@@ -1,0 +1,158 @@
+ENME 561 - News Items
+Exported Oct 22, 2026
+Total items: 10
+
+======================================================================
+1. Regrade Requests
+Posted: Oct 15, 2026, 10:13 AM
+----------------------------------------------------------------------
+Please note that all regrade requests must be submitted by email within 10 days of the grade release date. Each request must include a written, detailed justification explaining the reason for the regrade. All team members and the TA responsible for your section must be CC'd on the email.
+
+Regrade requests submitted after the 10-day deadline will not be accepted.
+
+======================================================================
+2. Lab 3 Submission Reminder
+Posted: Oct 13, 2026, 9:03 AM
+----------------------------------------------------------------------
+Reminder: for Lab 3, use the ENME561_661_Report_Template_F2026 and include a team contribution statement in your report. Some teams forgot this for Lab 2.
+
+======================================================================
+3. Lab 3 exit survey is open
+Posted: Oct 13, 2026, 8:49 AM
+----------------------------------------------------------------------
+The Lab 3 exit survey is now open:
+
+https://forms.cloud.microsoft/r/vJRgA4K9y2?origin=lprLink
+
+Deadline: Same as Lab 3 Report (Oct 15, Thursday 11:59pm).
+
+It is individual (not one per team). Submitting it earns the participation mark; not submitting gives 0.
+
+Your answers are not graded, and names are removed after completion is checked.
+
+Thank you for your feedback!
+
+======================================================================
+4. The Lab 2 Exit Survey deadline has been extended until next Tuesday
+Posted: Oct 2, 2026, 11:06 AM
+----------------------------------------------------------------------
+For future labs, the Lab Exit Survey deadline will not be extended.
+
+======================================================================
+5. Bring your printed Lab 2 design to the first Lab 3 session
+Posted: Oct 2, 2026, 8:05 AM
+----------------------------------------------------------------------
+Lab 3 starts Friday 2 October (M/F sections) and Tuesday 6 October (T/R sections).
+
+Bring one printed copy of your Section 7 experiment design from Lab 2, with your group members' first names and your D2L group number written at the top of the first page. Hand it to your TA at the start of class.
+
+You will review another group's design during that session. Without your printout, your group cannot take part.
+
+======================================================================
+6. Lab 2 Exit Survey Now Open
+Posted: Sep 28, 2026, 5:04 PM
+----------------------------------------------------------------------
+The Lab 2 exit survey is now open:
+
+https://forms.cloud.microsoft/r/9CGXqcy1Qc?origin=lprLink
+
+Deadline: Same as Lab 2 Report (Oct 1, Thursday 11:59pm).
+
+It is individual (not one per team). Submitting it earns the participation mark; not submitting gives 0.
+
+Your answers are not graded, and names are removed after completion is checked.
+
+Thank you for your feedback!
+
+======================================================================
+7. Office hours
+Posted: Sep 8, 2026, 8:42 AM
+----------------------------------------------------------------------
+Office hours are scheduled for Thursdays from 11:00 a.m. to 12:00 p.m. in my office, MEB 512.
+
+======================================================================
+8. Take Advantage of the Makerspace Trainings While You Can
+Posted: Sep 4, 2026, 2:23 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+This has nothing to do with your grade or any course deliverable. It is simply some advice from someone working in this field.
+
+The Schulich makerspaces offer hands-on training opportunities that are available to you as a student. Once you graduate, access to many of these resources and trainings may no longer be available.
+
+Mechatronics is a hands-on discipline, and practical skills can make a real difference. We cover many hands-on concepts and activities as much as possible in ENME 561 and ENME 562. However, there are many additional practical skills and specialized trainings offered through the Schulich Makerspaces that we are not able to cover within the scope of these courses. These opportunities can help you expand your hands-on experience beyond the classroom.
+
+Some trainings that may be particularly relevant to you include:
+
+- Electronics & PCB (Electronics Makerspace, ENG 29): Soldering THT, Soldering SMT I and II (Oven), PCB Milling
+- Rapid Prototyping: 3D Printing and Laser Cutting
+- Machining & Structures (Machine Shop): Access Training, Lathe and Milling Machine, CNC
+- Robotics related training
+
+My practical advice:
+
+- Start with the Machine Shop Access training. It is the prerequisite for using many of the machines in the shop.
+- Don't wait until you have an immediate project that requires the skill.
+- Consider taking at least one training outside your immediate needs.
+
+You can see the available workshops and register here:
+
+https://schulich.libcal.com/calendar/workshops
+
+If you have time this term, I strongly encourage you to take advantage of at least one of these opportunities!
+
+Thanks,
+
+Bisheban
+
+======================================================================
+9. Access MATLAB
+Posted: Sep 2, 2026, 6:16 PM
+----------------------------------------------------------------------
+- Go to https://www.mathworks.com and click on "Get MATLAB" on the right side of the page.
+- You will be redirected to the sign-in page. Sign in using your University of Calgary email account.
+- After signing in, choose one of the following options:
+  - Install MATLAB on your computer, or
+  - Open MATLAB Online to use MATLAB in your web browser.
+
+======================================================================
+10. Welcome to ENME 561/661
+Posted: Aug 27, 2026, 3:39 PM
+----------------------------------------------------------------------
+Hello everyone,
+
+Welcome to ENME 561/661!
+
+I am Mahdis Bisheban, an Associate Professor in the Department of Mechanical and Manufacturing Engineering, and your instructor for this course. I direct the Intelligent Dynamics and Control Lab (IDCL), where our research focuses on aerospace robotics, AI and machine learning, UAV systems, and control theory. This year, we are joined by Hiranya Udagedara, a graduate student in IDCL under my supervision, who will serve as co-instructor.
+
+Teaching Assistants
+
+Our Teaching Assistants are Adam Bigsby, Daniel Yang, Maciek Popik and Nathan Pangracs.
+
+All TAs are dedicated graduate students in IDCL under my supervision. Each has either taken this course before or TA'd it in the past, and they will be supervising the laboratories and assisting you with any questions during lab sessions.
+
+D2L
+
+Course materials and laboratory instructions will be posted on D2L throughout the semester. Please check it regularly for updates.
+
+Lecture Attendance
+
+Attendance will not be taken, but I strongly encourage you to attend. Over the years teaching this course, I've observed a significant difference in grades between students who attend lectures regularly and those who don't.
+
+Labs
+
+The first lab will be posted on D2L next week and completed asynchronously. It requires access to a computer and is completed individually (not in groups). Attendance is not required, and no one will be in EEEL 103 for this first lab.
+
+In-person labs begin:
+
+- Friday, September 18 for students enrolled in the MF sessions
+- Tuesday, September 22 for students enrolled in the TuTh sessions
+
+Feel free to reach out if you have any questions. Looking forward to meeting you all on Friday, September 4 for our first lecture.
+
+On behalf of the whole teaching team, I extend a warm welcome to each of you!
+
+Regards,
+
+Mahdis Bisheban (https://profiles.ucalgary.ca/mahdis-bisheban) (she/her), Ph.D., P.Eng.
+Associate Professor

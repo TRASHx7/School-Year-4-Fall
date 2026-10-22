@@ -1,0 +1,408 @@
+ENEL 500A - News Items
+Exported Oct 22, 2026
+Total items: 25
+
+======================================================================
+1. Demonstrating Engineering Design in your Roadmap Codument
+Posted: Oct 19, 2026, 10:31 AM
+----------------------------------------------------------------------
+Teams,
+
+As you work on your design roadmap document, please note that for your project to qualify for this course, it is essential to clearly demonstrate the application of engineering design principles. This means that at every decision point where multiple approaches are possible, you must explore and discuss a few viable alternatives, and justify why you selected the chosen path.
+
+Even if your project sponsor has imposed certain specifications (such as technology stacks or specific tools), there will still be areas where you have the flexibility to make decisions. It is your responsibility to identify these areas, evaluate your options, and justify your choices based on credible sources, such as industry best practices, industry standards and guidelines, scholarly articles, or relevant books.
+
+Additional Guidelines for Capstone Project Design
+
+- Document Trade-offs and Justifications: Clearly outline the pros and cons of each design option and explain why the chosen path was selected based on project priorities.
+- Perform Risk Analysis: Identify potential risks for each alternative and explain your strategy for mitigating them.
+- Embrace Iterative Design: Recognize that design is a dynamic process. Be open to revisiting decisions as new information emerges.
+- Prototyping and Testing: Recognize that prototyping may invalidate assumptions you made in early design process.
+- Align with Scope and Goals: Ensure that your decisions support the project's objectives, deliverables, budget, and timeline.
+- Maintain Communication with Sponsor: Keep the sponsor informed, and address any conflicting requirements transparently.
+- Reference Technical Standards: Utilize relevant industry standards, guidelines, and best practices to support your decisions.
+- Use Visual Aids: Enhance your presentations with diagrams, charts, or simulations to clearly communicate complex ideas.
+- Consider Sustainability and Ethics: Consider reflecting on the environmental, social, and ethical implications of your design choices.
+
+======================================================================
+2. Categorizing Deliverables: Must-Haves, Should-Haves, and Nice-to-Haves
+Posted: Oct 14, 2026, 9:19 AM
+----------------------------------------------------------------------
+Hello all,
+
+As you prepare to work on your design roadmap document, it is essential that each project team clearly defines and categorizes their deliverables into three groups: Must-Haves, Should-Haves, and Nice-to-Haves. This categorization serves as a way to set clear expectations for the project's success and progression.
+
+- Must-Haves: These are the non-negotiable, minimum requirements that your team needs to deliver in order to successfully complete the course. Without these, the project is considered incomplete or unsuccessful. Think of these as your core deliverables that demonstrate you've met the essential objectives of your project. Teams should prioritize Must-Haves from the beginning and allocate the necessary resources and time to ensure their completion. The quality of these must be solid, and no compromises should be made on their delivery.
+
+- Should-Haves: These are important features or deliverables that significantly enhance your project but are not absolutely critical for its completion. While the sponsor and your evaluators would be pleased to see the Should-Haves included, not delivering all of them will not impact your overall success in the course. However, delivering on Should-Haves can demonstrate strong planning, efficient resource management, and advanced problem-solving skills, showing that your team has exceeded basic requirements.
+
+- Nice-to-Haves: These are additional, value-adding deliverables that go above and beyond the project's essential scope. Nice-to-Haves are often features or enhancements that superstar teams achieve, reflecting creativity, innovation, and a strong understanding of the problem space. Successfully incorporating Nice-to-Haves is a sign of excellence and can greatly impress sponsors and stakeholders, though they should only be pursued if Must-Haves and Should-Haves have been sufficiently addressed.
+
+Agreement with the Sponsor
+It is crucial that these categories and their contents are mutually agreed upon between your team and your sponsor. Engaging in this conversation early on will help align expectations, prioritize efforts, and manage scope effectively. Ensure you have clear documentation that outlines each category, which will guide both your team and the sponsor throughout the project timeline.
+
+Important Note: Remember that while Must-Haves define the minimum success criteria, the Should-Haves and Nice-to-Haves give you opportunities to differentiate your project. Teams should be strategic and realistic about what they can achieve within the project timeline, but also think ambitiously about how they can exceed expectations.
+
+Good luck teams!
+
+======================================================================
+3. Services from Makerspace
+Posted: Oct 12, 2026, 11:22 PM
+----------------------------------------------------------------------
+Hello Capstone Students,
+
+As you head into your final project, you've got a whole network of people and spaces here to support you. This is an exciting stretch of your degree, and the Makerspace team is looking forward to helping you bring your ideas to life.
+
+Here's what's available to you:
+
+• Makerspace HQ (https://schulich.libguides.com/m2z/facilities/hq)
+General hand tools, build space, 3D printing (https://schulich.libguides.com/m2z/manufacturing/3d-printing), and laser cutting (https://schulich.libguides.com/c.php?g=722137).
+  - For 3D printing, refer to the provided slides for how to submit to the Academic Courses queue. Submissions there take priority over the Member queue.
+
+• Manufacturing in the Makerspace Shops (https://schulich.libguides.com/c.php?g=745335)
+Manual machining (https://schulich.libguides.com/c.php?g=725732), waterjet (https://schulich.libguides.com/c.php?g=725861), CNC, welding.
+  - This is a facility, not a service. Please book a consult (https://schulich.libcal.com/appointments/makerspace-consult) if you plan to fabricate parts, so we can help guide you in how to make your own parts.
+  - If you're new to the shop, book an Initial Group Shop Consult.
+  - If you're familiar with the shop and just need technical guidance, book a Machine Shop Consult.
+  - If you have no machining experience, try to get in early to do training and orientation so you can plan your project timeline properly.
+
+• Electronics Makerspace (https://schulich.libguides.com/c.php?g=737821)
+Tools and equipment for electronics prototyping.
+  - A series of hands-on workshops (https://schulich.libguides.com/IntroToElectronicPrototyping) such as soldering and PCB fabrication are available throughout the year
+
+• Digital Design Lab (https://schulich.libguides.com/m2z/facilities/ddlab) and VR Lab (https://schulich.libguides.com/c.php?g=725185)
+Extended collaborative build spaces, robotics equipment, sewing machines, and 3D visualization tools.
+
+• Consultations (https://schulich.libcal.com/appointments/makerspace-consult)
+You can book time with a Makerspace technician to talk through designs, approaches, and next steps.
+Undergraduate Lab Technicians (https://schulich.libguides.com/tech-services/support) outside the Makerspace are also available for informal consultation. They won't act as project mentors, but they can help troubleshoot ideas and point you in the right direction.
+
+• Materials and Fasteners
+We can provide a reasonable amount of common fasteners and readily available materials at no charge. Chat with us early so we can help you sort out what makes sense for your build. Smaller items such as fasteners are distributed at regular Engineering Store Hours (https://schulich.libguides.com/tech-services/contact-us). For large material stock (e.g., sheet metal or bar), it is best to visit the shop area when ENC 18 (Waterjet) is open (https://schulich.libcal.com/hours/) to determine stock availability before ordering through Engineering Stores.
+
+• Storage
+Half-size lockers are available across from the 3D printer wall and the Bill Rosehart Wellness Room (ENA 06). Use the locker request form (https://schulich.libwizard.com/f/capstone-locker-request) if you need one.
+For large or long-term storage needs, please coordinate with your professor or project advisor, as we aren't able to store oversized builds in Makerspace areas.
+
+• Contact Information
+If you're unsure where to start or who to talk to, send us a note at sse.m2z@ucalgary.ca and we'll guide you from there.
+
+Have fun with this stage of your project. It's one of the most creative and rewarding parts of your degree, and we're excited to see what you build.
+
+Happy making
+
+The Schulich Makerspace Team
+
+======================================================================
+4. PDF Cover pages
+Posted: Oct 5, 2026, 9:58 AM
+----------------------------------------------------------------------
+Please note that all teams are required to submit a cover page to the nine designated dropbox folders. See the fall requirements for what you need to include (see the screen shots attached). This is basically the cover page of your future reports! This is required because it is a trick to get around the limitations of D2L for populated group grades. Thank you.
+
+======================================================================
+5. Updated makerspace resources
+Posted: Sep 28, 2026, 9:14 AM
+----------------------------------------------------------------------
+Hi all, please see this:
+
+https://uofc.sharepoint.com/:p:/s/SSETS/IQBIR-C2nth_RI5wJZQwpS5bAfu1guY6AS4Ht889BP9pRzM?e=dmKcii&CID=249717BA-8DC1-8E4B-BD6C-F322E3474CF9
+
+This presentation includes important information about what is available through the makerspace, including links to hours, workshops, consultation appointments, the access code to the academic printing queue, and more. If you have any questions, please don't hesitate to reach out.
+
+======================================================================
+6. Additional support availble to you
+Posted: Sep 24, 2026, 5:24 PM
+----------------------------------------------------------------------
+Please see this link for all resources that are available to you:
+
+https://schulich.libguides.com/m2z/access-trainings
+
+======================================================================
+7. Technician support
+Posted: Sep 24, 2026, 12:43 PM
+----------------------------------------------------------------------
+To teams with a hardware component:
+
+The idea of identifying a technician is to make sure you know how to reach out to the technicians who can support you ad give you advice. Given the changes that has happened in the way the lab technicians work, as long as you confirm with your TA that you are aware of the internal resources within engineering and you know how to find/get advice when you need, it is sufficient.
+
+======================================================================
+8. TAs assigned
+Posted: Sep 18, 2026, 7:45 AM
+----------------------------------------------------------------------
+Hi teams,
+
+TAs are now assigned and you should receive the feedback on your initial submission on D2L any time. The TAs will set a time to meet you as per the course time line.
+
+Stay tuned.
+
+======================================================================
+9. Updates and next steps
+Posted: Sep 17, 2026, 9:00 AM
+----------------------------------------------------------------------
+Hi All,
+
+1- TAs are assigned to the projects and they are reviewing the initial proposals.
+
+2- Your team should receive an email from your TA about the kick off meeting today, if you have not received yet. If you do not, please let me know tomorrow morning.
+
+3- The TA will set the agenda and work with you to find a time and place to meet.
+
+4- you will update and finalize the proposal and submit to the designated group submission dropbox folder by the prescribed deadline.
+
+5- You should now be working on your design.
+
+6- You should also be looking for an academic advisor- look up the prescribed deadline.
+
+6- Hardware projects only: you to the technicians and secure one who will be helping you.
+
+7- You will receive the links to two google surveys (one individual and one for each team). You must complete those by the deadline. This is when you confim the information for your advisor and support technician..
+
+8- You will then need to upload the PDF cover pages..
+
+If you have any questions, please look for the answer in the posted materials. If you do not find the answer, please email me.
+
+Best wishes,
+
+Dr. Z.
+
+======================================================================
+10. Submit your proposal, even if a few pieces are still pending
+Posted: Sep 13, 2026, 6:15 PM
+----------------------------------------------------------------------
+Hello everyone,
+
+I know some teams still have loose ends (e.g., final team members not confirmed, sponsor still finalizing). That's okay. If you have at least 2-3 members and a credible project lead (even a long shot), please submit your Initial Project Proposal now via D2L using the Excel template. We'll work with you to close any gaps during review and finalization over the next week, per the course timeline.
+
+If your proposal is incomplete, include a short note inside the Excel file that clearly lists:
+
+- What's missing or not finalized (e.g., "sponsor confirmation pending," "two members TBD").
+- Your plan and expected date to finalize each item.
+- A primary contact (name and email).
+
+One submission per team, please.
+
+======================================================================
+11. using makerspace machine shop
+Posted: Sep 11, 2026, 7:53 PM
+----------------------------------------------------------------------
+Hello capstone teams!
+
+If you are planning to do any manufacturing in the makerspace machine shop for your capstone project this year (e.g., manual machining, waterjet, CNC, welding), we would like to have a meeting with you so that we can get an idea of your project requirements and feasibility. Please use the following link to book an appointment: https://schulich.libcal.com/appointments/teams-consult. If you are not able to make any of the posted times, please contact the makerspace at sse.m2z@ucalgary.ca.
+
+In addition, the Schulich Makerspace has many different facilities available! Please visit our website (https://schulich.libguides.com/m2z) for more information. All students are welcome to join and can get started by completing the online General Access Training (https://schulich.libguides.com/m2z/general-access-training). You can see a listing of spots and times available for booking by visiting our booking page (https://schulich.libcal.com/reserve) as well. Any questions can be directed to sse.m2z@ucalgary.ca.
+
+Happy making,
+
+The Schulich Makerspace Team
+
+======================================================================
+12. swapping to engg 503/504
+Posted: Sep 11, 2026, 11:18 AM
+----------------------------------------------------------------------
+Students who have no teams/no lead on a project
+
+Consider swapping to ENGG 503/504: there is a lot more flexibility there and you do not need an industry sponsor. Dr Steve Drew teaches that course and you can go and ask him about the details....
+
+Today is deadline to swap, I believe.
+
+======================================================================
+13. Incomplete Project Arrangements
+Posted: Sep 10, 2026, 6:47 PM
+----------------------------------------------------------------------
+Hi all,
+If your arrangements with a potential sponsor are not finalized by this Sunday, but you have formed a team and have a strong project lead, you must still submit the project proposal template by Sunday.
+
+Complete the template as fully as possible, include all team information, and add a brief note explaining what remains outstanding, for example, sponsor confirmation or project details.
+
+By this Sunday, every student must:
+
+- Be part of a team
+- Have an identified project
+- Submit the project proposal template
+
+You will have until October 4 to finalize the remaining project and sponsor details.
+
+======================================================================
+14. Sponsor-student team contract
+Posted: Sep 8, 2026, 10:26 AM
+----------------------------------------------------------------------
+All teams must sign the capstone sponsor-student team contract. Find it in Fall Team Deliverables. This is between the two parties and the instructor or TAs will not sign. This must be done by the final project submission deadline. The TAs or the instructor may ask to see this at any time.
+
+======================================================================
+15. Scoping the proposal
+Posted: Sep 7, 2026, 1:25 PM
+----------------------------------------------------------------------
+Teams:
+
+Please note that the scope of the work and deliverables must be agreed upon between the teams and the sponsors. Neither me nor the TAs will tell you at any point what to add or what to cut. We will only give you feedback on the proposal after you submit, and that feedback will mainly be on the clarity, meeting high level work hours/coverage expectations, alignment with the ESE programs, if the project has a strong design elements. etc. It is your responsibility to provide a detail scope of the technical work later on during the design roadmap stage and show that you have enough tasks for everyone. At that stage you will be providing must-haves, should-haves and nice-to-haves to show what is the bare minimum you must deliver to satisfy the sponsor.
+
+Good luck.
+
+======================================================================
+16. Project proposal submission instructions
+Posted: Sep 6, 2026, 12:29 PM
+Attachments: ENEL500_Project_Proposal_Template (studnets).xlsx
+----------------------------------------------------------------------
+Important Initial Project Proposal Instructions
+
+- One per team,
+- Via D2L, dedicated dropbox,
+- Use the provided Student Excel template (see attached).
+- If you have taken one of the projects posted by the instructor, make sure to port it to the student version of the template.
+- Change the name of the excel file to your project title
+- Deadline: Sept 13
+
+If you have already submitted and you have not followed the above, please delete the old submissions and die it again.
+
+======================================================================
+17. Lectures and Labs
+Posted: Sep 3, 2026, 3:54 PM
+----------------------------------------------------------------------
+Hello all,
+
+- the Labs are scheduled to ensure the team members are all available for those slots in case they need to gather as a team and work together. As long as the team can agree on a time that they are all available and they can meet when they need to, then it is fine to register in different lab sections.
+- There are no organized lab session for this course. The time is for you.
+- Lecture times are booked in case we need to get together for a workshop or alike. Unless you receive advanced notification, there is no lecture.
+
+Thank you.
+
+======================================================================
+18. Technician Support Staff
+Posted: Aug 31, 2026, 7:04 PM
+----------------------------------------------------------------------
+Hello all,
+
+Those projects that have a hardware component, must connect with a technician mentor who will be supporting the project. Here are the information you need for this item:
+
+- Allynne Casilan is the Electronics Makerspace Technician allynne.casilan@ucalgary.ca. He can help with electrical needs for Capstone students, facilitating soldering, surface mount, PCB design, and instrumentation basics workshops.
+- Aside from that our Electrical Technicians are Mateo Alzate mateo.alzate1@ucalgary.ca and Mohammad Islam mohammad.islam3@ucalgary.ca. They are can answer basic questions
+- If you require any other Makerspace support, please reach out to Kathleen Chow kdang@ucalgary.ca, the Makerspace and Teams & Clubs Technical Lead. She will be able to assist with general Makerspace protocols.
+
+Thank you.
+
+======================================================================
+19. A few notes and tips before you submit your proposal and next steps
+Posted: Aug 31, 2026, 1:03 PM
+----------------------------------------------------------------------
+Hi All,
+
+1- Each team must submit the completed excel template by the deadline. One per team.
+
+2- If you have accepted one of the projects posted on the course web page, you will need to complete the student project proposal template based on the latest agreed upon project information (definition, deliverables, etc.). The student proposal template that you need to submit has additional sheets for team information etc. compared to industry project proposal template.
+
+3- Every student must be in a team, and every team must have secured and submitted an industry-sponsored project by the submission deadline. If you have not secured a team, or if you have a team and no project, you do not have much time. Consider switching to ENGG 503/504 or ENGG 501/502 asap if you have exhausted all other venues.
+
+4- Your project will be assigned to a TA, projects will be reviewed, your TA will provide feedback by the week after.
+
+5- You will meet your designated TA during the TA kick-off meeting period to meet and greet, review the feedback etc.
+
+6- You will be assigned a Team number, you will be registered by your TA into D2L groups, and you will then need to submit the finalized project proposal by the prescribed deadline. This will be considered the deadline to make any charges to the team, the project etc. The project is officially on after this.
+
+7- If you have your team, your project and sponsor lined up, then start looking for an academic advisor (and a technician support if you have a hardware component).
+
+8- Start working now if you have a team and a project! The course timeline specifies submission deadlines, but you can get the work done any time.
+
+9- Read the course material!
+
+Good luck.
+
+======================================================================
+20. academic advisor
+Posted: Aug 27, 2026, 9:49 AM
+----------------------------------------------------------------------
+Hello all,
+
+Please note that each team must have an academic advisor and the deadline to secure one is Oct 13. here are some tips:
+
+1- Any professor within the university of Calgary with relevant expertise can be your advisor, as long as they are committed to attend the fall, winter and final evaluation sessions.
+
+2- A professor may delegate the role to a graduate student in their research team.
+
+3- If you send only an email and wait, it may not work. I suggest reach out in person. Go to their offices. Find out what they team and go and talk to them after their lectures. Clarify that they will not be marking reports nor have any responsibility of how the project progresses. They are there to provide expert advice where the team needs and evaluate the technical work that the team does only in evaluation sessions. Show them the evaluation forms if it helps.
+
+4- Do not give up.
+
+Good luck!
+
+======================================================================
+21. Use of Gen AI policy.
+Posted: Aug 21, 2026, 10:22 AM
+----------------------------------------------------------------------
+Hi all,
+
+I have now posted the the course policy on the use of Gen AI. Please read and follow.
+
+https://d2l.ucalgary.ca/d2l/le/content/770054/Home
+
+Thank you
+
+======================================================================
+22. Sposonsor Rep's APEGA status
+Posted: Aug 10, 2026, 11:26 AM
+----------------------------------------------------------------------
+Hi All,
+
+Please note that although it is strongly recommended that the sponsor rep has an EIT or PEng status, some projects (particularly software) may not be able to secure such role. In that case make sure the academic advisor has a PEng status.
+
+In any case, please make it clear in your proposal template filed (EIT/PEng/None for sponsor Rep).
+
+Thank you
+
+======================================================================
+23. Electrical students in pure software projects (or the other way around)
+Posted: Jul 29, 2026, 5:08 PM
+----------------------------------------------------------------------
+Hi All,
+
+We require that for purely software projects, the majority of the team members be from software program (for example, for a team of six, at least 3-4 members must be software students). This also means that electrical students in pure software projects have some background in software development (by the way, coding is different than software development!), are eager to learn what skills they will need and do not have, and they will be contributing equally to the project.
+
+For electrical projects, there must be a software component that justifies a software student in the team.
+
+The TAs are tasked to make sure everyone does their part.
+
+Thank you.
+
+======================================================================
+24. Entrepreneurial/Multidisciplinary capstone courses
+Posted: Jul 27, 2026, 2:45 PM
+----------------------------------------------------------------------
+Hello all,
+
+Just so you know:
+
+1- if you have your own ideas for a new product/.solution that could potentially be turned into a startup, you should drop from ENEL 500 and register in the entrepreneurial capstone ENGG 503/504. This course is run in coordination with Hunter Centre for Innovative Thinking, and there could be opportunities for financial support etc. You will not have to commit to building a start-up company, but what you have in mind needs to have some market potential.
+
+2- If you want to work with students from other engineering programs, and you are open to a variety of projects that may be already available, you should drop from ENEL 500 and register in the multidisciplinary capstone course ENGG 501/502. I am told this course does not require an industry sponsor for a project (please double check with the instructor).
+
+These courses will give you the same caret for graduation as ENEL 500.
+
+Good luck.
+
+======================================================================
+25. Welcome aboard!
+Posted: Jul 3, 2026, 2:32 PM
+----------------------------------------------------------------------
+Hello all,
+
+Welcome to Capstone!
+
+The course D2L shell is now up and active and has all the information you need to navigate your way through this course. PLEASE take some time to review the posted material. This is not your typical course that you register in, go to lectures, write the exam, and boom! This is a course that you are in the driving seat (for the most part!). Welcome to learning by doing
+
+Please be proactive and search for projects. It is your responsibility to form a team and secure a project. In case I get some projects from the industry, I will share them with you all. Historically, each year I get a few, but I would say ~90% of final projects are found and secured by team members themselves. Do not wait for projects to come from me. Go after projects yourselves. A great way to practice pitching your skills and build your network!
+
+If you are looking for teammates or if you are looking to connect to other students in the course, check out the discord server at (https://discord.gg/6fRqqgxURm)
+
+https://discord.gg/QTRpkvPNdm
+
+Dr. Z.
+
+Hamid Zareipour, P.Eng., Ph.D., FIEEE
+Killam Professor and Schulich Research Chair in Power Grid Transformation,
+Department of Electrical and Software Engineering,
+Schulich School of Engineering,
+The University of Calgary,
+Lead, Grid Foresight Lab.,
+Web: https://gridforesight.ca
+Office: ENA 232
+Canadian Co-Director of U.S.-Canada Center on Climate-Resilient Western Interconnected Grid (WIRED Global Center)
+Web: https://wiredcenter.org

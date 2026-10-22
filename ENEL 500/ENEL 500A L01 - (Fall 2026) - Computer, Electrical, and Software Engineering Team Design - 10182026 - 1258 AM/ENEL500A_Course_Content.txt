@@ -1,0 +1,994 @@
+AI Use Disclosure: The instructor provided all policy content and directions; ChatGPT (GPT-5 Thinking) assisted only with reorganizing, formatting, and proofreading. All policies reflect years of teaching this course and student feedback. No confidential student/sponsor data were shared with AI. The instructor authored and approved the final text.
+
+Instructor AI Use Disclosure: The general course information, policies, meeting expectations, logbook requirements, workload expectation, and capstone-internship overlap process are my established course materials from the ENEL 500 course information slides. ChatGPT (GPT-5 Thinking) helped reorganize the slide content into a student-friendly written guide and tighten wording. AI did not introduce new policy content. I verified all statements and remain solely responsible for the final version. No confidential student, sponsor, or project data were provided to AI.
+
+General Course Information - All You Need to Know
+
+This page summarizes the general expectations for ENEL 500 Capstone. The course is intentionally run like a real engineering project: information posted on D2L, instructions provided through course channels, and communication with the teaching team should be treated as part of the course "contract." Students are responsible for reading, understanding, and following the posted terms and expectations.
+
+Course goals and objectives
+ENEL 500 is designed to give you hands-on experience with the major steps involved in an engineering project. You will apply engineering knowledge, learn new skills as needed, and work toward a solution that is accountable to an external stakeholder.
+By the end of the course, you should have practiced how to:
+1. Identify a problem and envision a solution.
+2. Form a team and recruit the skills needed to move the project forward.
+3. Explore alternative solutions before committing to a design path.
+4. Implement the best feasible solution within time, resource, and budget constraints.
+5. Analyze and mitigate technical, delivery, and project-management risks.
+6. Manage project time, resources, and budget.
+7. Develop, test, validate, and finalize the product or deliverable.
+8. Document objectives, progress, activities, decisions, and design details.
+9. Communicate professionally with your team and external parties.
+10. Be accountable to an external stakeholder.
+
+Course policies and communication
+
+D2L is the main course platform
+- D2L is the primary platform for managing this course.
+- Course information posted on D2L serves as the terms and conditions of your course "contract."
+- You are responsible for understanding and following the posted requirements.
+
+Google Forms
+- Google Forms will be used several times during the year.
+- The course team will notify students when links become available.
+
+Notifications
+- Turn on D2L notifications so you receive alerts on deadlines and updates.
+- Not all updates will be emailed.
+
+Lectures and lab sections
+
+Learning model
+- This is not a traditional lecture-based class.
+- The course follows a learning-by-doing model: you apply what you already know and learn new skills required for your particular project.
+- Advance notice will be provided for in-person discussions, workshops, or events.
+- No advance notice means no lecture.
+
+Lab sections
+- Labs are scheduled to ensure team members have common availability if they need to gather and work together.
+- If all team members agree on another workable meeting time, it is acceptable for team members to register in different lab sections.
+
+Team meetings
+
+Types of meetings
+- Internal team meetings: meetings among team members to advance the project.
+- Evaluation sessions: graded meetings with the academic advisor and industry representative. There is one in Fall and one in Winter, plus the final project demonstration/presentation process described elsewhere.
+- Update meetings: meetings to update your TA on the team's progress.
+
+General meeting expectations
+- Team meetings and evaluation sessions are expected to be held in person.
+- Internal team meetings may be online in exceptional cases, such as illness, if all members agree. No instructor permission is needed for that internal decision.
+- Professional conduct is required in all meetings.
+- TAs will note professionalism, and this can affect evaluations.
+
+Evaluation sessions
+- Evaluation sessions must be in person.
+- If an in-person evaluation session is not possible, contact Dr. Zareipour and copy your TA to explain the situation.
+- Requests will be handled case by case.
+
+Update meetings
+- The team and TA should agree on the setting for each update meeting as needed.
+
+Online meeting rules
+If a meeting is held online, treat it with the same seriousness as an in-person meeting.
+- All members must attend as if the meeting were in person.
+- Join from a quiet, distraction-free place.
+- Cameras must be on. If you do not have a camera, arrange to get one or join from a teammate's setup.
+- Mute yourself unless speaking.
+- Dress code is business casual.
+- Be seated in an appropriate place. Do not join from cars, bikes, gyms, or similarly unsuitable locations.
+- Use the university's Zoom platform and your official display name.
+
+Team logbook
+Each team must maintain a logbook. The logbook may be a hard copy or an online platform. MS Planner or Jira is recommended for electronic logbooks, but the format does not need to be complicated.
+The logbook must include:
+- Timestamped events and log entries.
+- Updated information about team meetings.
+- Tasks assigned to each member and their deadlines.
+- Notes on delayed or undelivered tasks.
+- Action items from meetings with the sponsor and academic advisor.
+- Any disagreements on tasks.
+- Any other important information needed to track the project.
+
+How to use the logbook
+- The logbook provides a basis for tracking activities and resolving conflict.
+- All team members are responsible for ensuring the logbook exists and is kept up to date.
+- Team managers are responsible for logging entries.
+- The instructor or project TA may request the logbook if follow-up is necessary.
+- Any disagreement about log entries should be resolved internally, and the related communication should be documented.
+- Any change in scope or deliverables must be reflected in the logbook, with evidence that the sponsor agreed to the change.
+Note: A team's logbook may be verified by the TA or course instructor at any time.
+
+Workload expectation
+- The capstone course represents one-sixth of your semester workload.
+- Each student should expect to spend an average of 10 hours per week on the course.
+- This includes all course-related activities: technical work, documentation, project management, meetings, preparation, communication, and follow-up.
+
+Capstone-internship overlap
+Engineering Internship Program does not allowed any overlap (even partial one) between Capstone and internship.
+
+Instructor AI Use Disclosure: All rules on team size/composition, formation, numbering, and communication practices originate from my long-standing course policies and student feedback. ChatGPT (GPT-5 Thinking) supported only with structure, wording, and proofreading. I reviewed and approved every change; no confidential information was shared.
+
+Capstone Teams - All You Need to Know
+
+Team size & composition
+- Standard size: 4-6 students per team.
+- Exception (strict, rare): A 7th member may be approved case-by-case only if the project scope clearly requires it. Submit a written request to the course coordinator with specific justifications well before the initial project proposal deadline.
+- Pure software/electrical projects: The majority of team members should normally be from Software/electrical Engineering. If that isn't possible, email the course coordinator (Dr. Zareipour) to request permission.
+
+Time commitment
+The capstone course represents one-sixth of your academic workload each semester. Each student is expected to devote an average of ~10 hours/week to the project, including technical work, documentation, and project management.
+
+Forming your team
+- Students are responsible for finding/forming a suitable team.
+- You must bring an eligible project or join a team with an eligible project.
+- Use the official Discord channel (created by the course coordinator) to connect with classmates and potential teams.
+- The course coordinator will not form teams and cannot provide placement services.
+
+Deadlines
+- Every student must be in a team by the initial project proposal deadline. (See course schedule.)
+- Borderline cases (e.g., unusual composition/size) must be discussed in advance.
+
+Exceptional assignment (rare)
+In very unusual circumstances, the course instructor may assign students to existing teams to accommodate exceptional situations.
+
+Quick checklist before you submit your initial proposal
+- Team has 4-6 members (or an approved exception).
+- Team composition satisfies Software/Electrical Engineering requirements for purely software/electrical projects.
+- Every member understands the ~10 hours/week expectation.
+
+Team numbering & naming
+- Official team number format: 500-{TA Initials}-{Number}-{TeamName}
+- Example: 500-JD-1-MapLoad -> TA John Doe; this is their Team #1; course ENEL 500; team name MapLoad.
+- The TA Initials are the first letters of the TA's first and last names.
+- Keep the 500 prefix in front of all team numbers (the instructor leads multiple capstone courses).
+- Assignment: Team numbers are issued by the instructional team after initial proposal intake; team names are as proposed by the team or adjusted by the instructional team if needed for clarity/consistency.
+
+Communication protocol
+- Always use your complete team number in all communications with the instructor, TAs, and advisor (email subjects, tickets, documents, and slide decks).
+- Emails without a complete team number may be delayed or unanswered.
+- On D2L, your group name is your team number. Use this exact, complete format in all course-related communications.
+
+Instructor AI Use Disclosure: I drafted the project-stream policy and CEAB eligibility guidance based on department standards and my experience teaching this course. ChatGPT (GPT-5 Thinking) helped reorganize sections, tighten wording, and convert items into student-friendly checklists. AI did not introduce new policy content. I verified all statements and remain solely responsible for the final version. No confidential student/sponsor data were provided to AI.
+
+Capstone Projects - All You Need to Know
+
+Required project stream
+Industry-sponsored projects only.
+
+What counts as an industry-sponsored project?
+A project jointly defined and scoped by your team and an external industry sponsor to solve a real problem in the sponsor's line of work. The deliverable must be directly relevant to the sponsor and within the technical scope of Electrical & Software Engineering (ESE).
+
+Who can sponsor?
+Any organization whose problem aligns with ESE knowledge: engineering and high-tech firms, utilities, oil & gas, food and health sectors, public institutions, and research labs. Sponsors do not need to be in Alberta; local sponsors are preferred for easier meetings and communication.
+
+How to find a sponsor (practical starting points)
+- Previous employers (internships, co-ops, summer jobs).
+- Professional & personal networks (friends, relatives, classmates, community contacts).
+- Internships: your host company may sponsor next year's capstone.
+- Help each other: if your internship employer isn't a fit for your team, they might be perfect for a classmate's team.
+- Why sponsors say yes: the course organizes focused teams, produces prototypes/analyses tied to the sponsor's needs, and can seed follow-on work.
+
+Will the instructor provide projects?
+- Short answer: no. It is your responsibility to find projects and form a team.
+- Occasional opportunities: At times, local industry contacts share potential project ideas. When this happens, the course coordinator will post them as they come in via course channels.
+- Do not wait for postings: The number, scope, and timing of such opportunities are unpredictable, so you should actively pursue your own sponsor.
+
+CEAB design requirement - what your capstone must include
+CEAB requires that the engineering curriculum culminate in a significant design experience that builds on prior coursework and, preferably, includes teamwork and project management.
+"The engineering curriculum must culminate in a significant design experience which is based on the knowledge and skills acquired in earlier course work and which preferably gives students an exposure to the concepts of teamwork and project management." - Canadian Engineering Accreditation Board (CEAB)
+CEAB defines engineering design as:
+"Engineering design integrates mathematics, basic sciences, engineering sciences and complementary studies in developing elements, systems, and processes to meet specific needs."
+
+Quick eligibility checklist (use this before you submit)
+- Engineering design is central: you are creating/adapting an element, system, or process to meet a stated need (not just analyzing or testing).
+- Teamwork is integral: a multi-person team with defined roles and collaboration.
+- Project management is practiced: scope, schedule, milestones, risk, and stakeholder communication.
+If you can genuinely check all three, you're on the right track for ESE capstone eligibility.
+
+Important rules
+- University research labs may sponsor only if the lab proposes the project. Students should not solicit projects from professors.
+- Teams with their own idea without an industry sponsor (a new product/service with business potential) must register in ENGG 503/504 instead.
+- Multi-department teams must register in ENGG 501/502.
+
+Process & feedback
+- The course coordinator provides feedback only after your proposal is officially submitted and reviewed with the full set of proposals.
+- Borderline projects will receive specific tips and guidelines to elevate them to the required level during the late-September review.
+
+Fit & scope check (before you commit)
+- The problem statement and deliverables align with ESE capabilities.
+- A sponsor contact is available for periodic check-ins and feedback.
+- Any confidentiality or IP needs can be handled through standard course processes.
+
+Examples to guide your scoping
+- Qualifies: designing and prototyping an embedded control system for a sponsor's device; developing and validating a software-hardware data pipeline that meets performance and reliability requirements; re-engineering a process with quantitative trade-off analysis and verification.
+- Does not qualify (by itself): literature reviews, routine maintenance, pure data collection, or unstructured coding without defined requirements and verification.
+
+When reaching out to potential sponsors and asking to provide a project, make sure you provide them with the attached letter to potential sponsor. This should help answer some of their main questions. If they have addition questions, ask them to reach out to the course instructor directly.
+
+Instructor AI Use Disclosure: The definitions and expectations for the Project Manager, Technical Academic Advisor, Sponsor Representative, and Lab Technician are my policies developed over years of instruction. ChatGPT (GPT-5 Thinking) assisted with organization, headings, and clarity edits only. I confirmed accuracy and accept full responsibility for the final text. No confidential student/sponsor data were shared.
+
+Capstone Roles & Responsibilities - All You Need to Know
+This page outlines who does what in your industry-sponsored capstone project and how to work together effectively.
+
+--- Project Manager (a.k.a. Team Manager) ---
+Purpose: Owns logistics and coordination so the team can focus on technical work.
+Important clarification: The Project Manager role does not exclude the manager from day-to-day technical work. Treat PM duties as an additional layer of responsibility undertaken alongside technical contributions; the benefit is practical leadership experience.
+
+Core responsibilities (non-exhaustive):
+- Plan and run meetings (agenda, minutes, action items, owners, due dates).
+- Maintain the project plan (scope, schedule/milestones, risks, comms cadence).
+- Coordinate with the industry sponsor representative, academic advisor, TA, and instructor.
+- Ensure deliverables (proposal, design roadmap, reviews, demo, final report) are submitted on time and in the required formats.
+- Track decisions and change control; keep stakeholders informed.
+
+Rotation:
+- The Project Manager role should rotate among team members. You may plan rotations across Fall and Winter terms; the team decides timing.
+- If you choose one PM for the entire project, that student still participates in technical work; PM duties are additional. The benefit: practical leadership/management experience.
+
+Re-evaluation:
+- Any team member may request a PM change review at any time. The team must take such requests seriously and decide promptly.
+
+Issue escalation:
+- Concerns about the PM -> discuss with your TA first. If unresolved -> engage the course instructor.
+- Shared accountability: The health and progress of the project is everyone's responsibility.
+- Important: Unresolved disputes left until the end of term may lead to penalties for all team members. Be proactive.
+
+--- Technical Academic Advisor (faculty/graduate delegate) ---
+Purpose: Ensure your technical decisions are sound and that the solution meets ESE standards.
+
+What "formal advisor" means:
+- A committed advisor for the full academic year who will evaluate the team's technical solutions and attend three evaluation sessions.
+- Typical workload: about 4-5 hours across the year. Advisors do not mark reports; they provide technical guidance, endorse the technical soundness of your design, and attend the fall, winter, and final oral project evaluation sessions.
+
+Who can serve as an academic advisor:
+- Any academic member of the faculty with relevant expertise (assistant professor, associate professor, professor, lecturer, senior lecturer, or equivalent teaching-stream role) may serve as an advisor.
+- The advisor does not necessarily have to be from ESE. Expertise is what matters.
+- The academic may designate a graduate student (PhD or Master's) to act as the team's advisor under their oversight.
+- Advisors may come from any relevant department across the University of Calgary, not only ESE.
+- Teams may have multiple advisors (formal and/or informal); however, at least one formal academic advisor is required.
+
+Minimum requirement & deadline:
+- By the time you submit the Project Information Google Form (typically late September to mid-October; see course timeline), your team must have at least one formal academic advisor.
+- If you do not secure an advisor by the deadline, you must drop the course.
+
+Working with your advisor:
+- Keep the advisor in the loop: share your design roadmap, major decisions, and updates.
+- Consult them when making important design choices; ensure they agree with the approach.
+- You may engage additional advisors (faculty or grad students) formally or informally if helpful. Between your TA and advisor(s) there should be adequate technical coverage for guidance and evaluation.
+
+Advisor expectations (minimum):
+- Ensures the team's technical decisions are sound.
+- Available for both Fall and Winter terms.
+- Attends the fall, winter, and final oral evaluation sessions.
+- Meets with the team as needed, when requested by the team, to guide them through the project.
+- Switching advisors: If suitability becomes an issue, speak with the instructor immediately.
+
+How to find an advisor (practical steps):
+- Identify faculty whose expertise matches your project's core technical work (department website, course pages, Google Scholar/publications).
+- Email and/or visit: if a professor is too busy, ask if a graduate student can be delegated.
+- Be clear: no report marking required; expected commitment about 4-5 hours/year plus three evaluations.
+- You may approach faculty in any relevant department across the University of Calgary when appropriate.
+- ESE faculty profiles: https://schulich.ucalgary.ca/electrical-computer/faculty-members
+
+--- Industry Sponsor Representative ---
+Purpose: Liaison with the sponsoring organization; voice of the client/project owner.
+Assignment: Each team must have an assigned sponsor representative. All requests, evaluations, and meetings are arranged through this representative.
+Deadline: by the Project Information Form deadline (see course timeline and dates).
+
+Engagement expectations:
+- APEGA membership (EIT or PEng) is strongly recommended.
+- Keep the sponsor involved in scoping and solution design to avoid surprises.
+- Meet at least once with the sponsor before finalizing the design roadmap.
+- Meet/consult as often as necessary, while respecting the representative's schedule.
+- Share copies of team reports with the sponsor representative for their information (they do not mark your reports).
+- Attend the fall, winter, and final oral evaluation sessions.
+
+Assessment: Sponsor representative evaluations are part of your grade. They can evaluate fairly only if you keep them informed throughout.
+If issues arise: An unsatisfied sponsor is not an option. Do your best to keep the sponsor informed and satisfied. Escalate serious issues early to the course instructor if they cannot be resolved promptly and reasonably.
+
+Special cases:
+- University research lab projects: someone from the lab must act as the industry representative. This cannot be the same person as the technical academic advisor; appoint another lab member as the academic advisor.
+- No sponsor yet? Contact the instructor asap.
+
+--- Lab Technician (for hardware projects) ---
+- Hardware projects should identify a subject-matter lab technician early and engage them on lab practices, tooling, procurement, and implementation choices.
+- Identify technician(s) before the design roadmap deadline; your TA will verify this during meetings.
+- Technician contact details will be posted on the course web page when available.
+- This is not a formal role in the course; however, if you have a hardware project, you are strongly encouraged to identify technicians who might be able to help you. Your TA will ask you about it.
+
+--- Teaching Assistants (TAs) ---
+First Line of Contact:
+Each team is assigned a TA who serves as the first point of contact for technical challenges and general project guidance.
+
+Role & Responsibilities:
+- Monitor overall progress of the team's solution and deliverables.
+- Provide assessments and feedback to the course coordinator.
+- Ensure the team is on the right track from a technical perspective.
+- Help verify that the team has secured appropriate technical resources and advisors to ensure soundness of tools, solutions, and methods.
+
+Important Notes:
+- TAs are usually graduate students within the engineering faculty.
+- They may not be subject-matter experts in the exact technical domain of your project. Their focus is on process, project management, and ensuring technical direction is sound.
+- The TA's input is an important factor in your evaluations.
+- Engaging with your TA regularly leads to smoother project progress and higher-quality outcomes.
+
+Assignment:
+TAs are assigned to teams by the course instructor, and each TA typically manages multiple teams at the same time.
+
+--- Communication & cadence (recommended) ---
+- Weekly (or bi-weekly) internal team meeting with minutes and action items.
+- Regular sponsor/TA touch points (e.g., bi-weekly or milestone-based), agreed upon early.
+- Advisor check-ins aligned with major decisions and milestone reviews.
+- Use the complete team number in all communications with instructor/TA/advisor/sponsor.
+
+--- Quick compliance checklist ---
+- Project Manager assigned (and rotation plan agreed, or one-PM decision documented).
+- Formal academic advisor secured by the Project Information Form deadline.
+- Sponsor representative (or industry mentor) assigned and engaged before Project Information Form deadline.
+- Hardware projects: relevant lab technician identified before the design roadmap deadline.
+- Stakeholder communication plan and meeting cadence defined.
+- Sponsor and advisor receive design roadmap and relevant updates.
+
+--- Escalation path (summary) ---
+Team -> PM -> TA -> Instructor (as needed). Don't wait; early escalation prevents end-of-term penalties.
+
+Component | Due Date | Submission Type | Learning Outcomes | Weight
+----------------------------------------------------------------------
+Initial Project Proposal | Sept 13 | Team | 1 | Pass/Fail
+TA Kick-off Meeting | Sept 21-29 | Team | 4, 5, 6 | Pass/Fail
+Finalized Project Proposal | Oct 4 | Team | 1 | 2%
+Team Contract and Sponsor-Team Contract | Oct 4 | Team | 4 | 1.5% + 1.5%
+Project Information (Google Form) *includes finalizing your academic advisor/Industry Rep | Oct 12 | Team | 5 | Pass/Fail
+Team Affiliation (Google Form) | Oct 12 | Individual | 5 | Pass/Fail
+Cover Page PDFs to Dropbox | Oct 12 | Team | 5 | Pass/Fail
+Design Roadmap Document *includes finalizing your technician for hardware projects | Nov 8 | Team | 1-7 | 16%
+Fall Term Progress Evaluations (Three Evaluators: TA, Academic Advisor, Sponsor Rep) | Nov 18 - Dec 2 | Team | 5 | 7% + 7% + 7%
+Peer Evaluation | Dec 6 | Individual | 4 | Pass/Fail
+Winter Term Progress Evaluation (Three Evaluators: TA, Academic Advisor, Sponsor Rep) | Jan 25 - Feb 5 | Team | 1-7 | 3% + 3% + 3%
+Project Demonstration Final Evaluations (Three Evaluators: TA, Academic Advisor, Sponsor Rep) | Mar 15 - Apr 2 | Team | 1-7 | 10% + 10% + 10%
+Design Fair Poster and Showcasing | TBA | Team | 5 | Pass/Fail
+Final Report | Apr 12 | Team | 1-7 | 7%
+Peer Evaluation 2 | Apr 19 | Individual | 4 | 12%
+
+Instructor AI Use Disclosure: The sequence of fall-term activities (proposals, kick-off, design roadmap, evaluations, and peer review) and all requirements/rubrics were authored by me and refined through prior course offerings. ChatGPT (GPT-5 Thinking) helped streamline structure and proofreading. I validated all content; AI did not supply new requirements. No confidential data were entered into AI tools.
+
+Fall Deliverables - All You Need To Know (ESE)
+This page collects what you must submit/do in the Fall term, how it's reviewed, and who must attend key meetings. See Deadlines at a Glance for dates.
+Tip: Include your complete team number on every submission, email subject, and slide deck.
+
+1) Initial Project Proposal (first official step)
+Submit: one per team, via D2L, using the provided Excel template.
+Writing tips (what reviewers look for):
+- Be clear and specific in defining the problem and proposed solution.
+- Avoid jargon and undefined technical terms; make it understandable to a non-expert.
+- Proofread for grammar and typos.
+- Eligibility: Demonstrate that the project is a fourth-year team design project eligible (design is central; see the section on Projects where project eligibility and CEAB requirements are discussed).
+- If the sponsor provided target deliverables, show where solution design remains open for the team to design/engineer.
+After you submit:
+- Instructor and TAs review proposals.
+- D2L groups are created for each project.
+- Initial feedback is posted on D2L.
+- Teams arrange a kick-off meeting with the TA (see item 2).
+
+2) Kick-off Meeting with Your TA
+Who arranges: The TA will initiate, but the team is responsible for scheduling.
+Purpose: meet-and-greet, walk through the proposal, discuss initial feedback, clarify issues, and align on next steps per the course timeline.
+
+3) Final Project Proposal (Excel) -> D2L
+Submit: final version via D2L by the deadline (Excel template).
+Assessment criteria:
+- Clarity
+- Completion of all sections
+- Evidence that you addressed prior feedback in this final submission
+Outcome: marks posted the following week; projects approved/finalized.
+
+4) Team Contracts
+Internal Team Contract
+- Use the provided template and customize it to reflect how your team will work (expectations, roles, consequences for not meeting expectations).
+- Ensure every member signs and the contract matches the time-on-task expectation (~10 hours/week per student).
+Sponsor-Team Contract
+- Use the provided template and complete it and submit by the Team Contracts deadline.
+
+5) Google Forms + Project Identification Cover Page (PDF)
+Instruction team will post Google Form links and instructions; submit by the deadlines. These are essentially team surveys to make sure we have the final status of each team and student.
+
+Purpose of the PDF Cover Page Submission
+The PDF cover page upload is a required administrative step that enables D2L to display grades for your team's evaluations.
+Because D2L does not allow instructors or TAs to post grades for a group unless something has been submitted, every team must upload a simple placeholder file (the cover page of your report) in the designated folder.
+This is not graded and does not require any specific content. It simply activates your team's submission space in D2L.
+
+What You Need to Do
+- Go to the D2L folder labeled "PDF Cover Page - [Evaluation Name]" (e.g., Fall Evaluation, Winter Evaluation, Final Evaluation).
+- Upload your team's cover page PDF; it can be the same one used in your report.
+- Make sure the file name includes your team number.
+- That's it; you will not receive feedback on this file.
+Cover page contents (see Design Roadmap requirements for full detail): project title; team number; PM name/email; team member names & IDs; support technician (if applicable); academic advisor name; sponsoring company; sponsor rep name/email
+
+6) Design Review Check-ins (pre-Design Roadmap submission)
+- With Academic Advisor(s): Consult on scope and technical direction; number/format of meetings is up to the team.
+- With Sponsor Representative: Confirm scope, deliverables, and success criteria; ensure you're aligned before freezing the roadmap.
+- Assessment note: Engagement is tracked as part of advisor/sponsor evaluation, but not separately graded. Skipping these risks misalignment at evaluations.
+
+7) Design Roadmap Document (team's working plan)
+Submission: one per team, PDF via D2L only. A grading rubric will be available well before the deadline.
+Purpose:
+- Finalize scope and deliverables.
+- Identify candidate technical solutions/methodologies; state the preferred approach and how you'll implement it.
+- Serve as the living roadmap for the project (designs may evolve later).
+Required sections:
+- Project Identification cover page (see Section 5).
+- Table of Contents
+- Glossary (terms/abbreviations/nomenclature)
+- Short bios of team members (skills and interests)
+- Project Motivation & Objectives (why this project; what problem the end product solves)
+- Project Scope & Deliverables
+    - Define the integrated system and what it will / will not do.
+    - List deliverables (e.g., prototype, code, drawings, manuals, guidelines).
+    - Tag each as must-have / should-have / nice-to-have.
+    - State the change-control rule: after this point, any scope/deliverable changes must be mutually agreed by team and sponsor, and discussed with the advisor and TA (and instructor if needed). Changes must not reduce the expected workload per team member.
+- Preliminary Design of the Proposed Solution
+    - Describe the design you propose to implement; include diagrams, flowcharts, logic/schematics, tables, etc.
+    - Show component interactions and interfaces; provide as much detail as feasible now.
+    - Software projects: include a conceptual architecture diagram, list required features as specified by the sponsor, and outline how you intend to build them.
+- Alternative Solutions/Methodologies
+    - Discuss 2-3 alternative design paths you considered and why your current choice fits best (team skill/time/budget constraints, trade-offs).
+    - Demonstrate a survey of public domain options and justify tool/technique choices.
+    - Citations: include academic papers, industry reports, reputable web releases, and books; avoid unreliable sources. Provide a References section with full citation details.
+- IP and Other Legal Agreements (team-team and team-sponsor, as applicable)
+- Technical Specifications (measurable, in a table; include budget limit). Examples: dimensions, power/voltage, performance, OS/GUI, speed, range.
+- Materials, Tools, Supplies, and Cost Estimates (include a tolerance, e.g., $250 +/- 5%. If no direct costs, state tools/supplies only and justify.)
+- Risks & Risk Mitigation Plans (delivery risks such as delayed data/parts; identify mitigations and owners)
+- Major Technical Tasks & Milestones (table of milestones, tasks, and dates through end of Winter term)
+- Software projects: Agile & sprints
+    You will implement in three sprints:
+    - Sprint 1: From Design Roadmap submission -> Fall Term Progress Evaluation
+    - Sprint 2: From Fall Term Evaluation -> Winter Term Progress Evaluation
+    - Sprint 3: From Winter Term Evaluation -> Final Demo/Presentation
+    For each sprint, define before it starts: goals, exact outcomes, evaluation criteria, specs, tools, cost estimate, and any alternative solution options.
+    At Sprint 1 Review (Fall Evaluation): report the outcomes vs. goals and your Sprint 2 plan (goals, outcomes, criteria, specs/tools/costs, alternatives).
+- Roles & Responsibilities (e.g., RACI/RASCI or equivalent table)
+- Measures of Success & Validation Tests (how you will validate success; planned tests at project end)
+- Team Logbook approach (tools, cadence, who maintains it)
+- Appendix
+- References
+Formatting guidelines:
+- Use the bold titles above for section headings.
+- Times New Roman, 12 pt, 1.5 line spacing, 1" margins.
+
+8) Design Review Check-ins (pre-Fall Term Evaluation)
+- With Academic Advisor(s): Ensure they fully understand your design and execution plan; gather early technical guidance. Use their time effectively.
+- With Sponsor Representative: Confirm the sponsor approves the design steps and remains aligned with outcomes and success criteria.
+- Responsible to arrange: Project Manager.
+- Deadline: Must be done before your Fall Term Evaluation session.
+
+9) Optional: Design Roadmap Review Meeting with the TA
+- Purpose: discuss the feedback and mark you received on the Design Roadmap.
+- May be initiated by team or TA. If needed, complete before the team's Fall Term evaluation session.
+
+10) Fall Term Design Review & Progress Evaluation
+Attendance (required): TA, Academic Advisor(s), Sponsor Representative, all team members. If a joint meeting is impossible, schedule separate meetings; the TA must attend all.
+Note: If the sponsor rep or the technical advisor cannot attend in person, it is allowed to set a link so they can join online.
+Who arranges: Project Manager.
+Format & objectives:
+- Book a 1-hour slot. Keep the presentation <= 25 minutes to allow Q&A/discussion.
+- Clarify, explain, and justify design decisions to date.
+- Present the plan to fully execute the project (logistics, schedule, procurement, approvals).
+- Demonstrate implementation progress (e.g., orders placed, due diligence completed, blueprints, tooling/software set up, partial builds).
+- Discuss what's done and what's next (upcoming weeks).
+- Surface challenges (technical and PM) and request guidance.
+Software projects (what to bring):
+- Sprint 1 Review: outcomes vs. defined goals, evaluation of results, and your Sprint 2 plan (goals, outcomes, criteria, specs/tools/costs, alternatives).
+Evaluation logistics:
+- TA brings the evaluation forms (for TA, Advisor, Sponsor rep) and collects them after the session.
+- If any evaluator assigns a grade <= 75%, a follow-up process is triggered. See Process for Following Up on Peer/Evaluator Results.
+
+11) Peer Evaluation I (Fall)
+Conducted via ITP Metrics: https://www.itpmetrics.com
+Competencies assessed:
+- Communicating with team members
+- Foundation of knowledge, skills, and abilities
+- Commitment to the team's work
+- Emphasizing high standards
+- Keeping the team on track
+Rating scale: Outstanding (5), Strong (4), Moderate (3), Bare minimum (2), Unsatisfactory (1)
+Each student receives feedback and an overall numerical average.
+Grade rules:
+- Fall Peer Evaluation is feedback-only (no weight toward final grade).
+- Winter Peer Evaluation carries grade weight; its average numerical score is used directly as the percentage grade for that component.
+Follow-ups:
+- Any student with an average < 4.0 / 5 must complete the follow-up process (see the separate follow-up processes page: Process for following up on the results of the peer evaluations).
+
+12) Change Control (scope/deliverables)
+Any major change to project deliverables or scope must be discussed with the TA, and if there is disagreement, with the instructor. Changes must be approved by the sponsor representative and discussed with the academic advisor, and must not significantly reduce the expected workload per team member.
+
+1) Initial Project Proposal (first official step)
+Submit:
+- One per team,
+- Via D2L, dedicated dropbox,
+- Use the provided Student Excel template.
+- If you have taken one of the projects posted by the instructor, make sure to port it to the student version of the template. see below this page for the template.
+- Change the name of the excel file to your project title
+- deadline: Look at Deadlines At A Glance; the initial proposal deadline
+Writing tips (what reviewers look for):
+- Be clear and specific in defining the problem and proposed solution.
+- Avoid jargon and undefined technical terms; make it understandable to a non-expert.
+- Proofread for grammar and typos.
+- Eligibility: Demonstrate that the project is a fourth-year team design project eligible (design is central; see the section on Projects where project eligibility and CEAB requirements are discussed).
+- If the sponsor provided target deliverables, show where solution design remains open for the team to design/engineer.
+Note: the instructor will not review or comment on project proposals before the official initial submission. please review the provided material to align. We review all proposals after submission in September and provide feedback.
+After the initial submission deadline:
+- Within 2-3 days, Instructor and TAs review proposals.
+- Within a ~week, D2L groups are created for each project, and the Initial feedback is posted on D2L.
+- Teams arrange a kick-off meeting with the TA (see item 2 below).
+
+2) Kick-off Meeting with Your TA
+Who arranges: The TA will initiate, but the team is responsible for scheduling.
+Purpose: meet-and-greet, walk through the proposal, discuss initial feedback, clarify issues, and align on next steps per the course timeline.
+
+3) Final Project Proposal (Excel) -> D2L
+Submit: final version via D2L by the deadline (Excel template).
+Assessment criteria:
+- Clarity
+- Completion of all sections
+- Evidence that you addressed prior feedback in this final submission
+Outcome: marks posted the following week; projects approved/finalized.
+
+4) Team Contracts
+Internal Team Contract
+- Use the provided template and customize it to reflect how your team will work (expectations, roles, consequences for not meeting expectations).
+- Ensure every member signs and the contract matches the time-on-task expectation (~10 hours/week per student).
+Sponsor-Team Contract
+- Use the provided template and complete it and submit by the Team Contracts deadline.
+
+7) Design Roadmap Document (team's working plan)
+Submission: one per team, PDF via D2L only. A grading rubric will be available well before the deadline.
+Purpose:
+- Finalize scope and deliverables.
+- Identify candidate technical solutions/methodologies; state the preferred approach and how you'll implement it.
+- Serve as the living roadmap for the project (designs may evolve later).
+Required sections:
+- Project Identification cover page (see Design Roadmap Document details).
+  Project Identification Cover Page includes the following information:
+    - Project title
+    - Team number
+    - Name, email, UCID of the project manager at the time
+    - Name and UCID for the rest of the team members
+    - Name of the support technician if applicable
+    - Name of the academic advisor
+    - Name of the sponsoring company
+    - Name and email of the sponsor representative
+- Table of Contents
+- Glossary (terms/abbreviations/nomenclature)
+- Short bios of team members (skills and interests)
+- Project Motivation & Objectives (why this project; what problem the end product solves)
+- Project Scope & Deliverables
+    - Define the integrated system and what it will / will not do.
+    - List deliverables (e.g., prototype, code, drawings, manuals, guidelines).
+    - Tag each as must-have / should-have / nice-to-have.
+    - State the change-control rule: after this point, any scope/deliverable changes must be mutually agreed by team and sponsor, and discussed with the advisor and TA (and instructor if needed). Changes must not reduce the expected workload per team member.
+- Preliminary Design of the Proposed Solution
+    - Describe the design you propose to implement; include diagrams, flowcharts, logic/schematics, tables, etc.
+    - Show component interactions and interfaces; provide as much detail as feasible now.
+    - Software projects: include a conceptual architecture diagram, list required features as specified by the sponsor, and outline how you intend to build them.
+- Alternative Solutions/Methodologies
+    - Discuss 2-3 alternative design paths you considered and why your current choice fits best (team skill/time/budget constraints, trade-offs).
+    - Demonstrate a survey of public domain options and justify tool/technique choices.
+    - Citations: include academic papers, industry reports, reputable web releases, and books; avoid unreliable sources. Provide a References section with full citation details.
+- IP and Other Legal Agreements (team-team and team-sponsor, as applicable)
+- Technical Specifications (measurable, in a table; include budget limit). Examples: dimensions, power/voltage, performance, OS/GUI, speed, range.
+- Materials, Tools, Supplies, and Cost Estimates (include a tolerance, e.g., $250 +/- 5%. If no direct costs, state tools/supplies only and justify.)
+- Risks & Risk Mitigation Plans (delivery risks such as delayed data/parts; identify mitigations and owners)
+- Major Technical Tasks & Milestones (table of milestones, tasks, and dates through end of Winter term)
+- Software projects: Agile & sprints
+    You will implement in three sprints:
+    - Sprint 1: From Design Roadmap submission -> Fall Term Progress Evaluation
+    - Sprint 2: From Fall Term Evaluation -> Winter Term Progress Evaluation
+    - Sprint 3: From Winter Term Evaluation -> Final Demo/Presentation
+    For each sprint, define before it starts: goals, exact outcomes, evaluation criteria, specs, tools, cost estimate, and any alternative solution options.
+    At Sprint 1 Review (Fall Evaluation): report the outcomes vs. goals and your Sprint 2 plan (goals, outcomes, criteria, specs/tools/costs, alternatives).
+- Roles & Responsibilities (e.g., RACI/RASCI or equivalent table)
+- Measures of Success & Validation Tests (how you will validate success; planned tests at project end)
+- Team Logbook approach (tools, cadence, who maintains it)
+- Appendix
+- References
+Formatting guidelines:
+- Use the bold titles above for section headings.
+- Times New Roman, 12 pt, 1.5 line spacing, 1" margins.
+
+Must-Haves vs Should-Haves vs Nice-to-Haves
+As you prepare to work on your design roadmap document, it is essential that each project team clearly defines and categorizes their deliverables into three groups: Must-Haves, Should-Haves, and Nice-to-Haves. This categorization serves as a way to set clear expectations for the project's success and progression.
+
+Must-Haves: These are the non-negotiable, minimum requirements that your team needs to deliver in order to successfully complete the course. Without these, the project is considered incomplete or unsuccessful. Think of these as your core deliverables that demonstrate you've met the essential objectives of your project. Teams should prioritize Must-Haves from the beginning and allocate the necessary resources and time to ensure their completion. The quality of these must be solid, and no compromises should be made on their delivery.
+
+Should-Haves: These are important features or deliverables that significantly enhance your project but are not absolutely critical for its completion. While the sponsor and your evaluators would be pleased to see the Should-Haves included, not delivering all of them will not impact your overall success in the course. However, delivering on Should-Haves can demonstrate strong planning, efficient resource management, and advanced problem-solving skills, showing that your team has exceeded basic requirements.
+
+Nice-to-Haves: These are additional, value-adding deliverables that go above and beyond the project's essential scope. Nice-to-Haves are often features or enhancements that superstar teams achieve, reflecting creativity, innovation, and a strong understanding of the problem space. Successfully incorporating Nice-to-Haves is a sign of excellence and can greatly impress sponsors and stakeholders, though they should only be pursued if Must-Haves and Should-Haves have been sufficiently addressed.
+
+Agreement with the Sponsor
+It is crucial that these categories and their contents are mutually agreed upon between your team and your sponsor. Engaging in this conversation early on will help align expectations, prioritize efforts, and manage scope effectively. Ensure you have clear documentation that outlines each category, which will guide both your team and the sponsor throughout the project timeline.
+
+Important Note: Remember that while Must-Haves define the minimum success criteria, the Should-Haves and Nice-to-Haves give you opportunities to differentiate your project. Teams should be strategic and realistic about what they can achieve within the project timeline, but also think ambitiously about how they can exceed expectations.
+
+10) Fall Term Design Review & Progress Evaluation
+Attendance (required): TA, Academic Advisor(s), Sponsor Representative, all team members. If a joint meeting is impossible, schedule separate meetings; the TA must attend all.
+Note: If the sponsor rep or the technical advisor cannot attend in person, it is allowed to set a link so they can join online.
+Who arranges: Project Manager.
+Format & objectives:
+- Book a 1-hour slot. Keep the presentation <= 25 minutes to allow Q&A/discussion.
+- Clarify, explain, and justify design decisions to date.
+- Present the plan to fully execute the project (logistics, schedule, procurement, approvals).
+- Demonstrate implementation progress (e.g., orders placed, due diligence completed, blueprints, tooling/software set up, partial builds).
+- Discuss what's done and what's next (upcoming weeks).
+- Surface challenges (technical and PM) and request guidance.
+Software projects (what to bring):
+- Sprint 1 Review: outcomes vs. defined goals, evaluation of results, and your Sprint 2 plan (goals, outcomes, criteria, specs/tools/costs, alternatives).
+Evaluation logistics:
+- TA brings the evaluation forms (for TA, Advisor, Sponsor rep) and collects them after the session.
+- If any evaluator assigns a grade <= 75%, a follow-up process is triggered. See Process for Following Up on Peer/Evaluator Results.
+
+11) Peer Evaluation I (Fall)
+Conducted via ITP Metrics: https://www.itpmetrics.com
+Competencies assessed:
+- Communicating with team members
+- Foundation of knowledge, skills, and abilities
+- Commitment to the team's work
+- Emphasizing high standards
+- Keeping the team on track
+Rating scale: Outstanding (5), Strong (4), Moderate (3), Bare minimum (2), Unsatisfactory (1)
+Each student receives feedback and an overall numerical average.
+Grade rules:
+- Fall Peer Evaluation is feedback-only (no weight toward final grade).
+- Winter Peer Evaluation carries grade weight; its average numerical score is used directly as the percentage grade for that component.
+Follow-ups:
+- Any student with an average < 4.0 / 5 must complete the follow-up process (see the separate follow-up processes page: Process for following up on the results of the peer evaluations).
+
+Instructor AI Use Disclosure: The winter-term expectations (progress evaluation, public-outreach description, final presentation/demo, design fair, final report, and peer evaluation) are my established course policies. ChatGPT (GPT-5 Thinking) only assisted with organization and language clarity. I verified accuracy and remain responsible for the final document. No confidential student/sponsor data were shared.
+
+Winter Deliverables - All You Need To Know
+This page outlines what you must do/submit in the Winter term, how items are evaluated, and who must attend each session. See Deadlines at a Glance for dates.
+Tip: Include your complete team number on every submission, email subject, and slide deck.
+
+1) Winter Term Progress Evaluation
+Attendance (required): TA, Academic Advisor(s), Sponsor Representative, all team members. If a joint meeting is impossible, schedule separate meetings; the TA must attend all.
+Note: If the sponsor rep or the technical advisor cannot attend in person, it is allowed to set a link so they can join online.
+Who arranges: Project Manager (coordinate a 1-hour slot with the project TA).
+Objectives & expectations:
+- Discuss and evaluate progress toward completion; you are not expected to be fully done.
+- Show serious, tangible progress toward the defined deliverables (teams choose how to showcase).
+- Prepare a concise slide deck to frame the discussion; all members participate in Q&A.
+- Surface both technical and project management challenges and request feedback.
+Software projects, bring:
+- Sprint 2 Review: outcomes versus goals, evaluation of results, and plan to address issues.
+- Sprint 3 Plan: goals, expected outcomes, evaluation criteria, specs, tools, cost estimate, and alternative options.
+Evaluation logistics:
+- The TA, Advisor(s), and Sponsor rep evaluate your progress; forms provided and collected by the TA.
+- If any evaluator assigns a grade < 75%, a follow-up process is required. See Process for following up on the results of the TA/Sponsor/Advisor evaluations.
+
+2) Project Demonstration & Final Presentation
+Attendance (required): TA, Academic Advisor(s), Sponsor Representative, all team members.
+Who arranges: The Project Manager schedules a 60-minute session with the advisor(s), sponsor rep/mentor, and project TA.
+Note: If the sponsor rep or the technical advisor cannot attend in person, it is allowed to set a link so they can join online.
+Time use: Up to 20 minutes for a slide presentation; the rest for demo + Q&A. If it suits your project, you may integrate the demo into the presentation; just state this at the start to the TA.
+What to cover (minimum):
+- Original Product Scope (from Fall term)
+- Original Deliverables (what you promised)
+- Original Technical Specifications (Fall term targets)
+- Project Accomplishments (what you built/delivered)
+    - Final Product Scope
+    - Delivered Items
+    - Final Technical Specifications
+- Measures of Success & Validation Test Results
+- Deviations from original goals and why (design/objectives/deliverables/specs)
+- Team logbook: how it was built and maintained
+- (Optional) Any other information that helps evaluate your engineering design and delivery
+Logistics:
+- You are responsible for all equipment and setup; have everything ready before your slot begins.
+Evaluation logistics:
+- The TA and Advisor/Sponsor rep evaluate your final solution; forms will be available in advance and collected by the TA.
+- If any evaluator assigns a grade <= 75%, a follow-up process is required.
+Software projects, bring:
+- Sprint 3 Review: outcomes versus goals, evaluation of results, and any final remediation plan (before submitting the Final Design Report).
+Dress code: Formal/business casual (no shorts or sandals).
+
+3) Design Fair Poster & Showcasing
+- At least one student must be present at the booth at all times.
+- Poster must include (minimum): motivations; the problem; the solution and results; names of team members; sponsoring company; academic advisor; and the Schulich School of Engineering logo.
+- Format: any layout within the size restrictions set by the School; no specific template is required.
+- Judging: three judges will visit your booth (rubric provided separately).
+- Dress code: Formal/business casual. Present yourselves professionally; industry, media, and the public attend the fair.
+
+4) Final Design Report (team submission via D2L)
+Format: PDF only, one per team.
+Scope: A comprehensive record of your project. Include at least (See details provided in the PDF):
+- Cover Page (same format as other reports)
+- Table of Contents
+- Glossary (clear definitions of terms/abbreviations)
+- Executive Summary (objectives, motivations, accomplishments; readable on its own)
+- Project Motivation & Objectives
+- Methodology & Design (complete description of final methodology and design; include graphs/flowcharts/diagrams/schematics sufficient for replication)
+- Product Scope & Functionality of the final product (what it does/does not do; note/justify deviations from Fall scope)
+- Final Technical Specifications (and justified deviations from Fall specs)
+- Measures of Success & Validation Test Results (why the project is successful; evidence of meeting sponsor expectations)
+- Tools, Materials, Supplies, and Costs (final list and costs; compare to Fall estimates and comment on variances)
+- Reflections
+- Appendix (drawings, supplementary materials)
+- References (if any)
+Formatting: Flexible; choose a clear, professional structure consistent with your Fall documents.
+
+5) Peer Evaluation II (Winter)
+Conducted via ITP Metrics: https://www.itpmetrics.com
+Competencies assessed:
+- Communicating with team members
+- Foundation of knowledge, skills, and abilities
+- Commitment to the team's work
+- Emphasizing high standards
+- Keeping the team on track
+Rating scale: Outstanding (5), Strong (4), Moderate (3), Bare minimum (2), Unsatisfactory (1)
+Grade rules:
+- Winter Peer Evaluation carries grade weight. The average numerical score is used directly as the percentage grade for that component.
+Follow-ups:
+- Any student with an average < 4.0 / 5 must complete the follow-up process (see Process for following up on the results of the peer evaluations).
+
+1) Winter Term Progress Evaluation
+Attendance (required): TA, Academic Advisor(s), Sponsor Representative, all team members. If a joint meeting is impossible, schedule separate meetings; the TA must attend all.
+Note: If the sponsor rep or the technical advisor cannot attend in person, it is allowed to set a link so they can join online.
+Who arranges: Project Manager (coordinate a 1-hour slot with the project TA).
+Objectives & expectations:
+- Discuss and evaluate progress toward completion; you are not expected to be fully done.
+- Show serious, tangible progress toward the defined deliverables (teams choose how to showcase).
+- Prepare a concise slide deck to frame the discussion; all members participate in Q&A.
+- Surface both technical and project management challenges and request feedback.
+Software projects, bring:
+- Sprint 2 Review: outcomes versus goals, evaluation of results, and plan to address issues.
+- Sprint 3 Plan: goals, expected outcomes, evaluation criteria, specs, tools, cost estimate, and alternative options.
+Evaluation logistics:
+- The TA, Advisor(s), and Sponsor rep evaluate your progress; forms provided and collected by the TA.
+- If any evaluator assigns a grade < 75%, a follow-up process is required. See Process for following up on the results of the TA/Sponsor/Advisor evaluations.
+
+2) Project Demonstration & Final Presentation
+Attendance (required): TA, Academic Advisor(s), Sponsor Representative, all team members.
+Who arranges: The Project Manager schedules a 60-minute session with the advisor(s), sponsor rep/mentor, and project TA.
+Note: If the sponsor rep or the technical advisor cannot attend in person, it is allowed to set a link so they can join online.
+Time use: Up to 20 minutes for a slide presentation; the rest for demo + Q&A. If it suits your project, you may integrate the demo into the presentation; just state this at the start to the TA.
+What to cover (minimum):
+- Original Product Scope (from Fall term)
+- Original Deliverables (what you promised)
+- Original Technical Specifications (Fall term targets)
+- Project Accomplishments (what you built/delivered)
+    - Final Product Scope
+    - Delivered Items
+    - Final Technical Specifications
+- Measures of Success & Validation Test Results
+- Deviations from original goals and why (design/objectives/deliverables/specs)
+- Team logbook: how it was built and maintained
+- (Optional) Any other information that helps evaluate your engineering design and delivery
+Logistics:
+- You are responsible for all equipment and setup; have everything ready before your slot begins.
+Evaluation logistics:
+- The TA and Advisor/Sponsor rep evaluate your final solution; forms will be available in advance and collected by the TA.
+- If any evaluator assigns a grade <= 75%, a follow-up process is required.
+Software projects, bring:
+- Sprint 3 Review: outcomes versus goals, evaluation of results, and any final remediation plan (before submitting the Final Design Report).
+Dress code: Formal/business casual (no shorts or sandals).
+
+4) Final Design Report (team submission via D2L)
+Format: PDF only, one per team.
+Scope: A comprehensive record of your project. Include at least (See details provided in the PDF below):
+- Cover Page (same format as other reports)
+- Table of Contents
+- Glossary (clear definitions of terms/abbreviations)
+- Executive Summary (objectives, motivations, accomplishments; readable on its own)
+- Project Motivation & Objectives
+- Methodology & Design (complete description of final methodology and design; include graphs/flowcharts/diagrams/schematics sufficient for replication)
+- Product Scope & Functionality of the final product (what it does/does not do; note/justify deviations from Fall scope)
+- Final Technical Specifications (and justified deviations from Fall specs)
+- Measures of Success & Validation Test Results (why the project is successful; evidence of meeting sponsor expectations)
+- Tools, Materials, Supplies, and Costs (final list and costs; compare to Fall estimates and comment on variances)
+- Reflections
+- Appendix (drawings, supplementary materials)
+- References (if any)
+Formatting: Flexible; choose a clear, professional structure consistent with your Fall documents.
+
+Using Gen AI in ENEL 500
+
+AI Use Disclosure: I, Dr. Hamid Zareipour, used ChatGPT (GPT-5 Thinking) as a writing assistant to brainstorm the structure, draft sections, tighten language, and generate the "appropriate uses" table for this course's AI policy. I provided the high-level requirements and public references (University of Calgary guidance on communicating generative-AI use to students and APEGA practice notices) and then edited, reorganized, and finalized the text. No personal or sponsor-confidential information was shared with AI tools. All claims, requirements, and examples were reviewed by me for accuracy and alignment with institutional and professional expectations. I accept full responsibility for the final content.
+
+Purpose. These guidelines tell you how you may use generative AI (writing, coding, images, data assistance, etc.) in ENEL 500 (ESE Capstone) while meeting academic integrity and professional expectations.
+
+Policy stance (allowed with responsibility). You may use AI tools to assist with your work provided that you:
+- Disclose your use clearly in every deliverable.
+- Own the results: you are fully responsible for the correctness, safety, originality, and fitness of anything you submit.
+- Verify and validate all AI-assisted content (text, designs, code) with appropriate checks and tests.
+- Protect confidentiality and IP: do not upload sponsor-confidential or restricted data to public tools.
+
+1) What kinds of AI use are appropriate?
+Use AI as a copilot, not an author of record. The table below gives typical uses and required safeguards.
+
+Task: Writing (proposals, roadmaps, reports, slides)
+  Common, acceptable AI uses: Brainstorming outlines; rephrasing for clarity/grammar; audience-tuning; formatting; summarizing your own text; generating figure/table scaffolds; checking for tone/conciseness.
+  You must still: Keep technical content yours. Fact-check all claims. Cite real sources you actually read. Add an AI Use Statement at the end of the doc.
+
+Task: Research support
+  Common, acceptable AI uses: Finding keywords, standards, test ideas; generating reading lists to pursue; drafting interview questions.
+  You must still: Do not cite AI as a source. Read and cite primary sources. Verify standards in original documents.
+
+Task: Math & analysis
+  Common, acceptable AI uses: Setting up equations; unit conversions; code to reproduce calcs; sensitivity ideas.
+  You must still: Show derivations and units. Recalculate independently. Spot-check with hand calcs or trusted tools.
+
+Task: Software engineering
+  Common, acceptable AI uses: Boilerplate/templates; test stubs; code reviews; refactoring suggestions; docstrings; explaining errors; generating small utility functions.
+  You must still: Ensure you understand all code. Run tests, static analysis, and security checks. Review licenses; avoid non-permissive code. Add AI Use Statement in repo/README and in reports.
+
+Task: Data work
+  Common, acceptable AI uses: Cleaning suggestions; visualization options; pseudocode for pipelines.
+  You must still: Do not upload restricted data to public tools. Validate outputs statistically; record data lineage.
+
+Task: Visuals
+  Common, acceptable AI uses: Drafting diagrams from your descriptions.
+  You must still: Verify accuracy; prefer tools that export editable vectors.
+
+Not acceptable uses (examples).
+- Submitting AI-generated text, code, or designs without disclosure.
+- Using AI to fabricate citations, results, or meeting notes.
+- Relying on AI outputs without independent verification ("AI said so").
+- Uploading confidential sponsor data, third-party IP, or exam/peer-evaluation prompts to public tools.
+- Bypassing learning outcomes (e.g., asking AI to write your entire design section or produce code you cannot explain).
+
+2) Disclosure: the AI Use Statement (required)
+Add a short AI Use Statement to every major deliverable (proposals, roadmap, reports, slides, etc.) and to your repo README if you have a codbase. Include:
+- Tools & versions (e.g., ChatGPT, Claude, Copilot; version if known), and mode (public web, enterprise, local).
+- What it did (e.g., grammar editing; code suggestions for module X; generated initial outline for Section 3).
+- Data exposure: whether any sponsor or personal data were provided (should be No for public tools); describe anonymization if used.
+- Verification steps: how you checked the outputs (tests, reviews, calculations, standard references).
+Example (document footer):
+AI Use Statement. We used ChatGPT to brainstorm problem statements and to improve clarity in Sections 2 and 5. We used GitHub Copilot for unit-test scaffolds in sensor_service.py. No sponsor-confidential data were shared with AI tools. All specifications, calculations, and code were independently verified by the team via hand checks, unit tests, and review against the vendor datasheet Rev. C.
+Keep an AI log in your team logbook: prompts (or a summary), key outputs, and your verification notes.
+
+3) Verification & validation (you own the results)
+Always apply appropriate engineering checks to AI-assisted work:
+- Text & claims: trace every fact to a verifiable source; read standards/papers you cite; avoid hallucinated references.
+- Calculations: show steps, units, and assumptions; reproduce with an independent method where feasible.
+- Code: compile/run; write unit/integration tests; run linters/static analysis; conduct peer code reviews; scan dependencies.
+- Design: perform requirements traceability, safety/risk analysis, tolerance checks, worst-case considerations; confirm with the advisor/sponsor.
+- Attribution: if AI proposed a non-obvious algorithm, explain it in your own words and justify its selection versus alternatives.
+
+4) Data, confidentiality, and IP
+- Do not paste sponsor-confidential or restricted data/code into public AI tools. Use approved enterprise or offline tools only if data sharing is disabled.
+- Assume prompts/outputs may be stored by providers. Anonymize or synthesize when seeking help.
+- Respect software licenses; do not accept suggestions that insert non-permissive code or content without proper rights.
+- Follow any NDAs and the sponsor's tooling restrictions. When unsure, ask your sponsor rep in writing.
+
+5) Engineering professionalism alignment (why this policy exists)
+These expectations mirror professional practice: you may rely on tools and the work of others only with appropriate oversight, you must be able to take responsibility for the work product, and work products must be authenticated/approved by accountable professionals. In the capstone course, accountability sits with you, reviewed by your advisor/sponsor/TA.
+See what APEGA practice notices on the use of AI by professionals here: https://www.apega.ca/about-apega/publications/standards-guidelines/practice-notices
+See Ucalgary resources here: https://teaching-learning.ucalgary.ca/resources-educators/generative-ai-teaching-and-learning
+
+6) Tool configuration tips (recommended)
+- Prefer enterprise/education versions with data-sharing off.
+- In coding assistants, disable suggestions from public code where possible; review license filters.
+- Use models for what they're good at: drafting, refactoring, tests, not authoritative citations.
+- Save key prompts/outputs to your AI log.
+
+7) Consequences
+Missing disclosure, misrepresentation, or unverified AI-assisted content may be treated as academic misconduct and may affect your grades across deliverables or failing the course.
+
+8) Quick checklist for each deliverable
+- AI used? Yes/No. If yes, add AI Use Statement.
+- Any confidential data entered into AI? Should be No for public tools.
+- Verification done (tests, calcs, sources, reviews)?
+- Citations point to real, read sources.
+- AI log updated.
+
+9) Where to ask questions
+- Process/allowed use: TA -> Instructor.
+- Sponsor data/IP: Sponsor Rep -> TA/Instructor.
+- Technical verification: Academic Advisor.
+
+Guidelines for Students: Handling Team Conflicts and Challenges
+
+Purpose
+Working in a team is one of the core learning outcomes of ENEL 500.
+Differences in communication style, workload balance, and expectations are normal, but how your team handles them determines your success.
+If challenges occur, your Teaching Assistant (TA) is your first point of contact. The goal is to resolve issues professionally and internally before they reach the course instructor.
+
+1) Raising a Concern
+If you feel that:
+- Workload is not being shared fairly,
+- Communication or participation is breaking down, or
+- A conflict is affecting progress or morale,
+then follow these steps:
+- Try to resolve the issue within the team first: talk directly, respectfully, and focus on the work, not the person.
+- If the issue persists or feels too uncomfortable to address alone, contact your TA (privately) and provide a short written summary of the concern (one or two paragraphs).
+- The TA will arrange a meeting with the full team to discuss and resolve the matter.
+
+2) Team Conflict Meeting
+When your TA calls a meeting:
+- Attendance is mandatory for all team members.
+- Meetings are normally held online (e.g., Zoom, Teams) with cameras on.
+- The meeting may be recorded so that an accurate record can be kept.
+- The purpose is to clarify issues, listen to all perspectives, and agree on next steps, not to assign blame.
+During the meeting:
+- Speak respectfully, wait your turn, and listen actively.
+- Focus on facts and behaviors, not personalities.
+- Be honest and specific about challenges.
+- Keep the conversation professional; avoid defensive or emotional language.
+- Collaborate on a realistic plan to move forward.
+
+3) Agreeing on Actions
+By the end of the meeting:
+- The group will identify clear action items: what needs to be done, by whom, and by when.
+- Each action will include:
+    - A short description of the task.
+    - The responsible team member(s).
+    - A deadline or timeframe.
+- Everyone must agree on the plan before the meeting ends.
+Within 48 hours, your TA will email a meeting summary listing:
+- The issues discussed,
+- The agreed actions and responsible members, and
+- The follow-up timeline.
+Each team member must "Reply All" within 24 hours if they have any comments, corrections, or additions.
+If no reply is received, it is assumed that the summary accurately reflects the team's agreement.
+
+4) Follow-Up and Accountability
+- Treat the meeting summary as an action plan.
+- Complete your assigned tasks on time and keep your teammates informed.
+- The TA will check in (typically within a week) to confirm that the agreed actions have been completed and that the situation has improved.
+- If progress is made, the issue is considered resolved.
+- The team should record a short note in the team logbook describing the resolution or process improvement.
+If the conflict continues or new issues emerge:
+- A second meeting will be scheduled that may include the course instructor.
+- Repeated or unresolved issues can affect individual peer evaluations and, in serious cases, course standing.
+
+5) Professional Expectations
+- Be respectful and objective. Keep communication about tasks and solutions.
+- Stay engaged. Non-participation or ignoring messages worsens the situation.
+- Be accountable. Take ownership for missed deadlines or misunderstandings and outline how you'll correct them.
+- Document everything. Keep meeting notes and updates in your team logbook.
+- Use the proper communication path: Team -> Project Manager -> TA -> Instructor.
+
+6) Shared Responsibility and Professional Conduct
+In ENEL 500, teamwork is not optional; it is fundamental.
+Every member shares equal responsibility for maintaining a productive, respectful, and professional team environment.
+When issues arise, it is not one person's problem; it is the team's problem to solve collectively.
+How a team handles conflict directly reflects on all members, not just those involved in the dispute.
+If a team repeatedly fails to address internal issues, or if conflicts lead to missed deadlines, sponsor dissatisfaction, or poor evaluations, the entire team may face consequences, including grade penalties or disciplinary actions.
+
+Key Expectations
+- Conflict is normal. Every professional engineering team encounters differences of opinion, personality, or work style.
+- Breaking the team apart because of disagreements is not acceptable. The expectation is that you will work through issues, not around them.
+- All members must actively participate in resolving conflicts.
+- Avoid silence or indifference; non-participation in conflict resolution is viewed as a lack of professionalism.
+- You are training for real-world engineering practice. In industry, your teammates, clients, or supervisors will not always be your friends or share your communication style.
+- Learning to navigate diverse personalities, expectations, and pressures is a crucial part of professional growth.
+- Focus on solutions, not blame. What matters most is how the team collaborates to move forward productively.
+
+Professional Reality
+In the workplace, you are evaluated not only on your technical skills, but also on your ability to work effectively with others under pressure, uncertainty, and disagreement.
+This course simulates that environment deliberately.
+Your ability to communicate respectfully, remain professional, and contribute to conflict resolution is a core component of your learning experience in ENEL 500.
+
+7) When to Contact the Instructor Directly
+You may bypass the normal process and contact Dr. Zareipour immediately if:
+- There are allegations of harassment, discrimination, or academic misconduct,
+- A teammate has stopped participating entirely and cannot be reached,
+- The conflict involves ethical or sponsor-related concerns, or
+- The situation is affecting your well-being or feels unsafe.
+
+8) Key Takeaways
+- Most issues can be resolved through clear communication and accountability.
+- The TA's role is to help the team rebuild trust and focus on progress, not to assign penalties.
+- Early action prevents escalation; don't wait until evaluations or deadlines to raise concerns.
+- Conflict management is part of your professional training. How you handle these situations will define your effectiveness as an engineer.
+
+On this page, I post the projects that I receive. If you do not have a project yet, please see the instructions below on how to apply for these projects:
+
+How to apply:
+1- Read the project description carefully. Do you like it? Do you find it exciting? Do you think you have the background to contribute to this project? If you answered all of the about questions yes, then you should apply.
+2- Form a team. Talk to your friends, or use the discord server (https://discord.gg/VGdJrsxxVP) that I have created for this course to connect to other students who are interested in this project. Even if you do not have all the necessary team members, you may apply along with a few others and if you get the project, then you can recruit. Do not apply individually though.
+3- Contact the sponsor directly, cc me, put the project name in the subject of your email and ask for a meeting/interview. In your email, say why you think you are the best team for this project and why the sponsor should pick your team. This is basically the same as the cover letter that you would write for a job application except that this is for the team. Think of it as bidding on a project as a "company". Sell your team properly.
+4- Attach a 2-page resume of all team members, one for each, and highlight the relevant experience and courses in the resumes.
+5- Wait to hear from the sponsor.
+6- After receiving approval from the sponsor, email me so I remove the project from the site.
+7- Like any other team, use the provided templates and submit your proposal based on the instructions provided.
+8- It is ok to apply for more than one projects. However, as soon as you have decided which project you will be doing, inform the sponsor so they can consider other teams.

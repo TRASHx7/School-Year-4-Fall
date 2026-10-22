@@ -1,0 +1,199 @@
+ENEL 573 - News Items
+Exported Oct 22, 2026
+Total items: 13
+
+======================================================================
+1. Midterm - Clarification on Formulas
+Posted: Oct 21, 2026, 11:08 AM
+----------------------------------------------------------------------
+Hi everyone,
+
+I would like to clarify a few things regarding the formulas for the upcoming midterm exam.
+
+First, there are not many "complex formulas" in this course that you need to memorize. In particular, for Chapter 2 (Network Analysis), you are not expected to memorize the detailed derivations. Instead, you should understand the key concepts and derivations, and be familiar with the important conclusions, especially the performance analysis results for the M/M/1 queue covered in class. We have introduced the detailed analysis for this type of queueing ONLY.
+
+As a general guideline, please refer to the homework assignments for the level of understanding and familiarity with formulas expected for the midterm. You should be comfortable with the formulas needed to solve problems at a similar level.
+
+As I have mentioned to some students who asked the same question, any "complex formulas" that I consider necessary for the exam will be provided during the exam.
+
+I hope this helps clarify expectations and address any concerns about memorizing formulas.
+
+Thanks,
+John
+
+======================================================================
+2. Midterm Exam Practice
+Posted: Oct 19, 2026, 4:37 PM
+----------------------------------------------------------------------
+Hi all,
+
+I have uploaded a sample midterm exam and some practice questions on D2L under "Midterm_Exam_Practice".
+
+Hope they are useful for your midterm exam preparation.
+
+Cheers,
+John
+
+======================================================================
+3. Project 2 Manual Released
+Posted: Oct 19, 2026, 4:15 PM
+----------------------------------------------------------------------
+Hi all,
+
+Our Project 2 Manual and the associated skeleton coding framework have been posted under "Content->Projects->Project_2". Please carefully read the manual before working on the project. Project 2 is about simulating link-layer packet retransmission.
+
+After your simulation is done, please prepare and submit a Project Report including your codes and your answers to the questions. The project report should be named as "ENEL 573 - Project 2 Report (student name and UCID)". The submission deadline is Nov. 16 at 11:59pm.
+
+Thanks,
+John
+
+======================================================================
+4. [!Important] Midterm Instructions
+Posted: Oct 18, 2026, 10:57 PM
+----------------------------------------------------------------------
+Dear all,
+
+Our ENEL 573 Midterm Exam will be held on Monday, October 26, from 12:00 PM to 12:50 PM (50 minutes) in ENA 101. Please read the following instructions carefully to prepare for the exam:
+
+- The exam will be closed-book. No textbooks or other course materials are allowed.
+- Please bring your UCID student card for identification.
+- The exam will consist of three written-response problems, each possibly containing several subproblems. The problems will cover course materials from Chapters 1-3 (up to the end of Chapter 3.5 Multiple access protocols). The key knowledge points can cover:
+  - Chapter 1: Network Edge, Network Core, Packet/Circuit Switching
+  - Chapter 2: Network Analysis and Queueing Theory
+  - Chapter 3: Error Detection/Correction, Retransmission, MAC Protocols
+
+To prepare, please focus on our course materials, including lecture slides (refer to the textbook when needed) and homework assignments. I will provide a sample midterm exam and some practice questions for your preparation.
+
+Please bring your own pen or ballpoint pen. You may use a university-allowed non-programmable scientific calculator, but no other electronic devices (e.g., mobile phones, tablets, laptops, or other computers) are permitted. Scratch papers will be provided.
+
+Please prepare thoroughly, and don't hesitate to reach out if you have any questions.
+
+Good luck on your midterm exam!
+
+Cheers,
+John
+
+======================================================================
+5. HW1 Evaluation Released
+Posted: Oct 16, 2026, 4:54 PM
+----------------------------------------------------------------------
+Hi all,
+
+The HW1 grades and feedback have been released. Your assignments were graded by the course TAs. If you have any questions, please feel free to reach out to me.
+
+Best,
+John
+
+======================================================================
+6. HW Assignment 3 Posted
+Posted: Oct 16, 2026, 3:57 PM
+----------------------------------------------------------------------
+Hi all,
+
+HW Assignment 3 has been posted on D2L under "Content -> HW_Assignments".
+
+The submission deadline is Oct 26 at 11:59 PM (MST).
+
+Thanks,
+John
+
+======================================================================
+7. Project 1 - Important Clarification on E[N] in Question 2
+Posted: Oct 13, 2026, 8:13 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+I would like to clarify the definition of E[N] in Question 2 of Project 1.
+
+Same as in our lecture slides, E[N] should refer to the expected number of packets in the "entire queueing system", not just the number of packets waiting in the buffer.
+
+There may have been some confusion caused by the wording in the project manual. I have updated the manual to make this description more precise.
+
+For those who have already submitted the project report and need to revise and resubmit, please kindly do so, and we will consider your most recent submission.
+
+Sorry for the confusion and the inconvenience.
+
+Best,
+John
+
+======================================================================
+8. HW Assignment 2 Posted
+Posted: Oct 2, 2026, 6:40 AM
+----------------------------------------------------------------------
+Hi all,
+
+HW Assignment 2 has been posted on D2L under "Content -> HW_Assignments".
+
+The submission deadline is Oct 13 at 11:59 PM (MST).
+
+Thanks,
+John
+
+======================================================================
+9. Tomorrow's Class Cancelled (Oct 2)
+Posted: Oct 1, 2026, 11:23 PM
+----------------------------------------------------------------------
+Hi all,
+
+I unfortunately have to cancel tomorrow's class due to some urgent matters.
+
+The Chapter 3 slides have already been uploaded on D2L. Please take the class time to review the course slides.
+
+Sorry for the inconvenience and appreciate your understanding.
+
+Best,
+John
+
+======================================================================
+10. Project 1 Manual Released
+Posted: Sep 25, 2026, 11:31 PM
+----------------------------------------------------------------------
+Hi all,
+
+Our Project 1 Manual has been posted under "Content->Projects->Project_1". Please carefully read the manual before working on the project. Project 1 is about Queueing Simulation which has two parts: Part I (with one question at the end) and Part II (with two questions at the end).
+
+Please prepare a Project Report after your simulation is done and the report should include your answers to those three questions. The report should be named as "ENEL 573 - Project 1 Report (student name and UCID)". The submission deadline is Oct 16 at 11:59pm.
+
+Thanks,
+John
+
+======================================================================
+11. HW Assignment 1 Posted
+Posted: Sep 18, 2026, 9:15 PM
+----------------------------------------------------------------------
+Hi all,
+
+HW Assignment 1 has been posted on D2L under "Content -> HW_Assignments". The submission folder is also available under "Assessment -> Dropbox -> HW_Assignment_1".
+
+The submission deadline is September 28 at 11:59 PM (MST).
+
+Thanks,
+John
+
+======================================================================
+12. Wednesday's Lecture (Sept 9)
+Posted: Sep 7, 2026, 7:55 AM
+----------------------------------------------------------------------
+Hi all,
+
+As I am away for a conference in US, my TA, Saleha Ahmed, will help cover our Wednesday's lecture (Sept 9). Saleha will teach the lecture content of Chapter 1.4 The way networks work.
+
+Please also be noted that there is no class today due to the Labour Day Holiday.
+
+Thank you,
+John
+
+======================================================================
+13. Welcome to ENEL 573 - Fall 2026 (First class today)
+Posted: Sep 2, 2026, 12:17 AM
+----------------------------------------------------------------------
+Dear Students,
+
+Welcome to ENEL 573! My name is Qiang (John) Ye, and I will be your instructor for this course. I am very pleased to have the opportunity to work with you this semester, and hope we can work well together and have a productive and enjoyable term.
+
+Please note that our first class will be held today (Sept 2) in BI 587 from 12:00PM - 12:50PM.
+
+Looking forward to seeing you tomorrow!
+
+Cheers,
+John

@@ -1,0 +1,920 @@
+Plecs {
+  Name          "buck_open_loop_v2"
+  Version       "5.0"
+  CircuitModel  "ContStateSpace"
+  StartTime     "0.0"
+  TimeSpan      "1.0"
+  Timeout       ""
+  Solver        "auto"
+  MaxStep       "1e-3"
+  InitStep      "-1"
+  FixedStep     "1e-3"
+  Refine        "1"
+  ZCStepSize    "1e-9"
+  RelTol        "1e-3"
+  AbsTol        "-1"
+  TurnOnThreshold "0"
+  NonIdealSwitchResistance "1"
+  SyncFixedStepTasks "2"
+  UseSingleCommonBaseRate "2"
+  LossVariableLimitExceededMsg "3"
+  NegativeSwitchLossMsg "3"
+  DivisionByZeroMsg "3"
+  DatatypeOverflowMsg "3"
+  DatatypeInheritanceConflictMsg "2"
+  ContSampleTimeConflictMsg "2"
+  StiffnessDetectionMsg "2"
+  MaxConsecutiveZCs "1000"
+  AlgebraicLoopWithStateMachineMsg "3"
+  AssertionAction "1"
+  FixedPointDatatypeOverride "1"
+  InitializationCommands "Vmax = 55;\nVmax_scaled = (Vmax+78.4)/47.0588; %2.73"
+"\n\nfsw = 1000;"
+  InitialState  "1"
+  SystemState   ""
+  JacobianComputation "2"
+  TaskingMode   "1"
+  TaskConfigurations ""
+  CodeGenParameterInlining "2"
+  CodeGenInliningExceptions "AAAACwAAAAACAAAAFABkAHUAdAB5ACAAYwB5AGMAbABlAAAAG"
+"ABlAG4AYQBiAGwAZQBzAHcAaQB0AGMAaA=="
+  CodeGenFloatingPointFormat "1"
+  CodeGenAbsTimeUsageMsg "3"
+  CodeGenBaseName ""
+  CodeGenOutputDir ""
+  CodeGenExtraOpts ""
+  CodeGenTarget "TI28P55x"
+  CodeGenTargetSettings "AAAAfwAAAAAbQ29kZUdlblRhcmdldDo6U2V0dGluZ3NNYXAAAAAAB"
+"AAAAA4ARwBlAG4AZQByAGkAYwAAAAUAAAAaAEUAWABUAEUAUgBOAEEATABfAE0ATwBEAEUAAAACAD"
+"AAAAA8AEcARQBOAEUAUgBBAFQARQBfAE8AVQBUAFAAVQBUAF8AQQBOAEQAXwBVAFAARABBAFQARQB"
+"fAEYAQwBOAAAAAgAwAAAASgBVAFMARQBfAEQAQQBUAEEAXwBUAFkAUABFAFMAXwBGAE8AUgBfAFQA"
+"VQBOAEEAQgBMAEUAXwBQAEEAUgBBAE0ARQBUAEUAUgBTAAAAAgAxAAAAOgBVAFMARQBfAEUAWABUA"
+"EUAUgBOAF8ATQBPAEQARQBMAF8ARABBAFQAQQBfAFMAVABSAFUAQwBUAFMAAAACADEAAAA0AFUAUw"
+"BFAF8AUwBUAEEAUgBUAF8AVABJAE0ARQBfAEkATgBfAEkATgBJAFQAXwBGAEMATgAAAAIAMQAAABA"
+"AVABJADIAOABQADUANQB4AAAAWQAAACIAQQBuAFQAcgBpAHAAMQBBAGQAYwBDAGgAYQBuAG4AZQBs"
+"AAAAAgAyAAAAHABBAG4AVAByAGkAcAAxAEEAZABjAFUAbgBpAHQAAAACADIAAAAaAEEAbgBUAHIAa"
+"QBwADEARQBuAGEAYgBsAGUAAAACADEAAAAaAEEAbgBUAHIAaQBwADEAUwBpAGcAbgBhAGwAAAACAD"
+"EAAAAoAEEAbgBUAHIAaQBwADEAVABoAHIAZQBzAGgAbwBsAGQASABpAGcAaAAAABYAVgBtAGEAeAB"
+"fAHMAYwBhAGwAZQBkAAAAJgBBAG4AVAByAGkAcAAxAFQAaAByAGUAcwBoAG8AbABkAEwAbwB3AAAA"
+"AgAwAAAAIgBBAG4AVAByAGkAcAAyAEEAZABjAEMAaABhAG4AbgBlAGwAAAACADAAAAAcAEEAbgBUA"
+"HIAaQBwADIAQQBkAGMAVQBuAGkAdAAAAAIAMQAAABoAQQBuAFQAcgBpAHAAMgBFAG4AYQBiAGwAZQ"
+"AAAAIAMAAAABoAQQBuAFQAcgBpAHAAMgBTAGkAZwBuAGEAbAAAAAIAMQAAACgAQQBuAFQAcgBpAHA"
+"AMgBUAGgAcgBlAHMAaABvAGwAZABIAGkAZwBoAAAAAgAwAAAAJgBBAG4AVAByAGkAcAAyAFQAaABy"
+"AGUAcwBoAG8AbABkAEwAbwB3AAAAAgAwAAAAIgBBAG4AVAByAGkAcAAzAEEAZABjAEMAaABhAG4Ab"
+"gBlAGwAAAACADAAAAAcAEEAbgBUAHIAaQBwADMAQQBkAGMAVQBuAGkAdAAAAAIAMQAAABoAQQBuAF"
+"QAcgBpAHAAMwBFAG4AYQBiAGwAZQAAAAIAMAAAABoAQQBuAFQAcgBpAHAAMwBTAGkAZwBuAGEAbAA"
+"AAAIAMQAAACgAQQBuAFQAcgBpAHAAMwBUAGgAcgBlAHMAaABvAGwAZABIAGkAZwBoAAAAAgAwAAAA"
+"JgBBAG4AVAByAGkAcAAzAFQAaAByAGUAcwBoAG8AbABkAEwAbwB3AAAAAgAwAAAAIgBBAG4AVAByA"
+"GkAcAA0AEEAZABjAEMAaABhAG4AbgBlAGwAAAACADAAAAAcAEEAbgBUAHIAaQBwADQAQQBkAGMAVQ"
+"BuAGkAdAAAAAIAMQAAABoAQQBuAFQAcgBpAHAANABFAG4AYQBiAGwAZQAAAAIAMAAAABoAQQBuAFQ"
+"AcgBpAHAANABTAGkAZwBuAGEAbAAAAAIAMQAAACgAQQBuAFQAcgBpAHAANABUAGgAcgBlAHMAaABv"
+"AGwAZABIAGkAZwBoAAAAAgAwAAAAJgBBAG4AVAByAGkAcAA0AFQAaAByAGUAcwBoAG8AbABkAEwAb"
+"wB3AAAAAgAwAAAAGgBFAFgAVABFAFIATgBBAEwAXwBNAE8ARABFAAAAAgAxAAAANABFAHgAdABlAH"
+"IAbgBhAGwAQwBsAG8AYwBrAEkAcwBTAGkAbgBnAGwAZQBFAG4AZABlAGQAAAACADAAAAAiAEwAaQB"
+"uAGsAZQByAEMAbwBtAG0AYQBuAGQARgBpAGwAZQAAAAAAAAAUAFAAdwBtADEAMABBAEcAcABpAG8A"
+"AAAEADEAOAAAABQAUAB3AG0AMQAwAEIARwBwAGkAbwAAAAQAMQA5AAAAFgBQAHcAbQAxADAARwBwA"
+"GkAbwBFAG4AAAACADAAAAAUAFAAdwBtADEAMQBBAEcAcABpAG8AAAAEADIAMAAAABQAUAB3AG0AMQ"
+"AxAEIARwBwAGkAbwAAAAQAMgAxAAAAFgBQAHcAbQAxADEARwBwAGkAbwBFAG4AAAACADAAAAAUAFA"
+"AdwBtADEAMgBBAEcAcABpAG8AAAAEADIAMgAAABQAUAB3AG0AMQAyAEIARwBwAGkAbwAAAAQAMgAz"
+"AAAAFgBQAHcAbQAxADIARwBwAGkAbwBFAG4AAAACADAAAAASAFAAdwBtADEAQQBHAHAAaQBvAAAAA"
+"gAwAAAAEgBQAHcAbQAxAEIARwBwAGkAbwAAAAIAMQAAABQAUAB3AG0AMQBHAHAAaQBvAEUAbgAAAA"
+"IAMQAAABIAUAB3AG0AMgBBAEcAcABpAG8AAAACADIAAAASAFAAdwBtADIAQgBHAHAAaQBvAAAAAgA"
+"zAAAAFABQAHcAbQAyAEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQAzAEEARwBwAGkAbwAAAAIA"
+"NAAAABIAUAB3AG0AMwBCAEcAcABpAG8AAAACADUAAAAUAFAAdwBtADMARwBwAGkAbwBFAG4AAAACA"
+"DAAAAASAFAAdwBtADQAQQBHAHAAaQBvAAAAAgA2AAAAEgBQAHcAbQA0AEIARwBwAGkAbwAAAAIANw"
+"AAABQAUAB3AG0ANABHAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0ANQBBAEcAcABpAG8AAAACADg"
+"AAAASAFAAdwBtADUAQgBHAHAAaQBvAAAAAgA5AAAAFABQAHcAbQA1AEcAcABpAG8ARQBuAAAAAgAw"
+"AAAAEgBQAHcAbQA2AEEARwBwAGkAbwAAAAQAMQAwAAAAEgBQAHcAbQA2AEIARwBwAGkAbwAAAAQAM"
+"QAxAAAAFABQAHcAbQA2AEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA3AEEARwBwAGkAbwAAAA"
+"QAMQAyAAAAEgBQAHcAbQA3AEIARwBwAGkAbwAAAAQAMQAzAAAAFABQAHcAbQA3AEcAcABpAG8ARQB"
+"uAAAAAgAwAAAAEgBQAHcAbQA4AEEARwBwAGkAbwAAAAQAMQA0AAAAEgBQAHcAbQA4AEIARwBwAGkA"
+"bwAAAAQAMQA1AAAAFABQAHcAbQA4AEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA5AEEARwBwA"
+"GkAbwAAAAQAMQA2AAAAEgBQAHcAbQA5AEIARwBwAGkAbwAAAAQAMQA3AAAAFABQAHcAbQA5AEcAcA"
+"BpAG8ARQBuAAAAAgAwAAAAIABTAGEAbQBwAGwAZQBUAGkAbQBlAFIAZQBsAFQAbwBsAAAABAAxADA"
+"AAAAYAFMAZQByAGkAYQBsAE4AdQBtAGIAZQByAAAAAAAAACoAUwBlAHIAaQBhAGwATgB1AG0AYgBl"
+"AHIAUwBwAGUAYwBpAGYAaQBlAGQAAAACADAAAAAaAFQAQQBSAEcARQBUAF8ARABFAFYASQBDAEUAA"
+"AAUADAAfABDAE8ATQA0AHwAMAB8ADAAAAASAFQAegAxAEUAbgBhAGIAbABlAAAAAgAwAAAADgBUAH"
+"oAMQBHAHAAaQBvAAAAAgAwAAAAEgBUAHoAMgBFAG4AYQBiAGwAZQAAAAIAMAAAAA4AVAB6ADIARwB"
+"wAGkAbwAAAAIAMAAAABIAVAB6ADMARQBuAGEAYgBsAGUAAAACADAAAAAOAFQAegAzAEcAcABpAG8A"
+"AAACADAAAABKAFUAUwBFAF8ARABBAFQAQQBfAFQAWQBQAEUAUwBfAEYATwBSAF8AVABVAE4AQQBCA"
+"EwARQBfAFAAQQBSAEEATQBFAFQARQBSAFMAAAACADEAAAA0AFUAUwBFAF8AUwBUAEEAUgBUAF8AVA"
+"BJAE0ARQBfAEkATgBfAEkATgBJAFQAXwBGAEMATgAAAAIAMAAAAA4AVgByAGUAZgBBAGQAYwAAAAY"
+"AMwAuADMAAAAYAFYAcgBlAGYAQwBvAG0AYgBvAEIAbwB4AAAAAgAxAAAACgBiAG8AYQByAGQAAAAC"
+"ADIAAAAWAGIAdQBpAGwAZABDAG8AbgBmAGkAZwAAAAIAMQAAAAgAYwBoAGkAcAAAAAIAMQAAABIAZ"
+"QB4AHQAQwBsAGsATQBIAHoAAAAEADIANQAAACIAZQB4AHQATQBvAGQAZQBCAHUAZgBmAGUAcgBTAG"
+"kAegBlAAAACAAxADAAMAAwAAAAHABlAHgAdABNAG8AZABlAFMAYwBpAFAAaQBuAHMAAAAOAFsAMgA"
+"4ACwAMgA5AF0AAAAOAGcAZQBuAE8AbgBsAHkAAAACADIAAAAUAGkAbgBzAHQAYQBsAGwARABpAHIA"
+"AAAAAAAAEgBzAHkAcwBDAGwAawBNAEgAegAAAAQANQAwAAAAFgB0AGEAcwBrAEYAcgBlAHEAVABvA"
+"GwAAAACADEAAAAYAHUAbgBpAGYAbABhAHMAaABGAGkAbABlAAAAAAAAABIAdQBzAGUASQBuAHQATw"
+"BzAGMAAAACADEAAAAQAFQASQAyADgAUAA2ADUAeAAAAGsAAAAiAEEAbgBUAHIAaQBwADEAQQBkAGM"
+"AQwBoAGEAbgBuAGUAbAAAAAIAMAAAABwAQQBuAFQAcgBpAHAAMQBBAGQAYwBVAG4AaQB0AAAAAgAx"
+"AAAAGgBBAG4AVAByAGkAcAAxAEUAbgBhAGIAbABlAAAAAgAwAAAAGgBBAG4AVAByAGkAcAAxAFMAa"
+"QBnAG4AYQBsAAAAAgAxAAAAKABBAG4AVAByAGkAcAAxAFQAaAByAGUAcwBoAG8AbABkAEgAaQBnAG"
+"gAAAACADAAAAAmAEEAbgBUAHIAaQBwADEAVABoAHIAZQBzAGgAbwBsAGQATABvAHcAAAACADAAAAA"
+"iAEEAbgBUAHIAaQBwADIAQQBkAGMAQwBoAGEAbgBuAGUAbAAAAAIAMAAAABwAQQBuAFQAcgBpAHAA"
+"MgBBAGQAYwBVAG4AaQB0AAAAAgAxAAAAGgBBAG4AVAByAGkAcAAyAEUAbgBhAGIAbABlAAAAAgAwA"
+"AAAGgBBAG4AVAByAGkAcAAyAFMAaQBnAG4AYQBsAAAAAgAxAAAAKABBAG4AVAByAGkAcAAyAFQAaA"
+"ByAGUAcwBoAG8AbABkAEgAaQBnAGgAAAACADAAAAAmAEEAbgBUAHIAaQBwADIAVABoAHIAZQBzAGg"
+"AbwBsAGQATABvAHcAAAACADAAAAAiAEEAbgBUAHIAaQBwADMAQQBkAGMAQwBoAGEAbgBuAGUAbAAA"
+"AAIAMAAAABwAQQBuAFQAcgBpAHAAMwBBAGQAYwBVAG4AaQB0AAAAAgAxAAAAGgBBAG4AVAByAGkAc"
+"AAzAEUAbgBhAGIAbABlAAAAAgAwAAAAGgBBAG4AVAByAGkAcAAzAFMAaQBnAG4AYQBsAAAAAgAxAA"
+"AAKABBAG4AVAByAGkAcAAzAFQAaAByAGUAcwBoAG8AbABkAEgAaQBnAGgAAAACADAAAAAmAEEAbgB"
+"UAHIAaQBwADMAVABoAHIAZQBzAGgAbwBsAGQATABvAHcAAAACADAAAAAiAEEAbgBUAHIAaQBwADQA"
+"QQBkAGMAQwBoAGEAbgBuAGUAbAAAAAIAMAAAABwAQQBuAFQAcgBpAHAANABBAGQAYwBVAG4AaQB0A"
+"AAAAgAxAAAAGgBBAG4AVAByAGkAcAA0AEUAbgBhAGIAbABlAAAAAgAwAAAAGgBBAG4AVAByAGkAcA"
+"A0AFMAaQBnAG4AYQBsAAAAAgAxAAAAKABBAG4AVAByAGkAcAA0AFQAaAByAGUAcwBoAG8AbABkAEg"
+"AaQBnAGgAAAACADAAAAAmAEEAbgBUAHIAaQBwADQAVABoAHIAZQBzAGgAbwBsAGQATABvAHcAAAAC"
+"ADAAAAAaAEUAWABUAEUAUgBOAEEATABfAE0ATwBEAEUAAAACADIAAAAiAEwAaQBuAGsAZQByAEMAb"
+"wBtAG0AYQBuAGQARgBpAGwAZQAAAAAAAAAUAFAAdwBtADEAMABBAEcAcABpAG8AAAAEADEAOAAAAB"
+"QAUAB3AG0AMQAwAEIARwBwAGkAbwAAAAQAMQA5AAAAFgBQAHcAbQAxADAARwBwAGkAbwBFAG4AAAA"
+"CADAAAAAUAFAAdwBtADEAMQBBAEcAcABpAG8AAAAEADIAMAAAABQAUAB3AG0AMQAxAEIARwBwAGkA"
+"bwAAAAQAMgAxAAAAFgBQAHcAbQAxADEARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtADEAMgBBA"
+"EcAcABpAG8AAAAEADIAMgAAABQAUAB3AG0AMQAyAEIARwBwAGkAbwAAAAQAMgAzAAAAFgBQAHcAbQ"
+"AxADIARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtADEAMwBBAEcAcABpAG8AAAAEADIANAAAABQ"
+"AUAB3AG0AMQAzAEIARwBwAGkAbwAAAAQAMgA1AAAAFgBQAHcAbQAxADMARwBwAGkAbwBFAG4AAAAC"
+"ADAAAAAUAFAAdwBtADEANABBAEcAcABpAG8AAAAEADIANgAAABQAUAB3AG0AMQA0AEIARwBwAGkAb"
+"wAAAAQAMgA3AAAAFgBQAHcAbQAxADQARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtADEANQBBAE"
+"cAcABpAG8AAAAEADIAOAAAABQAUAB3AG0AMQA1AEIARwBwAGkAbwAAAAQAMgA5AAAAFgBQAHcAbQA"
+"xADUARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtADEANgBBAEcAcABpAG8AAAAEADMAMAAAABQA"
+"UAB3AG0AMQA2AEIARwBwAGkAbwAAAAQAMwAxAAAAFgBQAHcAbQAxADYARwBwAGkAbwBFAG4AAAACA"
+"DAAAAAUAFAAdwBtADEANwBBAEcAcABpAG8AAAAEADMAMgAAABQAUAB3AG0AMQA3AEIARwBwAGkAbw"
+"AAAAQAMwAzAAAAFgBQAHcAbQAxADcARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtADEAOABBAEc"
+"AcABpAG8AAAAEADMANAAAABQAUAB3AG0AMQA4AEIARwBwAGkAbwAAAAQAMwA1AAAAFgBQAHcAbQAx"
+"ADgARwBwAGkAbwBFAG4AAAACADAAAAASAFAAdwBtADEAQQBHAHAAaQBvAAAAAgAwAAAAEgBQAHcAb"
+"QAxAEIARwBwAGkAbwAAAAIAMQAAABQAUAB3AG0AMQBHAHAAaQBvAEUAbgAAAAIAMQAAABIAUAB3AG"
+"0AMgBBAEcAcABpAG8AAAACADIAAAASAFAAdwBtADIAQgBHAHAAaQBvAAAAAgAzAAAAFABQAHcAbQA"
+"yAEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQAzAEEARwBwAGkAbwAAAAIANAAAABIAUAB3AG0A"
+"MwBCAEcAcABpAG8AAAACADUAAAAUAFAAdwBtADMARwBwAGkAbwBFAG4AAAACADAAAAASAFAAdwBtA"
+"DQAQQBHAHAAaQBvAAAAAgA2AAAAEgBQAHcAbQA0AEIARwBwAGkAbwAAAAIANwAAABQAUAB3AG0ANA"
+"BHAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0ANQBBAEcAcABpAG8AAAACADgAAAASAFAAdwBtADU"
+"AQgBHAHAAaQBvAAAAAgA5AAAAFABQAHcAbQA1AEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA2"
+"AEEARwBwAGkAbwAAAAQAMQAwAAAAEgBQAHcAbQA2AEIARwBwAGkAbwAAAAQAMQAxAAAAFABQAHcAb"
+"QA2AEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA3AEEARwBwAGkAbwAAAAQAMQAyAAAAEgBQAH"
+"cAbQA3AEIARwBwAGkAbwAAAAQAMQAzAAAAFABQAHcAbQA3AEcAcABpAG8ARQBuAAAAAgAxAAAAEgB"
+"QAHcAbQA4AEEARwBwAGkAbwAAAAQAMQA0AAAAEgBQAHcAbQA4AEIARwBwAGkAbwAAAAQAMQA1AAAA"
+"FABQAHcAbQA4AEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA5AEEARwBwAGkAbwAAAAQAMQA2A"
+"AAAEgBQAHcAbQA5AEIARwBwAGkAbwAAAAQAMQA3AAAAFABQAHcAbQA5AEcAcABpAG8ARQBuAAAAAg"
+"AwAAAAIABTAGEAbQBwAGwAZQBUAGkAbQBlAFIAZQBsAFQAbwBsAAAABAAxADAAAAAYAFMAZQByAGk"
+"AYQBsAE4AdQBtAGIAZQByAAAAAAAAACoAUwBlAHIAaQBhAGwATgB1AG0AYgBlAHIAUwBwAGUAYwBp"
+"AGYAaQBlAGQAAAACADAAAAAaAFQAQQBSAEcARQBUAF8ARABFAFYASQBDAEUAAAAiADUAfABsAG8AY"
+"wBhAGwAaABvAHMAdAB8AC0AMQB8AC0AMQAAABIAVAB6ADEARQBuAGEAYgBsAGUAAAACADAAAAAOAF"
+"QAegAxAEcAcABpAG8AAAACADAAAAASAFQAegAyAEUAbgBhAGIAbABlAAAAAgAwAAAADgBUAHoAMgB"
+"HAHAAaQBvAAAAAgAwAAAAEgBUAHoAMwBFAG4AYQBiAGwAZQAAAAIAMAAAAA4AVAB6ADMARwBwAGkA"
+"bwAAAAIAMAAAAEoAVQBTAEUAXwBEAEEAVABBAF8AVABZAFAARQBTAF8ARgBPAFIAXwBUAFUATgBBA"
+"EIATABFAF8AUABBAFIAQQBNAEUAVABFAFIAUwAAAAIAMQAAADQAVQBTAEUAXwBTAFQAQQBSAFQAXw"
+"BUAEkATQBFAF8ASQBOAF8ASQBOAEkAVABfAEYAQwBOAAAAAgAwAAAADgBWAHIAZQBmAEEAZABjAAA"
+"ABgAzAC4AMAAAABgAVgByAGUAZgBDAG8AbQBiAG8AQgBvAHgAAAACADMAAAAKAGIAbwBhAHIAZAAA"
+"AAIAMgAAABYAYgB1AGkAbABkAEMAbwBuAGYAaQBnAAAAAgAxAAAACABjAGgAaQBwAAAAAgAxAAAAE"
+"gBlAHgAdABDAGwAawBNAEgAegAAAAQAMgA1AAAAIgBlAHgAdABNAG8AZABlAEIAdQBmAGYAZQByAF"
+"MAaQB6AGUAAAAIADEAMAAwADAAAAAcAGUAeAB0AE0AbwBkAGUAUwBjAGkAUABpAG4AcwAAAA4AWwA"
+"0ADMALAA0ADIAXQAAAA4AZwBlAG4ATwBuAGwAeQAAAAIAMgAAABQAaQBuAHMAdABhAGwAbABEAGkA"
+"cgAAAAAAAAAcAGkAbgBzAHQAYQBsAGwARABpAHIAQwBwAHUAMgAAAAAAAAASAHMAeQBzAEMAbABrA"
+"E0ASAB6AAAABgAyADAAMAAAABYAdABhAHMAawBGAHIAZQBxAFQAbwBsAAAAAgAxAAAAGAB1AG4AaQ"
+"BmAGwAYQBzAGgARgBpAGwAZQAAAAAAAAASAHUAcwBlAEkAbgB0AE8AcwBjAAAAAgAxAAAAEABUAEk"
+"AMgA5AEgAOAA1AHgAAABsAAAAIgBBAG4AVAByAGkAcAAxAEEAZABjAEMAaABhAG4AbgBlAGwAAAAC"
+"ADAAAAAcAEEAbgBUAHIAaQBwADEAQQBkAGMAVQBuAGkAdAAAAAIAMQAAABoAQQBuAFQAcgBpAHAAM"
+"QBFAG4AYQBiAGwAZQAAAAIAMAAAABoAQQBuAFQAcgBpAHAAMQBTAGkAZwBuAGEAbAAAAAIAMQAAAC"
+"gAQQBuAFQAcgBpAHAAMQBUAGgAcgBlAHMAaABvAGwAZABIAGkAZwBoAAAAAgAwAAAAJgBBAG4AVAB"
+"yAGkAcAAxAFQAaAByAGUAcwBoAG8AbABkAEwAbwB3AAAAAgAwAAAAIgBBAG4AVAByAGkAcAAyAEEA"
+"ZABjAEMAaABhAG4AbgBlAGwAAAACADAAAAAcAEEAbgBUAHIAaQBwADIAQQBkAGMAVQBuAGkAdAAAA"
+"AIAMQAAABoAQQBuAFQAcgBpAHAAMgBFAG4AYQBiAGwAZQAAAAIAMAAAABoAQQBuAFQAcgBpAHAAMg"
+"BTAGkAZwBuAGEAbAAAAAIAMQAAACgAQQBuAFQAcgBpAHAAMgBUAGgAcgBlAHMAaABvAGwAZABIAGk"
+"AZwBoAAAAAgAwAAAAJgBBAG4AVAByAGkAcAAyAFQAaAByAGUAcwBoAG8AbABkAEwAbwB3AAAAAgAw"
+"AAAAIgBBAG4AVAByAGkAcAAzAEEAZABjAEMAaABhAG4AbgBlAGwAAAACADAAAAAcAEEAbgBUAHIAa"
+"QBwADMAQQBkAGMAVQBuAGkAdAAAAAIAMQAAABoAQQBuAFQAcgBpAHAAMwBFAG4AYQBiAGwAZQAAAA"
+"IAMAAAABoAQQBuAFQAcgBpAHAAMwBTAGkAZwBuAGEAbAAAAAIAMQAAACgAQQBuAFQAcgBpAHAAMwB"
+"UAGgAcgBlAHMAaABvAGwAZABIAGkAZwBoAAAAAgAwAAAAJgBBAG4AVAByAGkAcAAzAFQAaAByAGUA"
+"cwBoAG8AbABkAEwAbwB3AAAAAgAwAAAAIgBBAG4AVAByAGkAcAA0AEEAZABjAEMAaABhAG4AbgBlA"
+"GwAAAACADAAAAAcAEEAbgBUAHIAaQBwADQAQQBkAGMAVQBuAGkAdAAAAAIAMQAAABoAQQBuAFQAcg"
+"BpAHAANABFAG4AYQBiAGwAZQAAAAIAMAAAABoAQQBuAFQAcgBpAHAANABTAGkAZwBuAGEAbAAAAAI"
+"AMQAAACgAQQBuAFQAcgBpAHAANABUAGgAcgBlAHMAaABvAGwAZABIAGkAZwBoAAAAAgAwAAAAJgBB"
+"AG4AVAByAGkAcAA0AFQAaAByAGUAcwBoAG8AbABkAEwAbwB3AAAAAgAwAAAAGgBFAFgAVABFAFIAT"
+"gBBAEwAXwBNAE8ARABFAAAAAgAwAAAANABFAHgAdABlAHIAbgBhAGwAQwBsAG8AYwBrAEkAcwBTAG"
+"kAbgBnAGwAZQBFAG4AZABlAGQAAAACADAAAAAiAEwAaQBuAGsAZQByAEMAbwBtAG0AYQBuAGQARgB"
+"pAGwAZQAAAAAAAAAUAFAAdwBtADEAMABBAEcAcABpAG8AAAAEADEAOAAAABQAUAB3AG0AMQAwAEIA"
+"RwBwAGkAbwAAAAQAMQA5AAAAFgBQAHcAbQAxADAARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtA"
+"DEAMQBBAEcAcABpAG8AAAAEADIAMAAAABQAUAB3AG0AMQAxAEIARwBwAGkAbwAAAAQAMgAxAAAAFg"
+"BQAHcAbQAxADEARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtADEAMgBBAEcAcABpAG8AAAAEADI"
+"AMgAAABQAUAB3AG0AMQAyAEIARwBwAGkAbwAAAAQAMgAzAAAAFgBQAHcAbQAxADIARwBwAGkAbwBF"
+"AG4AAAACADAAAAAUAFAAdwBtADEAMwBBAEcAcABpAG8AAAAEADIANAAAABQAUAB3AG0AMQAzAEIAR"
+"wBwAGkAbwAAAAQAMgA1AAAAFgBQAHcAbQAxADMARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtAD"
+"EANABBAEcAcABpAG8AAAAEADIANgAAABQAUAB3AG0AMQA0AEIARwBwAGkAbwAAAAQAMgA3AAAAFgB"
+"QAHcAbQAxADQARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtADEANQBBAEcAcABpAG8AAAAEADIA"
+"OAAAABQAUAB3AG0AMQA1AEIARwBwAGkAbwAAAAQAMgA5AAAAFgBQAHcAbQAxADUARwBwAGkAbwBFA"
+"G4AAAACADAAAAAUAFAAdwBtADEANgBBAEcAcABpAG8AAAAEADMAMAAAABQAUAB3AG0AMQA2AEIARw"
+"BwAGkAbwAAAAQAMwAxAAAAFgBQAHcAbQAxADYARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtADE"
+"ANwBBAEcAcABpAG8AAAAEADMAMgAAABQAUAB3AG0AMQA3AEIARwBwAGkAbwAAAAQAMwAzAAAAFgBQ"
+"AHcAbQAxADcARwBwAGkAbwBFAG4AAAACADAAAAAUAFAAdwBtADEAOABBAEcAcABpAG8AAAAEADMAN"
+"AAAABQAUAB3AG0AMQA4AEIARwBwAGkAbwAAAAQAMwA1AAAAFgBQAHcAbQAxADgARwBwAGkAbwBFAG"
+"4AAAACADAAAAASAFAAdwBtADEAQQBHAHAAaQBvAAAAAgAwAAAAEgBQAHcAbQAxAEIARwBwAGkAbwA"
+"AAAIAMQAAABQAUAB3AG0AMQBHAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0AMgBBAEcAcABpAG8A"
+"AAACADIAAAASAFAAdwBtADIAQgBHAHAAaQBvAAAAAgAzAAAAFABQAHcAbQAyAEcAcABpAG8ARQBuA"
+"AAAAgAwAAAAEgBQAHcAbQAzAEEARwBwAGkAbwAAAAIANAAAABIAUAB3AG0AMwBCAEcAcABpAG8AAA"
+"ACADUAAAAUAFAAdwBtADMARwBwAGkAbwBFAG4AAAACADAAAAASAFAAdwBtADQAQQBHAHAAaQBvAAA"
+"AAgA2AAAAEgBQAHcAbQA0AEIARwBwAGkAbwAAAAIANwAAABQAUAB3AG0ANABHAHAAaQBvAEUAbgAA"
+"AAIAMAAAABIAUAB3AG0ANQBBAEcAcABpAG8AAAACADgAAAASAFAAdwBtADUAQgBHAHAAaQBvAAAAA"
+"gA5AAAAFABQAHcAbQA1AEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA2AEEARwBwAGkAbwAAAA"
+"QAMQAwAAAAEgBQAHcAbQA2AEIARwBwAGkAbwAAAAQAMQAxAAAAFABQAHcAbQA2AEcAcABpAG8ARQB"
+"uAAAAAgAwAAAAEgBQAHcAbQA3AEEARwBwAGkAbwAAAAQAMQAyAAAAEgBQAHcAbQA3AEIARwBwAGkA"
+"bwAAAAQAMQAzAAAAFABQAHcAbQA3AEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA4AEEARwBwA"
+"GkAbwAAAAQAMQA0AAAAEgBQAHcAbQA4AEIARwBwAGkAbwAAAAQAMQA1AAAAFABQAHcAbQA4AEcAcA"
+"BpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA5AEEARwBwAGkAbwAAAAQAMQA2AAAAEgBQAHcAbQA5AEI"
+"ARwBwAGkAbwAAAAQAMQA3AAAAFABQAHcAbQA5AEcAcABpAG8ARQBuAAAAAgAwAAAAIABTAGEAbQBw"
+"AGwAZQBUAGkAbQBlAFIAZQBsAFQAbwBsAAAABAAxADAAAAAYAFMAZQByAGkAYQBsAE4AdQBtAGIAZ"
+"QByAAAAAAAAACoAUwBlAHIAaQBhAGwATgB1AG0AYgBlAHIAUwBwAGUAYwBpAGYAaQBlAGQAAAACAD"
+"AAAAAaAFQAQQBSAEcARQBUAF8ARABFAFYASQBDAEX/////AAAAEgBUAHoAMQBFAG4AYQBiAGwAZQA"
+"AAAIAMAAAAA4AVAB6ADEARwBwAGkAbwAAAAIAMAAAABIAVAB6ADIARQBuAGEAYgBsAGUAAAACADAA"
+"AAAOAFQAegAyAEcAcABpAG8AAAACADAAAAASAFQAegAzAEUAbgBhAGIAbABlAAAAAgAwAAAADgBUA"
+"HoAMwBHAHAAaQBvAAAAAgAwAAAASgBVAFMARQBfAEQAQQBUAEEAXwBUAFkAUABFAFMAXwBGAE8AUg"
+"BfAFQAVQBOAEEAQgBMAEUAXwBQAEEAUgBBAE0ARQBUAEUAUgBTAAAAAgAxAAAANABVAFMARQBfAFM"
+"AVABBAFIAVABfAFQASQBNAEUAXwBJAE4AXwBJAE4ASQBUAF8ARgBDAE4AAAACADAAAAAOAFYAcgBl"
+"AGYAQQBkAGMAAAAGADMALgAwAAAAGABWAHIAZQBmAEMAbwBtAGIAbwBCAG8AeAAAAAIAMwAAAAoAY"
+"gBvAGEAcgBkAAAAAgAxAAAAFgBiAHUAaQBsAGQAQwBvAG4AZgBpAGcAAAACADEAAAAIAGMAaABpAH"
+"AAAAACADEAAAASAGUAeAB0AEMAbABrAE0ASAB6AAAABAAyADAAAAAiAGUAeAB0AE0AbwBkAGUAQgB"
+"1AGYAZgBlAHIAUwBpAHoAZQAAAAgAMQAwADAAMAAAABwAZQB4AHQATQBvAGQAZQBTAGMAaQBQAGkA"
+"bgBzAAAADgBbADQAMwAsADQAMgBdAAAADgBnAGUAbgBPAG4AbAB5AAAAAgAyAAAAFABpAG4AcwB0A"
+"GEAbABsAEQAaQByAAAAAAAAABwAaQBuAHMAdABhAGwAbABEAGkAcgBDAHAAdQAzAAAAAAAAABIAcw"
+"B5AHMAQwBsAGsATQBIAHoAAAAGADIAMAAwAAAAFgB0AGEAcwBrAEYAcgBlAHEAVABvAGwAAAACADE"
+"AAAAYAHUAbgBpAGYAbABhAHMAaABGAGkAbABlAAAAAAAAABIAdQBzAGUASQBuAHQATwBzAGMAAAAC"
+"ADE="
+  ExtendedMatrixPrecision "1"
+  MatrixSignificanceCheck "2"
+  RemoveUnusedStateSpaceOutputs "2"
+  EnableStateSpaceSplitting "2"
+  DisplayStateSpaceSplitting "1"
+  DiscretizationMethod "2"
+  ExternalModeSettings "AAAAfwAAAAAYQ29kZUdlblRhcmdldDo6U2V0dGluZ3MAAAAABwAAAB"
+"QARABlAGMAaQBtAGEAdABpAG8AbgAAAAIAMQAAABQATgB1AG0AUwBhAG0AcABsAGUAcwAAAAgAOAA"
+"xADkAMgAAABYAUgBlAGYAcgBlAHMAaABSAGEAdABlAAAABAAyADAAAAAWAFMAZQBuAHMAaQB0AGkA"
+"dgBpAHQAeQAAAAIAMAAAABwAVAByAGkAZwBnAGUAcgBDAGgAYQBuAG4AZQBsAAAABAAtADEAAAAYA"
+"FQAcgBpAGcAZwBlAHIARABlAGwAYQB5AAAAAgAwAAAAGABUAHIAaQBnAGcAZQByAFYAYQBsAHUAZQ"
+"AAAAIAMA=="
+  AlgebraicLoopMethod "1"
+  AlgebraicLoopTolerance "1e-6"
+  ScriptsDialogGeometry ""
+  ScriptsDialogSplitterPos "0"
+  MixedSignalSolverBypassOperatingPoint "1"
+  MixedSignalSolverInitialConditions "2"
+  MixedSignalSolverMaxNewtonIterations "25"
+  MixedSignalSolverNumThreads "-1"
+  OperatingPointMaxNewtonIterations "50"
+  OperatingPointRelativeNewtonTolerance "1e-3"
+  OperatingPointAbsoluteNewtonTolerance "1e-12"
+  OperatingPointNodalVoltageNewtonTolerance "1e-6"
+  SpiceTemperature "27"
+  SpiceGMin     "0"
+  SpiceInductorRPar "0"
+  SpiceInductorRSer "0"
+  SpiceCapacitorGPar "0"
+  SpiceCapacitorRSer "0"
+  NetlistParserDetails "2"
+  InvalidNetlistFunctionEvaluationMsg "1"
+  IncompatibleInitialConditionMsg "2"
+  Terminal {
+    Type          Output
+    Index         "1"
+  }
+  Terminal {
+    Type          Input
+    Index         "1"
+  }
+  Terminal {
+    Type          Output
+    Index         "1"
+  }
+  Schematic {
+    Location      [0, 123; 1536, 873]
+    ZoomFactor    1.96256
+    SliderPosition [0, 0]
+    ShowBrowser   off
+    BrowserWidth  158
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/PWM"
+      Name          "PWM"
+      Show          on
+      Position      [240, 205]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-30, -50; 30, 50]
+      Parameter {
+        Variable      "PwmUnit"
+        Value         "[1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "CarrierType"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CarrierFreq"
+        Value         "fsw"
+        Show          off
+      }
+      Parameter {
+        Variable      "CarrierFreqTol"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Phase"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "OutMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "VariableDeadTime"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "FixedDeadTime"
+        Value         "5e-6"
+        Show          off
+      }
+      Parameter {
+        Variable      "MinDeadTime"
+        Value         "1e-6"
+        Show          off
+      }
+      Parameter {
+        Variable      "Polarity"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Sequence"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SequenceAq"
+        Value         "[0]"
+        Show          off
+      }
+      Parameter {
+        Variable      "ShowEnable"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighResDutyMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighResPrdMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighResDeadTimeMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CmpShadowMode"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "RedShadowMode"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "FedShadowMode"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "AllowProtection"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SyncSrc"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SyncOut"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "PeripheralSyncMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "AdcTriggerMode"
+        Value         "4"
+        Show          off
+      }
+      Parameter {
+        Variable      "AdcTriggerDivider"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "TaskTriggerMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TaskTriggerDivider"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "OfflinePwmTclkOrigin"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "OfflinePwmTclk"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "tz1mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "tz2mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "tz3mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         "1"
+        Show          off
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, 0]
+        Direction     left
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, 20]
+        Direction     right
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, -20]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -20]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -30]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, 30]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -10]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, 5]
+        Direction     left
+      }
+      Terminal {
+        Type          EventInput
+        Position      [0, -50]
+        Direction     up
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -20]
+        Direction     left
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, -35]
+        Direction     right
+      }
+    }
+    Component {
+      Type          Constant
+      Name          "duty cycle"
+      Show          on
+      Position      [90, 205]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "0.2"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "8"
+        Show          off
+      }
+    }
+    Component {
+      Type          Constant
+      Name          "disable"
+      Show          on
+      Position      [90, 100]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "10"
+        Show          off
+      }
+    }
+    Component {
+      Type          ManualSignalSwitch
+      Name          "enableswitch"
+      Show          on
+      Position      [140, 85]
+      Direction     right
+      Flipped       off
+      LabelPosition north
+      Parameter {
+        Variable      "SwitchState"
+        Value         "1"
+        Show          off
+      }
+    }
+    Component {
+      Type          Constant
+      Name          "enable"
+      Show          on
+      Position      [90, 65]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "10"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/Load"
+      Name          "Load"
+      Show          on
+      Position      [440, 95]
+      Direction     up
+      Flipped       off
+      LabelPosition north
+      Frame         [-25, -20; 25, 20]
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         ""
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [29, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Output
+        Position      [29, 10]
+        Direction     right
+      }
+    }
+    Component {
+      Type          Display
+      Name          "%"
+      Show          on
+      Position      [505, 95]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-21, -11; 21, 11]
+      Parameter {
+        Variable      "Notation"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Precision"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/ADC"
+      Name          "ADC"
+      Show          on
+      Position      [335, 230]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-25, -25; 25, 25]
+      Parameter {
+        Variable      "TrigSrc"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "SigMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "AdcUnit"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "Input"
+        Value         "[2]"
+        Show          off
+      }
+      Parameter {
+        Variable      "Scale"
+        Value         "[47.0588]"
+        Show          off
+      }
+      Parameter {
+        Variable      "Offset"
+        Value         "[-78.4]"
+        Show          off
+      }
+      Parameter {
+        Variable      "AcqTimeSel"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "AcqTime"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "BitRes"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "VoltageRef"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         "1"
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [29, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [29, 15]
+        Direction     right
+      }
+      Terminal {
+        Type          EventInput
+        Position      [0, -25]
+        Direction     up
+      }
+    }
+    Component {
+      Type          Scope
+      Name          "Scope"
+      Show          on
+      Position      [415, 230]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-15, -15; 15, 15]
+      Location      [0, 24; 1536, 805]
+      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
+"G0AQQByAGUAYQAAAAAA/////wAAADAA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGIA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABiAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABEAP///wAABgAAAALuAAAA"
+"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
+"AAAAA=="
+      SavedViews    "AAAAAgAAAAA="
+      HeaderState   "{\"DefaultSecSize\":0,\"FirstSecSize\":115,\"Labels\":[],"
+"\"VisualIdxs\":[]}"
+      PlotPalettes  "AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      Axes          "1"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    "Time / s"
+      ShowLegend    "1"
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis       on
+        AxisLabel         "Frequency / Hz"
+        Scaling           0
+        PhaseDisplay      0
+        ShowFourierLegend off
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/Powerstage Protection"
+      Name          "Powerstage Protection"
+      Show          on
+      Position      [240, 85]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-45, -25; 45, 25]
+      Parameter {
+        Variable      "EnableSignal"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "EnableSignalPolarity"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "EnableSignalGpio"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "PwmSafeState"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripZone1Mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripZone2Mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripZone3Mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripSigAMode"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripSigBMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripSigCMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SimInterlock"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         "2"
+        Show          off
+      }
+      Terminal {
+        Type          Input
+        Position      [-45, 0]
+        Direction     left
+      }
+      Terminal {
+        Type          Output
+        Position      [49, 0]
+        Direction     right
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "duty cycle"
+      SrcTerminal   1
+      DstComponent  "PWM"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "enableswitch"
+      SrcTerminal   1
+      DstComponent  "Powerstage Protection"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "disable"
+      SrcTerminal   1
+      Points        [110, 100]
+      DstComponent  "enableswitch"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "enable"
+      SrcTerminal   1
+      Points        [110, 65]
+      DstComponent  "enableswitch"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Load"
+      SrcTerminal   1
+      DstComponent  "%"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Event
+      SrcComponent  "PWM"
+      SrcTerminal   3
+      Points        [335, 185]
+      DstComponent  "ADC"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "ADC"
+      SrcTerminal   1
+      DstComponent  "Scope"
+      DstTerminal   1
+    }
+  }
+}

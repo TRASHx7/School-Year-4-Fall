@@ -1,0 +1,64 @@
+%Math Stuff
+\usepackage{amsmath} % many display options for math modes and such (VERY IMPORTANT)
+\usepackage{physics} % useful math symbols and macros (VERY IMPORTANT)
+\usepackage{amssymb} % heck ton of math symbols and fonts (VERY IMPORTANT)
+\usepackage{amsfonts} % Additional fonts, math symbols, and options for existing fonts (IMPORTANT)
+\usepackage{mathtools} % lots of cool mathtools oh wait that is the name (IMPORTANT)
+\usepackage{siunitx} % allows you to quickly define units within math mode (IMPORTANT)
+\usepackage{array} % allows you to write piece-wise functions, matrices, and other cool things (IMPORTANT)
+\usepackage{txfonts} % defines times new roman as default text font and provides supporting math symbols
+\usepackage{braket} % allows the use of detailed Dirac braket notation
+\usepackage{cancel} % used to cancel terms (with X or diagonal line) while writing math (useful for assignments)
+\usepackage{ulem} % underlines, typewriter font (for comp sci somewhat), and striking out (required for cancel package)
+%\usepackage{halloweenmath} % spooky
+\usepackage{empheq} %Extension of amsmath for boxing equations or answers
+
+
+%Formatting Stuff
+\usepackage[utf8]{inputenc} % the typesetting rules
+\usepackage[left = 22mm, right = 22mm]{geometry} % flexible and easy interface to change page dimensions
+\usepackage{graphicx} % provides additional options for figures
+\usepackage{float} % allows you to tell latex no really I want the figure HERE (with H)
+\usepackage{color} % provides coloring capabilities to everything
+\usepackage{fancyhdr} % making fancy headers (obviously)
+\usepackage{changepage} % allows to change page formatting in the middle of a document (rather than the same throughout) 
+\usepackage{enumitem} % better control over enumerate and itemize
+\usepackage[labelfont=bf]{caption} % altering options for captions
+\usepackage{sidecap} % allows sideways captions for figures and tables
+\usepackage{soul,xcolor} % can enhance striking, underlining, and highlighting (in non-math mode)
+
+
+%Stuff for Tables
+\usepackage{booktabs} % allows weird lines within tables
+\usepackage{multirow}
+\usepackage{multicol} % allows for multiple columns and rows that collapse into single columns
+\usepackage{longtable} % allows a table to run over multiple pages
+\usepackage{colortbl} % colourful tables!
+
+%Stuff for Citing
+%\usepackage{apacite} % helps you apa cite
+%\usepackage[numbers]{natbib} % implements both author-year and numbered references
+\usepackage{url} % allows options for url links
+\usepackage[colorlinks, citecolor = black, urlcolor = black, linkcolor = black]{hyperref} %references (citation) options and hyperlink integration
+
+
+%Chemistry Stuff
+\usepackage[version=4]{mhchem} % write chemical equations within math mode
+\usepackage{chemfig} % draw simple and complex chemical structures in latex
+
+%Elijah Adams Created Commands
+\newcommand{\Q}{\mathbb{Q}} %Mathematical sets
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}} 
+\newcommand{\Curl}{\vec{\nabla}\times} % Good looking curl and div and laplace (because physics package ones look like shit)
+\newcommand{\Div}{\vec{\nabla}\cdot}
+\newcommand{\laplace}{\vec{\nabla}^2}
+\newcommand{\yas}{\frac{1}{4\pi\epsilon_0}} % Useful for E&M stuff
+\newcommand{\mas}{\frac{\mu_0}{4\pi}}
+\newcommand{\ppdv}[2]{\frac{\partial^2 #1}{\partial #2^2}} % Twice partial derivatives
+
+\setlength{\parindent}{4mm}
+\definecolor{purple}{rgb}{0.84,0.71,0.85} % defining a colour for later, each rgb value is a ratio of r/255, g/255 and b/255 because 255 is the maximum value of rgb numbers
+\newcolumntype{d}{>{\columncolor{purple}}c} 
+

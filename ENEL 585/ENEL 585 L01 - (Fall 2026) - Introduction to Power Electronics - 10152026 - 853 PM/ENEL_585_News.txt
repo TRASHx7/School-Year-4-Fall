@@ -1,0 +1,488 @@
+ENEL 585 - News Items
+Exported Oct 22, 2026
+Total items: 23
+
+======================================================================
+1. Typhoon HIL Farm Follow-up
+Posted: Oct 21, 2026, 8:42 PM
+----------------------------------------------------------------------
+Hi all,
+
+The launchpads are now connected to all the Typhoon HIL units. These should be accessible remotely.
+
+Thanks,
+
+Phil
+
+======================================================================
+2. Final project: design review moved to Bench 2, and a streamlined handout
+Posted: Oct 21, 2026, 9:05 AM
+----------------------------------------------------------------------
+Hi everyone,
+
+As we are still working through the Topic 11 material for the course and that the project proposals were solid, I've decided to move back the date for the design review. It'll be moved from Bench 1 to the start of Bench 2.
+
+Section | Was (course outline) | Now
+B01     | Bench 1, Oct 30      | Start of Bench 2, Fri Nov 20
+B02     | Bench 1, Nov 6       | Start of Bench 2, Fri Nov 27
+
+This gives you time to finish your control design after the relevant lectures. Bench 1 is now for wiring and verifying your station, checking your startup and shutdown procedure, checking your probes and gating, and initial open loop experiments.
+
+If your group is ready early, you may still take the review at Bench 1. Email me at least three days before your Bench 1 session (by Oct 27 for B01, Nov 3 for B02). The early review is your one graded review, with no second attempt at Bench 2.
+
+I'll go over the design review in lecture on Thursday (Oct 22).
+
+Streamlined common handout. I've also posted an updated, shorter common handout (v21) on D2L. Section 1 summarizes each deliverable in one table, Section 2 gives one goal per bench session, and Appendix B explains what the design review covers and how it is marked. Please read it with your station sheet before Bench 1.
+
+Thanks,
+
+Phil
+
+======================================================================
+3. Typhoon HIL Remote Farm Now Available
+Posted: Oct 20, 2026, 9:23 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+The Typhoon remote farm is now running. You can use it to access the HIL lab PCs from off campus.
+
+How to connect
+
+- Go to https://labstats.ucalgary.ca/schulich.html
+- Read the instructions at the top of the page carefully and follow them.
+- Scroll down to the list of computers and click an available one to get its connection steps. In short, you log in at securelabs.ucalgary.ca, click RDP, enter that computer's address, and open the .rdp file that downloads.
+- Log in with your UCalgary username and password.
+
+Software on the remote computers
+
+- Typhoon HIL Control Center is already installed, since these are the same lab PCs you used in the Orientation Lab.
+- PLECS is not preinstalled, but you can install it yourself without admin rights. PLECS licenses are tied to a specific computer, so the license on your personal PC won't work on a lab PC. Request a new license from Plexim using the student license information on D2L (the same information you used for your personal PC). Your install and license will only work on that one machine, so note which computer it is and use it again when you can.
+
+LaunchPads
+
+The LaunchPads are not connected to the HIL units yet. We'll add them by Thursday. I'll post a follow-up once the LaunchPads are connected.
+
+Please note
+
+- There are 8 computers in the farm. A computer disappears from the list while someone is connected to it. If none are listed, all of them are in use, so please try again later.
+- When you're finished, sign out. Closing the Remote Desktop window does not free up the computer. To logout, enter Ctrl+Alt+End inside the remote session and then log off. A computer only goes back on the list after you sign out, so if you forget, it stays unavailable to your classmates.
+- Since there are only 8 machines, please don't stay connected while you aren't actively working. Expect them to be busier in the days before the project bench sessions, so plan your remote time around that.
+
+If you have trouble connecting, post in the discussion forum or contact Mohammad Islam.
+
+Thanks,
+Phil
+
+======================================================================
+4. Tutorial #3 Problems
+Posted: Oct 19, 2026, 4:29 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+On Tuesday, October 20th, I will go through the solutions to the following practice problems during the tutorial:
+
+- Kassakian 3.16: A square-wave source and leakage inductance
+- Kassakian 4.4/4.5: Half-wave phase control: diode or thyristor freewheeling
+- Kassakian 3.10: Centre-tapped rectifier with commutation inductance (if time permits)
+
+Please try to take a look at these questions before the tutorial.
+
+See you all then,
+
+JT
+
+======================================================================
+5. Quiz 1 - Regrade Requests (Deadline: Friday, October 23)
+Posted: Oct 16, 2026, 12:25 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+Quiz 1 was marked by our TA, Xuan Phuc Luong. If you think part of your quiz was graded incorrectly, you can ask for a regrade by emailing Phuc directly at phuc.luong@ucalgary.ca.
+
+So your request can be reviewed quickly, please:
+
+- Use the subject line "ENEL 585 Quiz 1 Regrade - [Your Name], [UCID]"
+- Name the specific question and part you want reviewed (e.g., Q2(b))
+- Briefly explain why you think the marking should be reconsidered
+- Attach a clear photo or scan of the relevant page(s)
+
+Only the parts you list will be reviewed, so please be specific.
+
+Deadline: This announcement is going out later than planned, so you have one week. Please send all regrade requests by Friday, October 23, 2026. Requests after this date won't be considered.
+
+Haven't picked up your quiz? I'll bring the remaining Quiz 1 papers to lecture one more time on Tuesday, October 20. Please collect yours then.
+
+Thanks,
+Phil
+
+======================================================================
+6. Industry Talk: Thursday Oct 22, ENG 207
+Posted: Oct 15, 2026, 3:49 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+The CIGRE Canada NGN chapter at UCalgary is hosting an industry talk next Thursday evening with an engineer from WSP Canada. All the details and the registration QR code are in the flyer:
+
+It seems like a good chance to hear from a practicing engineer in the power sector. Pizza is provided.
+
+Phil
+
+======================================================================
+7. Lab 3 (Diode Rectifiers): handout posted
+Posted: Oct 14, 2026, 11:00 AM
+----------------------------------------------------------------------
+Hi all,
+
+The Lab 3 handout is on D2L. Apologies for posting it so close to the first session: the lab has changed significantly from last year's version.
+
+Reminder of your session:
+
+- B01: this Thursday, Oct. 16
+- B02: next Thursday, Oct. 23
+
+B01 has a short turnaround, so we've kept the pre-lab small: four short questions that apply results straight from the rectifier lectures, with no new derivations. The 10-minute closed-book quiz at the start of your session is drawn directly from them.
+
+Before you come, read the whole handout, especially the Safety Notes and the Experiment questions, so you know what to measure.
+
+======================================================================
+8. Quiz 1 Marks
+Posted: Oct 9, 2026, 12:29 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+Quiz 1 has been marked. The paper was too long for the 50 minutes: most of you did not have time to finish, and that is a fault in the quiz, not in your preparation.
+
+To correct for this, Quiz 1 will be marked out of 19 instead of 23. Your raw mark stays the same and only the total changes, so everyone's percentage goes up by the same factor. For example, 12/23 (52%) becomes 12/19 (63%). If your mark is above 19, you keep it, so your Quiz 1 grade will be over 100%. With this change the class average is 61.2%.
+
+Quiz 2 on Tuesday is shorter than Quiz 1. It is marked out of 11, with 2 bonus marks available on top of that.
+
+I will have the quizzes with me at the next lecture, so you can pick yours up there. If you have questions about your marking, please reach out to the TA (Phuc Luong) after you have picked up your paper.
+
+Phil
+
+======================================================================
+9. Tutorial #2 Problems
+Posted: Oct 4, 2026, 2:27 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+On Tuesday, October 6, I will go through the solutions to the following practice problems during the tutorial:
+
+- A3: Distorted current from a sinusoidal source
+- Kassakian 8.4: Removing a harmonic with phase-shift control
+- C1: Following the power to the DC side
+- D1: Which quadrants?
+
+Please take a look at these questions before the tutorial. I will have some PLECS models made to expand on the answers.
+
+See you all then,
+
+JT
+
+======================================================================
+10. Quiz 2 (Tuesday, October 13): scope, aids and how to prepare
+Posted: Oct 3, 2026, 12:29 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+Quiz 2 is on Tuesday, October 13 at 10 AM in SB 146. It runs 50 minutes and is worth 10 % of your grade.
+
+Scope
+
+- Lecture 6, AC fundamentals: phasors, solving a circuit one frequency at a time, real and reactive power, rms of a waveform with harmonics, and THD.
+- Lecture 7, single-phase inverters: the H-bridge and its switch states, square-wave operation, phase-shift control, bipolar and unipolar sinusoidal PWM, and where their harmonics sit.
+- Topic 8, power balance and the dc link: power balance between the ac and dc sides of an inverter, and what the dc-link capacitor does.
+- Topic 9, power semiconductor devices: which current directions and voltage polarities each device handles.
+- Lab 2: the single-phase H-bridge inverter experiments.
+
+I've decided not to include rectifiers on this quiz. We only started them at the end of the October 1 lecture; they will be covered in a later quiz.
+
+Permitted aids
+
+- A non-programmable calculator.
+- One double-sided, letter-size cheat sheet. It can be handwritten or printed, and you may copy anything onto it, including material from the lecture slides.
+
+As a reminder, smart glasses are not permitted. If your only glasses are smart glasses, you may wear them, but we will provide tape, and you must use it to cover all camera lenses before the quiz starts.
+
+No formulas are provided on the quiz. Anything you want to have in front of you must be on your cheat sheet. You do not need to copy the PWM harmonic table onto your sheet; it will be provided if needed.
+
+What to expect
+
+As in Quiz 1, the questions test reasoning, not formula lookup: expect to apply the ideas to circuits and operating points you have not seen before.
+
+Show your working for every part. A correct final number with no working shown earns at most half the marks for that part.
+
+How to prepare
+
+- Work the Topics 6 to 9 problems in the new problems.html file posted on D2L. Download it and open it in your browser, then click the Quiz 2 filter button to show only the problems for this quiz. There are 12: start with the 9 marked core, which is enough to prepare for the quiz; the 3 stretch problems are there if you want more. Each has a final answer you can open after trying it.
+- Revisit your Lab 2 results (Section B02 will have to wait for this).
+
+Lab 2 prelab quiz (Section B02)
+
+There will be no prelab quiz for Lab 2 in Section B02. The prelab quiz had to be cancelled for B01, so to treat both sections the same, I am cancelling it for B02 as well. The prelab marks will be moved to the Lab 2 report. There will be a prelab quiz for Lab 3 in both sections.
+
+Phil
+
+======================================================================
+11. ENEL 585 Lab 2 reminder: B01 tomorrow, B02 next Friday Body:
+Posted: Oct 1, 2026, 9:45 PM
+----------------------------------------------------------------------
+Hello everyone,
+
+This is a reminder about Lab 2:
+
+- Section B01: Lab 2 is tomorrow, Friday, October 2.
+- Section B02: Lab 2 is next Friday, October 9.
+
+Please complete the pre-lab and bring anything you need for the lab to your session. As with Lab 1, the quiz will start at 8 AM sharp to maximize your time for the lab.
+
+Thanks,
+Phil
+
+======================================================================
+12. Final project documents updated: proposal expectations, group registration and dropbox
+Posted: Oct 1, 2026, 10:11 AM
+----------------------------------------------------------------------
+Hi everyone,
+
+I've updated the final project documents on D2L (all changes have been highlighted in yellow):
+
+- Common Handout (Rev2)
+- Project Sheets (Rev2)
+
+The main change is a clearer description of what the project proposal should contain. It is due Friday, October 9 at 23:59. Section 3 of the handout now lists each part of the proposal and explains what is expected. That covers the operating envelope, operating points and margins, steady-state targets, a preliminary switching frequency, sensing and protection, the connection diagram, the safety plan, the work plan and the AI disclosure. A few points to note:
+
+- No controller design is needed in the proposal. We haven't covered control yet. Dynamic targets and compensator design come later, at the design review.
+- Targets that depend on your controller (for example, THD or power factor for C and D) should come from a cited standard, application note or published design, with a short justification. You may revise targets later with justification and without penalty.
+- Simulation is encouraged but not required for the proposal. HIL plant models will be provided for all projects. C to E will also receive an example PLECS model of the synchronization (PLL) block.
+- Project A: the control-design part of your design review moves to the start of Bench 2, in both sections.
+
+Group registration: you can now register your group on D2L. Groups are up to four students from the same lab section.
+
+Proposal dropbox: a group dropbox for the proposal is now available. Submit one PDF per group, naming all members and your project.
+
+Thanks,
+
+Phil
+
+======================================================================
+13. Quiz 1 (Tuesday, September 29): scope, aids and how to prepare
+Posted: Sep 25, 2026, 11:59 AM
+----------------------------------------------------------------------
+Hi everyone,
+
+Quiz 1 is on Tuesday, September 29 at 10 AM in SB 146. It runs 50 minutes and is worth 10% of your grade.
+
+Scope:
+
+- DC-DC converters from Lectures 2 to 5: the buck, boost, and buck-boost converters, and the flyback converter.
+- Inductor volt-second balance, capacitor charge balance, and the small-ripple approximation.
+- Inductor current and voltage waveforms, current ripple, and output voltage ripple.
+- Continuous and discontinuous conduction (CCM and DCM), the boundary between them, and synchronous versus diode rectification.
+- Switch voltage and current stresses.
+- The flyback converter modelled as a magnetizing inductance plus an ideal transformer.
+- Lab 1: the open-loop buck and closed-loop boost experiments.
+
+Magnetics (core sizing, flux, leakage inductance, open- and short-circuit tests) and AC fundamentals are not on this quiz. They will be covered in a later quiz.
+
+Permitted aids
+
+- A non-programmable calculator.
+- One double-sided, letter-size cheat sheet. It can be handwritten or printed, and you may copy anything onto it, including material from the lecture slides.
+
+No formulas are provided on the quiz. Anything you want to have in front of you must be on your cheat sheet.
+
+Smart glasses are not permitted. If your only glasses are smart glasses, you may wear them, but we will provide tape, and you must use it to cover all camera lenses before the quiz starts.
+
+What to expect
+
+The quiz is not a formula-lookup exercise, so a well-filled cheat sheet on its own will not carry you. The questions ask you to:
+
+- interpret measured waveforms like the ones you captured in Lab 1;
+- apply volt-second and charge balance to circuits, including ones you have not seen before;
+- decide which operating mode a converter is in, and which assumption breaks when conditions change;
+- justify design choices briefly.
+
+Show your working for every part. That means writing down how you got each answer: which interval or circuit you analysed, the equation you set up, or what you read from a waveform. A correct final number with no working shown earns at most half the marks for that part.
+
+How to prepare
+
+- Work through the assigned problems for Lectures 2 to 5 on D2L, starting from the balance principles rather than a formula.
+- Revisit your Lab 1 results. For each waveform you captured, make sure you can explain what the converter was doing in each interval and why.
+- Building your cheat sheet is part of your preparation. A summary of how to set up the analysis (which intervals, what the inductor sees in each, how to apply the balance conditions) will help you more than a list of final formulas.
+
+Good luck, and see you on Tuesday.
+
+Phil
+
+======================================================================
+14. Solutions to Tutorial #1 are posted
+Posted: Sep 24, 2026, 3:43 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+My handwritten solutions to tutorial #1 are posted under the "Practice Problems" folder on D2L.
+
+If you have any questions, you can send me an email or message on Teams.
+
+JT
+
+======================================================================
+15. Problems for Quiz #1
+Posted: Sep 23, 2026, 9:18 PM
+----------------------------------------------------------------------
+Hi all,
+
+I've uploaded the final answers to all the problems on D2L as an HTML page: problems.html (https://d2l.ucalgary.ca/d2l/le/content/770066/viewContent/7811118/View)
+
+I've also added the two DC-DC converter questions from last year's midterm. These are included in the same HTML file.
+
+Thanks,
+Phil
+
+======================================================================
+16. Quiz #1: Content
+Posted: Sep 22, 2026, 9:45 AM
+----------------------------------------------------------------------
+Hi all,
+
+Just a reminder, Quiz 1 is Tuesday, Sep 29, in the tutorial slot (10:00-11:00). It's 50 minutes, in person, and covers DC-DC converters: everything from Lectures 1-5 and Lab 1. You are allowed one double-sided handwritten aid sheet and an SSE-sanctioned calculator.
+
+Thanks,
+
+Phil
+
+======================================================================
+17. Tutorial #1 Problems
+Posted: Sep 17, 2026, 9:00 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+Our first true tutorial will be next week on Tuesday, September 22, at 10am in SB146. I am going to work through the following questions from the practice problems Dr. Gray posted to D2L to prep for Quiz #1:
+
+Erickson 2.5: H-bridge converter - conversion ratio
+
+Erickson 5.19: Buck converter boundary mode on the Vg-P_load plane
+
+Erickson 6.2: analysis of the DCM flyback converter
+
+Erickson 2.1: analysis and design of a buck-boost converter (if time permits)
+
+I will also leave some time at the end for questions.
+
+See you all then,
+
+JT
+
+======================================================================
+18. Annoucements
+Posted: Sep 15, 2026, 9:54 PM
+----------------------------------------------------------------------
+Hi all,
+
+Just a few announcements:
+
+- Practice problems covering the content for Lectures 2-5 are available here: Practice Problems (https://d2l.ucalgary.ca/d2l/le/content/770066/viewContent/7811118/View). Some of these problems will be covered in the tutorial next week.
+- Final project details were uploaded on Sunday. Please see here: Final Project Details (https://d2l.ucalgary.ca/d2l/le/content/770066/viewContent/7805680/View) and here (https://d2l.ucalgary.ca/d2l/le/content/770066/viewContent/7805679/View). I'll go over the final project at the top of class on Thursday.
+- Bench instruments guide has also been uploaded to D2L: Bench Instruments Guide (https://d2l.ucalgary.ca/d2l/le/content/770066/viewContent/7810293/View). This should be helpful for future labs.
+
+======================================================================
+19. Lab 1
+Posted: Sep 10, 2026, 11:28 PM
+----------------------------------------------------------------------
+Hi all,
+
+We've made a few small updates to the Lab 1 handout and the accompanying PLECS files, based on bench testing today. These changes are limited to the Experiments/procedure section only. Nothing in the pre-lab content has changed, so your pre-lab preparation and quiz prep are unaffected.
+
+Key changes to be aware of:
+
+- Clarified protection scheme description (voltage limiter, duty clamp, firmware trip)
+- Updated discharge/safety threshold before touching the DC link or re-wiring
+- Duty ratio in Part B is now read from the inductor-current waveform rather than a gate-command splitter
+- Load bank switching procedure clarified (Part B)
+- Experiment 7 updated to a steady-state comparison across load resistances
+- Boost shutdown sequence clarified
+
+The updated handout is posted on D2L. Edits are highlighted in yellow so you can quickly spot what changed. No action needed on your end; just use the version on D2L when you come to the bench.
+
+Thanks,
+
+Phil
+
+======================================================================
+20. Announcements
+Posted: Sep 10, 2026, 2:11 PM
+----------------------------------------------------------------------
+Hi all,
+
+Some announcements:
+
+- I've updated today's lecture notes with a bit more detail. The revised version has been reposted. As I'm redoing the notes this year, expect small updates after most lectures based on how the class went.
+- Reminder for tomorrow's quiz for Lab Section 2: it's closed book. Please bring your calculator.
+- I realized after the lecture that I forgot to finish the last part of the Lecture 3 material today. I'll cover that at the top of Lecture 5 next week. Sorry about that.
+- Sorry for the delay on the final project details. I haven't posted them yet, but they'll be up by the end of this week at the latest. I'm working through each project in advance to make sure they're all viable
+
+Thanks all,
+Phil
+
+======================================================================
+21. Reminder about Tutorial Today/Next Week
+Posted: Sep 8, 2026, 9:07 AM
+----------------------------------------------------------------------
+Hi all,
+
+Just a reminder about tutorials this week and next:
+
+- This week (Sept 8): Lab section 2 (B02) meets at the ENA13 power electronics lab at 10am for the orientation lab. Lab section 1 has no tutorial this week.
+- Next week (Sept 15): Lab section 1 (B01) meets at the ENA13 power electronics lab at 10am for the orientation lab. Lab section 2 has no tutorial next week.
+
+Thanks,
+Phil
+
+======================================================================
+22. Project Orientation Overview
+Posted: Sep 4, 2026, 3:05 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+My name is JT Luterbach, one of your two TA's for ENEL 585 this semester.
+
+On Tuesday, September 8th, everyone in lab section 2 (B02) will meet at the ENA13 power electronics lab at 10am for an orientation on some of the lab equipment, particularly the Typhoon Hardware-In-the-Loop (HIL) simulators and the Texas Instruments Launchpad microcontroller boards. Everyone else in Lab section 1 (B01) will do the same the following week (September 15th). There are participation marks connected to this orientation.
+
+There are four files on D2L under the "Orientation Lab" folder related to this orientation. Please download the .plecs file in that folder to your personal laptop (please check you have the most recent version that I just uploaded), and please make sure you have PLECS and the TI C2000 Support Package from PLECS installed on your personal laptop. The other files are the PowerPoint slides I will be presenting at the start of the orientation, as well as two files for the TyphoonHIL (.tse and .cus files) that you will need to download from D2L onto the lab computers.
+
+Also, if you're laptop doesn't have any USB-A ports, please bring your own USB-C cable with data-transfer capabilities (or an adapter) so you can connect to the Launchpad board.
+
+If anyone has any questions, please send me an email or message on Teams: jt.luterbach@ucalgary.ca
+
+Have a good long weekend,
+
+JT Luterbach
+
+======================================================================
+23. Welcome to ENEL 585!
+Posted: Aug 31, 2026, 10:09 PM
+----------------------------------------------------------------------
+Hi all,
+
+I hope you all had a great summer. Welcome to ENEL 585.
+
+You'll find the following posted on D2L:
+
+- The course outline
+- The tentative course schedule
+- Details on the laboratory resources
+- PLECS installation instructions
+- The orientation lab (Lab 0) material
+
+For the orientation lab, you'll need PLECS installed and a Typhoon account set up beforehand. No other prep work is required.
+
+Tutorials, the orientation lab, and Lab 1 all start next week, but the orientation lab runs during the tutorial timeslot (not on Friday), split across the two lab sections over two weeks:
+
+- Lab Section 2: tutorial (orientation) and Lab 1 both run next week. No tutorial or lab the week after.
+- Lab Section 1: no tutorial or lab next week. Tutorial (orientation) and Lab 1 both run the week after.
+
+Lecture 1 material will be posted before class tomorrow. Looking forward to meeting you all then.
+
+Thanks,
+Phil
