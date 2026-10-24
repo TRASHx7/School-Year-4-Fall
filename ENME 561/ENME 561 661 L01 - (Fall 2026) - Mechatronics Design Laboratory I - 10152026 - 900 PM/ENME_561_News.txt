@@ -1,9 +1,23 @@
 ENME 561 - News Items
-Exported Oct 22, 2026
-Total items: 10
+Exported Oct 24, 2026
+Total items: 11
 
 ======================================================================
-1. Regrade Requests
+1. Important Reminder: AI Use and Academic Integrity
+Posted: Oct 23, 2026, 3:15 PM
+----------------------------------------------------------------------
+Please ensure that all graphs included in your reports are generated using code that you have written and understand, based on the data you collected during your experiments or simulations.
+
+AI tools can be helpful for learning and coding support, but you must understand, verify, and take responsibility for the results you submit. AI generated plots and analysis, or using AI to perform data analysis without understanding how the results were obtained may constitute a violation of academic integrity. Any such cases will be addressed in accordance with university policies.
+
+Please also remember that although only one group member may submit the report, all group members are jointly responsible for the content, accuracy, and academic integrity of the submitted work.
+
+As stated in the course outline, under "Transparent Use": AI tools may be used to support your learning and content creation, with appropriate attribution. You may use AI for drafting, problem-solving support, or code assistance, provided that you critically evaluate and revise all outputs. You are responsible for the accuracy and integrity of your submission. All use of AI, including prompts and tool identification, must be clearly documented through an AI use statement included with your work.
+
+The goal is to help you develop your own skills and understanding. If you have questions or need support, please don't hesitate to reach out!
+
+======================================================================
+2. Regrade Requests
 Posted: Oct 15, 2026, 10:13 AM
 ----------------------------------------------------------------------
 Please note that all regrade requests must be submitted by email within 10 days of the grade release date. Each request must include a written, detailed justification explaining the reason for the regrade. All team members and the TA responsible for your section must be CC'd on the email.
@@ -11,13 +25,13 @@ Please note that all regrade requests must be submitted by email within 10 days 
 Regrade requests submitted after the 10-day deadline will not be accepted.
 
 ======================================================================
-2. Lab 3 Submission Reminder
+3. Lab 3 Submission Reminder
 Posted: Oct 13, 2026, 9:03 AM
 ----------------------------------------------------------------------
 Reminder: for Lab 3, use the ENME561_661_Report_Template_F2026 and include a team contribution statement in your report. Some teams forgot this for Lab 2.
 
 ======================================================================
-3. Lab 3 exit survey is open
+4. Lab 3 exit survey is open
 Posted: Oct 13, 2026, 8:49 AM
 ----------------------------------------------------------------------
 The Lab 3 exit survey is now open:
@@ -33,13 +47,13 @@ Your answers are not graded, and names are removed after completion is checked.
 Thank you for your feedback!
 
 ======================================================================
-4. The Lab 2 Exit Survey deadline has been extended until next Tuesday
+5. The Lab 2 Exit Survey deadline has been extended until next Tuesday
 Posted: Oct 2, 2026, 11:06 AM
 ----------------------------------------------------------------------
 For future labs, the Lab Exit Survey deadline will not be extended.
 
 ======================================================================
-5. Bring your printed Lab 2 design to the first Lab 3 session
+6. Bring your printed Lab 2 design to the first Lab 3 session
 Posted: Oct 2, 2026, 8:05 AM
 ----------------------------------------------------------------------
 Lab 3 starts Friday 2 October (M/F sections) and Tuesday 6 October (T/R sections).
@@ -49,7 +63,7 @@ Bring one printed copy of your Section 7 experiment design from Lab 2, with your
 You will review another group's design during that session. Without your printout, your group cannot take part.
 
 ======================================================================
-6. Lab 2 Exit Survey Now Open
+7. Lab 2 Exit Survey Now Open
 Posted: Sep 28, 2026, 5:04 PM
 ----------------------------------------------------------------------
 The Lab 2 exit survey is now open:
@@ -65,13 +79,13 @@ Your answers are not graded, and names are removed after completion is checked.
 Thank you for your feedback!
 
 ======================================================================
-7. Office hours
+8. Office hours
 Posted: Sep 8, 2026, 8:42 AM
 ----------------------------------------------------------------------
 Office hours are scheduled for Thursdays from 11:00 a.m. to 12:00 p.m. in my office, MEB 512.
 
 ======================================================================
-8. Take Advantage of the Makerspace Trainings While You Can
+9. Take Advantage of the Makerspace Trainings While You Can
 Posted: Sep 4, 2026, 2:23 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -106,7 +120,7 @@ Thanks,
 Bisheban
 
 ======================================================================
-9. Access MATLAB
+10. Access MATLAB
 Posted: Sep 2, 2026, 6:16 PM
 ----------------------------------------------------------------------
 - Go to https://www.mathworks.com and click on "Get MATLAB" on the right side of the page.
@@ -116,7 +130,7 @@ Posted: Sep 2, 2026, 6:16 PM
   - Open MATLAB Online to use MATLAB in your web browser.
 
 ======================================================================
-10. Welcome to ENME 561/661
+11. Welcome to ENME 561/661
 Posted: Aug 27, 2026, 3:39 PM
 ----------------------------------------------------------------------
 Hello everyone,
