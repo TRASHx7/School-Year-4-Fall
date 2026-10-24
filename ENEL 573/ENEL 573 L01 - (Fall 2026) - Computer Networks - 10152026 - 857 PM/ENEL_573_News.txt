@@ -1,9 +1,37 @@
 ENEL 573 - News Items
-Exported Oct 22, 2026
-Total items: 13
+Exported Oct 24, 2026
+Total items: 15
 
 ======================================================================
-1. Midterm - Clarification on Formulas
+1. HW2 Evaluation Released
+Posted: Oct 23, 2026, 7:34 PM
+----------------------------------------------------------------------
+Hi all,
+
+The HW2 grades and feedback have been released. Your assignments were graded by the course TAs.
+
+If you have questions about the marking, please feel free to reach out.
+
+Best,
+John
+
+======================================================================
+2. Tomorrow's Lecture Canceled - Office Hour Instead
+Posted: Oct 22, 2026, 7:17 PM (Edited)
+----------------------------------------------------------------------
+Hi all,
+
+Since our midterm exam is next Monday (Oct 26), I have decided to cancel tomorrow's lecture to give you more time to prepare for the exam.
+
+Instead, I will hold an office hour tomorrow during our class time (12:00PM - 12:50PM). If you have questions and would like to discuss them in person, please feel free to stop by my office (ICT 352B).
+
+You can also email me if you have questions.
+
+Good luck on your midterm exam,
+John
+
+======================================================================
+3. Midterm - Clarification on Formulas
 Posted: Oct 21, 2026, 11:08 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -22,7 +50,7 @@ Thanks,
 John
 
 ======================================================================
-2. Midterm Exam Practice
+4. Midterm Exam Practice
 Posted: Oct 19, 2026, 4:37 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -35,7 +63,7 @@ Cheers,
 John
 
 ======================================================================
-3. Project 2 Manual Released
+5. Project 2 Manual Released
 Posted: Oct 19, 2026, 4:15 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -48,7 +76,7 @@ Thanks,
 John
 
 ======================================================================
-4. [!Important] Midterm Instructions
+6. [!Important] Midterm Instructions
 Posted: Oct 18, 2026, 10:57 PM
 ----------------------------------------------------------------------
 Dear all,
@@ -74,7 +102,7 @@ Cheers,
 John
 
 ======================================================================
-5. HW1 Evaluation Released
+7. HW1 Evaluation Released
 Posted: Oct 16, 2026, 4:54 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -85,7 +113,7 @@ Best,
 John
 
 ======================================================================
-6. HW Assignment 3 Posted
+8. HW Assignment 3 Posted
 Posted: Oct 16, 2026, 3:57 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -98,7 +126,7 @@ Thanks,
 John
 
 ======================================================================
-7. Project 1 - Important Clarification on E[N] in Question 2
+9. Project 1 - Important Clarification on E[N] in Question 2
 Posted: Oct 13, 2026, 8:13 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -117,7 +145,7 @@ Best,
 John
 
 ======================================================================
-8. HW Assignment 2 Posted
+10. HW Assignment 2 Posted
 Posted: Oct 2, 2026, 6:40 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -130,7 +158,7 @@ Thanks,
 John
 
 ======================================================================
-9. Tomorrow's Class Cancelled (Oct 2)
+11. Tomorrow's Class Cancelled (Oct 2)
 Posted: Oct 1, 2026, 11:23 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -145,7 +173,7 @@ Best,
 John
 
 ======================================================================
-10. Project 1 Manual Released
+12. Project 1 Manual Released
 Posted: Sep 25, 2026, 11:31 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -158,7 +186,7 @@ Thanks,
 John
 
 ======================================================================
-11. HW Assignment 1 Posted
+13. HW Assignment 1 Posted
 Posted: Sep 18, 2026, 9:15 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -171,7 +199,7 @@ Thanks,
 John
 
 ======================================================================
-12. Wednesday's Lecture (Sept 9)
+14. Wednesday's Lecture (Sept 9)
 Posted: Sep 7, 2026, 7:55 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -184,7 +212,7 @@ Thank you,
 John
 
 ======================================================================
-13. Welcome to ENEL 573 - Fall 2026 (First class today)
+15. Welcome to ENEL 573 - Fall 2026 (First class today)
 Posted: Sep 2, 2026, 12:17 AM
 ----------------------------------------------------------------------
 Dear Students,
