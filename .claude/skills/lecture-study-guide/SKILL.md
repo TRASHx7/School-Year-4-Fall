@@ -1,19 +1,43 @@
 ---
 name: "lecture-study-guide"
-description: Turn an attached lecture (slides, notes, PDF, textbook chapter) from any course into an interactive HTML study guide with sections, analogies, demos, quizzes, a final exam and a formula sheet. Use only when the user explicitly invokes /lecture-study-guide or asks for this skill by name. Do not use automatically for general studying or tutoring requests.
+description: Turn one or more lectures (slides, notes, PDFs, textbook chapters) from any course, attached or pulled from a GitHub repo, local folder or cloud drive, into an interactive HTML study guide with sections, analogies, demos, quizzes, a final exam and a formula sheet. Use only when the user explicitly invokes /lecture-study-guide or asks for this skill by name. Do not use automatically for general studying or tutoring requests.
 ---
 
 # Lecture Study Guide
 
-Build one self-contained, interactive HTML study guide that teaches an attached lecture to someone who has never read it. The guide replaces the lecture: a reader should be able to learn the topic, solve the lecture's problems, and pass an exam using only this page.
+Build a self-contained, interactive HTML study guide for each lecture the user picks, teaching it to someone who has never read it. The guide replaces the lecture: a reader should be able to learn the topic, solve the lecture's problems, and pass an exam using only this page.
 
 Works for any course (engineering, physics, math, chemistry, economics, biology, and so on). Adapt the demos and examples to the subject, but keep the structure and style below fixed so every guide feels like part of the same set.
 
-## Step 0: Check for the lecture
+## Step 0: Find the lectures
 
-Before doing anything else, confirm a lecture is actually attached (check the conversation and the files available). If nothing is attached, stop and ask the user to attach it. Do not build a guide from memory, from the course title, or from a guess about what the lecture probably covers. A guide built on assumed content would teach notation, numbers and examples that differ from the user's course, which is worse than no guide.
+Lectures can come from any of these places. Work out which one from what the user says, checking in this order:
 
-If the file is attached but unreadable (scanned images, corrupted), say so and ask for another copy or a text version.
+1. **Attached files** in the conversation.
+2. **A GitHub repo.** If the user names a repo (`owner/repo`, a github.com URL, or "my lectures repo"), attach it with the `add_repo` tool (read access is enough), clone it, and look for lecture files (`.pdf`, `.pptx`, `.docx`, `.md`, `.tex`, `.txt`, `.ipynb`). If they don't name the repo, ask once for `owner/repo`. Do not pre-check the repo with curl or `gh`; call `add_repo` directly and relay its error if access is denied (usually the fix is reconnecting GitHub in claude.ai Settings, Connectors).
+3. **A local folder** on the user's computer, through the device bridge or device shell tools when the conversation is linked to the desktop app. If those tools are missing, tell the user to open this chat in the Claude desktop app, or to attach the files instead.
+4. **A cloud drive** (Google Drive, or another connected storage app). Search it with the connector; if none is connected, say which connection would help.
+
+If no lecture can be found in any of these, stop and ask the user to attach one or point to where it lives. Do not build a guide from memory, from a course title, or from a guess about what the lecture covers. A guide built on assumed content would teach notation, numbers and examples that differ from the user's course, which is worse than no guide.
+
+If a file is unreadable (scanned images with no text, corrupted, password protected), say so and skip it rather than guessing its contents.
+
+## Step 0.5: Pick the lectures (one or many)
+
+The user may ask for one lecture or several at once ("lectures 5 to 8", "everything in /ece457/week3", "all of them").
+
+- When a source holds more than one lecture and the request doesn't make the selection obvious, list what you found (file name, path, page count or slide count, and the lecture title if readable) and ask which ones to build, with "all" as an option. Ask this once, using AskUserQuestion when available.
+- Treat a folder of files for one lecture (for example slides plus a separate examples PDF) as **one** lecture. Treat clearly separate lectures as separate guides.
+- Skip anything already built unless the user asks to rebuild: check their artifacts for a guide with the same title.
+
+### Running several lectures
+
+- Create a task list with one item per lecture so progress is visible if the user steps away.
+- Build each guide fully (Steps 1 to 9) before starting the next, one artifact per lecture. Finish and verify each one completely; never cut sections, quizzes or checks to fit more lectures in.
+- If subagents are available and there are more than three lectures, you may hand each lecture to its own subagent, passing it this skill's path and the lecture's file path, then review each result against the Step 8 checks yourself before publishing.
+- Keep titles consistent so the set reads as a series: `[Course] L[number]: [Topic]` when a number is known.
+- If one lecture fails (unreadable, missing pages), note it and carry on with the rest.
+- After the last guide, publish a small **course index** artifact in the same style: one card per guide with its title, a one-line summary, the number of sections, and a link. If an index for this course already exists, update it instead of making a new one.
 
 ## Step 1: Read the whole lecture and extract
 
@@ -139,8 +163,11 @@ Fix anything that fails and rerun the checks.
 
 ## Step 9: Publish and report
 
-Publish the guide as an HTML artifact (load the `artifact-design` skill first if the session has it). Then reply briefly with:
+Publish each guide as its own HTML artifact (load the `artifact-design` skill first if the session has it). If the lectures came from a repo or folder and the user asked for the guides to be saved there too, also write each HTML file into a `study-guides/` folder next to the lectures (commit and push only if they asked for that).
 
-- One line saying what the guide covers (number of parts and sections).
-- Any **Filled in** or **Possible lecture error** notes, listed so the user can check them against their class.
-- Suggestions: anything that would make this guide more useful for this particular lecture (for example, a topic the lecture references but doesn't explain, or a demo that would need data the lecture doesn't give).
+Then reply briefly with:
+
+- One line per guide saying what it covers (parts and sections). For a batch, a short table: lecture, guide, sections, notes.
+- Any **Filled in** or **Possible lecture error** notes, grouped by lecture, so the user can check them against their class.
+- Any lectures that were skipped and why.
+- Suggestions: anything that would make the guides more useful (for example, a topic a lecture references but doesn't explain, or a demo that needs data the lecture doesn't give).
