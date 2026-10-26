@@ -1,6 +1,6 @@
 # Study Guide Style Guide
 
-The fixed visual style for every study guide. Copy the tokens and component CSS below into the page and build with these class names. Adapt only what the subject requires (for example, demo-specific SVG classes).
+The fixed visual style for every study guide. **All of this CSS and the quiz engine are already in `assets/` and are added by `build_guide.py`; do not paste them into guides.** Use this file to look up class names and component markup when writing `content.html`. Demo-specific styles can go in a `<style>` block inside the demo's markup.
 
 ## Contents
 1. Page skeleton

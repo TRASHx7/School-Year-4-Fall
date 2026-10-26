@@ -9,6 +9,27 @@ Build a self-contained, interactive HTML study guide for each lecture the user p
 
 Works for any course (engineering, physics, math, chemistry, economics, biology, and so on). Adapt the demos and examples to the subject, but keep the structure and style below fixed so every guide feels like part of the same set.
 
+## Tools bundled with this skill
+
+The page shell is prebuilt and tested, so each guide only needs its lecture content. Never hand-write the CSS, sidebar, KaTeX setup or quiz engine.
+
+| File | What it does |
+|---|---|
+| `scripts/extract_lecture.py <file_or_folder> <work_dir>` | Turns a lecture into `lecture.txt` once, and lists pages with little text (diagrams, scans) to view as images. |
+| `assets/` (`head.html`, `guide.css`, `engine.js`) | Styling, dark mode, print, KaTeX, quizzes, saved progress, sidebar scores, resets, wrong-answer review. |
+| `scripts/build_guide.py <work_dir>` | Assembles `guide.json` + `content.html` + `quizzes.json` + `demos.js` into `guide.html`. Generates the sidebar and hero. |
+| `scripts/check_guide.py <work_dir>` | Structure, quiz data, slash fractions, math in code boxes, KaTeX render errors, demos.js syntax. |
+| `scripts/check_page.py <guide.html>` | Headless browser: JS errors, math rendered, chips update, progress survives reload, phone width, dark mode, screenshots. |
+
+Run scripts from this skill's folder (`python3 <skill_dir>/scripts/...`). Each lecture gets its own work folder in the scratchpad, for example `guides/<course>-L05/`.
+
+### The four files you write per guide
+
+- **`guide.json`**: `{"title", "eyebrow", "lede", "parts":[{"name", "sections":[{"id":"s1","title":"..."}]}]}`. Section ids `s1`, `s2`, ... with matching quiz ids `q1`, `q2`, ... (override with `"quiz"` on a section).
+- **`content.html`**: everything in `<main>` after the hero: `<section class="sec" id="big">`, each `<h2 class="part">` and `<section class="sec" id="sN">`, then `id="final"` and `id="formulas"`. Quizzes are empty placeholders `<div class="quiz" data-quiz="q1"></div>`; the final exam is `data-quiz="final"`. Put the formula sheet's `<button class="btn" id="printSheet" type="button">Print formula sheet</button>` at the top of `#formulas`. Use the components in `references/style-guide.md`.
+- **`quizzes.json`**: `{"q1": {"title": "Section 1 quiz", "questions": [{"q", "options": [4 strings], "answer": 0-3, "explain", "mistakes": [one note per option, null for the correct one], "review": "s1"}]}, "final": {...}}`. The engine writes "Not quite. You chose B, which comes from [mistake]" itself, so `mistakes` entries are short phrases ("using the slotted formula"). Math in JSON needs doubled backslashes (`"\\(\\frac{1}{2e}\\)"`).
+- **`demos.js`** (optional): define `window.initDemos = function(){ ... }`; the engine calls it after math renders. Read colors from CSS variables. Use `katex.render` for live math readouts.
+
 ## Step 0: Find the lectures
 
 Lectures can come from any of these places. Work out which one from what the user says, checking in this order:
@@ -41,7 +62,7 @@ The user may ask for one lecture or several at once ("lectures 5 to 8", "everyth
 
 ## Step 1: Read the whole lecture and extract
 
-Read every page before writing. Build a working list of:
+Run `extract_lecture.py` first and read `lecture.txt` instead of the original file; only open the pages it lists as low-text as images (diagrams, circuits, handwritten work). Read every page before writing. Build a working list of:
 
 - The lecture's order of topics, which becomes the section order.
 - Every worked example, with all given values, units, notation and final answers exactly as the lecture states them.
@@ -142,28 +163,24 @@ End with a formula sheet: cards grouped by part, each formula typeset with stack
 
 Add print styles (`@media print`) so the formula sheet prints cleanly on one or two pages: hide the sidebar, demos, quizzes and buttons when printing, use black on white, avoid breaking a card across pages. Include a "Print formula sheet" button that prints only the formula sheet.
 
-## Step 7: Style
+## Step 7: Style and assembly
 
-Follow `references/style-guide.md` exactly for layout, colors, fonts, components and dark mode. Read it before writing any HTML. It defines the look shared by all of the user's guides.
+Look up component markup in `references/style-guide.md` when you need it (callouts, demos, worked examples, formula cards). Then run `build_guide.py`. Changing the look means editing `assets/`, never patching one guide's HTML.
 
 ## Step 8: Verify before publishing
 
-Do not publish until every check passes. Run these in code (Python or Node), not by eye:
+Do not publish until every check passes.
 
-1. **Worked examples**: recompute every lecture example from its givens. Confirm the guide's steps and final answers match the lecture (or the flagged correction).
-2. **Demo defaults**: for each calculator, run its formula with the default inputs and confirm the output equals the lecture's answer to the displayed precision.
-3. **Quiz answers**: for every calculation question, compute the correct answer and confirm the marked correct option matches it. Compute each distractor from its stated mistake and confirm it differs from the correct answer and from the other options.
-4. **Practice problems**: recompute each solution.
-5. **Units**: confirm every number in examples, readouts, options and explanations has a unit or is labelled unitless.
-6. **Variables**: confirm every symbol is defined at or before its first use.
-7. **Notation**: search the HTML for slash fractions in math (a digit, letter or closing bracket, then "/", then a digit, letter, Greek letter or opening bracket, outside URLs and code) and replace them with `\frac`. Confirm no equation sits inside `<pre>`, `<code>` or a monospace element, and that every math block renders without KaTeX errors.
-8. **Page checks**: the page loads without console errors, the quizzes record and restore scores, the sidebar chips update, the layout works at phone width, and dark mode is readable.
+1. **Numbers, in one script.** Write `verify.py` in the work folder that recomputes every lecture example from its givens, each demo's output at its default inputs, every practice solution, and every quiz answer plus each distractor from its stated mistake. It asserts that each matches the value shown in the guide (or the flagged correction), that the distractors differ from the answer and from each other. Write this script while drafting the quizzes, not after, and take quiz numbers from it so they cannot drift.
+2. **`check_guide.py`**: structure, quiz data, notation, KaTeX and JS syntax. Fix every ERROR and read the WARNs.
+3. **`check_page.py`** (if playwright is available): open the screenshots it saves and look at them once.
+4. **By reading**, the things scripts can't judge: every variable defined at or before first use, units on every number, analogies that actually fit.
 
-Fix anything that fails and rerun the checks.
+Fix failures by editing the work files (Edit tool, small changes), rebuild, and rerun only the checks that failed.
 
 ## Step 9: Publish and report
 
-Publish each guide as its own HTML artifact (load the `artifact-design` skill first if the session has it). If the lectures came from a repo or folder and the user asked for the guides to be saved there too, also write each HTML file into a `study-guides/` folder next to the lectures (commit and push only if they asked for that).
+Publish each guide's `guide.html` as its own HTML artifact (load the `artifact-design` skill once per session if it exists; the template already follows it, so don't redesign). If the lectures came from a repo or folder and the user asked for the guides to be saved there too, also write each HTML file into a `study-guides/` folder next to the lectures (commit and push only if they asked for that).
 
 Then reply briefly with:
 
@@ -171,3 +188,13 @@ Then reply briefly with:
 - Any **Filled in** or **Possible lecture error** notes, grouped by lecture, so the user can check them against their class.
 - Any lectures that were skipped and why.
 - Suggestions: anything that would make the guides more useful (for example, a topic a lecture references but doesn't explain, or a demo that needs data the lecture doesn't give).
+
+## Saving time and usage
+
+- **Read the lecture once.** Extract to text, then work from `lecture.txt` and your notes. Never re-read the source or re-open pages already read.
+- **Write each file once, then edit.** Draft `content.html` section by section with Write/append, then fix problems with small Edits. Never regenerate a whole file to change one part, and never read back a file you just wrote.
+- **Let the scripts check.** Don't scan the HTML by eye for slashes, broken math or quiz counts; run the checkers and read only their output.
+- **Keep demos small.** One focused demo per idea, sharing helper functions inside `demos.js`. Reuse a demo pattern across sections (for example one plotting helper) rather than writing several from scratch.
+- **Batches stay lean.** Finish, verify and publish one lecture, then move on without re-reading it; carry forward only a short `course_notes.md` (notation, symbols, recurring definitions, the course's title format) so later lectures stay consistent without reloading earlier guides.
+- **Republish only when something changed.** Build and check locally; publish once.
+- **Effort routing (when using an orchestrator).** Extraction and the course index are routine; content writing, `verify.py` and the final review need the strongest model.
