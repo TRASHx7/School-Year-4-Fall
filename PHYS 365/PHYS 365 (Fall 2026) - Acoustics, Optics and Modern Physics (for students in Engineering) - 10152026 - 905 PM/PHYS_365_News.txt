@@ -1,9 +1,15 @@
 PHYS 365 - News Items
-Exported Oct 22, 2026
-Total items: 10
+Exported Oct 27, 2026
+Total items: 11
 
 ======================================================================
-1. Assignments 5 and 6
+1. Exam booklets - SAS
+Posted: Oct 27, 2026, 2:40 PM
+----------------------------------------------------------------------
+If you wrote your exam in the Exam Centre with SAS then you will be able to retrieve your exam booklet from your instructor during lecture on Thursday October 29 or Tuesday November 3. After next Tuesday the remaining booklets that have not been picked up will be recycled.
+
+======================================================================
+2. Assignments 5 and 6
 Posted: Oct 21, 2026, 4:21 PM
 ----------------------------------------------------------------------
 On Assignment 5 there was a question about the ratio of impedances and it has been causing a lot of problems for many of you. It is a rare example where if you use extra sig digs than Achieve is expecting (in this case 2) then your unrounded value will fall outside the 2% tolerance window. This cost many of you a lot of attempts so to fix this, I will take Assignment 5 as being out of one less question and cap the grades at 100%.
@@ -11,7 +17,7 @@ On Assignment 5 there was a question about the ratio of impedances and it has be
 On Assignment 6 there is a question about a clarinet and its 3rd normal mode. Please note the subtle language use here: normal modes refer to sequential harmonic frequencies, so the first, second, and third normal modes for a clarinet correspond to the 1st, 3rd, and 5th harmonics. On an exam we will not use the phrase "normal modes" but instead refer to harmonics to avoid this type of confusion.
 
 ======================================================================
-2. Midterm Room Information
+3. Midterm Room Information
 Posted: Oct 16, 2026, 1:30 PM
 ----------------------------------------------------------------------
 PHYS 365 L01 students will write the midterm in ICT 102
@@ -21,7 +27,7 @@ PHYS 365 L02 students will write the midterm in ENC 70
 The midterm will take place on Wednesday October 21 from 7:00-8:30 PM
 
 ======================================================================
-3. Midterm Details
+4. Midterm Details
 Posted: Oct 13, 2026, 8:58 AM
 ----------------------------------------------------------------------
 The midterm exam will cover material from Weeks 1-6 in the course schedule, which can be found under Content/Course Information. This includes all material up to and including resonant modes of air columns. The midterm in the previous years was a little later in the semester, so they include Doppler shift and beating frequencies, but these topics will not be covered on this year's midterm.
@@ -31,7 +37,7 @@ The exam will be 20 multiple choice questions with a range of difficulty levels 
 I have posted the exam cover page for you to review before arriving. I will be posting information about which room each student will be writing in later this week as an item in the D2L gradebook.
 
 ======================================================================
-4. Re: Change in Office Hours
+5. Re: Change in Office Hours
 Posted: Sep 28, 2026, 10:04 AM
 ----------------------------------------------------------------------
 Hi Everyone,
@@ -43,7 +49,7 @@ Thanks,
 Tim
 
 ======================================================================
-5. No Office Hours Friday, September 18th
+6. No Office Hours Friday, September 18th
 Posted: Sep 18, 2026, 12:09 PM
 ----------------------------------------------------------------------
 Hello PHYS 365,
@@ -55,7 +61,7 @@ Have a great weekend,
 Nolan
 
 ======================================================================
-6. Re: Lab group Assignments
+7. Re: Lab group Assignments
 Posted: Sep 17, 2026, 10:05 AM
 ----------------------------------------------------------------------
 Hi Everyone,
@@ -67,7 +73,7 @@ Thank you,
 Tim
 
 ======================================================================
-7. Reminder on Use of AI in this course
+8. Reminder on Use of AI in this course
 Posted: Sep 14, 2026, 7:00 AM
 ----------------------------------------------------------------------
 Hi Everyone,
@@ -90,7 +96,7 @@ Thanks,
 Tim
 
 ======================================================================
-8. Prelab Quiz – Extended Deadline
+9. Prelab Quiz – Extended Deadline
 Posted: Sep 13, 2026, 10:39 AM
 ----------------------------------------------------------------------
 Hi Everyone,
@@ -104,13 +110,13 @@ Thanks,
 Tim
 
 ======================================================================
-9. Pre-Lab Quiz 1 (Odd sections) now visible
+10. Pre-Lab Quiz 1 (Odd sections) now visible
 Posted: Sep 11, 2026, 10:21 AM
 ----------------------------------------------------------------------
 The pre-lab quiz for odd sections due this coming Monday at 8AM was mistakenly set to hidden, but I have now made it visible. Access it under Assessments>Quizzes. If you are in an even lab section, your PLQ1 will become visible on Monday at 5PM and be due the following Monday at 8AM.
 
 ======================================================================
-10. IMPORTANT: L02 lecture room change
+11. IMPORTANT: L02 lecture room change
 Posted: Sep 3, 2026, 2:22 PM
 ----------------------------------------------------------------------
 I have received confirmation from central scheduling that the PHYS 365 L02 lecture room has officially been changed and will now take place in ENE 239, effective today. If you know anyone who is on the waitlist and cannot yet see this notification as a result, please let them know of this change.
