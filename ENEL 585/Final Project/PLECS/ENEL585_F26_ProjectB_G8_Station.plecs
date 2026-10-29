@@ -1,0 +1,2668 @@
+Plecs {
+  Name          "ENEL585_F26_ProjectB_G8_Station"
+  Version       "5.0"
+  CircuitModel  "ContStateSpace"
+  StartTime     "0.0"
+  TimeSpan      "1.1"
+  Timeout       ""
+  Solver        "auto"
+  MaxStep       "1e-5"
+  InitStep      "-1"
+  FixedStep     "Ts"
+  Refine        "1"
+  ZCStepSize    "1e-9"
+  RelTol        "1e-4"
+  AbsTol        "-1"
+  TurnOnThreshold "0"
+  NonIdealSwitchResistance "1"
+  SyncFixedStepTasks "2"
+  UseSingleCommonBaseRate "2"
+  LossVariableLimitExceededMsg "3"
+  NegativeSwitchLossMsg "3"
+  DivisionByZeroMsg "3"
+  DatatypeOverflowMsg "3"
+  DatatypeInheritanceConflictMsg "2"
+  ContSampleTimeConflictMsg "2"
+  StiffnessDetectionMsg "2"
+  MaxConsecutiveZCs "1000"
+  AlgebraicLoopWithStateMachineMsg "3"
+  AssertionAction "1"
+  FixedPointDatatypeOverride "1"
+  InitializationCommands "%% ENEL 585 Fall 2026, Project B: single-phase standalone inverter\n%% Group"
+" 8, Station 6, Lab B01\n\n%% Timing: N_per samples per 60 Hz period. The car"
+"rier is the nearest value the\n%% ePWM up-down counter hits exactly, so the "
+"reference stays synchronous.\nf1    = 60;\nN_per = 166;                     "
+"          % even; carrier periods per 60 Hz period\nfclk  = 150e6;          "
+"                   % SYSCLK in the TI28P55x target settings [Hz]\nfsw   = fc"
+"lk/(2*round(fclk/(2*N_per*f1))); % 9960.16 Hz, below the 10 kHz ceiling\nTs "
+"   = 1/fsw;                             % control and ADC sample period [s]\n"
+"dead_time = 2e-6;                          % per-leg dead time [s] (Lab 2 us"
+"ed 5e-6)\n\n%% Sensing: V_pin = O + signal/K at the ADC pin (Inverter Box Se"
+"tup Guide:\n%% 1.667 V centre, 0.213 V/V after the probe for voltage, 0.154 "
+"V/V for current)\nK_vo = 10/0.213;  O_vo = 1.667;   % VProbe 1, 10:1: output"
+" voltage, tap A - tap B\nK_il = 1/0.0154;  O_il = 1.667;   % CProbe 2, 100 m"
+"V/A: leg-A inductor current\nK_io = 1/0.0154;  O_io = 1.667;   % CProbe 1, 1"
+"00 mV/A: load current\nK_dc = 10/0.213;  O_dc = 1.667;   % VProbe 2, 10:1: d"
+"c input voltage\nsrc  = [1 2 3 4];                 % pin carrying [vo iL io "
+"vdc]: 1=B2 2=B0 3=B1 4=A6, 0=none\nH60  = 0.9949;                    % inter"
+"face-board filter gain at 60 Hz (amplitude calibration)\nVdc_nom = 50;      "
+"               % used if src(4) = 0\n\n%% Protection (latched; clear by sett"
+"ing enableswitch to 0). Pin voltages:\nVo_trip  = 50;    % |vo| [V]   -> 0.6"
+"02 V / 2.732 V\nIL_trip  = 9;     % |iL| [A]   -> 1.528 V / 1.806 V\nIo_trip"
+"  = 6;     % |io| [A]   -> 1.575 V / 1.759 V\nVdc_trip = 55;    % vdc [V]   "
+" -> 2.839 V\nVdc_min  = 20;    % switching starts only once the filtered vdc"
+" exceeds this [V]\n\nprotection_test = 0;  % 1: lower IL_trip to 2.5 A so th"
+"e load step trips the bridge\nif protection_test\n  IL_trip = 2.5;\nend\n\n%"
+"% Amplitude control (see README for the loop design)\nVref_max = 32;    % la"
+"rgest accepted Vref_rms [V]\nslew     = 5;     % amplitude slew [V pk per ha"
+"lf cycle] = 600 V/s, also the soft start\nm_max    = 0.98;  % modulation lim"
+"it; anti-windup holds the trim here\nx_max    = 10;    % integral trim limit"
+" [V pk]\nI_lim    = 6;     % current limit on the half-cycle peak of the sen"
+"sed iL [A]\nK_fold   = 2;     % foldback gain [V pk per A per half cycle]\nf"
+"old_dec = 0.5;   % foldback recovery [V pk per half cycle]\ntau_dc   = 0.02;"
+"  % dc-link voltage filter for the feedforward [s]\n\nctl_par = [N_per Ts K_"
+"vo O_vo K_il O_il K_io O_io K_dc O_dc src Vdc_nom H60 Vo_trip IL_trip Io_tri"
+"p Vdc_trip Vdc_min Vref_max slew m_max x_max I_lim K_fold fold_dec tau_dc];\n"
+"\n%% Station (Project B sheet)\nVdc   = 50;       % ITECH setting [V]\nRs   "
+" = 0.02;     % supply leads [ohm]\nCdc   = 1.1e-3;   % SEMITEACH dc link [F]"
+"\nLf    = 47e-6;    % per branch, Wurth 7443783533470, +-20 %\nRLf   = 0.02;"
+"     % per branch winding + wiring [ohm] (estimate)\nCf    = 62e-6;    % per"
+" branch; star point floating\nRbl   = 100e3;    % capacitor bleeders [ohm]\n"
+"Ron   = 0.02;     % switch on-resistance [ohm] (no IGBT/diode drop modelled)"
+"\nR_bank = 250/10;  % 10 bank switches closed: 25 ohm (OP1)\nR_step = 250/10"
+";  % 10 more switches: 25 || 25 = 12.5 ohm (OP2, load step)\n\n%% Interface-"
+"board sensing model\nsens_par = [1500 700 900 1.667 0.213/10 0.0154 3.3 12 V"
+"dc];\n\n%% Test sequence [t_en t_load_on t_ref_up t_ref_dn t_load_off V_op1 "
+"V_op2]\nscen_par = [0.02 0.30 0.50 0.70 0.85 25 30];\n"
+  InitialState  "1"
+  SystemState   ""
+  JacobianComputation "2"
+  TaskingMode   "1"
+  TaskConfigurations ""
+  CodeGenParameterInlining "2"
+  CodeGenInliningExceptions "AAAACwAAAAACAAAADABLAHAAXwBhAG0AcAAAAAwASwBpAF8AYQBtAHA="
+  CodeGenFloatingPointFormat "1"
+  CodeGenAbsTimeUsageMsg "3"
+  CodeGenBaseName ""
+  CodeGenOutputDir ""
+  CodeGenExtraOpts ""
+  CodeGenTarget "TI28P55x"
+  CodeGenTargetSettings "AAAAfwAAAAAbQ29kZUdlblRhcmdldDo6U2V0dGluZ3NNYXAAAAAAA"
+"QAAABAAVABJADIAOABQADUANQB4AAAAWQAAACIAQQBuAFQAcgBpAHAAMQBBAGQAYwBDAGgAYQBuAG"
+"4AZQBsAAAAAgAwAAAAHABBAG4AVAByAGkAcAAxAEEAZABjAFUAbgBpAHQAAAACADEAAAAaAEEAbgB"
+"UAHIAaQBwADEARQBuAGEAYgBsAGUAAAACADAAAAAaAEEAbgBUAHIAaQBwADEAUwBpAGcAbgBhAGwA"
+"AAACADEAAAAoAEEAbgBUAHIAaQBwADEAVABoAHIAZQBzAGgAbwBsAGQASABpAGcAaAAAAAIAMAAAA"
+"CYAQQBuAFQAcgBpAHAAMQBUAGgAcgBlAHMAaABvAGwAZABMAG8AdwAAAAIAMAAAACIAQQBuAFQAcg"
+"BpAHAAMgBBAGQAYwBDAGgAYQBuAG4AZQBsAAAAAgAwAAAAHABBAG4AVAByAGkAcAAyAEEAZABjAFU"
+"AbgBpAHQAAAACADEAAAAaAEEAbgBUAHIAaQBwADIARQBuAGEAYgBsAGUAAAACADAAAAAaAEEAbgBU"
+"AHIAaQBwADIAUwBpAGcAbgBhAGwAAAACADEAAAAoAEEAbgBUAHIAaQBwADIAVABoAHIAZQBzAGgAb"
+"wBsAGQASABpAGcAaAAAAAIAMAAAACYAQQBuAFQAcgBpAHAAMgBUAGgAcgBlAHMAaABvAGwAZABMAG"
+"8AdwAAAAIAMAAAACIAQQBuAFQAcgBpAHAAMwBBAGQAYwBDAGgAYQBuAG4AZQBsAAAAAgAwAAAAHAB"
+"BAG4AVAByAGkAcAAzAEEAZABjAFUAbgBpAHQAAAACADEAAAAaAEEAbgBUAHIAaQBwADMARQBuAGEA"
+"YgBsAGUAAAACADAAAAAaAEEAbgBUAHIAaQBwADMAUwBpAGcAbgBhAGwAAAACADEAAAAoAEEAbgBUA"
+"HIAaQBwADMAVABoAHIAZQBzAGgAbwBsAGQASABpAGcAaAAAAAIAMAAAACYAQQBuAFQAcgBpAHAAMw"
+"BUAGgAcgBlAHMAaABvAGwAZABMAG8AdwAAAAIAMAAAACIAQQBuAFQAcgBpAHAANABBAGQAYwBDAGg"
+"AYQBuAG4AZQBsAAAAAgAwAAAAHABBAG4AVAByAGkAcAA0AEEAZABjAFUAbgBpAHQAAAACADEAAAAa"
+"AEEAbgBUAHIAaQBwADQARQBuAGEAYgBsAGUAAAACADAAAAAaAEEAbgBUAHIAaQBwADQAUwBpAGcAb"
+"gBhAGwAAAACADEAAAAoAEEAbgBUAHIAaQBwADQAVABoAHIAZQBzAGgAbwBsAGQASABpAGcAaAAAAA"
+"IAMAAAACYAQQBuAFQAcgBpAHAANABUAGgAcgBlAHMAaABvAGwAZABMAG8AdwAAAAIAMAAAABoARQB"
+"YAFQARQBSAE4AQQBMAF8ATQBPAEQARQAAAAIAMQAAADQARQB4AHQAZQByAG4AYQBsAEMAbABvAGMA"
+"awBJAHMAUwBpAG4AZwBsAGUARQBuAGQAZQBkAAAAAgAwAAAAIgBMAGkAbgBrAGUAcgBDAG8AbQBtA"
+"GEAbgBkAEYAaQBsAGUAAAAAAAAAFABQAHcAbQAxADAAQQBHAHAAaQBvAAAABAAxADgAAAAUAFAAdw"
+"BtADEAMABCAEcAcABpAG8AAAAEADEAOQAAABYAUAB3AG0AMQAwAEcAcABpAG8ARQBuAAAAAgAwAAA"
+"AFABQAHcAbQAxADEAQQBHAHAAaQBvAAAABAAyADAAAAAUAFAAdwBtADEAMQBCAEcAcABpAG8AAAAE"
+"ADIAMQAAABYAUAB3AG0AMQAxAEcAcABpAG8ARQBuAAAAAgAwAAAAFABQAHcAbQAxADIAQQBHAHAAa"
+"QBvAAAABAAyADIAAAAUAFAAdwBtADEAMgBCAEcAcABpAG8AAAAEADIAMwAAABYAUAB3AG0AMQAyAE"
+"cAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQAxAEEARwBwAGkAbwAAAAIAMAAAABIAUAB3AG0AMQB"
+"CAEcAcABpAG8AAAACADEAAAAUAFAAdwBtADEARwBwAGkAbwBFAG4AAAACADAAAAASAFAAdwBtADIA"
+"QQBHAHAAaQBvAAAAAgAyAAAAEgBQAHcAbQAyAEIARwBwAGkAbwAAAAIAMwAAABQAUAB3AG0AMgBHA"
+"HAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0AMwBBAEcAcABpAG8AAAACADQAAAASAFAAdwBtADMAQg"
+"BHAHAAaQBvAAAAAgA1AAAAFABQAHcAbQAzAEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA0AEE"
+"ARwBwAGkAbwAAAAIANgAAABIAUAB3AG0ANABCAEcAcABpAG8AAAACADcAAAAUAFAAdwBtADQARwBw"
+"AGkAbwBFAG4AAAACADAAAAASAFAAdwBtADUAQQBHAHAAaQBvAAAAAgA4AAAAEgBQAHcAbQA1AEIAR"
+"wBwAGkAbwAAAAIAOQAAABQAUAB3AG0ANQBHAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0ANgBBAE"
+"cAcABpAG8AAAAEADEAMAAAABIAUAB3AG0ANgBCAEcAcABpAG8AAAAEADEAMQAAABQAUAB3AG0ANgB"
+"HAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0ANwBBAEcAcABpAG8AAAAEADEAMgAAABIAUAB3AG0A"
+"NwBCAEcAcABpAG8AAAAEADEAMwAAABQAUAB3AG0ANwBHAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3A"
+"G0AOABBAEcAcABpAG8AAAAEADEANAAAABIAUAB3AG0AOABCAEcAcABpAG8AAAAEADEANQAAABQAUA"
+"B3AG0AOABHAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0AOQBBAEcAcABpAG8AAAAEADEANgAAABI"
+"AUAB3AG0AOQBCAEcAcABpAG8AAAAEADEANwAAABQAUAB3AG0AOQBHAHAAaQBvAEUAbgAAAAIAMAAA"
+"ACAAUwBhAG0AcABsAGUAVABpAG0AZQBSAGUAbABUAG8AbAAAAAQAMgAwAAAAGABTAGUAcgBpAGEAb"
+"ABOAHUAbQBiAGUAcgAAAAAAAAAqAFMAZQByAGkAYQBsAE4AdQBtAGIAZQByAFMAcABlAGMAaQBmAG"
+"kAZQBkAAAAAgAwAAAAGgBUAEEAUgBHAEUAVABfAEQARQBWAEkAQwBFAAAAFAAwAHwAQwBPAE0ANgB"
+"8ADAAfAAwAAAAEgBUAHoAMQBFAG4AYQBiAGwAZQAAAAIAMAAAAA4AVAB6ADEARwBwAGkAbwAAAAIA"
+"MAAAABIAVAB6ADIARQBuAGEAYgBsAGUAAAACADAAAAAOAFQAegAyAEcAcABpAG8AAAACADAAAAASA"
+"FQAegAzAEUAbgBhAGIAbABlAAAAAgAwAAAADgBUAHoAMwBHAHAAaQBvAAAAAgAwAAAASgBVAFMARQ"
+"BfAEQAQQBUAEEAXwBUAFkAUABFAFMAXwBGAE8AUgBfAFQAVQBOAEEAQgBMAEUAXwBQAEEAUgBBAE0"
+"ARQBUAEUAUgBTAAAAAgAxAAAANABVAFMARQBfAFMAVABBAFIAVABfAFQASQBNAEUAXwBJAE4AXwBJ"
+"AE4ASQBUAF8ARgBDAE4AAAACADAAAAAOAFYAcgBlAGYAQQBkAGMAAAAGADMALgAzAAAAGABWAHIAZ"
+"QBmAEMAbwBtAGIAbwBCAG8AeAAAAAIAMQAAAAoAYgBvAGEAcgBkAAAAAgAyAAAAFgBiAHUAaQBsAG"
+"QAQwBvAG4AZgBpAGcAAAACADEAAAAIAGMAaABpAHAAAAACADEAAAASAGUAeAB0AEMAbABrAE0ASAB"
+"6AAAABAAyADUAAAAiAGUAeAB0AE0AbwBkAGUAQgB1AGYAZgBlAHIAUwBpAHoAZQAAAAgAMQAwADAA"
+"MAAAABwAZQB4AHQATQBvAGQAZQBTAGMAaQBQAGkAbgBzAAAADgBbADIAOAAsADIAOQBdAAAADgBnA"
+"GUAbgBPAG4AbAB5AAAAAgAyAAAAFABpAG4AcwB0AGEAbABsAEQAaQByAAAAAAAAABIAcwB5AHMAQw"
+"BsAGsATQBIAHoAAAAGADEANQAwAAAAFgB0AGEAcwBrAEYAcgBlAHEAVABvAGwAAAACADIAAAAYAHU"
+"AbgBpAGYAbABhAHMAaABGAGkAbABlAAAAAAAAABIAdQBzAGUASQBuAHQATwBzAGMAAAACADE="
+  ExtendedMatrixPrecision "1"
+  MatrixSignificanceCheck "2"
+  RemoveUnusedStateSpaceOutputs "2"
+  EnableStateSpaceSplitting "2"
+  DisplayStateSpaceSplitting "1"
+  DiscretizationMethod "2"
+  ExternalModeSettings "AAAAfwAAAAAYQ29kZUdlblRhcmdldDo6U2V0dGluZ3MAAAAABwAAAB"
+"QARABlAGMAaQBtAGEAdABpAG8AbgAAAAIAMQAAABQATgB1AG0AUwBhAG0AcABsAGUAcwAAAAgAOAA"
+"xADkAMgAAABYAUgBlAGYAcgBlAHMAaABSAGEAdABlAAAABAAyADAAAAAWAFMAZQBuAHMAaQB0AGkA"
+"dgBpAHQAeQAAAAIAMAAAABwAVAByAGkAZwBnAGUAcgBDAGgAYQBuAG4AZQBsAAAABAAtADEAAAAYA"
+"FQAcgBpAGcAZwBlAHIARABlAGwAYQB5AAAAAgAwAAAAGABUAHIAaQBnAGcAZQByAFYAYQBsAHUAZQ"
+"AAAAIAMA=="
+  AlgebraicLoopMethod "1"
+  AlgebraicLoopTolerance "1e-6"
+  ScriptsDialogGeometry ""
+  ScriptsDialogSplitterPos "0"
+  MixedSignalSolverBypassOperatingPoint "1"
+  MixedSignalSolverInitialConditions "2"
+  MixedSignalSolverMaxNewtonIterations "25"
+  MixedSignalSolverNumThreads "-1"
+  OperatingPointMaxNewtonIterations "50"
+  OperatingPointRelativeNewtonTolerance "1e-3"
+  OperatingPointAbsoluteNewtonTolerance "1e-12"
+  OperatingPointNodalVoltageNewtonTolerance "1e-6"
+  SpiceTemperature "27"
+  SpiceGMin     "0"
+  SpiceInductorRPar "0"
+  SpiceInductorRSer "0"
+  SpiceCapacitorGPar "0"
+  SpiceCapacitorRSer "0"
+  NetlistParserDetails "2"
+  InvalidNetlistFunctionEvaluationMsg "1"
+  IncompatibleInitialConditionMsg "2"
+  Schematic {
+    Location      [0, 26; 1536, 864]
+    ZoomFactor    1.2
+    SliderPosition [0, 0]
+    ShowBrowser   off
+    BrowserWidth  100
+    Component {
+      Type          DCVoltageSource
+      Name          "ITECH"
+      Show          on
+      Position      [60, 180]
+      Direction     down
+      Flipped       on
+      LabelPosition east
+      Parameter {
+        Variable      "V"
+        Value         "Vdc"
+        Show          off
+      }
+    }
+    Component {
+      Type          Resistor
+      Name          "Rs"
+      Show          on
+      Position      [110, 60]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Parameter {
+        Variable      "R"
+        Value         "Rs"
+        Show          off
+      }
+    }
+    Component {
+      Type          Capacitor
+      Name          "Cdc"
+      Show          on
+      Position      [170, 180]
+      Direction     up
+      Flipped       off
+      LabelPosition east
+      Parameter {
+        Variable      "C"
+        Value         "Cdc"
+        Show          off
+      }
+      Parameter {
+        Variable      "v_init"
+        Value         "Vdc"
+        Show          off
+      }
+    }
+    Component {
+      Type          Voltmeter
+      Name          "Vm_dc"
+      Show          on
+      Position      [220, 180]
+      Direction     up
+      Flipped       off
+      LabelPosition west
+    }
+    Component {
+      Type          MosfetWithDiode
+      Name          "Q1"
+      Show          on
+      Position      [300, 120]
+      Direction     up
+      Flipped       off
+      LabelPosition east
+      Parameter {
+        Variable      "Ron"
+        Value         "Ron"
+        Show          off
+      }
+      Parameter {
+        Variable      "s_init"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "Rth"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Np"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          MosfetWithDiode
+      Name          "Q2"
+      Show          on
+      Position      [300, 240]
+      Direction     up
+      Flipped       off
+      LabelPosition east
+      Parameter {
+        Variable      "Ron"
+        Value         "Ron"
+        Show          off
+      }
+      Parameter {
+        Variable      "s_init"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "Rth"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Np"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          MosfetWithDiode
+      Name          "Q3"
+      Show          on
+      Position      [420, 120]
+      Direction     up
+      Flipped       off
+      LabelPosition east
+      Parameter {
+        Variable      "Ron"
+        Value         "Ron"
+        Show          off
+      }
+      Parameter {
+        Variable      "s_init"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "Rth"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Np"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          MosfetWithDiode
+      Name          "Q4"
+      Show          on
+      Position      [420, 240]
+      Direction     up
+      Flipped       off
+      LabelPosition east
+      Parameter {
+        Variable      "Ron"
+        Value         "Ron"
+        Show          off
+      }
+      Parameter {
+        Variable      "s_init"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "Rth"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Np"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          Resistor
+      Name          "RL1"
+      Show          on
+      Position      [520, 180]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Parameter {
+        Variable      "R"
+        Value         "RLf"
+        Show          off
+      }
+    }
+    Component {
+      Type          Inductor
+      Name          "Lf1"
+      Show          on
+      Position      [580, 180]
+      Direction     left
+      Flipped       off
+      LabelPosition north
+      Parameter {
+        Variable      "L"
+        Value         "Lf"
+        Show          off
+      }
+      Parameter {
+        Variable      "i_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Inductor
+      Name          "Lf2"
+      Show          on
+      Position      [580, 330]
+      Direction     right
+      Flipped       off
+      LabelPosition north
+      Parameter {
+        Variable      "L"
+        Value         "Lf"
+        Show          off
+      }
+      Parameter {
+        Variable      "i_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Resistor
+      Name          "RL2"
+      Show          on
+      Position      [520, 330]
+      Direction     left
+      Flipped       off
+      LabelPosition west
+      Parameter {
+        Variable      "R"
+        Value         "RLf"
+        Show          off
+      }
+    }
+    Component {
+      Type          Capacitor
+      Name          "Cf1"
+      Show          on
+      Position      [650, 225]
+      Direction     up
+      Flipped       off
+      LabelPosition east
+      Parameter {
+        Variable      "C"
+        Value         "Cf"
+        Show          off
+      }
+      Parameter {
+        Variable      "v_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Capacitor
+      Name          "Cf2"
+      Show          on
+      Position      [650, 285]
+      Direction     up
+      Flipped       off
+      LabelPosition east
+      Parameter {
+        Variable      "C"
+        Value         "Cf"
+        Show          off
+      }
+      Parameter {
+        Variable      "v_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Resistor
+      Name          "Rbl1"
+      Show          on
+      Position      [690, 225]
+      Direction     up
+      Flipped       off
+      LabelPosition west
+      Parameter {
+        Variable      "R"
+        Value         "Rbl"
+        Show          off
+      }
+    }
+    Component {
+      Type          Resistor
+      Name          "Rbl2"
+      Show          on
+      Position      [690, 285]
+      Direction     up
+      Flipped       off
+      LabelPosition west
+      Parameter {
+        Variable      "R"
+        Value         "Rbl"
+        Show          off
+      }
+    }
+    Component {
+      Type          Resistor
+      Name          "R_bank"
+      Show          on
+      Position      [760, 255]
+      Direction     up
+      Flipped       off
+      LabelPosition west
+      Parameter {
+        Variable      "R"
+        Value         "R_bank"
+        Show          off
+      }
+    }
+    Component {
+      Type          Resistor
+      Name          "R_step"
+      Show          on
+      Position      [840, 210]
+      Direction     up
+      Flipped       off
+      LabelPosition west
+      Parameter {
+        Variable      "R"
+        Value         "R_step"
+        Show          off
+      }
+    }
+    Component {
+      Type          MosfetWithDiode
+      Name          "S1"
+      Show          on
+      Position      [840, 270]
+      Direction     up
+      Flipped       off
+      LabelPosition east
+      Parameter {
+        Variable      "Ron"
+        Value         "Ron"
+        Show          off
+      }
+      Parameter {
+        Variable      "s_init"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "Rth"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Np"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          MosfetWithDiode
+      Name          "S2"
+      Show          on
+      Position      [840, 320]
+      Direction     down
+      Flipped       off
+      LabelPosition east
+      Parameter {
+        Variable      "Ron"
+        Value         "Ron"
+        Show          off
+      }
+      Parameter {
+        Variable      "s_init"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "Rth"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Np"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          Voltmeter
+      Name          "Vm_o"
+      Show          on
+      Position      [910, 255]
+      Direction     up
+      Flipped       off
+      LabelPosition west
+    }
+    Component {
+      Type          PlecsProbe
+      Name          "Probe"
+      Show          on
+      Position      [120, 430]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Probe {
+        Component     "Lf1"
+        Path          ""
+        Signals       {"Inductor current"}
+      }
+      Probe {
+        Component     "R_bank"
+        Path          ""
+        Signals       {"Resistor current"}
+      }
+      Probe {
+        Component     "R_step"
+        Path          ""
+        Signals       {"Resistor current"}
+      }
+      Probe {
+        Component     "Vm_o"
+        Path          ""
+        Signals       {"Measured voltage"}
+      }
+      Probe {
+        Component     "Vm_dc"
+        Path          ""
+        Signals       {"Measured voltage"}
+      }
+    }
+    Component {
+      Type          CScript
+      Name          "Interface board\nsensing"
+      Show          on
+      Position      [250, 430]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "DialogGeometry"
+        Value         "[268 171 682 684]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumInputs"
+        Value         "5"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumOutputs"
+        Value         "[3, 1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumContStates"
+        Value         "8"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumDiscStates"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumZCSignals"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "DirectFeedthrough"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ts"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "TerminalBasedSampleTimes"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Parameters"
+        Value         "sens_par"
+        Show          off
+      }
+      Parameter {
+        Variable      "LangStandard"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "GnuExtensions"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "RuntimeCheck"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Declarations"
+        Value         "/* Interface-board sensing chain (Inverter Box Setup Guide), simulation only"
+".\n * Probe -> divider -> active low-pass -> ADC pin, modelled as\n *   H(s)"
+" = (1 + s/wz) / ((1 + s/wp1)(1 + s/wp2)),  fz = 1.5 kHz, fp = 700/900 Hz\n *"
+" (0.5 % low and -6 deg at 60 Hz, -21 dB at 5 kHz), then\n *   V_pin = 1.667 "
+"V + k*signal, 12-bit quantisation over 0..3.3 V.\n * Input  (probe order): ["
+"iL, iR1, iR2, vo, vdc]\n * Output 1: pins [B2 B0 B1] = [vo iL io]   2: pin ["
+"A6] = vdc\n */\n#include <math.h>\nenum { S_FZ, S_FP1, S_FP2, S_OFS, S_KV, S"
+"_KI, S_VREF, S_BITS, S_VDC0, S_NUM };\nstatic double s_wz, s_wp1, s_wp2, s_q"
+";\n\nstatic double s_pin(double y, double k)\n{\n    double v = ParamRealDat"
+"a(0, S_OFS) + k*y;\n    v = s_q*floor(v/s_q + 0.5);\n    if (v < 0.0) v = 0."
+"0;\n    if (v > ParamRealData(0, S_VREF)) v = ParamRealData(0, S_VREF);\n   "
+" return v;\n}"
+        Show          off
+      }
+      Parameter {
+        Variable      "StartFcn"
+        Value         "int c;\ns_wz  = 6.283185307179586*ParamRealData(0, S_FZ);\ns_wp1 = 6.2831853"
+"07179586*ParamRealData(0, S_FP1);\ns_wp2 = 6.283185307179586*ParamRealData(0"
+", S_FP2);\ns_q   = ParamRealData(0, S_VREF)/pow(2.0, ParamRealData(0, S_BITS"
+"));\nfor (c = 0; c < 8; c++)\n    ContState(c) = 0.0;\n/* dc-link channel st"
+"arts settled at the supply voltage */\nContState(6) = ParamRealData(0, S_VDC"
+"0);\nContState(7) = ParamRealData(0, S_VDC0);"
+        Show          off
+      }
+      Parameter {
+        Variable      "OutputFcn"
+        Value         "/* Each channel: state 2c is the first pole, state 2c+1 the output. */\nOutp"
+"utSignal(0, 0) = s_pin(ContState(1), ParamRealData(0, S_KV));   /* B2: vo  *"
+"/\nOutputSignal(0, 1) = s_pin(ContState(3), ParamRealData(0, S_KI));   /* B0"
+": iL  */\nOutputSignal(0, 2) = s_pin(ContState(5), ParamRealData(0, S_KI)); "
+"  /* B1: io  */\nOutputSignal(1, 0) = s_pin(ContState(7), ParamRealData(0, S"
+"_KV));   /* A6: vdc */"
+        Show          off
+      }
+      Parameter {
+        Variable      "UpdateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "DerivativeFcn"
+        Value         "double u[4];\nint c;\nu[0] = InputSignal(0, 3);                       /* vo "
+"*/\nu[1] = InputSignal(0, 0);                       /* iL */\nu[2] = InputSi"
+"gnal(0, 1) + InputSignal(0, 2);   /* io = iR1 + iR2 */\nu[3] = InputSignal(0"
+", 4);                       /* vdc */\nfor (c = 0; c < 4; c++) {\n    double"
+" d1 = s_wp1*(u[c] - ContState(2*c));\n    double w  = ContState(2*c) + d1/s_"
+"wz;       /* zero */\n    ContDeriv(2*c)     = d1;\n    ContDeriv(2*c + 1) ="
+" s_wp2*(w - ContState(2*c + 1));\n}"
+        Show          off
+      }
+      Parameter {
+        Variable      "TerminateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "StoreCustomStateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "RestoreCustomStateFcn"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          CScript
+      Name          "Test sequence"
+      Show          on
+      Position      [250, 530]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "DialogGeometry"
+        Value         "[268 171 682 684]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumInputs"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumOutputs"
+        Value         "[1, 1, 1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumContStates"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumDiscStates"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumZCSignals"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "DirectFeedthrough"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ts"
+        Value         "Ts"
+        Show          off
+      }
+      Parameter {
+        Variable      "TerminalBasedSampleTimes"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Parameters"
+        Value         "scen_par"
+        Show          off
+      }
+      Parameter {
+        Variable      "LangStandard"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "GnuExtensions"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "RuntimeCheck"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Declarations"
+        Value         "/* Demonstration sequence for the station-sheet tests (simulation only).\n *"
+" Output 1: Vref_rms   2: enable   3: load-step switch (closes 10 more bank s"
+"witches)\n */\nenum { T_EN, T_LOAD_ON, T_REF_UP, T_REF_DN, T_LOAD_OFF, V_OP1"
+", V_OP2 };"
+        Show          off
+      }
+      Parameter {
+        Variable      "StartFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "OutputFcn"
+        Value         "const double t = CurrentTime;\nOutputSignal(0, 0) = (t >= ParamRealData(0, T"
+"_REF_UP) && t < ParamRealData(0, T_REF_DN))\n                     ? ParamRea"
+"lData(0, V_OP2) : ParamRealData(0, V_OP1);\nOutputSignal(1, 0) = t >= ParamR"
+"ealData(0, T_EN) ? 1.0 : 0.0;\nOutputSignal(2, 0) = (t >= ParamRealData(0, T"
+"_LOAD_ON) && t < ParamRealData(0, T_LOAD_OFF))\n                     ? 1.0 :"
+" 0.0;"
+        Show          off
+      }
+      Parameter {
+        Variable      "UpdateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "DerivativeFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "TerminateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "StoreCustomStateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "RestoreCustomStateFcn"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          Constant
+      Name          "Kp_amp"
+      Show          on
+      Position      [250, 590]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "10"
+        Show          off
+      }
+    }
+    Component {
+      Type          Constant
+      Name          "Ki_amp"
+      Show          on
+      Position      [250, 630]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "0.4"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "10"
+        Show          off
+      }
+    }
+    Component {
+      Type          CScript
+      Name          "Controller"
+      Show          on
+      Position      [420, 500]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "DialogGeometry"
+        Value         "[268 171 682 684]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumInputs"
+        Value         "[3, 1, 1, 1, 1, 1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumOutputs"
+        Value         "[2, 1, 3, 7]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumContStates"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumDiscStates"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumZCSignals"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "DirectFeedthrough"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ts"
+        Value         "Ts"
+        Show          off
+      }
+      Parameter {
+        Variable      "TerminalBasedSampleTimes"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Parameters"
+        Value         "ctl_par"
+        Show          off
+      }
+      Parameter {
+        Variable      "LangStandard"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "GnuExtensions"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "RuntimeCheck"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Declarations"
+        Value         "/* ENEL 585 Project B, Group 8: single-phase standalone inverter controller."
+"\n * The same code runs in the switched station model and on the LAUNCHXL-F2"
+"8P55X.\n *\n * Inputs  1: ADC unit B pins [B2 B0 B1] (V)    2: ADC unit A pi"
+"n [A6] (V)\n *         3: Vref_rms (V)   4: enable (0/1)   5: Kp_amp   6: Ki"
+"_amp\n * Outputs 1: [dA dB] leg duties   2: PWM enable to Powerstage Protect"
+"ion\n *         3: [vo iL io] (V, A)    4: [Vpk_meas Vpk_cmd m fault Vrms IL"
+"rms Pout]\n *\n * Runs once per carrier period. The 60 Hz reference is sampl"
+"ed at n/N of a\n * period (n counts carrier periods), so it stays synchronou"
+"s with the carrier.\n * The output amplitude is measured by synchronous demo"
+"dulation over the last\n * full cycle and trimmed by an integrator; the modu"
+"lation index changes only\n * at the reference zero crossings (n = 0 and n ="
+" N/2).\n */\n#include <math.h>\n\n#define G8_NMAX 256                 /* sin"
+"e-table capacity */\n\n/* Parameter vector ctl_par (see the model's init com"
+"mands) */\nenum {\n    P_N, P_TS,                      /* samples per 60 Hz "
+"period, sample time */\n    P_KVO, P_OVO, P_KIL, P_OIL,     /* pin-to-physic"
+"al gain and pin offset */\n    P_KIO, P_OIO, P_KDC, P_ODC,\n    P_SRC_VO, P_"
+"SRC_IL, P_SRC_IO, P_SRC_DC, /* pin index 1..4, 0 = not wired */\n    P_VDC_N"
+"OM, P_H60,               /* dc voltage if unmeasured, sensor gain at 60 Hz *"
+"/\n    P_VO_TRIP, P_IL_TRIP, P_IO_TRIP, P_DC_TRIP, /* protection thresholds "
+"*/\n    P_DC_MIN,                       /* dc voltage needed before switchin"
+"g starts */\n    P_VREF_MAX,                     /* largest accepted Vref_rm"
+"s */\n    P_SLEW,                         /* amplitude slew, V pk per half c"
+"ycle */\n    P_M_MAX, P_X_MAX,               /* modulation and integrator li"
+"mits */\n    P_I_LIM, P_K_FOLD, P_FOLD_DEC,  /* inductor-current limit foldb"
+"ack */\n    P_TAU_DC,                       /* dc voltage filter time consta"
+"nt */\n    P_NUM\n};\n\n/* Latched fault bits */\n#define F_VO 1            "
+"          /* output overvoltage */\n#define F_IL 2                      /* i"
+"nductor overcurrent */\n#define F_IO 4                      /* output overcu"
+"rrent */\n#define F_DC 8                      /* dc-link overvoltage */\n\nt"
+"ypedef struct {\n    int   n;                        /* index in the 60 Hz p"
+"eriod, 0..N-1 */\n    int   cnt;                      /* samples summed in t"
+"his half cycle */\n    int   halves;                   /* half cycles comple"
+"ted since start */\n    int   run;                      /* 1 while the bridg"
+"e switches */\n    int   fault;                    /* latched fault bits */\n"
+"    float sI, sQ;                   /* half-cycle sums of vo*sin, vo*cos */\n"
+"    float AIh, AQh;                 /* previous half-cycle amplitudes */\n  "
+"  float s_v2, s_il2, s_io2, s_p;  /* full-cycle sums for RMS and power */\n "
+"   float ilpk;                     /* half-cycle peak |iL| */\n    float vc,"
+" vc1;                  /* amplitude command, this and last half */\n    floa"
+"t x;                        /* integral trim, V pk */\n    float fold;      "
+"               /* current-limit foldback, V pk */\n    float m;             "
+"           /* modulation index for this half cycle */\n    float vdcf;      "
+"               /* filtered dc-link voltage */\n    float vpk;               "
+"       /* measured output amplitude, V pk */\n    float vrms, ilrms, pout;  "
+"      /* last full-cycle results */\n} g8_state;\n\nstatic g8_state g8, g8_n"
+"ext;        /* committed state, state after this step */\nstatic float g8_si"
+"n[G8_NMAX], g8_cos[G8_NMAX];\nstatic float g8_p[P_NUM];\nstatic int   g8_N, "
+"g8_NH;\n\nstatic float g8_clamp(float v, float lo, float hi)\n{\n    return "
+"v < lo ? lo : (v > hi ? hi : v);\n}\n\n/* Physical value of signal 'src' (pi"
+"n index 1..4), or dflt if not wired. */\nstatic float g8_meas(const float *p"
+"in, int k_src, int k_gain, int k_ofs, float dflt)\n{\n    int src = (int)(g8"
+"_p[k_src] + 0.5f);\n    if (src < 1 || src > 4)\n        return dflt;\n    r"
+"eturn g8_p[k_gain]*(pin[src - 1] - g8_p[k_ofs]);\n}"
+        Show          off
+      }
+      Parameter {
+        Variable      "StartFcn"
+        Value         "/* Copy the parameters and build the sine/cosine tables once, before the PWM"
+"\n * starts, so the per-step task does lookups instead of sin() calls. */\ni"
+"nt k;\ng8_state zero = {0};\nfor (k = 0; k < P_NUM; k++)\n    g8_p[k] = (flo"
+"at)ParamRealData(0, k);\ng8_N = (int)(g8_p[P_N] + 0.5f);\nif (g8_N > G8_NMAX"
+") g8_N = G8_NMAX;\ng8_N -= g8_N % 2;                   /* even, so a half cy"
+"cle is whole samples */\ng8_NH = g8_N/2;\nfor (k = 0; k < g8_N; k++) {\n    "
+"g8_sin[k] = (float)sin(6.283185307179586*k/g8_N);\n    g8_cos[k] = (float)co"
+"s(6.283185307179586*k/g8_N);\n}\ng8 = zero;\ng8.vdcf = g8_p[P_VDC_NOM];\ng8_"
+"next = g8;"
+        Show          off
+      }
+      Parameter {
+        Variable      "OutputFcn"
+        Value         "/* Work on a copy of the state; UpdateFcn commits it, so a repeated call at "
+"the\n * same sample time cannot advance the controller twice. */\ng8_state s"
+" = g8;\nfloat pin[4];\npin[0] = (float)InputSignal(0, 0);  /* B2: VProbe 1 *"
+"/\npin[1] = (float)InputSignal(0, 1);  /* B0: CProbe 2 */\npin[2] = (float)I"
+"nputSignal(0, 2);  /* B1: CProbe 1 */\npin[3] = (float)InputSignal(1, 0);  /"
+"* A6: VProbe 2 */\nconst float vref_rms = (float)InputSignal(2, 0);\nconst i"
+"nt   enable   = InputSignal(3, 0) > 0.5;\nconst float kp       = (float)Inpu"
+"tSignal(4, 0);\nconst float ki       = (float)InputSignal(5, 0);\n\nconst fl"
+"oat vo  = g8_meas(pin, P_SRC_VO, P_KVO, P_OVO, 0.0f);\nconst float il  = g8_"
+"meas(pin, P_SRC_IL, P_KIL, P_OIL, 0.0f);\nconst float io  = g8_meas(pin, P_S"
+"RC_IO, P_KIO, P_OIO, 0.0f);\nconst float vdc = g8_meas(pin, P_SRC_DC, P_KDC,"
+" P_ODC, g8_p[P_VDC_NOM]);\n\ns.vdcf += g8_p[P_TS]/g8_p[P_TAU_DC]*(vdc - s.vd"
+"cf);\n\n/* Protection, every sample. A trip latches until the enable switch "
+"is set\n * to 0; while disabled the bits show any condition that is still pr"
+"esent. */\nif (!enable)\n    s.fault = 0;\nif (fabsf(vo) > g8_p[P_VO_TRIP]) "
+"s.fault |= F_VO;\nif (fabsf(il) > g8_p[P_IL_TRIP]) s.fault |= F_IL;\nif (g8_"
+"p[P_SRC_IO] > 0.5f && fabsf(io) > g8_p[P_IO_TRIP]) s.fault |= F_IO;\nif (g8_"
+"p[P_SRC_DC] > 0.5f && vdc > g8_p[P_DC_TRIP]) s.fault |= F_DC;\n\nif (!enable"
+" || s.fault) {\n    s.run = 0;\n} else if (!s.run && s.vdcf >= g8_p[P_DC_MIN"
+"]) {\n    /* Start at a zero crossing with zero amplitude; the slew limit ra"
+"mps it. */\n    g8_state zero = {0};\n    zero.vdcf = s.vdcf;\n    s = zero;"
+"\n    s.run = 1;\n}\n\n/* Half-cycle boundary: the sums now hold one complet"
+"e half cycle. */\nif (s.run && (s.n == 0 || s.n == g8_NH) && s.cnt == g8_NH)"
+" {\n    const float AI = 2.0f*s.sI/(float)g8_NH;\n    const float AQ = 2.0f*"
+"s.sQ/(float)g8_NH;\n    /* Average with the previous half: a full-cycle wind"
+"ow rejects dc offset\n     * and even harmonics as well as the odd ones. */\n"
+"    const float AIf = s.halves > 0 ? 0.5f*(AI + s.AIh) : AI;\n    const floa"
+"t AQf = s.halves > 0 ? 0.5f*(AQ + s.AQh) : AQ;\n    s.AIh = AI;\n    s.AQh ="
+" AQ;\n    s.vpk = sqrtf(AIf*AIf + AQf*AQf)/g8_p[P_H60];\n    s.halves++;\n\n"
+"    /* Compare with the command applied over the same window, so the trim\n "
+"    * corrects losses rather than the measurement delay during a ramp. */\n "
+"   const float r_win = s.halves > 1 ? 0.5f*(s.vc + s.vc1) : s.vc;\n    const"
+" float e = r_win - s.vpk;\n    if (s.halves > 1) {\n        /* Conditional i"
+"ntegration: hold the trim while the modulator is at\n         * its limit an"
+"d the error would push it further. */\n        if (!(s.m >= g8_p[P_M_MAX] - "
+"1e-4f && e > 0.0f))\n            s.x += ki*e;\n        s.x = g8_clamp(s.x, -"
+"g8_p[P_X_MAX], g8_p[P_X_MAX]);\n    }\n\n    /* Current limit: reduce the am"
+"plitude while the half-cycle peak of the\n     * sensed inductor current is "
+"above I_LIM, recover slowly once below. */\n    if (s.ilpk > g8_p[P_I_LIM])\n"
+"        s.fold += g8_p[P_K_FOLD]*(s.ilpk - g8_p[P_I_LIM]);\n    else\n      "
+"  s.fold -= g8_p[P_FOLD_DEC];\n    s.fold = g8_clamp(s.fold, 0.0f, 1.4142135"
+"6f*g8_p[P_VREF_MAX]);\n\n    /* Slew-limited amplitude command for the next "
+"half cycle. */\n    float target = 1.41421356f*g8_clamp(vref_rms, 0.0f, g8_p"
+"[P_VREF_MAX]) - s.fold;\n    if (target < 0.0f) target = 0.0f;\n    s.vc1 = "
+"s.vc;\n    s.vc += g8_clamp(target - s.vc, -g8_p[P_SLEW], g8_p[P_SLEW]);\n\n"
+"    /* Feedforward over the measured dc link plus the trim. */\n    float a "
+"= s.vc + s.x + (s.halves > 1 ? kp*e : 0.0f);\n    if (a < 0.0f) a = 0.0f;\n "
+"   s.m = g8_clamp(a/(s.vdcf > 1.0f ? s.vdcf : 1.0f), 0.0f, g8_p[P_M_MAX]);\n"
+"\n    s.sI = 0.0f;\n    s.sQ = 0.0f;\n    s.ilpk = 0.0f;\n    s.cnt = 0;\n\n"
+"    if (s.n == 0) {\n        s.vrms  = sqrtf(s.s_v2/(float)g8_N)/g8_p[P_H60]"
+";\n        s.ilrms = sqrtf(s.s_il2/(float)g8_N);\n        s.pout  = s.s_p/(f"
+"loat)g8_N;\n        s.s_v2 = s.s_il2 = s.s_io2 = s.s_p = 0.0f;\n    }\n}\n\n"
+"float dA = 0.5f;\nif (s.run) {\n    const float sn = g8_sin[s.n];\n    dA = "
+"0.5f + 0.5f*s.m*sn;\n    s.sI += vo*sn;\n    s.sQ += vo*g8_cos[s.n];\n    s."
+"cnt++;\n    s.s_v2  += vo*vo;\n    s.s_il2 += il*il;\n    s.s_io2 += io*io;\n"
+"    s.s_p   += vo*io;\n    if (fabsf(il) > s.ilpk) s.ilpk = fabsf(il);\n    "
+"s.n = s.n + 1 >= g8_N ? 0 : s.n + 1;\n}\n\n/* Unipolar SPWM: leg B compares "
+"-m*sin with the same carrier. */\nOutputSignal(0, 0) = dA;\nOutputSignal(0, "
+"1) = 1.0f - dA;\nOutputSignal(1, 0) = s.run ? 1.0 : 0.0;\nOutputSignal(2, 0)"
+" = vo;\nOutputSignal(2, 1) = il;\nOutputSignal(2, 2) = io;\nOutputSignal(3, "
+"0) = s.vpk;\nOutputSignal(3, 1) = s.vc;\nOutputSignal(3, 2) = s.m;\nOutputSi"
+"gnal(3, 3) = s.fault;\nOutputSignal(3, 4) = s.vrms;\nOutputSignal(3, 5) = s."
+"ilrms;\nOutputSignal(3, 6) = s.pout;\ng8_next = s;"
+        Show          off
+      }
+      Parameter {
+        Variable      "UpdateFcn"
+        Value         "g8 = g8_next;\nDiscState(0) = DiscState(0) + 1.0;   /* step counter (keeps t"
+"he update call) */"
+        Show          off
+      }
+      Parameter {
+        Variable      "DerivativeFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "TerminateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "StoreCustomStateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "RestoreCustomStateFcn"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          SignalDemux
+      Name          "Demux"
+      Show          off
+      Position      [520, 450]
+      Direction     right
+      Flipped       on
+      LabelPosition south
+      Frame         [-7, -15; 2, 15]
+      Parameter {
+        Variable      "Width"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "Components/Control/Modulators/Symmetrical PWM"
+      Name          "PWM leg A"
+      Show          on
+      Position      [580, 430]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-20, -20; 20, 20]
+      Parameter {
+        Variable      "sampling"
+        Value         "5"
+        Show          off
+      }
+      Parameter {
+        Variable      "fc"
+        Value         "fsw"
+        Show          off
+      }
+      Parameter {
+        Variable      "carrier_phaseshift"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "carrier_limits"
+        Value         "[0 1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "output_values"
+        Value         "[0 1]"
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [24, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-20, 0]
+        Direction     left
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "Components/Control/Modulators/Symmetrical PWM"
+      Name          "PWM leg B"
+      Show          on
+      Position      [580, 520]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-20, -20; 20, 20]
+      Parameter {
+        Variable      "sampling"
+        Value         "5"
+        Show          off
+      }
+      Parameter {
+        Variable      "fc"
+        Value         "fsw"
+        Show          off
+      }
+      Parameter {
+        Variable      "carrier_phaseshift"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "carrier_limits"
+        Value         "[0 1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "output_values"
+        Value         "[0 1]"
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [24, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-20, 0]
+        Direction     left
+      }
+    }
+    Component {
+      Type          LogicalOperator
+      Name          "NOT A"
+      Show          on
+      Position      [640, 460]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Operator"
+        Value         "6"
+        Show          off
+      }
+      Parameter {
+        Variable      "Inputs"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          LogicalOperator
+      Name          "NOT B"
+      Show          on
+      Position      [640, 550]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Operator"
+        Value         "6"
+        Show          off
+      }
+      Parameter {
+        Variable      "Inputs"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          LogicalOperator
+      Name          "AND1"
+      Show          on
+      Position      [700, 420]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Operator"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Inputs"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "Components/Control/Delays/Turn-on Delay"
+      Name          "Dead time 1"
+      Show          on
+      Position      [760, 420]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-15, -15; 15, 15]
+      Parameter {
+        Variable      "DeadTimeSource"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_d"
+        Value         "dead_time"
+        Show          off
+      }
+      Parameter {
+        Variable      "Rounding"
+        Value         "1"
+        Show          off
+      }
+      Terminal {
+        Type          Input
+        Position      [-15, 0]
+        Direction     left
+      }
+      Terminal {
+        Type          Output
+        Position      [19, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-15, 5]
+        Direction     left
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "Goto G1"
+      Show          off
+      Position      [810, 420]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "G1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          LogicalOperator
+      Name          "AND2"
+      Show          on
+      Position      [700, 460]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Operator"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Inputs"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "Components/Control/Delays/Turn-on Delay"
+      Name          "Dead time 2"
+      Show          on
+      Position      [760, 460]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-15, -15; 15, 15]
+      Parameter {
+        Variable      "DeadTimeSource"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_d"
+        Value         "dead_time"
+        Show          off
+      }
+      Parameter {
+        Variable      "Rounding"
+        Value         "1"
+        Show          off
+      }
+      Terminal {
+        Type          Input
+        Position      [-15, 0]
+        Direction     left
+      }
+      Terminal {
+        Type          Output
+        Position      [19, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-15, 5]
+        Direction     left
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "Goto G2"
+      Show          off
+      Position      [810, 460]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "G2"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          LogicalOperator
+      Name          "AND3"
+      Show          on
+      Position      [700, 510]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Operator"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Inputs"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "Components/Control/Delays/Turn-on Delay"
+      Name          "Dead time 3"
+      Show          on
+      Position      [760, 510]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-15, -15; 15, 15]
+      Parameter {
+        Variable      "DeadTimeSource"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_d"
+        Value         "dead_time"
+        Show          off
+      }
+      Parameter {
+        Variable      "Rounding"
+        Value         "1"
+        Show          off
+      }
+      Terminal {
+        Type          Input
+        Position      [-15, 0]
+        Direction     left
+      }
+      Terminal {
+        Type          Output
+        Position      [19, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-15, 5]
+        Direction     left
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "Goto G3"
+      Show          off
+      Position      [810, 510]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "G3"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          LogicalOperator
+      Name          "AND4"
+      Show          on
+      Position      [700, 550]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Operator"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Inputs"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "Components/Control/Delays/Turn-on Delay"
+      Name          "Dead time 4"
+      Show          on
+      Position      [760, 550]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-15, -15; 15, 15]
+      Parameter {
+        Variable      "DeadTimeSource"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_d"
+        Value         "dead_time"
+        Show          off
+      }
+      Parameter {
+        Variable      "Rounding"
+        Value         "1"
+        Show          off
+      }
+      Terminal {
+        Type          Input
+        Position      [-15, 0]
+        Direction     left
+      }
+      Terminal {
+        Type          Output
+        Position      [19, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-15, 5]
+        Direction     left
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "Goto G4"
+      Show          off
+      Position      [810, 550]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "G4"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "From G1"
+      Show          off
+      Position      [250, 120]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "G1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "From G2"
+      Show          off
+      Position      [250, 240]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "G2"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "From G3"
+      Show          off
+      Position      [370, 120]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "G3"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "From G4"
+      Show          off
+      Position      [370, 240]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "G4"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "Goto LS"
+      Show          off
+      Position      [340, 560]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "LS"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "From LS1"
+      Show          off
+      Position      [790, 270]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "LS"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "From LS2"
+      Show          off
+      Position      [790, 320]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "LS"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          SignalDemux
+      Name          "Demux probe"
+      Show          off
+      Position      [180, 380]
+      Direction     right
+      Flipped       on
+      LabelPosition south
+      Frame         [-7, -15; 2, 15]
+      Parameter {
+        Variable      "Width"
+        Value         "5"
+        Show          off
+      }
+    }
+    Component {
+      Type          SignalDemux
+      Name          "Demux status"
+      Show          off
+      Position      [520, 600]
+      Direction     right
+      Flipped       on
+      LabelPosition south
+      Frame         [-7, -15; 2, 15]
+      Parameter {
+        Variable      "Width"
+        Value         "7"
+        Show          off
+      }
+    }
+    Component {
+      Type          Scope
+      Name          "Scope"
+      Show          on
+      Position      [680, 650]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-15, -20; 15, 20]
+      Location      [100, 100; 900, 800]
+      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
+"G0AQQByAGUAYQAAAAAA/////wAAAIAA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGIA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABiAP///wAAAAMAAAgAAAAAovw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQBAAAAAAAACAAAAABEAP///wAACAAAAANdAAAA"
+"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
+"AAAAA=="
+      SavedViews    "AAAAAgAAAAA="
+      HeaderState   "{\"DefaultSecSize\":100,\"FirstSecSize\":184,\"Labels\":["
+"\"Delta\"],\"VisualIdxs\":[3]}"
+      PlotPalettes  "AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+"=="
+      Axes          "4"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    "Time / s"
+      ShowLegend    "1"
+      Axis {
+        Name          "Output voltage vo [V]"
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Axis {
+        Name          "Inductor current iL [A]"
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Axis {
+        Name          "Amplitude measured [V pk]"
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Axis {
+        Name          "Modulation index m"
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis       on
+        AxisLabel         "Frequency / Hz"
+        Scaling           0
+        PhaseDisplay      0
+        ShowFourierLegend off
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
+    Component {
+      Type          Display
+      Name          "status"
+      Show          on
+      Position      [680, 720]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-21, -11; 21, 11]
+      Parameter {
+        Variable      "Notation"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Precision"
+        Value         "2"
+        Show          off
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "ITECH"
+      SrcTerminal   1
+      Points        [60, 60]
+      DstComponent  "Rs"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "Rs"
+      SrcTerminal   2
+      Points        [140, 60]
+      Branch {
+        Points        [170, 60]
+        DstComponent  "Cdc"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [220, 60]
+        DstComponent  "Vm_dc"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [300, 60]
+        DstComponent  "Q1"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [420, 60]
+        DstComponent  "Q3"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "ITECH"
+      SrcTerminal   2
+      Points        [60, 300]
+      Branch {
+        Points        [170, 300]
+        DstComponent  "Cdc"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [220, 300]
+        DstComponent  "Vm_dc"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [300, 300]
+        DstComponent  "Q2"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [420, 300]
+        DstComponent  "Q4"
+        DstTerminal   2
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "Q1"
+      SrcTerminal   2
+      Branch {
+        DstComponent  "Q2"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [300, 180]
+        DstComponent  "RL1"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "Q3"
+      SrcTerminal   2
+      Branch {
+        DstComponent  "Q4"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [440, 180; 440, 330]
+        DstComponent  "RL2"
+        DstTerminal   2
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "RL1"
+      SrcTerminal   2
+      DstComponent  "Lf1"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "RL2"
+      SrcTerminal   1
+      DstComponent  "Lf2"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "Lf1"
+      SrcTerminal   2
+      Branch {
+        Points        [650, 180]
+        DstComponent  "Cf1"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [690, 180]
+        DstComponent  "Rbl1"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [760, 180]
+        DstComponent  "R_bank"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [840, 180]
+        DstComponent  "R_step"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [910, 180]
+        DstComponent  "Vm_o"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "Cf1"
+      SrcTerminal   2
+      Branch {
+        DstComponent  "Cf2"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [670, 255; 690, 255]
+        DstComponent  "Rbl1"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [670, 255; 690, 255]
+        DstComponent  "Rbl2"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "Lf2"
+      SrcTerminal   1
+      Branch {
+        Points        [650, 330]
+        DstComponent  "Cf2"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [690, 330]
+        DstComponent  "Rbl2"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [760, 330]
+        DstComponent  "R_bank"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [840, 345]
+        DstComponent  "S2"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [910, 330]
+        DstComponent  "Vm_o"
+        DstTerminal   2
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "R_step"
+      SrcTerminal   2
+      DstComponent  "S1"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "S1"
+      SrcTerminal   2
+      DstComponent  "S2"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Probe"
+      SrcTerminal   1
+      Branch {
+        DstComponent  "Interface board\nsensing"
+        DstTerminal   1
+      }
+      Branch {
+        DstComponent  "Demux probe"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Interface board\nsensing"
+      SrcTerminal   2
+      DstComponent  "Controller"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Interface board\nsensing"
+      SrcTerminal   3
+      DstComponent  "Controller"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Test sequence"
+      SrcTerminal   1
+      DstComponent  "Controller"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Test sequence"
+      SrcTerminal   2
+      DstComponent  "Controller"
+      DstTerminal   4
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Test sequence"
+      SrcTerminal   3
+      DstComponent  "Goto LS"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Kp_amp"
+      SrcTerminal   1
+      DstComponent  "Controller"
+      DstTerminal   5
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Ki_amp"
+      SrcTerminal   1
+      DstComponent  "Controller"
+      DstTerminal   6
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Controller"
+      SrcTerminal   7
+      DstComponent  "Demux"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux"
+      SrcTerminal   2
+      DstComponent  "PWM leg A"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux"
+      SrcTerminal   3
+      DstComponent  "PWM leg B"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "PWM leg A"
+      SrcTerminal   1
+      Branch {
+        DstComponent  "AND1"
+        DstTerminal   2
+      }
+      Branch {
+        DstComponent  "NOT A"
+        DstTerminal   2
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "PWM leg B"
+      SrcTerminal   1
+      Branch {
+        DstComponent  "AND3"
+        DstTerminal   2
+      }
+      Branch {
+        DstComponent  "NOT B"
+        DstTerminal   2
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "NOT A"
+      SrcTerminal   1
+      DstComponent  "AND2"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "NOT B"
+      SrcTerminal   1
+      DstComponent  "AND4"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Controller"
+      SrcTerminal   8
+      Branch {
+        DstComponent  "AND1"
+        DstTerminal   3
+      }
+      Branch {
+        DstComponent  "AND2"
+        DstTerminal   3
+      }
+      Branch {
+        DstComponent  "AND3"
+        DstTerminal   3
+      }
+      Branch {
+        DstComponent  "AND4"
+        DstTerminal   3
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "AND1"
+      SrcTerminal   1
+      DstComponent  "Dead time 1"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Dead time 1"
+      SrcTerminal   2
+      DstComponent  "Goto G1"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "AND2"
+      SrcTerminal   1
+      DstComponent  "Dead time 2"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Dead time 2"
+      SrcTerminal   2
+      DstComponent  "Goto G2"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "AND3"
+      SrcTerminal   1
+      DstComponent  "Dead time 3"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Dead time 3"
+      SrcTerminal   2
+      DstComponent  "Goto G3"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "AND4"
+      SrcTerminal   1
+      DstComponent  "Dead time 4"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Dead time 4"
+      SrcTerminal   2
+      DstComponent  "Goto G4"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "From G1"
+      SrcTerminal   1
+      DstComponent  "Q1"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "From G2"
+      SrcTerminal   1
+      DstComponent  "Q2"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "From G3"
+      SrcTerminal   1
+      DstComponent  "Q3"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "From G4"
+      SrcTerminal   1
+      DstComponent  "Q4"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "From LS1"
+      SrcTerminal   1
+      DstComponent  "S1"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "From LS2"
+      SrcTerminal   1
+      DstComponent  "S2"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux probe"
+      SrcTerminal   5
+      DstComponent  "Scope"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux probe"
+      SrcTerminal   2
+      DstComponent  "Scope"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Controller"
+      SrcTerminal   10
+      Branch {
+        DstComponent  "Demux status"
+        DstTerminal   1
+      }
+      Branch {
+        DstComponent  "status"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux status"
+      SrcTerminal   2
+      DstComponent  "Scope"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux status"
+      SrcTerminal   4
+      DstComponent  "Scope"
+      DstTerminal   4
+    }
+    Annotation {
+      Name          "<html><body>\n<p><span style=\" font-weight:700;\">ENEL 585 Project B, Group"
+" 8: switched station model (same controller code as the firmware)</span></p>"
+"</body></html>"
+      Position      [480, 15]
+    } 
+    Annotation {
+      Name          "Sequence: enable at 20 ms (soft start to 25 Vrms, 25 ohm = OP1); load step t"
+"o 12.5 ohm at 0.30 s;\nreference step 25 -> 30 Vrms at 0.50 s (OP2) and back"
+" at 0.70 s; load step back to 25 ohm at 0.85 s.\nSet protection_test = 1 in "
+"the init commands to see the inductor-current trip at the load step."
+      Position      [480, 780]
+    } 
+  }
+}

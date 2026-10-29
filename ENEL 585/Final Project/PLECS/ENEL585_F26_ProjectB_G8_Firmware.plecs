@@ -1,0 +1,1644 @@
+Plecs {
+  Name          "ENEL585_F26_ProjectB_G8_Firmware"
+  Version       "5.0"
+  CircuitModel  "ContStateSpace"
+  StartTime     "0.0"
+  TimeSpan      "1.0"
+  Timeout       ""
+  Solver        "auto"
+  MaxStep       "1e-3"
+  InitStep      "-1"
+  FixedStep     "Ts"
+  Refine        "1"
+  ZCStepSize    "1e-9"
+  RelTol        "1e-3"
+  AbsTol        "-1"
+  TurnOnThreshold "0"
+  NonIdealSwitchResistance "1"
+  SyncFixedStepTasks "2"
+  UseSingleCommonBaseRate "2"
+  LossVariableLimitExceededMsg "3"
+  NegativeSwitchLossMsg "3"
+  DivisionByZeroMsg "3"
+  DatatypeOverflowMsg "3"
+  DatatypeInheritanceConflictMsg "2"
+  ContSampleTimeConflictMsg "2"
+  StiffnessDetectionMsg "2"
+  MaxConsecutiveZCs "1000"
+  AlgebraicLoopWithStateMachineMsg "3"
+  AssertionAction "1"
+  FixedPointDatatypeOverride "1"
+  InitializationCommands "%% ENEL 585 Fall 2026, Project B: single-phase standalone inverter\n%% Group"
+" 8, Station 6, Lab B01\n\n%% Timing: N_per samples per 60 Hz period. The car"
+"rier is the nearest value the\n%% ePWM up-down counter hits exactly, so the "
+"reference stays synchronous.\nf1    = 60;\nN_per = 166;                     "
+"          % even; carrier periods per 60 Hz period\nfclk  = 150e6;          "
+"                   % SYSCLK in the TI28P55x target settings [Hz]\nfsw   = fc"
+"lk/(2*round(fclk/(2*N_per*f1))); % 9960.16 Hz, below the 10 kHz ceiling\nTs "
+"   = 1/fsw;                             % control and ADC sample period [s]\n"
+"dead_time = 2e-6;                          % per-leg dead time [s] (Lab 2 us"
+"ed 5e-6)\n\n%% Sensing: V_pin = O + signal/K at the ADC pin (Inverter Box Se"
+"tup Guide:\n%% 1.667 V centre, 0.213 V/V after the probe for voltage, 0.154 "
+"V/V for current)\nK_vo = 10/0.213;  O_vo = 1.667;   % VProbe 1, 10:1: output"
+" voltage, tap A - tap B\nK_il = 1/0.0154;  O_il = 1.667;   % CProbe 2, 100 m"
+"V/A: leg-A inductor current\nK_io = 1/0.0154;  O_io = 1.667;   % CProbe 1, 1"
+"00 mV/A: load current\nK_dc = 10/0.213;  O_dc = 1.667;   % VProbe 2, 10:1: d"
+"c input voltage\nsrc  = [1 2 3 4];                 % pin carrying [vo iL io "
+"vdc]: 1=B2 2=B0 3=B1 4=A6, 0=none\nH60  = 0.9949;                    % inter"
+"face-board filter gain at 60 Hz (amplitude calibration)\nVdc_nom = 50;      "
+"               % used if src(4) = 0\n\n%% Target: 1 = bench (interface board"
+"), 2 = remote Typhoon HIL\ntarget = 1;\nif target == 2\n  % Replace with the"
+" provided Project B HIL model's I/O before flashing:\n  % in its .tse, analo"
+"g_outputs lists 'AOn;signal;scale;offset;...' per channel.\n  % The orientat"
+"ion model used AO1 -> ADCINA6 and AO2 -> ADCINB2, scale 10.\n  K_vo = 10/0.2"
+"13;  O_vo = 1.667;\n  K_il = 1/0.0154;  O_il = 1.667;\n  src  = [1 2 0 0];  "
+"             % no io or vdc channel: feedforward uses Vdc_nom\nend\n\n%% Pin"
+"s (Inverter Box Setup Guide, Table 1 and 2)\nADCB_CH   = [2 0 1];   % ADCINB"
+"2 = VProbe 1, ADCINB0 = CProbe 2, ADCINB1 = CProbe 1\nADCA_CH   = [6];      "
+" % ADCINA6 = VProbe 2\nPWM_LEG_A = 1;         % EPWM1A/B = Top 1 / Bot 1 (le"
+"g A, Q1/Q2)\nPWM_LEG_B = 2;         % EPWM2A/B = Top 2 / Bot 2 (leg B, Q3/Q4"
+")\nPWR_GPIO  = 21;        % powerstage enable output, as in the orientation "
+"model\n\n%% Protection (latched; clear by setting enableswitch to 0). Pin vo"
+"ltages:\nVo_trip  = 50;    % |vo| [V]   -> 0.602 V / 2.732 V\nIL_trip  = 9; "
+"    % |iL| [A]   -> 1.528 V / 1.806 V\nIo_trip  = 6;     % |io| [A]   -> 1.5"
+"75 V / 1.759 V\nVdc_trip = 55;    % vdc [V]    -> 2.839 V\nVdc_min  = 20;   "
+" % switching starts only once the filtered vdc exceeds this [V]\n\n%% Amplit"
+"ude control (see README for the loop design)\nVref_max = 32;    % largest ac"
+"cepted Vref_rms [V]\nslew     = 5;     % amplitude slew [V pk per half cycle"
+"] = 600 V/s, also the soft start\nm_max    = 0.98;  % modulation limit; anti"
+"-windup holds the trim here\nx_max    = 10;    % integral trim limit [V pk]\n"
+"I_lim    = 6;     % current limit on the half-cycle peak of the sensed iL [A"
+"]\nK_fold   = 2;     % foldback gain [V pk per A per half cycle]\nfold_dec ="
+" 0.5;   % foldback recovery [V pk per half cycle]\ntau_dc   = 0.02;  % dc-li"
+"nk voltage filter for the feedforward [s]\n\nctl_par = [N_per Ts K_vo O_vo K"
+"_il O_il K_io O_io K_dc O_dc src Vdc_nom H60 Vo_trip IL_trip Io_trip Vdc_tri"
+"p Vdc_min Vref_max slew m_max x_max I_lim K_fold fold_dec tau_dc];\n"
+  InitialState  "1"
+  SystemState   ""
+  JacobianComputation "2"
+  TaskingMode   "1"
+  TaskConfigurations ""
+  CodeGenParameterInlining "2"
+  CodeGenInliningExceptions "AAAACwAAAAAEAAAAGABlAG4AYQBiAGwAZQBzAHcAaQB0AGMAaAAAABAAVgByAGUAZgBfAHIAbQBzAA"
+"AADABLAHAAXwBhAG0AcAAAAAwASwBpAF8AYQBtAHA="
+  CodeGenFloatingPointFormat "1"
+  CodeGenAbsTimeUsageMsg "3"
+  CodeGenBaseName ""
+  CodeGenOutputDir ""
+  CodeGenExtraOpts ""
+  CodeGenTarget "TI28P55x"
+  CodeGenTargetSettings "AAAAfwAAAAAbQ29kZUdlblRhcmdldDo6U2V0dGluZ3NNYXAAAAAAA"
+"QAAABAAVABJADIAOABQADUANQB4AAAAWQAAACIAQQBuAFQAcgBpAHAAMQBBAGQAYwBDAGgAYQBuAG"
+"4AZQBsAAAAAgAwAAAAHABBAG4AVAByAGkAcAAxAEEAZABjAFUAbgBpAHQAAAACADEAAAAaAEEAbgB"
+"UAHIAaQBwADEARQBuAGEAYgBsAGUAAAACADAAAAAaAEEAbgBUAHIAaQBwADEAUwBpAGcAbgBhAGwA"
+"AAACADEAAAAoAEEAbgBUAHIAaQBwADEAVABoAHIAZQBzAGgAbwBsAGQASABpAGcAaAAAAAIAMAAAA"
+"CYAQQBuAFQAcgBpAHAAMQBUAGgAcgBlAHMAaABvAGwAZABMAG8AdwAAAAIAMAAAACIAQQBuAFQAcg"
+"BpAHAAMgBBAGQAYwBDAGgAYQBuAG4AZQBsAAAAAgAwAAAAHABBAG4AVAByAGkAcAAyAEEAZABjAFU"
+"AbgBpAHQAAAACADEAAAAaAEEAbgBUAHIAaQBwADIARQBuAGEAYgBsAGUAAAACADAAAAAaAEEAbgBU"
+"AHIAaQBwADIAUwBpAGcAbgBhAGwAAAACADEAAAAoAEEAbgBUAHIAaQBwADIAVABoAHIAZQBzAGgAb"
+"wBsAGQASABpAGcAaAAAAAIAMAAAACYAQQBuAFQAcgBpAHAAMgBUAGgAcgBlAHMAaABvAGwAZABMAG"
+"8AdwAAAAIAMAAAACIAQQBuAFQAcgBpAHAAMwBBAGQAYwBDAGgAYQBuAG4AZQBsAAAAAgAwAAAAHAB"
+"BAG4AVAByAGkAcAAzAEEAZABjAFUAbgBpAHQAAAACADEAAAAaAEEAbgBUAHIAaQBwADMARQBuAGEA"
+"YgBsAGUAAAACADAAAAAaAEEAbgBUAHIAaQBwADMAUwBpAGcAbgBhAGwAAAACADEAAAAoAEEAbgBUA"
+"HIAaQBwADMAVABoAHIAZQBzAGgAbwBsAGQASABpAGcAaAAAAAIAMAAAACYAQQBuAFQAcgBpAHAAMw"
+"BUAGgAcgBlAHMAaABvAGwAZABMAG8AdwAAAAIAMAAAACIAQQBuAFQAcgBpAHAANABBAGQAYwBDAGg"
+"AYQBuAG4AZQBsAAAAAgAwAAAAHABBAG4AVAByAGkAcAA0AEEAZABjAFUAbgBpAHQAAAACADEAAAAa"
+"AEEAbgBUAHIAaQBwADQARQBuAGEAYgBsAGUAAAACADAAAAAaAEEAbgBUAHIAaQBwADQAUwBpAGcAb"
+"gBhAGwAAAACADEAAAAoAEEAbgBUAHIAaQBwADQAVABoAHIAZQBzAGgAbwBsAGQASABpAGcAaAAAAA"
+"IAMAAAACYAQQBuAFQAcgBpAHAANABUAGgAcgBlAHMAaABvAGwAZABMAG8AdwAAAAIAMAAAABoARQB"
+"YAFQARQBSAE4AQQBMAF8ATQBPAEQARQAAAAIAMQAAADQARQB4AHQAZQByAG4AYQBsAEMAbABvAGMA"
+"awBJAHMAUwBpAG4AZwBsAGUARQBuAGQAZQBkAAAAAgAwAAAAIgBMAGkAbgBrAGUAcgBDAG8AbQBtA"
+"GEAbgBkAEYAaQBsAGUAAAAAAAAAFABQAHcAbQAxADAAQQBHAHAAaQBvAAAABAAxADgAAAAUAFAAdw"
+"BtADEAMABCAEcAcABpAG8AAAAEADEAOQAAABYAUAB3AG0AMQAwAEcAcABpAG8ARQBuAAAAAgAwAAA"
+"AFABQAHcAbQAxADEAQQBHAHAAaQBvAAAABAAyADAAAAAUAFAAdwBtADEAMQBCAEcAcABpAG8AAAAE"
+"ADIAMQAAABYAUAB3AG0AMQAxAEcAcABpAG8ARQBuAAAAAgAwAAAAFABQAHcAbQAxADIAQQBHAHAAa"
+"QBvAAAABAAyADIAAAAUAFAAdwBtADEAMgBCAEcAcABpAG8AAAAEADIAMwAAABYAUAB3AG0AMQAyAE"
+"cAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQAxAEEARwBwAGkAbwAAAAIAMAAAABIAUAB3AG0AMQB"
+"CAEcAcABpAG8AAAACADEAAAAUAFAAdwBtADEARwBwAGkAbwBFAG4AAAACADAAAAASAFAAdwBtADIA"
+"QQBHAHAAaQBvAAAAAgAyAAAAEgBQAHcAbQAyAEIARwBwAGkAbwAAAAIAMwAAABQAUAB3AG0AMgBHA"
+"HAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0AMwBBAEcAcABpAG8AAAACADQAAAASAFAAdwBtADMAQg"
+"BHAHAAaQBvAAAAAgA1AAAAFABQAHcAbQAzAEcAcABpAG8ARQBuAAAAAgAwAAAAEgBQAHcAbQA0AEE"
+"ARwBwAGkAbwAAAAIANgAAABIAUAB3AG0ANABCAEcAcABpAG8AAAACADcAAAAUAFAAdwBtADQARwBw"
+"AGkAbwBFAG4AAAACADAAAAASAFAAdwBtADUAQQBHAHAAaQBvAAAAAgA4AAAAEgBQAHcAbQA1AEIAR"
+"wBwAGkAbwAAAAIAOQAAABQAUAB3AG0ANQBHAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0ANgBBAE"
+"cAcABpAG8AAAAEADEAMAAAABIAUAB3AG0ANgBCAEcAcABpAG8AAAAEADEAMQAAABQAUAB3AG0ANgB"
+"HAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0ANwBBAEcAcABpAG8AAAAEADEAMgAAABIAUAB3AG0A"
+"NwBCAEcAcABpAG8AAAAEADEAMwAAABQAUAB3AG0ANwBHAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3A"
+"G0AOABBAEcAcABpAG8AAAAEADEANAAAABIAUAB3AG0AOABCAEcAcABpAG8AAAAEADEANQAAABQAUA"
+"B3AG0AOABHAHAAaQBvAEUAbgAAAAIAMAAAABIAUAB3AG0AOQBBAEcAcABpAG8AAAAEADEANgAAABI"
+"AUAB3AG0AOQBCAEcAcABpAG8AAAAEADEANwAAABQAUAB3AG0AOQBHAHAAaQBvAEUAbgAAAAIAMAAA"
+"ACAAUwBhAG0AcABsAGUAVABpAG0AZQBSAGUAbABUAG8AbAAAAAQAMgAwAAAAGABTAGUAcgBpAGEAb"
+"ABOAHUAbQBiAGUAcgAAAAAAAAAqAFMAZQByAGkAYQBsAE4AdQBtAGIAZQByAFMAcABlAGMAaQBmAG"
+"kAZQBkAAAAAgAwAAAAGgBUAEEAUgBHAEUAVABfAEQARQBWAEkAQwBFAAAAFAAwAHwAQwBPAE0ANgB"
+"8ADAAfAAwAAAAEgBUAHoAMQBFAG4AYQBiAGwAZQAAAAIAMAAAAA4AVAB6ADEARwBwAGkAbwAAAAIA"
+"MAAAABIAVAB6ADIARQBuAGEAYgBsAGUAAAACADAAAAAOAFQAegAyAEcAcABpAG8AAAACADAAAAASA"
+"FQAegAzAEUAbgBhAGIAbABlAAAAAgAwAAAADgBUAHoAMwBHAHAAaQBvAAAAAgAwAAAASgBVAFMARQ"
+"BfAEQAQQBUAEEAXwBUAFkAUABFAFMAXwBGAE8AUgBfAFQAVQBOAEEAQgBMAEUAXwBQAEEAUgBBAE0"
+"ARQBUAEUAUgBTAAAAAgAxAAAANABVAFMARQBfAFMAVABBAFIAVABfAFQASQBNAEUAXwBJAE4AXwBJ"
+"AE4ASQBUAF8ARgBDAE4AAAACADAAAAAOAFYAcgBlAGYAQQBkAGMAAAAGADMALgAzAAAAGABWAHIAZ"
+"QBmAEMAbwBtAGIAbwBCAG8AeAAAAAIAMQAAAAoAYgBvAGEAcgBkAAAAAgAyAAAAFgBiAHUAaQBsAG"
+"QAQwBvAG4AZgBpAGcAAAACADEAAAAIAGMAaABpAHAAAAACADEAAAASAGUAeAB0AEMAbABrAE0ASAB"
+"6AAAABAAyADUAAAAiAGUAeAB0AE0AbwBkAGUAQgB1AGYAZgBlAHIAUwBpAHoAZQAAAAgAMQAwADAA"
+"MAAAABwAZQB4AHQATQBvAGQAZQBTAGMAaQBQAGkAbgBzAAAADgBbADIAOAAsADIAOQBdAAAADgBnA"
+"GUAbgBPAG4AbAB5AAAAAgAyAAAAFABpAG4AcwB0AGEAbABsAEQAaQByAAAAAAAAABIAcwB5AHMAQw"
+"BsAGsATQBIAHoAAAAGADEANQAwAAAAFgB0AGEAcwBrAEYAcgBlAHEAVABvAGwAAAACADIAAAAYAHU"
+"AbgBpAGYAbABhAHMAaABGAGkAbABlAAAAAAAAABIAdQBzAGUASQBuAHQATwBzAGMAAAACADE="
+  ExtendedMatrixPrecision "1"
+  MatrixSignificanceCheck "2"
+  RemoveUnusedStateSpaceOutputs "2"
+  EnableStateSpaceSplitting "2"
+  DisplayStateSpaceSplitting "1"
+  DiscretizationMethod "2"
+  ExternalModeSettings "AAAAfwAAAAAYQ29kZUdlblRhcmdldDo6U2V0dGluZ3MAAAAABwAAAB"
+"QARABlAGMAaQBtAGEAdABpAG8AbgAAAAIAMQAAABQATgB1AG0AUwBhAG0AcABsAGUAcwAAAAgAOAA"
+"xADkAMgAAABYAUgBlAGYAcgBlAHMAaABSAGEAdABlAAAABAAyADAAAAAWAFMAZQBuAHMAaQB0AGkA"
+"dgBpAHQAeQAAAAIAMAAAABwAVAByAGkAZwBnAGUAcgBDAGgAYQBuAG4AZQBsAAAABAAtADEAAAAYA"
+"FQAcgBpAGcAZwBlAHIARABlAGwAYQB5AAAAAgAwAAAAGABUAHIAaQBnAGcAZQByAFYAYQBsAHUAZQ"
+"AAAAIAMA=="
+  AlgebraicLoopMethod "1"
+  AlgebraicLoopTolerance "1e-6"
+  ScriptsDialogGeometry ""
+  ScriptsDialogSplitterPos "0"
+  MixedSignalSolverBypassOperatingPoint "1"
+  MixedSignalSolverInitialConditions "2"
+  MixedSignalSolverMaxNewtonIterations "25"
+  MixedSignalSolverNumThreads "-1"
+  OperatingPointMaxNewtonIterations "50"
+  OperatingPointRelativeNewtonTolerance "1e-3"
+  OperatingPointAbsoluteNewtonTolerance "1e-12"
+  OperatingPointNodalVoltageNewtonTolerance "1e-6"
+  SpiceTemperature "27"
+  SpiceGMin     "0"
+  SpiceInductorRPar "0"
+  SpiceInductorRSer "0"
+  SpiceCapacitorGPar "0"
+  SpiceCapacitorRSer "0"
+  NetlistParserDetails "2"
+  InvalidNetlistFunctionEvaluationMsg "1"
+  IncompatibleInitialConditionMsg "2"
+  Terminal {
+    Type          Input
+    Index         "1"
+  }
+  Terminal {
+    Type          Input
+    Index         "2"
+  }
+  Terminal {
+    Type          Output
+    Index         "1"
+  }
+  Terminal {
+    Type          Output
+    Index         "2"
+  }
+  Terminal {
+    Type          Output
+    Index         "3"
+  }
+  Schematic {
+    Location      [0, 26; 1536, 864]
+    ZoomFactor    1.2
+    SliderPosition [0, 0]
+    ShowBrowser   off
+    BrowserWidth  100
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/ADC"
+      Name          "ADC_B"
+      Show          on
+      Position      [90, 130]
+      Direction     up
+      Flipped       off
+      LabelPosition northNortheast
+      Frame         [-25, -25; 25, 25]
+      Parameter {
+        Variable      "TrigSrc"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "AdcUnit"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "Input"
+        Value         "ADCB_CH"
+        Show          off
+      }
+      Parameter {
+        Variable      "Scale"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Offset"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "AcqTimeSel"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "AcqTime"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "BitRes"
+        Value         "12"
+        Show          off
+      }
+      Parameter {
+        Variable      "VoltageRef"
+        Value         "3.0"
+        Show          off
+      }
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         "1"
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [29, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [29, 15]
+        Direction     right
+      }
+      Terminal {
+        Type          EventInput
+        Position      [0, -25]
+        Direction     up
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/ADC"
+      Name          "ADC_A"
+      Show          on
+      Position      [90, 210]
+      Direction     up
+      Flipped       off
+      LabelPosition northNortheast
+      Frame         [-25, -25; 25, 25]
+      Parameter {
+        Variable      "TrigSrc"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "AdcUnit"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Input"
+        Value         "ADCA_CH"
+        Show          off
+      }
+      Parameter {
+        Variable      "Scale"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Offset"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "AcqTimeSel"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "AcqTime"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "BitRes"
+        Value         "12"
+        Show          off
+      }
+      Parameter {
+        Variable      "VoltageRef"
+        Value         "3.0"
+        Show          off
+      }
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         "2"
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [29, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [29, 15]
+        Direction     right
+      }
+      Terminal {
+        Type          EventInput
+        Position      [0, -25]
+        Direction     up
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/Control Task\\nTrigger"
+      Name          "Control Task Trigger"
+      Show          on
+      Position      [180, 235]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+    }
+    Component {
+      Type          Constant
+      Name          "Vref_rms"
+      Show          on
+      Position      [90, 290]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "25"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "10"
+        Show          off
+      }
+    }
+    Component {
+      Type          Constant
+      Name          "enable"
+      Show          on
+      Position      [40, 330]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "10"
+        Show          off
+      }
+    }
+    Component {
+      Type          Constant
+      Name          "disable"
+      Show          on
+      Position      [40, 360]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "10"
+        Show          off
+      }
+    }
+    Component {
+      Type          ManualSignalSwitch
+      Name          "enableswitch"
+      Show          on
+      Position      [90, 345]
+      Direction     right
+      Flipped       off
+      LabelPosition north
+      Parameter {
+        Variable      "SwitchState"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Constant
+      Name          "Kp_amp"
+      Show          on
+      Position      [90, 400]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "10"
+        Show          off
+      }
+    }
+    Component {
+      Type          Constant
+      Name          "Ki_amp"
+      Show          on
+      Position      [90, 440]
+      Direction     right
+      Flipped       off
+      LabelPosition west
+      Frame         [-10, -10; 10, 10]
+      Parameter {
+        Variable      "Value"
+        Value         "0.4"
+        Show          off
+      }
+      Parameter {
+        Variable      "DataType"
+        Value         "10"
+        Show          off
+      }
+    }
+    Component {
+      Type          CScript
+      Name          "Controller"
+      Show          on
+      Position      [300, 290]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "DialogGeometry"
+        Value         "[268 171 682 684]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumInputs"
+        Value         "[3, 1, 1, 1, 1, 1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumOutputs"
+        Value         "[2, 1, 3, 7]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumContStates"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumDiscStates"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumZCSignals"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "DirectFeedthrough"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ts"
+        Value         "Ts"
+        Show          off
+      }
+      Parameter {
+        Variable      "TerminalBasedSampleTimes"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Parameters"
+        Value         "ctl_par"
+        Show          off
+      }
+      Parameter {
+        Variable      "LangStandard"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "GnuExtensions"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "RuntimeCheck"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "Declarations"
+        Value         "/* ENEL 585 Project B, Group 8: single-phase standalone inverter controller."
+"\n * The same code runs in the switched station model and on the LAUNCHXL-F2"
+"8P55X.\n *\n * Inputs  1: ADC unit B pins [B2 B0 B1] (V)    2: ADC unit A pi"
+"n [A6] (V)\n *         3: Vref_rms (V)   4: enable (0/1)   5: Kp_amp   6: Ki"
+"_amp\n * Outputs 1: [dA dB] leg duties   2: PWM enable to Powerstage Protect"
+"ion\n *         3: [vo iL io] (V, A)    4: [Vpk_meas Vpk_cmd m fault Vrms IL"
+"rms Pout]\n *\n * Runs once per carrier period. The 60 Hz reference is sampl"
+"ed at n/N of a\n * period (n counts carrier periods), so it stays synchronou"
+"s with the carrier.\n * The output amplitude is measured by synchronous demo"
+"dulation over the last\n * full cycle and trimmed by an integrator; the modu"
+"lation index changes only\n * at the reference zero crossings (n = 0 and n ="
+" N/2).\n */\n#include <math.h>\n\n#define G8_NMAX 256                 /* sin"
+"e-table capacity */\n\n/* Parameter vector ctl_par (see the model's init com"
+"mands) */\nenum {\n    P_N, P_TS,                      /* samples per 60 Hz "
+"period, sample time */\n    P_KVO, P_OVO, P_KIL, P_OIL,     /* pin-to-physic"
+"al gain and pin offset */\n    P_KIO, P_OIO, P_KDC, P_ODC,\n    P_SRC_VO, P_"
+"SRC_IL, P_SRC_IO, P_SRC_DC, /* pin index 1..4, 0 = not wired */\n    P_VDC_N"
+"OM, P_H60,               /* dc voltage if unmeasured, sensor gain at 60 Hz *"
+"/\n    P_VO_TRIP, P_IL_TRIP, P_IO_TRIP, P_DC_TRIP, /* protection thresholds "
+"*/\n    P_DC_MIN,                       /* dc voltage needed before switchin"
+"g starts */\n    P_VREF_MAX,                     /* largest accepted Vref_rm"
+"s */\n    P_SLEW,                         /* amplitude slew, V pk per half c"
+"ycle */\n    P_M_MAX, P_X_MAX,               /* modulation and integrator li"
+"mits */\n    P_I_LIM, P_K_FOLD, P_FOLD_DEC,  /* inductor-current limit foldb"
+"ack */\n    P_TAU_DC,                       /* dc voltage filter time consta"
+"nt */\n    P_NUM\n};\n\n/* Latched fault bits */\n#define F_VO 1            "
+"          /* output overvoltage */\n#define F_IL 2                      /* i"
+"nductor overcurrent */\n#define F_IO 4                      /* output overcu"
+"rrent */\n#define F_DC 8                      /* dc-link overvoltage */\n\nt"
+"ypedef struct {\n    int   n;                        /* index in the 60 Hz p"
+"eriod, 0..N-1 */\n    int   cnt;                      /* samples summed in t"
+"his half cycle */\n    int   halves;                   /* half cycles comple"
+"ted since start */\n    int   run;                      /* 1 while the bridg"
+"e switches */\n    int   fault;                    /* latched fault bits */\n"
+"    float sI, sQ;                   /* half-cycle sums of vo*sin, vo*cos */\n"
+"    float AIh, AQh;                 /* previous half-cycle amplitudes */\n  "
+"  float s_v2, s_il2, s_io2, s_p;  /* full-cycle sums for RMS and power */\n "
+"   float ilpk;                     /* half-cycle peak |iL| */\n    float vc,"
+" vc1;                  /* amplitude command, this and last half */\n    floa"
+"t x;                        /* integral trim, V pk */\n    float fold;      "
+"               /* current-limit foldback, V pk */\n    float m;             "
+"           /* modulation index for this half cycle */\n    float vdcf;      "
+"               /* filtered dc-link voltage */\n    float vpk;               "
+"       /* measured output amplitude, V pk */\n    float vrms, ilrms, pout;  "
+"      /* last full-cycle results */\n} g8_state;\n\nstatic g8_state g8, g8_n"
+"ext;        /* committed state, state after this step */\nstatic float g8_si"
+"n[G8_NMAX], g8_cos[G8_NMAX];\nstatic float g8_p[P_NUM];\nstatic int   g8_N, "
+"g8_NH;\n\nstatic float g8_clamp(float v, float lo, float hi)\n{\n    return "
+"v < lo ? lo : (v > hi ? hi : v);\n}\n\n/* Physical value of signal 'src' (pi"
+"n index 1..4), or dflt if not wired. */\nstatic float g8_meas(const float *p"
+"in, int k_src, int k_gain, int k_ofs, float dflt)\n{\n    int src = (int)(g8"
+"_p[k_src] + 0.5f);\n    if (src < 1 || src > 4)\n        return dflt;\n    r"
+"eturn g8_p[k_gain]*(pin[src - 1] - g8_p[k_ofs]);\n}"
+        Show          off
+      }
+      Parameter {
+        Variable      "StartFcn"
+        Value         "/* Copy the parameters and build the sine/cosine tables once, before the PWM"
+"\n * starts, so the per-step task does lookups instead of sin() calls. */\ni"
+"nt k;\ng8_state zero = {0};\nfor (k = 0; k < P_NUM; k++)\n    g8_p[k] = (flo"
+"at)ParamRealData(0, k);\ng8_N = (int)(g8_p[P_N] + 0.5f);\nif (g8_N > G8_NMAX"
+") g8_N = G8_NMAX;\ng8_N -= g8_N % 2;                   /* even, so a half cy"
+"cle is whole samples */\ng8_NH = g8_N/2;\nfor (k = 0; k < g8_N; k++) {\n    "
+"g8_sin[k] = (float)sin(6.283185307179586*k/g8_N);\n    g8_cos[k] = (float)co"
+"s(6.283185307179586*k/g8_N);\n}\ng8 = zero;\ng8.vdcf = g8_p[P_VDC_NOM];\ng8_"
+"next = g8;"
+        Show          off
+      }
+      Parameter {
+        Variable      "OutputFcn"
+        Value         "/* Work on a copy of the state; UpdateFcn commits it, so a repeated call at "
+"the\n * same sample time cannot advance the controller twice. */\ng8_state s"
+" = g8;\nfloat pin[4];\npin[0] = (float)InputSignal(0, 0);  /* B2: VProbe 1 *"
+"/\npin[1] = (float)InputSignal(0, 1);  /* B0: CProbe 2 */\npin[2] = (float)I"
+"nputSignal(0, 2);  /* B1: CProbe 1 */\npin[3] = (float)InputSignal(1, 0);  /"
+"* A6: VProbe 2 */\nconst float vref_rms = (float)InputSignal(2, 0);\nconst i"
+"nt   enable   = InputSignal(3, 0) > 0.5;\nconst float kp       = (float)Inpu"
+"tSignal(4, 0);\nconst float ki       = (float)InputSignal(5, 0);\n\nconst fl"
+"oat vo  = g8_meas(pin, P_SRC_VO, P_KVO, P_OVO, 0.0f);\nconst float il  = g8_"
+"meas(pin, P_SRC_IL, P_KIL, P_OIL, 0.0f);\nconst float io  = g8_meas(pin, P_S"
+"RC_IO, P_KIO, P_OIO, 0.0f);\nconst float vdc = g8_meas(pin, P_SRC_DC, P_KDC,"
+" P_ODC, g8_p[P_VDC_NOM]);\n\ns.vdcf += g8_p[P_TS]/g8_p[P_TAU_DC]*(vdc - s.vd"
+"cf);\n\n/* Protection, every sample. A trip latches until the enable switch "
+"is set\n * to 0; while disabled the bits show any condition that is still pr"
+"esent. */\nif (!enable)\n    s.fault = 0;\nif (fabsf(vo) > g8_p[P_VO_TRIP]) "
+"s.fault |= F_VO;\nif (fabsf(il) > g8_p[P_IL_TRIP]) s.fault |= F_IL;\nif (g8_"
+"p[P_SRC_IO] > 0.5f && fabsf(io) > g8_p[P_IO_TRIP]) s.fault |= F_IO;\nif (g8_"
+"p[P_SRC_DC] > 0.5f && vdc > g8_p[P_DC_TRIP]) s.fault |= F_DC;\n\nif (!enable"
+" || s.fault) {\n    s.run = 0;\n} else if (!s.run && s.vdcf >= g8_p[P_DC_MIN"
+"]) {\n    /* Start at a zero crossing with zero amplitude; the slew limit ra"
+"mps it. */\n    g8_state zero = {0};\n    zero.vdcf = s.vdcf;\n    s = zero;"
+"\n    s.run = 1;\n}\n\n/* Half-cycle boundary: the sums now hold one complet"
+"e half cycle. */\nif (s.run && (s.n == 0 || s.n == g8_NH) && s.cnt == g8_NH)"
+" {\n    const float AI = 2.0f*s.sI/(float)g8_NH;\n    const float AQ = 2.0f*"
+"s.sQ/(float)g8_NH;\n    /* Average with the previous half: a full-cycle wind"
+"ow rejects dc offset\n     * and even harmonics as well as the odd ones. */\n"
+"    const float AIf = s.halves > 0 ? 0.5f*(AI + s.AIh) : AI;\n    const floa"
+"t AQf = s.halves > 0 ? 0.5f*(AQ + s.AQh) : AQ;\n    s.AIh = AI;\n    s.AQh ="
+" AQ;\n    s.vpk = sqrtf(AIf*AIf + AQf*AQf)/g8_p[P_H60];\n    s.halves++;\n\n"
+"    /* Compare with the command applied over the same window, so the trim\n "
+"    * corrects losses rather than the measurement delay during a ramp. */\n "
+"   const float r_win = s.halves > 1 ? 0.5f*(s.vc + s.vc1) : s.vc;\n    const"
+" float e = r_win - s.vpk;\n    if (s.halves > 1) {\n        /* Conditional i"
+"ntegration: hold the trim while the modulator is at\n         * its limit an"
+"d the error would push it further. */\n        if (!(s.m >= g8_p[P_M_MAX] - "
+"1e-4f && e > 0.0f))\n            s.x += ki*e;\n        s.x = g8_clamp(s.x, -"
+"g8_p[P_X_MAX], g8_p[P_X_MAX]);\n    }\n\n    /* Current limit: reduce the am"
+"plitude while the half-cycle peak of the\n     * sensed inductor current is "
+"above I_LIM, recover slowly once below. */\n    if (s.ilpk > g8_p[P_I_LIM])\n"
+"        s.fold += g8_p[P_K_FOLD]*(s.ilpk - g8_p[P_I_LIM]);\n    else\n      "
+"  s.fold -= g8_p[P_FOLD_DEC];\n    s.fold = g8_clamp(s.fold, 0.0f, 1.4142135"
+"6f*g8_p[P_VREF_MAX]);\n\n    /* Slew-limited amplitude command for the next "
+"half cycle. */\n    float target = 1.41421356f*g8_clamp(vref_rms, 0.0f, g8_p"
+"[P_VREF_MAX]) - s.fold;\n    if (target < 0.0f) target = 0.0f;\n    s.vc1 = "
+"s.vc;\n    s.vc += g8_clamp(target - s.vc, -g8_p[P_SLEW], g8_p[P_SLEW]);\n\n"
+"    /* Feedforward over the measured dc link plus the trim. */\n    float a "
+"= s.vc + s.x + (s.halves > 1 ? kp*e : 0.0f);\n    if (a < 0.0f) a = 0.0f;\n "
+"   s.m = g8_clamp(a/(s.vdcf > 1.0f ? s.vdcf : 1.0f), 0.0f, g8_p[P_M_MAX]);\n"
+"\n    s.sI = 0.0f;\n    s.sQ = 0.0f;\n    s.ilpk = 0.0f;\n    s.cnt = 0;\n\n"
+"    if (s.n == 0) {\n        s.vrms  = sqrtf(s.s_v2/(float)g8_N)/g8_p[P_H60]"
+";\n        s.ilrms = sqrtf(s.s_il2/(float)g8_N);\n        s.pout  = s.s_p/(f"
+"loat)g8_N;\n        s.s_v2 = s.s_il2 = s.s_io2 = s.s_p = 0.0f;\n    }\n}\n\n"
+"float dA = 0.5f;\nif (s.run) {\n    const float sn = g8_sin[s.n];\n    dA = "
+"0.5f + 0.5f*s.m*sn;\n    s.sI += vo*sn;\n    s.sQ += vo*g8_cos[s.n];\n    s."
+"cnt++;\n    s.s_v2  += vo*vo;\n    s.s_il2 += il*il;\n    s.s_io2 += io*io;\n"
+"    s.s_p   += vo*io;\n    if (fabsf(il) > s.ilpk) s.ilpk = fabsf(il);\n    "
+"s.n = s.n + 1 >= g8_N ? 0 : s.n + 1;\n}\n\n/* Unipolar SPWM: leg B compares "
+"-m*sin with the same carrier. */\nOutputSignal(0, 0) = dA;\nOutputSignal(0, "
+"1) = 1.0f - dA;\nOutputSignal(1, 0) = s.run ? 1.0 : 0.0;\nOutputSignal(2, 0)"
+" = vo;\nOutputSignal(2, 1) = il;\nOutputSignal(2, 2) = io;\nOutputSignal(3, "
+"0) = s.vpk;\nOutputSignal(3, 1) = s.vc;\nOutputSignal(3, 2) = s.m;\nOutputSi"
+"gnal(3, 3) = s.fault;\nOutputSignal(3, 4) = s.vrms;\nOutputSignal(3, 5) = s."
+"ilrms;\nOutputSignal(3, 6) = s.pout;\ng8_next = s;"
+        Show          off
+      }
+      Parameter {
+        Variable      "UpdateFcn"
+        Value         "g8 = g8_next;\nDiscState(0) = DiscState(0) + 1.0;   /* step counter (keeps t"
+"he update call) */"
+        Show          off
+      }
+      Parameter {
+        Variable      "DerivativeFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "TerminateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "StoreCustomStateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "RestoreCustomStateFcn"
+        Value         ""
+        Show          off
+      }
+    }
+    Component {
+      Type          SignalDemux
+      Name          "Demux"
+      Show          off
+      Position      [420, 230]
+      Direction     right
+      Flipped       on
+      LabelPosition south
+      Frame         [-7, -15; 2, 15]
+      Parameter {
+        Variable      "Width"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/PWM"
+      Name          "PWM_A"
+      Show          on
+      Position      [560, 160]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-30, -50; 30, 50]
+      Parameter {
+        Variable      "PwmUnit"
+        Value         "[PWM_LEG_A]"
+        Show          off
+      }
+      Parameter {
+        Variable      "CarrierType"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CarrierFreq"
+        Value         "fsw"
+        Show          off
+      }
+      Parameter {
+        Variable      "CarrierFreqTol"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "Phase"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "OutMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "VariableDeadTime"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "FixedDeadTime"
+        Value         "dead_time"
+        Show          off
+      }
+      Parameter {
+        Variable      "MinDeadTime"
+        Value         "1e-6"
+        Show          off
+      }
+      Parameter {
+        Variable      "Polarity"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Sequence"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SequenceAq"
+        Value         "[0]"
+        Show          off
+      }
+      Parameter {
+        Variable      "ShowEnable"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighResDutyMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighResPrdMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighResDeadTimeMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CmpShadowMode"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "RedShadowMode"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "FedShadowMode"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "AllowProtection"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SyncSrc"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SyncOut"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "PeripheralSyncMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "AdcTriggerMode"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "AdcTriggerDivider"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "TaskTriggerMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TaskTriggerDivider"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "OfflinePwmTclkOrigin"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "OfflinePwmTclk"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "tz1mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "tz2mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "tz3mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         "1"
+        Show          off
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, 0]
+        Direction     left
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, 20]
+        Direction     right
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, -20]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -20]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -30]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, 30]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -10]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, 5]
+        Direction     left
+      }
+      Terminal {
+        Type          EventInput
+        Position      [0, -50]
+        Direction     up
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -20]
+        Direction     left
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, -35]
+        Direction     right
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/PWM"
+      Name          "PWM_B"
+      Show          on
+      Position      [560, 310]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-30, -50; 30, 50]
+      Parameter {
+        Variable      "PwmUnit"
+        Value         "[PWM_LEG_B]"
+        Show          off
+      }
+      Parameter {
+        Variable      "CarrierType"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CarrierFreq"
+        Value         "fsw"
+        Show          off
+      }
+      Parameter {
+        Variable      "CarrierFreqTol"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "Phase"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "OutMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "VariableDeadTime"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "FixedDeadTime"
+        Value         "dead_time"
+        Show          off
+      }
+      Parameter {
+        Variable      "MinDeadTime"
+        Value         "1e-6"
+        Show          off
+      }
+      Parameter {
+        Variable      "Polarity"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Sequence"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SequenceAq"
+        Value         "[0]"
+        Show          off
+      }
+      Parameter {
+        Variable      "ShowEnable"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighResDutyMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighResPrdMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "HighResDeadTimeMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CmpShadowMode"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "RedShadowMode"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "FedShadowMode"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "AllowProtection"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SyncSrc"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SyncOut"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "PeripheralSyncMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "AdcTriggerMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "AdcTriggerDivider"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "TaskTriggerMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TaskTriggerDivider"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "OfflinePwmTclkOrigin"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "OfflinePwmTclk"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "tz1mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "tz2mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "tz3mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         "3"
+        Show          off
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, 0]
+        Direction     left
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, 20]
+        Direction     right
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, -20]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -20]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -30]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, 30]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -10]
+        Direction     left
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, 5]
+        Direction     left
+      }
+      Terminal {
+        Type          EventInput
+        Position      [0, -50]
+        Direction     up
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-30, -20]
+        Direction     left
+      }
+      Terminal {
+        Type          EventOutput
+        Position      [34, -35]
+        Direction     right
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/Powerstage Protection"
+      Name          "Powerstage Protection"
+      Show          on
+      Position      [560, 430]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-45, -25; 45, 25]
+      Parameter {
+        Variable      "EnableSignal"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "EnableSignalPolarity"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "EnableSignalGpio"
+        Value         "PWR_GPIO"
+        Show          off
+      }
+      Parameter {
+        Variable      "PwmSafeState"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripZone1Mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripZone2Mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripZone3Mode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripSigAMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripSigBMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TripSigCMode"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "SimInterlock"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         "2"
+        Show          off
+      }
+      Terminal {
+        Type          Input
+        Position      [-45, 0]
+        Direction     left
+      }
+      Terminal {
+        Type          Output
+        Position      [49, 0]
+        Direction     right
+      }
+    }
+    Component {
+      Type          SignalDemux
+      Name          "Demux status"
+      Show          off
+      Position      [420, 400]
+      Direction     right
+      Flipped       on
+      LabelPosition south
+      Frame         [-7, -15; 2, 15]
+      Parameter {
+        Variable      "Width"
+        Value         "7"
+        Show          off
+      }
+    }
+    Component {
+      Type          Scope
+      Name          "Scope"
+      Show          on
+      Position      [520, 520]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-15, -20; 15, 20]
+      Location      [100, 100; 700, 600]
+      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
+"G0AQQByAGUAYQAAAAAA/////wAAAIAA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGIA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABiAP///wAAAAMAAAgAAAAAovw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQBAAAAAAAACAAAAABEAP///wAACAAAAANdAAAA"
+"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
+"AAAAA=="
+      SavedViews    "AAAAAgAAAAA="
+      HeaderState   "{\"DefaultSecSize\":100,\"FirstSecSize\":184,\"Labels\":["
+"\"Delta\"],\"VisualIdxs\":[3]}"
+      PlotPalettes  "AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+"=="
+      Axes          "3"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    "Time / s"
+      ShowLegend    "1"
+      Axis {
+        Name          "vo, iL, io (sensed)"
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Axis {
+        Name          "Vpk measured"
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Axis {
+        Name          "m"
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis       on
+        AxisLabel         "Frequency / Hz"
+        Scaling           0
+        PhaseDisplay      0
+        ShowFourierLegend off
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
+    Component {
+      Type          Display
+      Name          "status"
+      Show          on
+      Position      [560, 590]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-21, -11; 21, 11]
+      Parameter {
+        Variable      "Notation"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Precision"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/Load"
+      Name          "Load"
+      Show          on
+      Position      [700, 60]
+      Direction     up
+      Flipped       off
+      LabelPosition north
+      Frame         [-25, -20; 25, 20]
+      Parameter {
+        Variable      "TargetPortIndices"
+        Value         ""
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [29, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Output
+        Position      [29, 10]
+        Direction     right
+      }
+    }
+    Component {
+      Type          Display
+      Name          "%"
+      Show          on
+      Position      [765, 60]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-21, -11; 21, 11]
+      Parameter {
+        Variable      "Notation"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Precision"
+        Value         "2"
+        Show          off
+      }
+    }
+    Connection {
+      Type          Event
+      SrcComponent  "PWM_A"
+      SrcTerminal   3
+      Points        [610, 140; 610, 40; 30, 40]
+      Branch {
+        DstComponent  "ADC_B"
+        DstTerminal   3
+      }
+      Branch {
+        Points        [30, 170]
+        DstComponent  "ADC_A"
+        DstTerminal   3
+      }
+    }
+    Connection {
+      Type          Event
+      SrcComponent  "ADC_B"
+      SrcTerminal   2
+      Points        [140, 145; 140, 235]
+      DstComponent  "Control Task Trigger"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "ADC_B"
+      SrcTerminal   1
+      DstComponent  "Controller"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "ADC_A"
+      SrcTerminal   1
+      DstComponent  "Controller"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Vref_rms"
+      SrcTerminal   1
+      DstComponent  "Controller"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "enable"
+      SrcTerminal   1
+      DstComponent  "enableswitch"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "disable"
+      SrcTerminal   1
+      DstComponent  "enableswitch"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "enableswitch"
+      SrcTerminal   1
+      DstComponent  "Controller"
+      DstTerminal   4
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Kp_amp"
+      SrcTerminal   1
+      DstComponent  "Controller"
+      DstTerminal   5
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Ki_amp"
+      SrcTerminal   1
+      DstComponent  "Controller"
+      DstTerminal   6
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Controller"
+      SrcTerminal   7
+      DstComponent  "Demux"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux"
+      SrcTerminal   2
+      Points        [480, 160]
+      DstComponent  "PWM_A"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux"
+      SrcTerminal   3
+      Points        [480, 310]
+      DstComponent  "PWM_B"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Controller"
+      SrcTerminal   8
+      Points        [380, 430]
+      DstComponent  "Powerstage Protection"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Controller"
+      SrcTerminal   9
+      DstComponent  "Scope"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Controller"
+      SrcTerminal   10
+      Branch {
+        DstComponent  "Demux status"
+        DstTerminal   1
+      }
+      Branch {
+        DstComponent  "status"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux status"
+      SrcTerminal   2
+      DstComponent  "Scope"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux status"
+      SrcTerminal   4
+      DstComponent  "Scope"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Load"
+      SrcTerminal   1
+      DstComponent  "%"
+      DstTerminal   1
+    }
+    Annotation {
+      Name          "<html><body>\n<p><span style=\" font-weight:700;\">ENEL 585 Project B, Group"
+" 8: standalone inverter firmware (LAUNCHXL-F28P55X)</span></p></body></html>"
+""
+      Position      [330, 15]
+    } 
+    Annotation {
+      Name          "Pins: VProbe 1 (vo) ADCINB2, CProbe 2 (iL) ADCINB0, CProbe 1 (io) ADCINB1, V"
+"Probe 2 (vdc) ADCINA6.\nGates: EPWM1A/B = Top 1/Bot 1 (leg A), EPWM2A/B = To"
+"p 2/Bot 2 (leg B). Leave leg 3 inhibited."
+      Position      [330, 650]
+    } 
+    Annotation {
+      Name          "Start: set enableswitch to 1 (or <model>_P.enableswitch_SwitchState = 1 in C"
+"CS).\nA trip latches; set it to 0 to clear. status = [Vpk_meas Vpk_cmd m fau"
+"lt Vrms ILrms Pout],\nfault bits: 1 vo, 2 iL, 4 io, 8 vdc."
+      Position      [330, 700]
+    } 
+  }
+}
