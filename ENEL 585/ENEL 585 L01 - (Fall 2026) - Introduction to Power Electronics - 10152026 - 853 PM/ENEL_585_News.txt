@@ -1,9 +1,124 @@
 ENEL 585 - News Items
-Exported Oct 29, 2026
-Total items: 25
+Exported Oct 30, 2026
+Total items: 28
 
 ======================================================================
-1. Quiz 2 returned in lecture tomorrow; regrade requests due Thursday, November 5
+1. HIL Plant Models Posted (Projects B, D, E) and Remote HIL Quick Start
+Posted: Oct 29, 2026, 11:58 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+The Typhoon HIL plant models for Projects B, D and E are now posted, along with a guide for running your controller on the remote HIL. You can start HIL testing now.
+
+Where to find them
+
+In Content → Final Project:
+
+- Project B / D / E: Typhoon HIL Files: the plant model (.tse) and its SCADA panel (.cus) for your project.
+- Testing Controller Remotely: Instructions: the Remote HIL Quick Start and the CCS connection file Launchpad_TMS320F28P550SJ9.ccxml.
+
+Running your controller remotely
+
+It turns out, PLECS will not run on the remote HIL computers, because its license blocks Remote Desktop. Instead:
+
+1. On your own computer, set the PLECS Coder Build type to Build only and build.
+2. Copy Controller.out and Controller.h to the HIL computer, together with the .ccxml from D2L.
+3. On the HIL computer, open your project's .tse in Typhoon, compile it, open its .cus panel and start the simulation.
+4. Load and run the .out from Code Composer Studio, then change parameters live in the Watch panel.
+
+The Quick Start has the step-by-step details and screenshots. If you have not tried it yet, practise first with the orientation lab model, which works the same way.
+
+What the models include
+
+- Plant only, no control: the power stage, your station's source and loads, and the sensing. The controller is yours, running on the LaunchPad.
+- Same pins as the bench: the measurements arrive on the same LaunchPad ADC pins as on the bench interface board, and the gate signals are read from ePWM1A/B (leg A) and ePWM2A/B (leg B). Firmware that works on the HIL should need no pin changes on the bench.
+- Same sensing as the bench: the HIL outputs reproduce the probes and the interface-board filter, including the 1.62 V ADC offset. Set the probe settings on the SCADA panel to match your bench probes; the defaults are 10:1 and 100 mV/A.
+- Load resistances and other plant values are in Model Settings → Model initialization. Recompile after changing them.
+
+Note the ADC offset: the bench measurements show the interface-board offset is 1.62 V, not the 1.667 V in the earlier Inverter Box Setup Guide. Use the updated Inverter Box Setup Guide v3 (Content → Lab + Project Resources → General) for your ADC scaling. At 10:1 the voltage channels saturate at about 79 V, so set any DC-voltage trip below that.
+
+Thanks,
+
+Phil
+
+======================================================================
+2. Clarification: Bench 1 Has Not Moved, Only the Design Review
+Posted: Oct 29, 2026, 9:14 PM
+----------------------------------------------------------------------
+Hi all,
+
+I've been asked whether Bench 1 was moved to Bench 2, and I thought everyone should see the answer. It was not. Only the design review moved. Bench 1 still happens on its original date.
+
+Section   Bench 1       Bench 2       Bench 3
+B01       Fri, Oct 30   Fri, Nov 20   Fri, Dec 4
+B02       Fri, Nov 6    Fri, Nov 27   Tue, Dec 1
+
+What changed
+
+- The graded design review is now at the start of Bench 2 (B01: Nov 20, B02: Nov 27).
+- Bench 1 is an ungraded wiring and bring-up session. Use it to wire your station, check the wiring against your connection diagram, calibrate your probes, check your gating signals and go through your startup and shutdown procedure. If you can do open-loop testing, or closed-loop testing once your HIL sign-off is done, even better.
+- Before you energize, the instructor or TA must sign off your wiring, probe scaling, gate mapping, protection settings and startup procedure, including precharge for Projects C–E.
+
+Do I need to attend Bench 1?
+
+Bench 1 is not graded, but I strongly recommend you attend. You only have three bench sessions, and hardware setup alone takes a large part of a session. If you skip Bench 1, you may have to do your wiring and get your sign-off at Bench 2, which is when the design reviews take place. That leaves little time for closed-loop testing.
+
+Thanks,
+
+Phil
+
+======================================================================
+3. Bench Session 1 Tomorrow (B01) / Nov 6 (B02): Your Station Assignments
+Posted: Oct 29, 2026, 7:05 PM
+----------------------------------------------------------------------
+Hi everyone,
+
+B01: Your first bench session is tomorrow (Friday, Oct 30). B02: Yours is Friday, Nov 6.
+
+Bench 1 is optional, but I strongly recommend you attend. Each group only gets only three bench sessions for the project. The goals for Bench 1:
+
+- Wire your station and check the wiring against your connection diagram.
+- Calibrate your probes and check your gating signals.
+- Go through your startup and shutdown procedure.
+- If time allows, start open-loop tests at reduced power.
+
+Before you energize, the instructor or TA must sign off your wiring, probe scaling, gate mapping, protection settings and startup procedure, including precharge for Projects C–E. This sign-off is not graded. If you don't get it at Bench 1, you'll need to get it at Bench 2, which takes time away from your closed-loop testing.
+
+Station assignments
+
+Groups doing the same project share a bench, one from each section, so the bench can stay wired until the end of term.
+
+Station   B01 Group   B02 Group   Project   Assigned Computer
+1         3           6           B         SSE-1Y2H2N3
+2         4           7           B         SSE-3Y2H2N3
+3         5           15          B         SSE-4Y2H2N3
+4         12          2           E         SSE-5Y2H2N3
+5         8           —           B         SSE-6Y8G3H4
+6         10          —           B         SSE-7Y8G3H4
+7         —           1           D         SSE-8Y8G3H4
+8         11          —           N/A       SSE-9Y8G3H4
+
+If you share a station:
+
+- B01 groups wire the bench first. Leave your wiring in place.
+- B02 groups: Don't assume the wiring is correct when you arrive on Nov 6. Check it against your own connection diagram before your sign-off.
+
+Typhoon remote farm and remote HIL
+
+Remote HIL access is already available. The connection instructions are on D2L. The HIL plant models for each project will be posted likely tomorrow, and I'll post an announcement when they're up.
+
+Your assigned computer is the one with the same name on the Typhoon remote farm: https://labstats.ucalgary.ca/schulich.html
+
+If your computer isn't listed on that page, someone is already using it. During each section's bench session, the bench computers are in use at the stations.
+
+Once the models are posted, start your HIL testing right away and use it before Bench 2. Closed-loop operation on the hardware needs HIL sign-off, and without HIL testing you're unlikely to finish closed-loop testing in time.
+
+See you tomorrow,
+
+Phil
+
+======================================================================
+4. Quiz 2 returned in lecture tomorrow; regrade requests due Thursday, November 5
 Posted: Oct 28, 2026, 10:23 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -29,7 +144,7 @@ Thanks,
 Phil
 
 ======================================================================
-2. Tutorial #4 Problems
+5. Tutorial #4 Problems
 Posted: Oct 25, 2026, 5:19 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -47,7 +162,7 @@ see you then,
 JT
 
 ======================================================================
-3. Typhoon HIL Farm Follow-up
+6. Typhoon HIL Farm Follow-up
 Posted: Oct 21, 2026, 8:42 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -59,7 +174,7 @@ Thanks,
 Phil
 
 ======================================================================
-4. Final project: design review moved to Bench 2, and a streamlined handout
+7. Final project: design review moved to Bench 2, and a streamlined handout
 Posted: Oct 21, 2026, 9:05 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -83,7 +198,7 @@ Thanks,
 Phil
 
 ======================================================================
-5. Typhoon HIL Remote Farm Now Available
+8. Typhoon HIL Remote Farm Now Available
 Posted: Oct 20, 2026, 9:23 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -118,7 +233,7 @@ Thanks,
 Phil
 
 ======================================================================
-6. Tutorial #3 Problems
+9. Tutorial #3 Problems
 Posted: Oct 19, 2026, 4:29 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -136,7 +251,7 @@ See you all then,
 JT
 
 ======================================================================
-7. Quiz 1 - Regrade Requests (Deadline: Friday, October 23)
+10. Quiz 1 - Regrade Requests (Deadline: Friday, October 23)
 Posted: Oct 16, 2026, 12:25 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -160,7 +275,7 @@ Thanks,
 Phil
 
 ======================================================================
-8. Industry Talk: Thursday Oct 22, ENG 207
+11. Industry Talk: Thursday Oct 22, ENG 207
 Posted: Oct 15, 2026, 3:49 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -172,7 +287,7 @@ It seems like a good chance to hear from a practicing engineer in the power sect
 Phil
 
 ======================================================================
-9. Lab 3 (Diode Rectifiers): handout posted
+12. Lab 3 (Diode Rectifiers): handout posted
 Posted: Oct 14, 2026, 11:00 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -189,7 +304,7 @@ B01 has a short turnaround, so we've kept the pre-lab small: four short question
 Before you come, read the whole handout, especially the Safety Notes and the Experiment questions, so you know what to measure.
 
 ======================================================================
-10. Quiz 1 Marks
+13. Quiz 1 Marks
 Posted: Oct 9, 2026, 12:29 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -205,7 +320,7 @@ I will have the quizzes with me at the next lecture, so you can pick yours up th
 Phil
 
 ======================================================================
-11. Tutorial #2 Problems
+14. Tutorial #2 Problems
 Posted: Oct 4, 2026, 2:27 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -224,7 +339,7 @@ See you all then,
 JT
 
 ======================================================================
-12. Quiz 2 (Tuesday, October 13): scope, aids and how to prepare
+15. Quiz 2 (Tuesday, October 13): scope, aids and how to prepare
 Posted: Oct 3, 2026, 12:29 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -268,7 +383,7 @@ There will be no prelab quiz for Lab 2 in Section B02. The prelab quiz had to be
 Phil
 
 ======================================================================
-13. ENEL 585 Lab 2 reminder: B01 tomorrow, B02 next Friday Body:
+16. ENEL 585 Lab 2 reminder: B01 tomorrow, B02 next Friday Body:
 Posted: Oct 1, 2026, 9:45 PM
 ----------------------------------------------------------------------
 Hello everyone,
@@ -284,7 +399,7 @@ Thanks,
 Phil
 
 ======================================================================
-14. Final project documents updated: proposal expectations, group registration and dropbox
+17. Final project documents updated: proposal expectations, group registration and dropbox
 Posted: Oct 1, 2026, 10:11 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -310,7 +425,7 @@ Thanks,
 Phil
 
 ======================================================================
-15. Quiz 1 (Tuesday, September 29): scope, aids and how to prepare
+18. Quiz 1 (Tuesday, September 29): scope, aids and how to prepare
 Posted: Sep 25, 2026, 11:59 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -360,7 +475,7 @@ Good luck, and see you on Tuesday.
 Phil
 
 ======================================================================
-16. Solutions to Tutorial #1 are posted
+19. Solutions to Tutorial #1 are posted
 Posted: Sep 24, 2026, 3:43 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -372,7 +487,7 @@ If you have any questions, you can send me an email or message on Teams.
 JT
 
 ======================================================================
-17. Problems for Quiz #1
+20. Problems for Quiz #1
 Posted: Sep 23, 2026, 9:18 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -385,7 +500,7 @@ Thanks,
 Phil
 
 ======================================================================
-18. Quiz #1: Content
+21. Quiz #1: Content
 Posted: Sep 22, 2026, 9:45 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -397,7 +512,7 @@ Thanks,
 Phil
 
 ======================================================================
-19. Tutorial #1 Problems
+22. Tutorial #1 Problems
 Posted: Sep 17, 2026, 9:00 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -419,7 +534,7 @@ See you all then,
 JT
 
 ======================================================================
-20. Annoucements
+23. Annoucements
 Posted: Sep 15, 2026, 9:54 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -431,7 +546,7 @@ Just a few announcements:
 - Bench instruments guide has also been uploaded to D2L: Bench Instruments Guide (https://d2l.ucalgary.ca/d2l/le/content/770066/viewContent/7810293/View). This should be helpful for future labs.
 
 ======================================================================
-21. Lab 1
+24. Lab 1
 Posted: Sep 10, 2026, 11:28 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -454,7 +569,7 @@ Thanks,
 Phil
 
 ======================================================================
-22. Announcements
+25. Announcements
 Posted: Sep 10, 2026, 2:11 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -470,7 +585,7 @@ Thanks all,
 Phil
 
 ======================================================================
-23. Reminder about Tutorial Today/Next Week
+26. Reminder about Tutorial Today/Next Week
 Posted: Sep 8, 2026, 9:07 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -484,7 +599,7 @@ Thanks,
 Phil
 
 ======================================================================
-24. Project Orientation Overview
+27. Project Orientation Overview
 Posted: Sep 4, 2026, 3:05 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -504,7 +619,7 @@ Have a good long weekend,
 JT Luterbach
 
 ======================================================================
-25. Welcome to ENEL 585!
+28. Welcome to ENEL 585!
 Posted: Aug 31, 2026, 10:09 PM
 ----------------------------------------------------------------------
 Hi all,
