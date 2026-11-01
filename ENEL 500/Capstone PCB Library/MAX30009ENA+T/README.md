@@ -31,7 +31,7 @@ Don't use the Run button inside the script editor. The script itself is then the
 - Pad size: the outline gives no land pattern, and the data sheet only says "Refer to Application Note 1891". The pad is 80% of the nominal ball diameter (0.8 x 0.27 = 0.216, rounded to 0.22 mm), the usual NSMD rule. That leaves 0.18 mm copper to copper.
 - Solder mask expansion fixed at 0.03 mm per side (0.28 mm openings), which leaves a 0.12 mm mask web between neighbouring pads. The usual 0.1 mm rule would remove the web completely at this pitch.
 - Paste: same as the pad (0.22 mm circles).
-- Pin-1 dot outside the body next to A1, assembly outline with A1 chamfer on Mechanical 13, courtyard (body + 0.25 mm) on Mechanical 15. Height 0.50 mm (A max).
+- Pin-1 dot outside the body next to A1, assembly outline with A1 chamfer on Mechanical 13, silkscreen outline 0.2 mm outside the body (closer would overlap the pad clearance), courtyard (body + 0.3 mm) on Mechanical 15. Height 0.50 mm (A max).
 - No 3D model.
 
 ## Symbol

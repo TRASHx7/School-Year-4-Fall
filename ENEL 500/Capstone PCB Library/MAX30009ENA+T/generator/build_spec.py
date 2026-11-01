@@ -62,7 +62,8 @@ def main(out):
             "mask_expansion": 0.03,
             "pads": pads,
             "pin1_pad": "A1",
-            "courtyard_expansion": 0.25,
+            "silk_offset": 0.2,          # 0.1 default is inside the pad keep-out (pad edge + 0.2 + w/2 = 1.17 mm)
+            "courtyard_expansion": 0.3,
         },
         "symbol": {
             "name": "MAX30009ENA+T",

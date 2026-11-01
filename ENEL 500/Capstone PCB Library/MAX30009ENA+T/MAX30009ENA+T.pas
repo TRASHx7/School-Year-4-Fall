@@ -215,16 +215,20 @@ Begin
     AddPad(Comp, 'E3', 0, -0.8, 0.22, 0.22, 1, 0, 0, 0);
     AddPad(Comp, 'E4', 0.4, -0.8, 0.22, 0.22, 1, 0, 0, 0);
     AddPad(Comp, 'E5', 0.8, -0.8, 0.22, 0.22, 1, 0, 0, 0);
-    AddCircle(Comp, -1.464, 0.8, 0.075, 0.15, eTopOverlay);
+    AddLine(Comp, -1.214, 1.214, 1.214, 1.214, 0.12, eTopOverlay);
+    AddLine(Comp, -1.214, -1.214, 1.214, -1.214, 0.12, eTopOverlay);
+    AddLine(Comp, 1.214, -1.214, 1.214, 1.214, 0.12, eTopOverlay);
+    AddLine(Comp, -1.214, -1.214, -1.214, 1.214, 0.12, eTopOverlay);
+    AddCircle(Comp, -1.564, 0.8, 0.075, 0.15, eTopOverlay);
     AddLine(Comp, -1.014, 0.507, -0.507, 1.014, 0.1, eMechanical13);
     AddLine(Comp, -0.507, 1.014, 1.014, 1.014, 0.1, eMechanical13);
     AddLine(Comp, 1.014, 1.014, 1.014, -1.014, 0.1, eMechanical13);
     AddLine(Comp, 1.014, -1.014, -1.014, -1.014, 0.1, eMechanical13);
     AddLine(Comp, -1.014, -1.014, -1.014, 0.507, 0.1, eMechanical13);
-    AddLine(Comp, -1.9, 1.3, 1.3, 1.3, 0.05, eMechanical15);
-    AddLine(Comp, 1.3, 1.3, 1.3, -1.3, 0.05, eMechanical15);
-    AddLine(Comp, 1.3, -1.3, -1.9, -1.3, 0.05, eMechanical15);
-    AddLine(Comp, -1.9, -1.3, -1.9, 1.3, 0.05, eMechanical15);
+    AddLine(Comp, -2.05, 1.35, 1.35, 1.35, 0.05, eMechanical15);
+    AddLine(Comp, 1.35, 1.35, 1.35, -1.35, 0.05, eMechanical15);
+    AddLine(Comp, 1.35, -1.35, -2.05, -1.35, 0.05, eMechanical15);
+    AddLine(Comp, -2.05, -1.35, -2.05, 1.35, 0.05, eMechanical15);
     PCBServer.PostProcess;
 
     Step := 'refreshing the view';

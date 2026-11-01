@@ -215,7 +215,8 @@
       }
     ],
     "pin1_pad": "A1",
-    "courtyard_expansion": 0.25
+    "silk_offset": 0.2,
+    "courtyard_expansion": 0.3
   },
   "symbol": {
     "name": "MAX30009ENA+T",
