@@ -161,7 +161,8 @@ End;
 { Shape: 1 = round, 0 = rectangular.  NoPaste: 1 removes the pad's own paste. }
 Procedure AddSmdPad(Comp : IPCB_LibComponent; PadName : String; X, Y, W, H : Double; Shape, NoPaste : Integer);
 Var
-    Pad : IPCB_Pad;
+    Pad   : IPCB_Pad;
+    Cache : TPadCache;
 Begin
     Pad := PCBServer.PCBObjectFactory(ePadObject, eNoDimension, eCreate_Default);
     Pad.Mode     := ePadMode_Simple;
@@ -173,15 +174,21 @@ Begin
     Pad.TopYSize := MMsToCoord(H);
     If Shape = 1 Then Pad.TopShape := eRounded Else Pad.TopShape := eRectangular;
     Pad.Name     := PadName;
-    { Fixed solder mask opening; the usual 0.1 mm rule leaves no mask web at this pitch }
-    Pad.SolderMaskExpansionMode := eMaskExpansionMode_Manual;
-    Pad.SolderMaskExpansion     := MMsToCoord(MaskExpMM);
+    AddToComp(Comp, Pad);
+    { Fixed solder mask opening; the usual 0.1 mm rule leaves no mask web at this pitch.
+      Set through the pad cache: in AD25 the SolderMaskExpansion and PasteMaskExpansion
+      property setters crash the scripting system with an access violation. }
+    Pad.BeginModify;
+    Cache := Pad.GetState_Cache;
+    Cache.SolderMaskExpansion      := MMsToCoord(MaskExpMM);
+    Cache.SolderMaskExpansionValid := eCacheManual;
     If NoPaste = 1 Then
     Begin
-        Pad.PasteMaskExpansionMode := eMaskExpansionMode_Manual;
-        Pad.PasteMaskExpansion     := -MMsToCoord(W);
+        Cache.PasteMaskExpansion      := -MMsToCoord(W);
+        Cache.PasteMaskExpansionValid := eCacheManual;
     End;
-    AddToComp(Comp, Pad);
+    Pad.SetState_Cache := Cache;
+    Pad.EndModify;
 End;
 
 Procedure AddPasteFill(Comp : IPCB_LibComponent; Xa, Ya, Xb, Yb : Double);
