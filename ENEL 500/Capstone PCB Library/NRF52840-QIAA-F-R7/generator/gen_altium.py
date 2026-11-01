@@ -462,7 +462,8 @@ def main():
         w = csv.writer(fh)
         w.writerow(["Designator (ball)", "Pin name", "Electrical type", "Symbol side", "Group",
                     "Pad X (mm)", "Pad Y (mm)", "Pad size (mm)"])
-        for p in spec["symbol"]["pins"]:
+        placed, _ = symbol_layout(spec["symbol"])
+        for p, _x, _y, _o in placed:
             pd = pads[p["num"]]
             w.writerow([p["num"], p["name"], p["type"], p["side"], p["group"], f(pd["x"]), f(pd["y"]),
                         f"{f(pd['dx'])} x {f(pd['dy'])}"])

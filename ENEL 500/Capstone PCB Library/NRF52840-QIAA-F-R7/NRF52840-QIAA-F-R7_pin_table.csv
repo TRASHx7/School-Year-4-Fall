@@ -1,45 +1,10 @@
 Designator (ball),Pin name,Electrical type,Symbol side,Group,Pad X (mm),Pad Y (mm),Pad size (mm)
-D2,P0.00/XL1,io,right,P0,-2.75,2,0.25 x 0.25
 Y2,VDDH,power,left,1 Supply,-2.75,-2,0.25 x 0.25
 A22,VDD,power,left,1 Supply,2.25,3.25,0.25 x 0.25
 AD14,VDD,power,left,1 Supply,0.25,-3.25,0.25 x 0.25
 AD23,VDD,power,left,1 Supply,2.75,-3.25,0.25 x 0.25
 B1,VDD,power,left,1 Supply,-3.25,2.75,0.25 x 0.25
-F2,P0.01/XL2,io,right,P0,-2.75,1.5,0.25 x 0.25
 W1,VDD,power,left,1 Supply,-3.25,-1.75,0.25 x 0.25
-A12,P0.02/AIN0,io,right,P0,-0.25,3.25,0.25 x 0.25
-B13,P0.03/AIN1,io,right,P0,0,2.75,0.25 x 0.25
-J1,P0.04/AIN2,io,right,P0,-3.25,0.75,0.25 x 0.25
-K2,P0.05/AIN3,io,right,P0,-2.75,0.5,0.25 x 0.25
-L1,P0.06,io,right,P0,-3.25,0.25,0.25 x 0.25
-M2,P0.07/TRACECLK,io,right,P0,-2.75,0,0.25 x 0.25
-N1,P0.08,io,right,P0,-3.25,-0.25,0.25 x 0.25
-L24,P0.09/NFC1,io,right,P0,3.25,0.25,0.25 x 0.25
-J24,P0.10/NFC2,io,right,P0,3.25,0.75,0.25 x 0.25
-T2,P0.11/TRACEDATA2,io,right,P0,-2.75,-1,0.25 x 0.25
-U1,P0.12/TRACEDATA1,io,right,P0,-3.25,-1.25,0.25 x 0.25
-AD8,P0.13,io,right,P0,-1.25,-3.25,0.25 x 0.25
-AC9,P0.14,io,right,P0,-1,-2.75,0.25 x 0.25
-AD10,P0.15,io,right,P0,-0.75,-3.25,0.25 x 0.25
-AC11,P0.16,io,right,P0,-0.5,-2.75,0.25 x 0.25
-AD12,P0.17,io,right,P0,-0.25,-3.25,0.25 x 0.25
-AC13,P0.18/nRESET,io,right,P0,0,-2.75,0.25 x 0.25
-AC15,P0.19,io,right,P0,0.5,-2.75,0.25 x 0.25
-B7,VSS,power,bottom,GND,-1.5,2.75,0.25 x 0.25
-EP,VSS,power,bottom,GND,0,0,4.85 x 4.85
-AD16,P0.20,io,right,P0,0.75,-3.25,0.25 x 0.25
-F23,VSS_PA,power,bottom,GND,2.75,1.5,0.25 x 0.25
-AC17,P0.21,io,right,P0,1,-2.75,0.25 x 0.25
-AD18,P0.22,io,right,P0,1.25,-3.25,0.25 x 0.25
-AC19,P0.23,io,right,P0,1.5,-2.75,0.25 x 0.25
-AD20,P0.24,io,right,P0,1.75,-3.25,0.25 x 0.25
-AC21,P0.25,io,right,P0,2,-2.75,0.25 x 0.25
-G1,P0.26,io,right,P0,-3.25,1.25,0.25 x 0.25
-H2,P0.27,io,right,P0,-2.75,1,0.25 x 0.25
-B11,P0.28/AIN4,io,right,P0,-0.5,2.75,0.25 x 0.25
-A10,P0.29/AIN5,io,right,P0,-0.75,3.25,0.25 x 0.25
-B9,P0.30/AIN6,io,right,P0,-1,2.75,0.25 x 0.25
-A8,P0.31/AIN7,io,right,P0,-1.25,3.25,0.25 x 0.25
 C1,DEC1,passive,left,2 Regulator,-3.25,2.25,0.25 x 0.25
 A18,DEC2,passive,left,2 Regulator,1.25,3.25,0.25 x 0.25
 D23,DEC3,passive,left,2 Regulator,2.75,2,0.25 x 0.25
@@ -73,3 +38,38 @@ B17,P1.12,io,left,P1,1,2.75,0.25 x 0.25
 A16,P1.13,io,left,P1,0.75,3.25,0.25 x 0.25
 B15,P1.14,io,left,P1,0.5,2.75,0.25 x 0.25
 A14,P1.15,io,left,P1,0.25,3.25,0.25 x 0.25
+D2,P0.00/XL1,io,right,P0,-2.75,2,0.25 x 0.25
+F2,P0.01/XL2,io,right,P0,-2.75,1.5,0.25 x 0.25
+A12,P0.02/AIN0,io,right,P0,-0.25,3.25,0.25 x 0.25
+B13,P0.03/AIN1,io,right,P0,0,2.75,0.25 x 0.25
+J1,P0.04/AIN2,io,right,P0,-3.25,0.75,0.25 x 0.25
+K2,P0.05/AIN3,io,right,P0,-2.75,0.5,0.25 x 0.25
+L1,P0.06,io,right,P0,-3.25,0.25,0.25 x 0.25
+M2,P0.07/TRACECLK,io,right,P0,-2.75,0,0.25 x 0.25
+N1,P0.08,io,right,P0,-3.25,-0.25,0.25 x 0.25
+L24,P0.09/NFC1,io,right,P0,3.25,0.25,0.25 x 0.25
+J24,P0.10/NFC2,io,right,P0,3.25,0.75,0.25 x 0.25
+T2,P0.11/TRACEDATA2,io,right,P0,-2.75,-1,0.25 x 0.25
+U1,P0.12/TRACEDATA1,io,right,P0,-3.25,-1.25,0.25 x 0.25
+AD8,P0.13,io,right,P0,-1.25,-3.25,0.25 x 0.25
+AC9,P0.14,io,right,P0,-1,-2.75,0.25 x 0.25
+AD10,P0.15,io,right,P0,-0.75,-3.25,0.25 x 0.25
+AC11,P0.16,io,right,P0,-0.5,-2.75,0.25 x 0.25
+AD12,P0.17,io,right,P0,-0.25,-3.25,0.25 x 0.25
+AC13,P0.18/nRESET,io,right,P0,0,-2.75,0.25 x 0.25
+AC15,P0.19,io,right,P0,0.5,-2.75,0.25 x 0.25
+AD16,P0.20,io,right,P0,0.75,-3.25,0.25 x 0.25
+AC17,P0.21,io,right,P0,1,-2.75,0.25 x 0.25
+AD18,P0.22,io,right,P0,1.25,-3.25,0.25 x 0.25
+AC19,P0.23,io,right,P0,1.5,-2.75,0.25 x 0.25
+AD20,P0.24,io,right,P0,1.75,-3.25,0.25 x 0.25
+AC21,P0.25,io,right,P0,2,-2.75,0.25 x 0.25
+G1,P0.26,io,right,P0,-3.25,1.25,0.25 x 0.25
+H2,P0.27,io,right,P0,-2.75,1,0.25 x 0.25
+B11,P0.28/AIN4,io,right,P0,-0.5,2.75,0.25 x 0.25
+A10,P0.29/AIN5,io,right,P0,-0.75,3.25,0.25 x 0.25
+B9,P0.30/AIN6,io,right,P0,-1,2.75,0.25 x 0.25
+A8,P0.31/AIN7,io,right,P0,-1.25,3.25,0.25 x 0.25
+B7,VSS,power,bottom,GND,-1.5,2.75,0.25 x 0.25
+EP,VSS,power,bottom,GND,0,0,4.85 x 4.85
+F23,VSS_PA,power,bottom,GND,2.75,1.5,0.25 x 0.25
