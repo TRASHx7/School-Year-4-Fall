@@ -1,0 +1,1184 @@
+{
+ "title": "Nordic nRF52840-QIAA-F-R7 (aQFN73 7 x 7 mm): Altium footprint and schematic symbol",
+ "source": "nRF52840 Product Specification v1.8, section 7.1.1 (Figure 207, Table 145) and section 7.2.1 (Figure 210, Table 148)",
+ "date": "2026-11-01",
+ "basename": "NRF52840-QIAA-F-R7",
+ "footprint": {
+  "name": "NORDIC_AQFN73_7X7MM_P0.5",
+  "height_note": "A max 0.85",
+  "description": "Nordic aQFN73 7.0 x 7.0 mm, 0.5 mm pitch staggered rows, 0.25 mm round pads, 4.85 mm exposed pad (nRF52840 PS v1.8 Fig. 207/210)",
+  "body": {
+   "D": 7.0,
+   "E": 7.0,
+   "A": 0.85
+  },
+  "pads": [
+   {
+    "name": "A8",
+    "x": -1.25,
+    "y": 3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "A10",
+    "x": -0.75,
+    "y": 3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "A12",
+    "x": -0.25,
+    "y": 3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "A14",
+    "x": 0.25,
+    "y": 3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "A16",
+    "x": 0.75,
+    "y": 3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "A18",
+    "x": 1.25,
+    "y": 3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "A20",
+    "x": 1.75,
+    "y": 3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "A22",
+    "x": 2.25,
+    "y": 3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "A23",
+    "x": 2.75,
+    "y": 3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B1",
+    "x": -3.25,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B3",
+    "x": -2.5,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B5",
+    "x": -2.0,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B7",
+    "x": -1.5,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B9",
+    "x": -1.0,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B11",
+    "x": -0.5,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B13",
+    "x": 0.0,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B15",
+    "x": 0.5,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B17",
+    "x": 1.0,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B19",
+    "x": 1.5,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "B24",
+    "x": 3.25,
+    "y": 2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "C1",
+    "x": -3.25,
+    "y": 2.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "D2",
+    "x": -2.75,
+    "y": 2.0,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "D23",
+    "x": 2.75,
+    "y": 2.0,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "E24",
+    "x": 3.25,
+    "y": 1.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "F2",
+    "x": -2.75,
+    "y": 1.5,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "F23",
+    "x": 2.75,
+    "y": 1.5,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "G1",
+    "x": -3.25,
+    "y": 1.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "H2",
+    "x": -2.75,
+    "y": 1.0,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "H23",
+    "x": 2.75,
+    "y": 1.0,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "J1",
+    "x": -3.25,
+    "y": 0.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "J24",
+    "x": 3.25,
+    "y": 0.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "K2",
+    "x": -2.75,
+    "y": 0.5,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "L1",
+    "x": -3.25,
+    "y": 0.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "L24",
+    "x": 3.25,
+    "y": 0.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "M2",
+    "x": -2.75,
+    "y": 0.0,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "N1",
+    "x": -3.25,
+    "y": -0.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "N24",
+    "x": 3.25,
+    "y": -0.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "P2",
+    "x": -2.75,
+    "y": -0.5,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "P23",
+    "x": 2.75,
+    "y": -0.5,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "R1",
+    "x": -3.25,
+    "y": -0.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "R24",
+    "x": 3.25,
+    "y": -0.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "T2",
+    "x": -2.75,
+    "y": -1.0,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "T23",
+    "x": 2.75,
+    "y": -1.0,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "U1",
+    "x": -3.25,
+    "y": -1.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "U24",
+    "x": 3.25,
+    "y": -1.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "V23",
+    "x": 2.75,
+    "y": -1.5,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "W1",
+    "x": -3.25,
+    "y": -1.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "W24",
+    "x": 3.25,
+    "y": -1.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "Y2",
+    "x": -2.75,
+    "y": -2.0,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "Y23",
+    "x": 2.75,
+    "y": -2.0,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AA24",
+    "x": 3.25,
+    "y": -2.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AB2",
+    "x": -2.75,
+    "y": -2.5,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AC5",
+    "x": -2.0,
+    "y": -2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AC9",
+    "x": -1.0,
+    "y": -2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AC11",
+    "x": -0.5,
+    "y": -2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AC13",
+    "x": 0.0,
+    "y": -2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AC15",
+    "x": 0.5,
+    "y": -2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AC17",
+    "x": 1.0,
+    "y": -2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AC19",
+    "x": 1.5,
+    "y": -2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AC21",
+    "x": 2.0,
+    "y": -2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AC24",
+    "x": 3.25,
+    "y": -2.75,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD2",
+    "x": -2.75,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD4",
+    "x": -2.25,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD6",
+    "x": -1.75,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD8",
+    "x": -1.25,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD10",
+    "x": -0.75,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD12",
+    "x": -0.25,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD14",
+    "x": 0.25,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD16",
+    "x": 0.75,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD18",
+    "x": 1.25,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD20",
+    "x": 1.75,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD22",
+    "x": 2.25,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   },
+   {
+    "name": "AD23",
+    "x": 2.75,
+    "y": -3.25,
+    "dx": 0.25,
+    "dy": 0.25,
+    "shape": "round"
+   }
+  ],
+  "ep": {
+   "name": "EP",
+   "x": 0,
+   "y": 0,
+   "dx": 4.85,
+   "dy": 4.85
+  },
+  "paste_windows": [
+   {
+    "x": -1.1,
+    "y": 1.1,
+    "dx": 1.9,
+    "dy": 1.9
+   },
+   {
+    "x": -1.1,
+    "y": -1.1,
+    "dx": 1.9,
+    "dy": 1.9
+   },
+   {
+    "x": 1.1,
+    "y": 1.1,
+    "dx": 1.9,
+    "dy": 1.9
+   },
+   {
+    "x": 1.1,
+    "y": -1.1,
+    "dx": 1.9,
+    "dy": 1.9
+   }
+  ],
+  "mask_expansion": 0.05,
+  "silk_offset": 0.11,
+  "silk_corner_len": 0.6,
+  "silk_width": 0.12,
+  "pin1_dot": {
+   "x": -3.95,
+   "y": 3.95,
+   "r": 0.15
+  },
+  "assembly_chamfer": 0.5,
+  "assembly_layer": "eMechanical13",
+  "courtyard_layer": "eMechanical15",
+  "courtyard_expansion": 0.3
+ },
+ "symbol": {
+  "name": "NRF52840-QIAA-F-R7",
+  "designator": "U?",
+  "description": "nRF52840 BLE 5 / 802.15.4 SoC, Cortex-M4F 64 MHz, 1 MB flash, 256 kB RAM, aQFN73 7x7 mm",
+  "pin_pitch_mil": 100,
+  "pin_length_mil": 200,
+  "body_width_mil": 2000,
+  "pins": [
+   {
+    "num": "D2",
+    "name": "P0.00/XL1",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "Y2",
+    "name": "VDDH",
+    "side": "left",
+    "group": "1 Supply",
+    "type": "power"
+   },
+   {
+    "num": "A22",
+    "name": "VDD",
+    "side": "left",
+    "group": "1 Supply",
+    "type": "power"
+   },
+   {
+    "num": "AD14",
+    "name": "VDD",
+    "side": "left",
+    "group": "1 Supply",
+    "type": "power"
+   },
+   {
+    "num": "AD23",
+    "name": "VDD",
+    "side": "left",
+    "group": "1 Supply",
+    "type": "power"
+   },
+   {
+    "num": "B1",
+    "name": "VDD",
+    "side": "left",
+    "group": "1 Supply",
+    "type": "power"
+   },
+   {
+    "num": "F2",
+    "name": "P0.01/XL2",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "W1",
+    "name": "VDD",
+    "side": "left",
+    "group": "1 Supply",
+    "type": "power"
+   },
+   {
+    "num": "A12",
+    "name": "P0.02/AIN0",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "B13",
+    "name": "P0.03/AIN1",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "J1",
+    "name": "P0.04/AIN2",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "K2",
+    "name": "P0.05/AIN3",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "L1",
+    "name": "P0.06",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "M2",
+    "name": "P0.07/TRACECLK",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "N1",
+    "name": "P0.08",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "L24",
+    "name": "P0.09/NFC1",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "J24",
+    "name": "P0.10/NFC2",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "T2",
+    "name": "P0.11/TRACEDATA2",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "U1",
+    "name": "P0.12/TRACEDATA1",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AD8",
+    "name": "P0.13",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AC9",
+    "name": "P0.14",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AD10",
+    "name": "P0.15",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AC11",
+    "name": "P0.16",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AD12",
+    "name": "P0.17",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AC13",
+    "name": "P0.18/nRESET",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AC15",
+    "name": "P0.19",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "B7",
+    "name": "VSS",
+    "side": "bottom",
+    "group": "GND",
+    "type": "power"
+   },
+   {
+    "num": "EP",
+    "name": "VSS",
+    "side": "bottom",
+    "group": "GND",
+    "type": "power"
+   },
+   {
+    "num": "AD16",
+    "name": "P0.20",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "F23",
+    "name": "VSS_PA",
+    "side": "bottom",
+    "group": "GND",
+    "type": "power"
+   },
+   {
+    "num": "AC17",
+    "name": "P0.21",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AD18",
+    "name": "P0.22",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AC19",
+    "name": "P0.23",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AD20",
+    "name": "P0.24",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "AC21",
+    "name": "P0.25",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "G1",
+    "name": "P0.26",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "H2",
+    "name": "P0.27",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "B11",
+    "name": "P0.28/AIN4",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "A10",
+    "name": "P0.29/AIN5",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "B9",
+    "name": "P0.30/AIN6",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "A8",
+    "name": "P0.31/AIN7",
+    "side": "right",
+    "group": "P0",
+    "type": "io"
+   },
+   {
+    "num": "C1",
+    "name": "DEC1",
+    "side": "left",
+    "group": "2 Regulator",
+    "type": "passive"
+   },
+   {
+    "num": "A18",
+    "name": "DEC2",
+    "side": "left",
+    "group": "2 Regulator",
+    "type": "passive"
+   },
+   {
+    "num": "D23",
+    "name": "DEC3",
+    "side": "left",
+    "group": "2 Regulator",
+    "type": "passive"
+   },
+   {
+    "num": "B5",
+    "name": "DEC4",
+    "side": "left",
+    "group": "2 Regulator",
+    "type": "passive"
+   },
+   {
+    "num": "E24",
+    "name": "DEC6",
+    "side": "left",
+    "group": "2 Regulator",
+    "type": "passive"
+   },
+   {
+    "num": "B3",
+    "name": "DCC",
+    "side": "left",
+    "group": "2 Regulator",
+    "type": "passive"
+   },
+   {
+    "num": "AB2",
+    "name": "DCCH",
+    "side": "left",
+    "group": "2 Regulator",
+    "type": "passive"
+   },
+   {
+    "num": "N24",
+    "name": "NC",
+    "side": "left",
+    "group": "2 Regulator",
+    "type": "passive"
+   },
+   {
+    "num": "B24",
+    "name": "XC1",
+    "side": "left",
+    "group": "3 Clock",
+    "type": "passive"
+   },
+   {
+    "num": "A23",
+    "name": "XC2",
+    "side": "left",
+    "group": "3 Clock",
+    "type": "passive"
+   },
+   {
+    "num": "H23",
+    "name": "ANT",
+    "side": "left",
+    "group": "4 RF",
+    "type": "passive"
+   },
+   {
+    "num": "AC24",
+    "name": "SWDIO",
+    "side": "left",
+    "group": "5 Debug",
+    "type": "io"
+   },
+   {
+    "num": "AA24",
+    "name": "SWDCLK",
+    "side": "left",
+    "group": "5 Debug",
+    "type": "in"
+   },
+   {
+    "num": "AD2",
+    "name": "VBUS",
+    "side": "left",
+    "group": "6 USB",
+    "type": "power"
+   },
+   {
+    "num": "AC5",
+    "name": "DECUSB",
+    "side": "left",
+    "group": "6 USB",
+    "type": "passive"
+   },
+   {
+    "num": "AD6",
+    "name": "D+",
+    "side": "left",
+    "group": "6 USB",
+    "type": "io"
+   },
+   {
+    "num": "AD4",
+    "name": "D-",
+    "side": "left",
+    "group": "6 USB",
+    "type": "io"
+   },
+   {
+    "num": "AD22",
+    "name": "P1.00/TRACEDATA0",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "Y23",
+    "name": "P1.01",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "W24",
+    "name": "P1.02",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "V23",
+    "name": "P1.03",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "U24",
+    "name": "P1.04",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "T23",
+    "name": "P1.05",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "R24",
+    "name": "P1.06",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "P23",
+    "name": "P1.07",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "P2",
+    "name": "P1.08",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "R1",
+    "name": "P1.09/TRACEDATA3",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "A20",
+    "name": "P1.10",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "B19",
+    "name": "P1.11",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "B17",
+    "name": "P1.12",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "A16",
+    "name": "P1.13",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "B15",
+    "name": "P1.14",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   },
+   {
+    "num": "A14",
+    "name": "P1.15",
+    "side": "left",
+    "group": "P1",
+    "type": "io"
+   }
+  ],
+  "parameters": {
+   "Manufacturer": "Nordic Semiconductor",
+   "Manufacturer Part Number": "NRF52840-QIAA-F-R7",
+   "Package": "aQFN73 7 x 7 mm",
+   "Datasheet": "nRF52840 Product Specification v1.8",
+   "Supplier 1": "Digi-Key",
+   "Supplier Part Number 1": "NRF52840-QIAA-F-R7 (Cut Tape)"
+  }
+ }
+}
