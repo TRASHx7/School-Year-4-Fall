@@ -1,0 +1,410 @@
+{
+  "basename": "MAX30009ENA+T",
+  "title": "Analog Devices MAX30009ENA+T (25-bump WLP 2.03 x 2.03 mm, 0.4 mm pitch): Altium footprint and schematic symbol",
+  "source": "MAX30009 data sheet Rev 2 (Aug 2023) p.20-21 pin configuration and description; package outline 21-100494 Rev A",
+  "date": "2026-11-01",
+  "footprint": {
+    "name": "ADI_WLP25_2.03X2.03MM_P0.4",
+    "description": "25-bump WLP (N252C2+1), 2.028 x 2.028 mm, 0.4 mm pitch, 0.22 mm NSMD lands (21-100494 Rev A)",
+    "body": {
+      "D": 2.028,
+      "E": 2.028,
+      "A": 0.5
+    },
+    "mask_expansion": 0.03,
+    "pads": [
+      {
+        "name": "A1",
+        "x": -0.8,
+        "y": 0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "A2",
+        "x": -0.4,
+        "y": 0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "A3",
+        "x": 0.0,
+        "y": 0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "A4",
+        "x": 0.4,
+        "y": 0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "A5",
+        "x": 0.8,
+        "y": 0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "B1",
+        "x": -0.8,
+        "y": 0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "B2",
+        "x": -0.4,
+        "y": 0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "B3",
+        "x": 0.0,
+        "y": 0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "B4",
+        "x": 0.4,
+        "y": 0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "B5",
+        "x": 0.8,
+        "y": 0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "C1",
+        "x": -0.8,
+        "y": 0.0,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "C2",
+        "x": -0.4,
+        "y": 0.0,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "C3",
+        "x": 0.0,
+        "y": 0.0,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "C4",
+        "x": 0.4,
+        "y": 0.0,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "C5",
+        "x": 0.8,
+        "y": 0.0,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "D1",
+        "x": -0.8,
+        "y": -0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "D2",
+        "x": -0.4,
+        "y": -0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "D3",
+        "x": 0.0,
+        "y": -0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "D4",
+        "x": 0.4,
+        "y": -0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "D5",
+        "x": 0.8,
+        "y": -0.4,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "E1",
+        "x": -0.8,
+        "y": -0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "E2",
+        "x": -0.4,
+        "y": -0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "E3",
+        "x": 0.0,
+        "y": -0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "E4",
+        "x": 0.4,
+        "y": -0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      },
+      {
+        "name": "E5",
+        "x": 0.8,
+        "y": -0.8,
+        "dx": 0.22,
+        "dy": 0.22,
+        "shape": "round"
+      }
+    ],
+    "pin1_pad": "A1",
+    "courtyard_expansion": 0.25
+  },
+  "symbol": {
+    "name": "MAX30009ENA+T",
+    "description": "Low-power, high-performance bioimpedance (BioZ) AFE, 1.8 V, SPI/I2C",
+    "designator": "U?",
+    "pins": [
+      {
+        "num": "C1",
+        "name": "AVDD",
+        "type": "power",
+        "side": "left",
+        "group": "1 Supply"
+      },
+      {
+        "num": "D1",
+        "name": "DVDD",
+        "type": "power",
+        "side": "left",
+        "group": "1 Supply"
+      },
+      {
+        "num": "C2",
+        "name": "VREF",
+        "type": "passive",
+        "side": "left",
+        "group": "1 Supply"
+      },
+      {
+        "num": "A1",
+        "name": "EL1",
+        "type": "passive",
+        "side": "left",
+        "group": "2 Electrodes"
+      },
+      {
+        "num": "A2",
+        "name": "EL2A",
+        "type": "passive",
+        "side": "left",
+        "group": "2 Electrodes"
+      },
+      {
+        "num": "A3",
+        "name": "EL2B",
+        "type": "passive",
+        "side": "left",
+        "group": "2 Electrodes"
+      },
+      {
+        "num": "B3",
+        "name": "EL3B",
+        "type": "passive",
+        "side": "left",
+        "group": "2 Electrodes"
+      },
+      {
+        "num": "B2",
+        "name": "EL3A",
+        "type": "passive",
+        "side": "left",
+        "group": "2 Electrodes"
+      },
+      {
+        "num": "B1",
+        "name": "EL4",
+        "type": "passive",
+        "side": "left",
+        "group": "2 Electrodes"
+      },
+      {
+        "num": "A4",
+        "name": "CAL1",
+        "type": "passive",
+        "side": "left",
+        "group": "3 Calibration"
+      },
+      {
+        "num": "A5",
+        "name": "CAL2",
+        "type": "passive",
+        "side": "left",
+        "group": "3 Calibration"
+      },
+      {
+        "num": "B5",
+        "name": "CAL3",
+        "type": "passive",
+        "side": "left",
+        "group": "3 Calibration"
+      },
+      {
+        "num": "B4",
+        "name": "CAL4",
+        "type": "passive",
+        "side": "left",
+        "group": "3 Calibration"
+      },
+      {
+        "num": "E4",
+        "name": "SCLK/SCL",
+        "type": "in",
+        "side": "right",
+        "group": "1 Interface"
+      },
+      {
+        "num": "E3",
+        "name": "SDI/SDA",
+        "type": "io",
+        "side": "right",
+        "group": "1 Interface"
+      },
+      {
+        "num": "E2",
+        "name": "SDO/ADDR",
+        "type": "io",
+        "side": "right",
+        "group": "1 Interface"
+      },
+      {
+        "num": "D2",
+        "name": "CSB/I2C_SEL",
+        "type": "in",
+        "side": "right",
+        "group": "1 Interface"
+      },
+      {
+        "num": "E5",
+        "name": "INT",
+        "type": "out",
+        "side": "right",
+        "group": "1 Interface"
+      },
+      {
+        "num": "D3",
+        "name": "FCLK",
+        "type": "in",
+        "side": "right",
+        "group": "2 Clock"
+      },
+      {
+        "num": "D4",
+        "name": "TRIG",
+        "type": "in",
+        "side": "right",
+        "group": "2 Clock"
+      },
+      {
+        "num": "C4",
+        "name": "DRVSJ",
+        "type": "passive",
+        "side": "right",
+        "group": "3 Drive amp"
+      },
+      {
+        "num": "C5",
+        "name": "DRVXR",
+        "type": "passive",
+        "side": "right",
+        "group": "3 Drive amp"
+      },
+      {
+        "num": "D5",
+        "name": "DRVXC",
+        "type": "passive",
+        "side": "right",
+        "group": "3 Drive amp"
+      },
+      {
+        "num": "C3",
+        "name": "AGND",
+        "type": "power",
+        "side": "bottom",
+        "group": "4 Ground"
+      },
+      {
+        "num": "E1",
+        "name": "DGND",
+        "type": "power",
+        "side": "bottom",
+        "group": "4 Ground"
+      }
+    ],
+    "parameters": {
+      "Manufacturer": "Analog Devices",
+      "Manufacturer Part Number": "MAX30009ENA+T",
+      "Package": "25-WLP 2.03 x 2.03 mm, 0.4 mm pitch (N252C2+1, outline 21-100494)",
+      "Datasheet": "https://www.analog.com/media/en/technical-documentation/data-sheets/max30009.pdf",
+      "Supplier 1": "Digi-Key",
+      "Supplier Part Number 1": "175-MAX30009ENA+TCT-ND"
+    }
+  }
+}
