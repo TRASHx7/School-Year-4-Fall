@@ -19,11 +19,13 @@ Altium library parts for the Nordic nRF52840 in the aQFN73 7 x 7 mm package, bui
 
 ## Using it in Altium Designer
 
-1. File > New > Library > PCB Library. With the new PcbLib active, File > Run Script, browse to `NRF52840-QIAA-F-R7.pas` (or open `NRF52840-QIAA-F-R7.PrjScr` first) and run `CreateFootprint`.
-2. File > New > Library > Schematic Library. With the new SchLib active, run `CreateSymbol`.
+1. File > New > Library > PCB Library. Click on the new PcbLib tab so it is the active document, then File > Run Script, browse to `NRF52840-QIAA-F-R7.pas` (or open `NRF52840-QIAA-F-R7.PrjScr` first) and run `CreateFootprint`.
+2. File > New > Library > Schematic Library. Click on the new SchLib tab, then File > Run Script and run `CreateSymbol`.
 3. Save both libraries in the project. The symbol is already linked to footprint `NORDIC_AQFN73_7X7MM_P0.5`.
 
-The script was generated and checked here but has not been run in Altium yet. If Altium reports an error, note the line number and message.
+Don't use the Run button inside the script editor. The script itself is then the active document, so the script can't find the library and stops with a message.
+
+If something fails, the script names the step it reached (for example "CreateSymbol stopped while adding the body and pins"). Report that message and any error text.
 
 ## Footprint
 

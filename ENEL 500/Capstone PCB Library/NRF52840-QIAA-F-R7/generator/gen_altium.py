@@ -118,10 +118,13 @@ SCRIPT = r"""{ =================================================================
   Generated on:   {date}
 
   HOW TO USE (Altium Designer)
-  1. File > New > Library > PCB Library. With the new PcbLib open and active,
-     run File > Run Script, browse to this file and pick CreateFootprint.
-  2. File > New > Library > Schematic Library. With the new SchLib open and
-     active, run File > Run Script again and pick CreateSymbol.
+  1. File > New > Library > PCB Library. Click on the new PcbLib tab so it is
+     the active document, then File > Run Script, browse to this file and
+     pick CreateFootprint.
+  2. File > New > Library > Schematic Library. Click on the new SchLib tab,
+     then File > Run Script again and pick CreateSymbol.
+  Do not run it with the Run button in the script editor: then the script
+  itself is the active document and the library is not found.
   3. Save both libraries. The symbol already links to footprint
      '{fp_name}', so keep the PcbLib in the same project or add it to your
      installed libraries.
@@ -136,6 +139,7 @@ Var
     FpLib     : IPCB_Library;
     SymComp   : ISch_Component;
     MaskExpMM : Double;
+    Step      : String;
 
 Function X0(V : Double) : Integer;
 Begin
@@ -228,13 +232,22 @@ Procedure CreateFootprint;
 Var
     Comp : IPCB_LibComponent;
 Begin
+    { Run from File > Run Script with the PcbLib as the active tab, not from the script editor. }
+    If PCBServer = Nil Then Exit;
     FpLib := PCBServer.GetCurrentPCBLibrary;
     If FpLib = Nil Then
     Begin
-        ShowMessage('Open (or create) a PCB Library and make it the active document first.');
+        ShowMessage('No PCB Library is active. Click on the PcbLib tab, then run CreateFootprint from File > Run Script.');
+        Exit;
+    End;
+    If FpLib.Board = Nil Then
+    Begin
+        ShowMessage('The active PCB Library has no board object. Close and reopen the PcbLib, then try again.');
         Exit;
     End;
 
+    Step := 'creating the footprint';
+    Try
     MaskExpMM := {mask_exp};
     Comp := PCBServer.CreatePCBLibComp;
     Comp.Name        := '{fp_name}';
@@ -242,12 +255,18 @@ Begin
     Comp.Height      := MMsToCoord({height});
     FpLib.RegisterComponent(Comp);
 
+    Step := 'adding pads and outlines';
     PCBServer.PreProcess;
 {fp_body}
     PCBServer.PostProcess;
 
+    Step := 'refreshing the view';
     FpLib.CurrentComponent := Comp;
     FpLib.Board.ViewManager_FullUpdate;
+    Except
+        ShowMessage('CreateFootprint stopped while ' + Step + '. Please report this step and the error text.');
+        Exit;
+    End;
     ShowMessage('Footprint {fp_name} created ({npads} pads). Check it against the datasheet drawing, then save the library.');
 End;
 
@@ -303,14 +322,23 @@ Var
     SchLib : ISch_Lib;
     Impl   : ISch_Implementation;
 Begin
+    { Run from File > Run Script with the SchLib as the active tab, not from the script editor.
+      DelphiScript evaluates both sides of And/Or, so each nil check is its own If. }
     If SchServer = Nil Then Exit;
     SchLib := SchServer.GetCurrentSchDocument;
-    If (SchLib = Nil) Or (SchLib.ObjectID <> eSchLib) Then
+    If SchLib = Nil Then
     Begin
-        ShowMessage('Open (or create) a Schematic Library and make it the active document first.');
+        ShowMessage('No Schematic Library is active. Click on the SchLib tab, then run CreateSymbol from File > Run Script.');
+        Exit;
+    End;
+    If SchLib.ObjectID <> eSchLib Then
+    Begin
+        ShowMessage('The active document is a schematic sheet, not a Schematic Library. Click on the SchLib tab and try again.');
         Exit;
     End;
 
+    Step := 'creating the component';
+    Try
     SymComp := SchServer.SchObjectFactory(eSchComponent, eCreate_Default);
     If SymComp = Nil Then Exit;
     SymComp.CurrentPartID        := 1;
@@ -318,11 +346,14 @@ Begin
     SymComp.LibReference         := '{sym_name}';
     SymComp.ComponentDescription := '{sym_desc}';
     SymComp.Designator.Text      := '{designator}';
-    SymComp.Comment.Text         := '{sym_name}';
 
+    Step := 'adding the body and pins';
 {sym_body}
 
+    Step := 'adding parameters';
 {params}
+
+    Step := 'linking the footprint';
 
     Impl := SymComp.AddSchImplementation;
     Impl.ClearAllDatafileLinks;
@@ -332,10 +363,15 @@ Begin
     Impl.AddDataFileLink('{fp_name}', '', 'PCBLIB');
     Impl.IsCurrent   := True;
 
+    Step := 'adding the component to the library';
     SchLib.AddSchComponent(SymComp);
     SchServer.RobotManager.SendMessage(nil, c_BroadCast, SCHM_PrimitiveRegistration, SymComp.I_ObjectAddress);
     SchLib.CurrentSchComponent := SymComp;
     SchLib.GraphicallyInvalidate;
+    Except
+        ShowMessage('CreateSymbol stopped while ' + Step + '. Please report this step and the error text.');
+        Exit;
+    End;
     ShowMessage('Symbol {sym_name} created ({npins} pins). Save the library.');
 End;
 """

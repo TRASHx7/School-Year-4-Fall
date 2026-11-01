@@ -4,10 +4,13 @@
   Generated on:   2026-11-01
 
   HOW TO USE (Altium Designer)
-  1. File > New > Library > PCB Library. With the new PcbLib open and active,
-     run File > Run Script, browse to this file and pick CreateFootprint.
-  2. File > New > Library > Schematic Library. With the new SchLib open and
-     active, run File > Run Script again and pick CreateSymbol.
+  1. File > New > Library > PCB Library. Click on the new PcbLib tab so it is
+     the active document, then File > Run Script, browse to this file and
+     pick CreateFootprint.
+  2. File > New > Library > Schematic Library. Click on the new SchLib tab,
+     then File > Run Script again and pick CreateSymbol.
+  Do not run it with the Run button in the script editor: then the script
+  itself is the active document and the library is not found.
   3. Save both libraries. The symbol already links to footprint
      'NORDIC_AQFN73_7X7MM_P0.5', so keep the PcbLib in the same project or add it to your
      installed libraries.
@@ -22,6 +25,7 @@ Var
     FpLib     : IPCB_Library;
     SymComp   : ISch_Component;
     MaskExpMM : Double;
+    Step      : String;
 
 Function X0(V : Double) : Integer;
 Begin
@@ -114,13 +118,22 @@ Procedure CreateFootprint;
 Var
     Comp : IPCB_LibComponent;
 Begin
+    { Run from File > Run Script with the PcbLib as the active tab, not from the script editor. }
+    If PCBServer = Nil Then Exit;
     FpLib := PCBServer.GetCurrentPCBLibrary;
     If FpLib = Nil Then
     Begin
-        ShowMessage('Open (or create) a PCB Library and make it the active document first.');
+        ShowMessage('No PCB Library is active. Click on the PcbLib tab, then run CreateFootprint from File > Run Script.');
+        Exit;
+    End;
+    If FpLib.Board = Nil Then
+    Begin
+        ShowMessage('The active PCB Library has no board object. Close and reopen the PcbLib, then try again.');
         Exit;
     End;
 
+    Step := 'creating the footprint';
+    Try
     MaskExpMM := 0.05;
     Comp := PCBServer.CreatePCBLibComp;
     Comp.Name        := 'NORDIC_AQFN73_7X7MM_P0.5';
@@ -128,6 +141,7 @@ Begin
     Comp.Height      := MMsToCoord(0.85);
     FpLib.RegisterComponent(Comp);
 
+    Step := 'adding pads and outlines';
     PCBServer.PreProcess;
     AddSmdPad(Comp, 'A8', -1.25, 3.25, 0.25, 0.25, 1, 0);
     AddSmdPad(Comp, 'A10', -0.75, 3.25, 0.25, 0.25, 1, 0);
@@ -227,8 +241,13 @@ Begin
     AddLine(Comp, -3.8, -3.8, -3.8, 3.8, 0.05, eMechanical15);
     PCBServer.PostProcess;
 
+    Step := 'refreshing the view';
     FpLib.CurrentComponent := Comp;
     FpLib.Board.ViewManager_FullUpdate;
+    Except
+        ShowMessage('CreateFootprint stopped while ' + Step + '. Please report this step and the error text.');
+        Exit;
+    End;
     ShowMessage('Footprint NORDIC_AQFN73_7X7MM_P0.5 created (74 pads). Check it against the datasheet drawing, then save the library.');
 End;
 
@@ -284,14 +303,23 @@ Var
     SchLib : ISch_Lib;
     Impl   : ISch_Implementation;
 Begin
+    { Run from File > Run Script with the SchLib as the active tab, not from the script editor.
+      DelphiScript evaluates both sides of And/Or, so each nil check is its own If. }
     If SchServer = Nil Then Exit;
     SchLib := SchServer.GetCurrentSchDocument;
-    If (SchLib = Nil) Or (SchLib.ObjectID <> eSchLib) Then
+    If SchLib = Nil Then
     Begin
-        ShowMessage('Open (or create) a Schematic Library and make it the active document first.');
+        ShowMessage('No Schematic Library is active. Click on the SchLib tab, then run CreateSymbol from File > Run Script.');
+        Exit;
+    End;
+    If SchLib.ObjectID <> eSchLib Then
+    Begin
+        ShowMessage('The active document is a schematic sheet, not a Schematic Library. Click on the SchLib tab and try again.');
         Exit;
     End;
 
+    Step := 'creating the component';
+    Try
     SymComp := SchServer.SchObjectFactory(eSchComponent, eCreate_Default);
     If SymComp = Nil Then Exit;
     SymComp.CurrentPartID        := 1;
@@ -299,8 +327,8 @@ Begin
     SymComp.LibReference         := 'NRF52840-QIAA-F-R7';
     SymComp.ComponentDescription := 'nRF52840 BLE 5 / 802.15.4 SoC, Cortex-M4F 64 MHz, 1 MB flash, 256 kB RAM, aQFN73 7x7 mm';
     SymComp.Designator.Text      := 'U?';
-    SymComp.Comment.Text         := 'NRF52840-QIAA-F-R7';
 
+    Step := 'adding the body and pins';
     AddRect(SymComp, 0, -4600, 2000, 0);
     AddPin(SymComp, 'Y2', 'VDDH', 0, -100, eRotate180, eElectricPower, 200);
     AddPin(SymComp, 'A22', 'VDD', 0, -200, eRotate180, eElectricPower, 200);
@@ -377,12 +405,15 @@ Begin
     AddPin(SymComp, 'EP', 'VSS', 1000, -4600, eRotate270, eElectricPower, 200);
     AddPin(SymComp, 'F23', 'VSS_PA', 1100, -4600, eRotate270, eElectricPower, 200);
 
+    Step := 'adding parameters';
     AddParam(SymComp, 'Manufacturer', 'Nordic Semiconductor');
     AddParam(SymComp, 'Manufacturer Part Number', 'NRF52840-QIAA-F-R7');
     AddParam(SymComp, 'Package', 'aQFN73 7 x 7 mm');
     AddParam(SymComp, 'Datasheet', 'nRF52840 Product Specification v1.8');
     AddParam(SymComp, 'Supplier 1', 'Digi-Key');
     AddParam(SymComp, 'Supplier Part Number 1', 'NRF52840-QIAA-F-R7 (Cut Tape)');
+
+    Step := 'linking the footprint';
 
     Impl := SymComp.AddSchImplementation;
     Impl.ClearAllDatafileLinks;
@@ -392,9 +423,14 @@ Begin
     Impl.AddDataFileLink('NORDIC_AQFN73_7X7MM_P0.5', '', 'PCBLIB');
     Impl.IsCurrent   := True;
 
+    Step := 'adding the component to the library';
     SchLib.AddSchComponent(SymComp);
     SchServer.RobotManager.SendMessage(nil, c_BroadCast, SCHM_PrimitiveRegistration, SymComp.I_ObjectAddress);
     SchLib.CurrentSchComponent := SymComp;
     SchLib.GraphicallyInvalidate;
+    Except
+        ShowMessage('CreateSymbol stopped while ' + Step + '. Please report this step and the error text.');
+        Exit;
+    End;
     ShowMessage('Symbol NRF52840-QIAA-F-R7 created (74 pins). Save the library.');
 End;
