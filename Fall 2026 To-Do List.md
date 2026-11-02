@@ -19,6 +19,7 @@ _Built Oct 18, 2026 from the outlines, schedules and handouts in this folder. It
 
 | Due | Class | Task |
 |---|---|---|
+| Thu Nov 5, 11:59 PM | PHYS 365 | Lab 3 report (Standing Waves), group submission to the D2L dropbox with the Excel template |
 | **Fri Nov 6, 11:59 PM** | ENEL 573 | **HW Assignment 4** (5 problems: subnetting, IP fragmentation, ARP/LAN). ⚠️ D2L calendar shows Nov 8, but the news post and PDF say Nov 6 |
 | Before Nov 8 | ENEL 500 | Design review meeting with your sponsor and academic advisor (separately). The PM arranges these |
 | **Sun Nov 8, 11:59 PM** | ENEL 500 | **Design Roadmap Document** (16%). Rubric: `Design_Roadmap_Rubric-Final.xlsx` |
@@ -30,6 +31,7 @@ _Built Oct 18, 2026 from the outlines, schedules and handouts in this folder. It
 | Thu Nov 19, 3:30 PM | PHYS 365 | Lab 4: Hydrogen Balmer Series + pre-lab quiz |
 | Before Nov 20 | ENEL 585 | Finish the firmware and HIL checklist (required sign-off before closed loop) |
 | Fri Nov 20, 8:00 | ENEL 585 | Bench 2: closed loop |
+| Thu Nov 26, 11:59 PM | PHYS 365 | Lab 4 report (Hydrogen Balmer Series) |
 
 ## 📅 December
 
@@ -40,6 +42,7 @@ _Built Oct 18, 2026 from the outlines, schedules and handouts in this folder. It
 | Thu Dec 3, 3:30 PM | PHYS 365 | Lab 5: Electron Diffraction + pre-lab quiz |
 | Fri Dec 4, 8:00 | ENEL 585 | Bench 3: measurements. Capture every waveform you need for the report |
 | Sun Dec 6, 11:59 PM | ENEL 500 | Peer Evaluation 1 (ITP Metrics, individual, pass/fail) |
+| Thu Dec 10, 11:59 PM | PHYS 365 | Lab 5 report (Electron Diffraction). Due after the PHYS final, so finish it early |
 | Fri Dec 11 | ENEL 585 | Final project report (PDF, group) |
 | **Tue Dec 8, 5:00–7:00 PM** | PHYS 365 | **Final exam** (30%), location TBA |
 | **Tue Dec 15, 5:00–7:00 PM** | ENME 561 | **Final exam** (40%, **need ≥ 40% on it** to get above a D), one-sided reference sheet |
@@ -66,6 +69,7 @@ Study time per week: about 4 h each for ENEL 573, ENEL 585 and PHYS 365, 3.5 h f
 - **PHYS 365 Achieve:** due Wednesdays at **10:59 PM** (not 11:59 PM like the outline says). Weeks 10–17 (Assignments 7–10) aren't released yet, so there are tentative calendar placeholders on Wednesdays from Nov 4 to Dec 2.
 - **ENEL 500:** about 10 h/week. Keep the team logbook up to date (it can be audited at any time).
 - **ENME 561:** a lab report is due every second Thursday.
+- **PHYS 365 lab reports (B07, Group 4):** due at **11:59 PM one week after the lab** (rule from the Lab 1 intro slides), one report per group to the D2L dropbox.
 
 ## 💡 Organization & productivity suggestions
 1. **Start this week early.** You have the PHYS midterm (Wed), the 585 Lab 3 report (Fri), then the 573 midterm *and* HW 3 on Mon. Finish HW 3 by Friday so Sunday and Monday are just midterm review.
