@@ -19,9 +19,11 @@ _Built Oct 18, 2026 from the outlines, schedules and handouts in this folder. It
 
 | Due | Class | Task |
 |---|---|---|
+| **Fri Nov 6, 11:59 PM** | ENEL 573 | **HW Assignment 4** (5 problems: subnetting, IP fragmentation, ARP/LAN). ⚠️ D2L calendar shows Nov 8, but the news post and PDF say Nov 6 |
 | Before Nov 8 | ENEL 500 | Design review meeting with your sponsor and academic advisor (separately). The PM arranges these |
 | **Sun Nov 8, 11:59 PM** | ENEL 500 | **Design Roadmap Document** (16%). Rubric: `Design_Roadmap_Rubric-Final.xlsx` |
 | Nov 8–14 | — | Term break (no classes) |
+| Mon Nov 16, 11:59 PM | ENEL 573 | Project 2 report (link-layer retransmission sim): "ENEL 573 - Project 2 Report (name, UCID)" |
 | **Tue Nov 17, 10:00** | ENEL 585 | **Quiz 3** (tutorial slot, 1 double-sided handwritten sheet) |
 | Nov 18 – Dec 2 | ENEL 500 | **Fall Progress Evaluation** (3 × 7%). Book a 1-hour slot with the TA, advisor and sponsor early. Presentation ≤ 25 min |
 | Thu Nov 19 | ENME 561 | Lab 5 report |
@@ -77,6 +79,7 @@ Study time per week: about 4 h each for ENEL 573, ENEL 585 and PHYS 365, 3.5 h f
 
 ## ⚠️ Loose ends I found
 - [ ] **ENEL 573 Project 1 report:** the Student ID field is still blank (`Projects/Project 1/Project1_Report.docx`), and I couldn't find a due date. Check D2L.
-- [ ] ENEL 573: dates for HW 4–5 and Projects 2–3 aren't posted in the folder yet.
+- [ ] ENEL 573: dates for HW 5 and Project 3 aren't posted yet.
+- [ ] ENEL 573: midterm grade is out (Assessment → Dropbox → Midterm Exam Evaluation). Marked copies aren't returned, so email John to book a review if needed.
 - [ ] ENEL 585 demo slot: find it in the Student Centre (it's run during the registrar exam slot).
 - [ ] ENEL 500 Winter dates: Winter progress eval Jan 25–Feb 5, demos Mar 15–Apr 2, final report Apr 12, Peer Eval 2 Apr 19, plus the Design Fair (mandatory, date TBA).
