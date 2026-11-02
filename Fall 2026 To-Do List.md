@@ -1,5 +1,5 @@
 # Fall 2026 To-Do List
-_Built Oct 18, 2026 from the outlines, schedules and handouts in this folder. Items marked ⚠️ need checking on D2L._
+_Last synced with Google Calendar Nov 2, 2026. Built Oct 18, 2026 from the outlines, schedules and handouts in this folder. Items marked ⚠️ need checking on D2L._
 
 ## 🔥 Next 2 weeks (Oct 19 – Nov 1)
 
@@ -19,19 +19,22 @@ _Built Oct 18, 2026 from the outlines, schedules and handouts in this folder. It
 
 | Due | Class | Task |
 |---|---|---|
+| Thu Nov 5 | ENEL 585 | Quiz 2 regrade requests (email TA Phuc) close today, if you want one |
 | Thu Nov 5, 11:59 PM | PHYS 365 | Lab 3 report (Standing Waves), group submission to the D2L dropbox with the Excel template |
 | **Fri Nov 6, 11:59 PM** | ENEL 573 | **HW Assignment 4** (5 problems: subnetting, IP fragmentation, ARP/LAN). ⚠️ D2L calendar shows Nov 8, but the news post and PDF say Nov 6 |
 | Before Nov 8 | ENEL 500 | Design review meeting with your sponsor and academic advisor (separately). The PM arranges these |
 | **Sun Nov 8, 11:59 PM** | ENEL 500 | **Design Roadmap Document** (16%). Rubric: `Design_Roadmap_Rubric-Final.xlsx` |
 | Nov 8–14 | — | Term break (no classes) |
+| Mon Nov 16, 8:00 AM | PHYS 365 | Lab 4 pre-lab quiz (D2L) |
 | Mon Nov 16, 11:59 PM | ENEL 573 | Project 2 report (link-layer retransmission sim): "ENEL 573 - Project 2 Report (name, UCID)" |
 | **Tue Nov 17, 10:00** | ENEL 585 | **Quiz 3** (tutorial slot, 1 double-sided handwritten sheet) |
 | Nov 18 – Dec 2 | ENEL 500 | **Fall Progress Evaluation** (3 × 7%). Book a 1-hour slot with the TA, advisor and sponsor early. Presentation ≤ 25 min |
-| Thu Nov 19 | ENME 561 | Lab 5 report |
 | Thu Nov 19, 3:30 PM | PHYS 365 | Lab 4: Hydrogen Balmer Series + pre-lab quiz |
+| Thu Nov 19, 11:59 PM | ENME 561 | Lab 5 report. ⚠️ Lab 4 was moved to Friday by a news post, so check D2L in case Lab 5 moves too |
 | Before Nov 20 | ENEL 585 | Finish the firmware and HIL checklist (required sign-off before closed loop) |
-| Fri Nov 20, 8:00 | ENEL 585 | Bench 2: closed loop |
+| **Fri Nov 20, 8:00** | ENEL 585 | **Bench 2: graded design review at the start** (moved from Bench 1), then closed loop. B01, Group 8 |
 | Thu Nov 26, 11:59 PM | PHYS 365 | Lab 4 report (Hydrogen Balmer Series) |
+| Mon Nov 30, 8:00 AM | PHYS 365 | Lab 5 pre-lab quiz (D2L) |
 
 ## 📅 December
 
@@ -42,9 +45,9 @@ _Built Oct 18, 2026 from the outlines, schedules and handouts in this folder. It
 | Thu Dec 3, 3:30 PM | PHYS 365 | Lab 5: Electron Diffraction + pre-lab quiz |
 | Fri Dec 4, 8:00 | ENEL 585 | Bench 3: measurements. Capture every waveform you need for the report |
 | Sun Dec 6, 11:59 PM | ENEL 500 | Peer Evaluation 1 (ITP Metrics, individual, pass/fail) |
+| **Tue Dec 8, 5:00–7:00 PM** | PHYS 365 | **Final exam** (30%), location TBA |
 | Thu Dec 10, 11:59 PM | PHYS 365 | Lab 5 report (Electron Diffraction). Due after the PHYS final, so finish it early |
 | Fri Dec 11 | ENEL 585 | Final project report (PDF, group) |
-| **Tue Dec 8, 5:00–7:00 PM** | PHYS 365 | **Final exam** (30%), location TBA |
 | **Tue Dec 15, 5:00–7:00 PM** | ENME 561 | **Final exam** (40%, **need ≥ 40% on it** to get above a D), one-sided reference sheet |
 | **Thu Dec 17, 1:00–4:00 PM** | ENEL 573 | **Final exam** (30%) |
 | ⚠️ TBA | ENEL 585 | Final demo + individual questions (in the registrar exam slot, which wasn't in your list) |
