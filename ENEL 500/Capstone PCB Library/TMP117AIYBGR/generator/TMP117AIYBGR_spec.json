@@ -1,0 +1,168 @@
+{
+  "basename": "TMP117AIYBGR",
+  "title": "TI TMP117 (DSBGA-6 0.95 x 1.49 mm, YBG0006): Altium footprint and schematic symbol",
+  "source": "TMP117 data sheet SNOSD82D: Fig. 5-2 and Table 5-1 (page 4, ball map), YBG0006-C01 package outline, example board layout and stencil (pages 43 to 45)",
+  "date": "2026-11-03",
+  "footprint": {
+    "name": "TI_DSBGA6_0.95X1.49MM_P0.4_YBG0006",
+    "description": "DSBGA-6 (2 x 3) 0.95 x 1.49 mm, 0.4 mm pitch, TI YBG0006-C01, 0.23 mm NSMD pads (TMP117 data sheet land pattern example)",
+    "body": {
+      "D": 0.95,
+      "E": 1.488,
+      "A": 0.531
+    },
+    "mask_expansion": 0.03,
+    "pads": [
+      {
+        "name": "A1",
+        "x": -0.2,
+        "y": 0.4,
+        "dx": 0.23,
+        "dy": 0.23,
+        "shape": "round",
+        "paste": false
+      },
+      {
+        "name": "A2",
+        "x": 0.2,
+        "y": 0.4,
+        "dx": 0.23,
+        "dy": 0.23,
+        "shape": "round",
+        "paste": false
+      },
+      {
+        "name": "B1",
+        "x": -0.2,
+        "y": 0.0,
+        "dx": 0.23,
+        "dy": 0.23,
+        "shape": "round",
+        "paste": false
+      },
+      {
+        "name": "B2",
+        "x": 0.2,
+        "y": 0.0,
+        "dx": 0.23,
+        "dy": 0.23,
+        "shape": "round",
+        "paste": false
+      },
+      {
+        "name": "C1",
+        "x": -0.2,
+        "y": -0.4,
+        "dx": 0.23,
+        "dy": 0.23,
+        "shape": "round",
+        "paste": false
+      },
+      {
+        "name": "C2",
+        "x": 0.2,
+        "y": -0.4,
+        "dx": 0.23,
+        "dy": 0.23,
+        "shape": "round",
+        "paste": false
+      }
+    ],
+    "paste_windows": [
+      {
+        "x": -0.2,
+        "y": 0.4,
+        "dx": 0.25,
+        "dy": 0.25
+      },
+      {
+        "x": 0.2,
+        "y": 0.4,
+        "dx": 0.25,
+        "dy": 0.25
+      },
+      {
+        "x": -0.2,
+        "y": 0.0,
+        "dx": 0.25,
+        "dy": 0.25
+      },
+      {
+        "x": 0.2,
+        "y": 0.0,
+        "dx": 0.25,
+        "dy": 0.25
+      },
+      {
+        "x": -0.2,
+        "y": -0.4,
+        "dx": 0.25,
+        "dy": 0.25
+      },
+      {
+        "x": 0.2,
+        "y": -0.4,
+        "dx": 0.25,
+        "dy": 0.25
+      }
+    ],
+    "pin1_pad": "A1"
+  },
+  "symbol": {
+    "name": "TMP117AIYBGR",
+    "description": "High-accuracy (0.1 C) digital temperature sensor, I2C/SMBus, DSBGA-6",
+    "designator": "U?",
+    "pin_pitch_mil": 100,
+    "pin_length_mil": 200,
+    "pins": [
+      {
+        "num": "B1",
+        "name": "V+",
+        "type": "power",
+        "side": "left",
+        "group": "supply"
+      },
+      {
+        "num": "C1",
+        "name": "ADD0",
+        "type": "in",
+        "side": "left",
+        "group": "addr"
+      },
+      {
+        "num": "A2",
+        "name": "SCL",
+        "type": "in",
+        "side": "right",
+        "group": "bus"
+      },
+      {
+        "num": "A1",
+        "name": "SDA",
+        "type": "io",
+        "side": "right",
+        "group": "bus"
+      },
+      {
+        "num": "C2",
+        "name": "ALERT",
+        "type": "oc",
+        "side": "right",
+        "group": "alert"
+      },
+      {
+        "num": "B2",
+        "name": "GND",
+        "type": "power",
+        "side": "bottom",
+        "group": "gnd"
+      }
+    ],
+    "parameters": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part Number": "TMP117AIYBGR",
+      "Package": "DSBGA-6 (YBG0006)",
+      "Datasheet": "https://www.ti.com/lit/ds/symlink/tmp117.pdf"
+    }
+  }
+}
