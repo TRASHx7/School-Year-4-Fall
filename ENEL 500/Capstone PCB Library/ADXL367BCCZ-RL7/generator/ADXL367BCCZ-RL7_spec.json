@@ -1,0 +1,60 @@
+{
+  "basename": "ADXL367BCCZ-RL7",
+  "title": "ADI ADXL367 (LGA-12 2.2 x 2.3 mm): Altium footprint and schematic symbol",
+  "source": "ADXL367 data sheet Rev. B: Fig. 17 and Table 9 (page 13, pinout), Fig. 64 (page 64, recommended land pattern), page 1 (body 2.2 x 2.3 x 0.87 mm), package CC-12-4",
+  "date": "2026-11-03",
+
+  "footprint": {
+    "name": "ADI_LGA12_2.2X2.3MM_P0.5",
+    "description": "LGA-12 2.2 x 2.3 mm, 0.5 mm pitch, ADI CC-12-4 (ADXL367 data sheet Fig. 64 land pattern)",
+    "body": {"D": 2.2, "E": 2.3, "A": 0.87},
+    "mask_expansion": 0.05,
+    "pads": [
+      {"name": "1",  "x": -0.86, "y":  0.75, "dx": 0.39, "dy": 0.33, "shape": "rect"},
+      {"name": "2",  "x": -0.86, "y":  0.25, "dx": 0.39, "dy": 0.33, "shape": "rect"},
+      {"name": "3",  "x": -0.86, "y": -0.25, "dx": 0.39, "dy": 0.33, "shape": "rect"},
+      {"name": "4",  "x": -0.86, "y": -0.75, "dx": 0.39, "dy": 0.33, "shape": "rect"},
+      {"name": "5",  "x": -0.25, "y": -0.91, "dx": 0.33, "dy": 0.39, "shape": "rect"},
+      {"name": "6",  "x":  0.25, "y": -0.91, "dx": 0.33, "dy": 0.39, "shape": "rect"},
+      {"name": "7",  "x":  0.86, "y": -0.75, "dx": 0.39, "dy": 0.33, "shape": "rect"},
+      {"name": "8",  "x":  0.86, "y": -0.25, "dx": 0.39, "dy": 0.33, "shape": "rect"},
+      {"name": "9",  "x":  0.86, "y":  0.25, "dx": 0.39, "dy": 0.33, "shape": "rect"},
+      {"name": "10", "x":  0.86, "y":  0.75, "dx": 0.39, "dy": 0.33, "shape": "rect"},
+      {"name": "11", "x":  0.25, "y":  0.91, "dx": 0.33, "dy": 0.39, "shape": "rect"},
+      {"name": "12", "x": -0.25, "y":  0.91, "dx": 0.33, "dy": 0.39, "shape": "rect"}
+    ],
+    "pin1_pad": "1",
+    "silk_width": 0.12,
+    "silk_offset": 0.1,
+    "silk_clearance": 0.2,
+    "courtyard_expansion": 0.25
+  },
+
+  "symbol": {
+    "name": "ADXL367BCCZ-RL7",
+    "description": "Ultralow power 3-axis MEMS accelerometer, 14-bit, SPI/I2C, LGA-12",
+    "designator": "U?",
+    "pin_pitch_mil": 100,
+    "pin_length_mil": 200,
+    "pins": [
+      {"num": "10", "name": "VS",        "type": "power",   "side": "left",  "group": "supply"},
+      {"num": "12", "name": "VDDIO",     "type": "power",   "side": "left",  "group": "supply"},
+      {"num": "9",  "name": "VREG_OUT",  "type": "passive", "side": "left",  "group": "reg"},
+      {"num": "8",  "name": "ADC_IN",    "type": "in",      "side": "left",  "group": "adc"},
+      {"num": "4",  "name": "CS/SCL",    "type": "in",      "side": "right", "group": "bus"},
+      {"num": "1",  "name": "SCLK",      "type": "in",      "side": "right", "group": "bus"},
+      {"num": "2",  "name": "MOSI/SDA",  "type": "io",      "side": "right", "group": "bus"},
+      {"num": "3",  "name": "MISO/ASEL", "type": "io",      "side": "right", "group": "bus"},
+      {"num": "5",  "name": "INT1",      "type": "io",      "side": "right", "group": "int"},
+      {"num": "6",  "name": "INT2",      "type": "io",      "side": "right", "group": "int"},
+      {"num": "7",  "name": "GND",       "type": "power",   "side": "bottom", "group": "gnd"},
+      {"num": "11", "name": "GND",       "type": "power",   "side": "bottom", "group": "gnd"}
+    ],
+    "parameters": {
+      "Manufacturer": "Analog Devices",
+      "Manufacturer Part Number": "ADXL367BCCZ-RL7",
+      "Package": "LGA-12 (CC-12-4)",
+      "Datasheet": "https://www.analog.com/media/en/technical-documentation/data-sheets/adxl367.pdf"
+    }
+  }
+}
