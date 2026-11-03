@@ -97,6 +97,13 @@ the screen and click reliably); otherwise give these steps:
 3. Check the footprint visually, then save both libraries. Ask the user where to save
    new libraries; don't pick a location for them.
 
+Workspace components (Component Editor > Add Footprint/Add Symbol > New) work the same
+way: run the procedures in the new footprint and symbol tabs. Those documents start with
+a blank default item. The scripts delete it, because Save to Server rejects a document
+that holds more than one item (pitfalls item 17). If an older script already filled
+them, run `RemoveEmptyFootprints` / `RemoveEmptySymbols` in the matching tab, save it,
+then Save to Server again.
+
 Never use the Run button in the script editor: the script becomes the active document
 and the library isn't found.
 

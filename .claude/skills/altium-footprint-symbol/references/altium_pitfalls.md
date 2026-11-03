@@ -142,9 +142,58 @@ script there, check it, then in the Projects panel right-click it > Remove from
 Project > **Exclude from project** (never "Delete file"), then right-click it under
 Free Documents > Close.
 
-### 15. File dialogs
+### 15. Saving a library a script created: "A command is currently active"
+
+Saving a PcbLib the script built (Ctrl+S, File > Save or the Projects panel's Save)
+showed "A command is currently active and save cannot be completed at this time" every
+time, even after Escape and right-clicks on the canvas. Answering **Yes** ("save copy of
+current document") opens a second dialog; type the real file name (not the offered
+"Copy of ...") and click Save. That writes the full library. Then swap the in-memory
+document for the saved file: Projects panel > right-click the old `PcbLibN` > Remove
+from Project > **Exclude from project**, close it with **Don't Save**, then Project > Add
+Existing to Project > the saved `.PcbLib`, and save the project. Check the file on disk
+afterwards (its size, and that it contains the footprint name).
+
+SchLibs saved normally.
+
+### 16. File dialogs
 
 In the Windows file dialog, typing a path into "File name" sometimes landed before the
 box had focus. Click the File name box first, then type the full path and press
 Enter. Or double-click the file in the list if the dialog is already in the right
 folder (it opens in the folder used last).
+
+### 17. Workspace component won't save: "contains more than one component"
+
+What happened (ADXL367, 2026-11-03): the user built the component in the workspace
+Component Editor (Capstone workspace), clicked Add Footprint > New and Add Symbol > New,
+ran `CreateFootprint` / `CreateSymbol` in those new documents, and Save to Server failed
+validation with two errors in turn:
+
+- `[Fatal Error] Footprint "<fp_name>" contains more than one component`
+- after fixing that: `[Error] Number of pads in the footprint <fp_name> (12) exceeds
+  number of pins in the symbol <part>-Symbol-1 (0)`
+
+Why: a new workspace footprint or symbol document is not empty. Altium creates it with
+one blank default item (e.g. `<part>-Symbol-1`, 0 pins). The script then
+`RegisterComponent` / `AddSchComponent`s a *second* item next to it. A workspace
+footprint or symbol document must hold exactly one item, and the validator also checks
+the blank symbol, not the scripted one.
+
+Fix: delete every item that is not the scripted one and has no primitives (footprint)
+or no pins (symbol). The template now does this at the end of `CreateFootprint` and
+`CreateSymbol` (`RemoveEmptyFootprintsFrom` / `RemoveEmptySymbolsFrom`), and has
+standalone `RemoveEmptyFootprints` / `RemoveEmptySymbols` procedures for documents an
+older script already filled. Run those from File > Run Script with the footprint or
+symbol tab active, save that document (Ctrl+S), then Save to Server on the component.
+Only empty items are removed, so a normal multi-footprint PcbLib is safe.
+
+After the fix the only remaining message was the warning `Offset Component Origin`:
+pads are centred on the origin, but the pin-1 dot and courtyard extend further on one
+side, so the bounding box isn't. It is harmless; Release past it.
+
+Also seen in this session (AD 25.5.2): `mcp__computer-use__screenshot` showed Altium
+normally (item 12 didn't happen), and after the `.pas` was edited on disk, File > Run
+Script listed and ran the new procedures without closing the script project (item 6
+didn't happen). Still check the Run Script list for the new procedure names before
+relying on this.
