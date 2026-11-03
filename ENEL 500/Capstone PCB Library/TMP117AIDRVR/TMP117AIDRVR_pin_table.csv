@@ -1,7 +1,0 @@
-Pin,Name,Electrical type,Symbol side,Group,Pad X (mm),Pad Y (mm),Pad size (mm),Hole (mm)
-5,V+,power,left,supply,0.975,0,0.45 x 0.3,
-4,ADD0,in,left,addr,0.975,-0.65,0.45 x 0.3,
-1,SCL,in,right,bus,-0.975,0.65,0.45 x 0.3,
-6,SDA,io,right,bus,0.975,0.65,0.45 x 0.3,
-3,ALERT,oc,right,alert,-0.975,-0.65,0.45 x 0.3,
-2,GND,power,bottom,gnd,-0.975,0,0.45 x 0.3,

@@ -1,6 +1,6 @@
 # TMP117AIYBGR: Altium footprint and schematic symbol
 
-Altium library parts for the Texas Instruments TMP117 high-accuracy digital temperature sensor in the 6-ball DSBGA (TI package YBG0006-C01), order code TMP117AIYBGR. The same footprint and pinout fit TMP117MAIYBGR and TMP117NAIYBGR. The WSON (DRV) version is in `../TMP117AIDRVR/`. Built from the TMP117 data sheet SNOSD82D (Sept 2022):
+Altium library parts for the Texas Instruments TMP117 high-accuracy digital temperature sensor in the 6-ball DSBGA (TI package YBG0006-C01), order code TMP117AIYBGR. The same footprint and pinout fit TMP117MAIYBGR and TMP117NAIYBGR. The WSON (DRV) version has a different footprint and is not included. Built from the TMP117 data sheet SNOSD82D (Sept 2022):
 
 - Ball map: Figure 5-2 (YBG Package Top View) and Table 5-1 (Pin Functions), page 4
 - Package: YBG0006-C01 package outline, page 43: 2 x 3 balls, 0.4 mm pitch both ways, ball diameter 0.23 to 0.27 mm, body 0.92 to 0.98 mm (TI's E, across the 2 columns) by 1.458 to 1.518 mm (TI's D, along the 3 rows), 0.531 mm max height
