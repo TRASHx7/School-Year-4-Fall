@@ -154,6 +154,81 @@ Begin
     Lib.LibraryIterator_Destroy(It);
 End;
 
+Function PrimitiveCount(C : IPCB_LibComponent) : Integer;
+Var
+    GIt  : IPCB_GroupIterator;
+    Prim : IPCB_Primitive;
+Begin
+    Result := 0;
+    GIt := C.GroupIterator_Create;
+    GIt.AddFilter_ObjectSet(AllObjects);
+    Prim := GIt.FirstPCBObject;
+    While Prim <> Nil Do
+    Begin
+        Result := Result + 1;
+        Prim := GIt.NextPCBObject;
+    End;
+    C.GroupIterator_Destroy(GIt);
+End;
+
+Function FindEmptyFootprint(Lib : IPCB_Library; KeepName : String) : IPCB_LibComponent;
+Var
+    It : IPCB_LibraryIterator;
+    C  : IPCB_LibComponent;
+Begin
+    Result := Nil;
+    It := Lib.LibraryIterator_Create;
+    It.SetState_FilterAll;
+    C := It.FirstPCBObject;
+    While C <> Nil Do
+    Begin
+        If C.Name <> KeepName Then
+            If PrimitiveCount(C) = 0 Then
+                If Result = Nil Then Result := C;
+        C := It.NextPCBObject;
+    End;
+    Lib.LibraryIterator_Destroy(It);
+End;
+
+Function RemoveEmptyFootprintsFrom(Lib : IPCB_Library; KeepName : String) : Integer;
+Var
+    C : IPCB_LibComponent;
+Begin
+    { A new workspace footprint document starts with an empty default footprint.
+      The workspace accepts only one footprint per document, so delete the empty ones
+      (see altium_pitfalls.md item 17). Footprints with any primitives are kept. }
+    Result := 0;
+    C := FindEmptyFootprint(Lib, KeepName);
+    While C <> Nil Do
+    Begin
+        Lib.RemoveComponent(C);
+        Result := Result + 1;
+        C := FindEmptyFootprint(Lib, KeepName);
+    End;
+End;
+
+Procedure RemoveEmptyFootprints;
+Var
+    N : Integer;
+Begin
+    { Run from File > Run Script with the footprint document as the active tab. }
+    If PCBServer = Nil Then Exit;
+    FpLib := PCBServer.GetCurrentPCBLibrary;
+    If FpLib = Nil Then
+    Begin
+        ShowMessage('No PCB Library is active. Click on the footprint tab, then run RemoveEmptyFootprints.');
+        Exit;
+    End;
+    If Not FootprintExists(FpLib, 'TI_WSON6_2X2MM_P0.65_DRV0006B') Then
+    Begin
+        ShowMessage('TI_WSON6_2X2MM_P0.65_DRV0006B is not in this library, so nothing was removed.');
+        Exit;
+    End;
+    N := RemoveEmptyFootprintsFrom(FpLib, 'TI_WSON6_2X2MM_P0.65_DRV0006B');
+    FpLib.Board.ViewManager_FullUpdate;
+    ShowMessage('Removed ' + IntToStr(N) + ' empty footprint(s). Save the footprint, then save the component again.');
+End;
+
 Procedure CreateFootprint;
 Var
     Comp : IPCB_LibComponent;
@@ -210,6 +285,9 @@ Begin
     AddLine(Comp, -1.95, -1.25, -1.95, 1.25, 0.05, eMechanical15);
     PCBServer.PostProcess;
 
+    Step := 'removing the empty default footprint';
+    RemoveEmptyFootprintsFrom(FpLib, 'TI_WSON6_2X2MM_P0.65_DRV0006B');
+
     Step := 'refreshing the view';
     FpLib.CurrentComponent := Comp;
     FpLib.Board.ViewManager_FullUpdate;
@@ -265,6 +343,82 @@ Begin
     P.OwnerPartId          := Comp.CurrentPartID;
     P.OwnerPartDisplayMode := Comp.DisplayMode;
     Comp.AddSchObject(P);
+End;
+
+Function SchPinCount(C : ISch_Component) : Integer;
+Var
+    It  : ISch_Iterator;
+    Obj : ISch_BasicContainer;
+Begin
+    Result := 0;
+    It := C.SchIterator_Create;
+    It.AddFilter_ObjectSet(MkSet(ePin));
+    Obj := It.FirstSchObject;
+    While Obj <> Nil Do
+    Begin
+        Result := Result + 1;
+        Obj := It.NextSchObject;
+    End;
+    C.SchIterator_Destroy(It);
+End;
+
+Function FindEmptySymbol(Lib : ISch_Lib; KeepRef : String) : ISch_Component;
+Var
+    It : ISch_Iterator;
+    C  : ISch_Component;
+Begin
+    Result := Nil;
+    It := Lib.SchLibIterator_Create;
+    It.AddFilter_ObjectSet(MkSet(eSchComponent));
+    C := It.FirstSchObject;
+    While C <> Nil Do
+    Begin
+        If C.LibReference <> KeepRef Then
+            If SchPinCount(C) = 0 Then
+                If Result = Nil Then Result := C;
+        C := It.NextSchObject;
+    End;
+    Lib.SchIterator_Destroy(It);
+End;
+
+Function RemoveEmptySymbolsFrom(Lib : ISch_Lib; KeepRef : String) : Integer;
+Var
+    C : ISch_Component;
+Begin
+    { A new workspace symbol document starts with an empty default symbol.
+      The workspace accepts only one symbol per document, so delete the empty ones
+      (see altium_pitfalls.md item 17). Symbols with any pins are kept. }
+    Result := 0;
+    C := FindEmptySymbol(Lib, KeepRef);
+    While C <> Nil Do
+    Begin
+        Lib.RemoveSchComponent(C);
+        Result := Result + 1;
+        C := FindEmptySymbol(Lib, KeepRef);
+    End;
+End;
+
+Procedure RemoveEmptySymbols;
+Var
+    SchLib : ISch_Lib;
+    N      : Integer;
+Begin
+    { Run from File > Run Script with the symbol document as the active tab. }
+    If SchServer = Nil Then Exit;
+    SchLib := SchServer.GetCurrentSchDocument;
+    If SchLib = Nil Then
+    Begin
+        ShowMessage('No Schematic Library is active. Click on the symbol tab, then run RemoveEmptySymbols.');
+        Exit;
+    End;
+    If SchLib.ObjectID <> eSchLib Then
+    Begin
+        ShowMessage('The active document is not a Schematic Library. Click on the symbol tab and try again.');
+        Exit;
+    End;
+    N := RemoveEmptySymbolsFrom(SchLib, 'TMP117AIDRVR');
+    SchLib.GraphicallyInvalidate;
+    ShowMessage('Removed ' + IntToStr(N) + ' empty symbol(s). Save the symbol, then save the component again.');
 End;
 
 Procedure CreateSymbol;
@@ -325,6 +479,8 @@ Begin
     Step := 'adding the component to the library';
     SchLib.AddSchComponent(SymComp);
     SchServer.RobotManager.SendMessage(nil, c_BroadCast, SCHM_PrimitiveRegistration, SymComp.I_ObjectAddress);
+    Step := 'removing the empty default symbol';
+    RemoveEmptySymbolsFrom(SchLib, 'TMP117AIDRVR');
     SchLib.CurrentSchComponent := SymComp;
     SchLib.GraphicallyInvalidate;
     Except
