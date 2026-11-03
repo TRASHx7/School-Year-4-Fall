@@ -1,0 +1,44 @@
+{
+  "basename": "TMP117AIDRVR",
+  "title": "TI TMP117 (WSON-6 2 x 2 mm, DRV0006B): Altium footprint and schematic symbol",
+  "source": "TMP117 data sheet SNOSD82D: Fig. 5-1 and Table 5-1 (page 4, pinout), DRV0006B package outline and example board layout (pages 40 and 41), section 9.2 (page 36, thermal pad left unsoldered)",
+  "date": "2026-11-03",
+
+  "footprint": {
+    "name": "TI_WSON6_2X2MM_P0.65_DRV0006B",
+    "description": "WSON-6 2.0 x 2.0 mm, 0.65 mm pitch, TI DRV0006B, thermal pad not soldered (TMP117 data sheet land pattern example)",
+    "body": {"D": 2.0, "E": 2.0, "A": 0.8},
+    "mask_expansion": 0.05,
+    "pads": [
+      {"name": "1", "x": -0.975, "y":  0.65, "dx": 0.45, "dy": 0.3, "shape": "rect"},
+      {"name": "2", "x": -0.975, "y":  0.0,  "dx": 0.45, "dy": 0.3, "shape": "rect"},
+      {"name": "3", "x": -0.975, "y": -0.65, "dx": 0.45, "dy": 0.3, "shape": "rect"},
+      {"name": "4", "x":  0.975, "y": -0.65, "dx": 0.45, "dy": 0.3, "shape": "rect"},
+      {"name": "5", "x":  0.975, "y":  0.0,  "dx": 0.45, "dy": 0.3, "shape": "rect"},
+      {"name": "6", "x":  0.975, "y":  0.65, "dx": 0.45, "dy": 0.3, "shape": "rect"}
+    ],
+    "pin1_pad": "1"
+  },
+
+  "symbol": {
+    "name": "TMP117AIDRVR",
+    "description": "High-accuracy (0.1 C) digital temperature sensor, I2C/SMBus, WSON-6",
+    "designator": "U?",
+    "pin_pitch_mil": 100,
+    "pin_length_mil": 200,
+    "pins": [
+      {"num": "5", "name": "V+",    "type": "power", "side": "left",  "group": "supply"},
+      {"num": "4", "name": "ADD0",  "type": "in",    "side": "left",  "group": "addr"},
+      {"num": "1", "name": "SCL",   "type": "in",    "side": "right", "group": "bus"},
+      {"num": "6", "name": "SDA",   "type": "io",    "side": "right", "group": "bus"},
+      {"num": "3", "name": "ALERT", "type": "oc",    "side": "right", "group": "alert"},
+      {"num": "2", "name": "GND",   "type": "power", "side": "bottom", "group": "gnd"}
+    ],
+    "parameters": {
+      "Manufacturer": "Texas Instruments",
+      "Manufacturer Part Number": "TMP117AIDRVR",
+      "Package": "WSON-6 (DRV0006B)",
+      "Datasheet": "https://www.ti.com/lit/ds/symlink/tmp117.pdf"
+    }
+  }
+}
