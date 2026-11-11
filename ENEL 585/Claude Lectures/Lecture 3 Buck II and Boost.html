@@ -1,0 +1,1790 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Buck II and Boost Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky contents rail with live quiz scores on the left, one reading column on the right. Same system as the Lecture 7 guide. */
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+.tally{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:14px}
+.tally .big{font-family:var(--mono); font-size:20px; font-weight:600}
+.tally .sub{font-size:12px; color:var(--muted)}
+.tally .bar{height:6px; background:var(--surface-2); border-radius:99px; margin-top:8px; overflow:hidden}
+.tally .bar i{display:block; height:100%; width:0; background:var(--good); border-radius:99px; transition:width .25s}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+.example{background:var(--accent-soft); border-color:var(--accent)}
+.example .tag{color:var(--accent)}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num, th.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px; overflow-x:auto}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+ol.deriv{margin:0 0 12px; padding-left:24px}
+ol.deriv li{margin-bottom:10px}
+ol.deriv .m{display:block; font-size:18px; margin-top:2px; white-space:nowrap; overflow-x:auto}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .dnote{font-family:var(--display); font-size:12.5px; color:var(--muted); margin:-4px 0 8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:inline-block; white-space:nowrap}
+.controls label > input, .controls label > output{margin-left:8px; vertical-align:middle}
+.controls label > input[type=checkbox]{margin:0 8px 0 0}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls input[type=checkbox]{accent-color:var(--accent); width:16px; height:16px}
+.controls output{font-family:var(--mono); font-size:13px; min-width:52px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.btnrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.seg{display:inline-flex; flex-wrap:wrap; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{color:var(--muted)}
+.steps .ans{color:var(--good); font-weight:600}
+.steps .err{color:var(--bad); font-weight:600}
+
+/* circuits */
+svg.ckt{width:100%; max-width:480px; display:block; margin:0 auto}
+svg.ckt .w{stroke:var(--muted); stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round}
+svg.ckt .w.hot{stroke:var(--curr); stroke-width:4}
+svg.ckt .w.feed{stroke:var(--fund); stroke-width:4}
+svg.ckt .part{fill:var(--surface); stroke:var(--muted); stroke-width:2}
+svg.ckt .solid{fill:var(--muted); stroke:none}
+svg.ckt .sw rect{fill:var(--surface-2); stroke:var(--line); stroke-width:1.5}
+svg.ckt .sw text{fill:var(--ink); font-family:var(--display); font-weight:700; font-size:13px; pointer-events:none}
+svg.ckt .sw{cursor:pointer}
+svg.ckt .sw:hover rect{stroke:var(--accent)}
+svg.ckt .sw:focus{outline:none}
+svg.ckt .sw:focus-visible rect{stroke:var(--accent); stroke-width:3}
+svg.ckt .sw.on rect{fill:var(--accent); stroke:var(--accent)}
+svg.ckt .sw.on text{fill:var(--on-accent)}
+svg.ckt .lbl{fill:var(--muted); font-family:var(--mono); font-size:12px}
+svg.ckt .lbl.ink{fill:var(--ink); font-weight:600}
+svg.ckt .node{fill:var(--ink)}
+
+/* derivation stepper */
+.stepper ol{margin:0; padding-left:24px}
+.stepper li{padding:8px 10px; border-radius:8px; margin-bottom:4px; opacity:.55; transition:opacity .15s, background .15s}
+.stepper li.cur{opacity:1; background:var(--hl)}
+.stepper li .m{display:block; font-size:18px; white-space:nowrap; overflow-x:auto}
+.stepper .why{font-size:15px; color:var(--muted); margin-top:4px}
+.stepper li:not(.cur) .why{display:none}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} .stepper li, .tally .bar i{transition:none} }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="tally" aria-live="polite">
+    <div class="sub">Your quiz score</div>
+    <div class="big" id="totScore">0 / 0</div>
+    <div class="sub" id="totSub">0 of 0 answered</div>
+    <div class="bar"><i id="totBar"></i></div>
+  </div>
+  <h2>Part 1 · Buck, revisited</h2>
+  <ol>
+    <li><a href="#s1">1 Balance principles <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 Choosing L (buck) <span class="chip" data-chip="q2"></span></a></li>
+  </ol>
+  <h2>Part 2 · The boost converter</h2>
+  <ol>
+    <li><a href="#s3">3 Two operating states <span class="chip" data-chip="q3"></span></a></li>
+    <li><a href="#s4">4 Conversion ratio M(D) <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 Inductor current <span class="chip" data-chip="q5"></span></a></li>
+    <li><a href="#s6">6 Sizing L and C (boost) <span class="chip" data-chip="q6"></span></a></li>
+  </ol>
+  <h2>Part 3 · Buck output ripple</h2>
+  <ol>
+    <li><a href="#s7">7 Where the SRA breaks <span class="chip" data-chip="q7"></span></a></li>
+    <li><a href="#s8">8 Sizing C (buck) <span class="chip" data-chip="q8"></span></a></li>
+  </ol>
+  <h2>Part 4 · Real switches and DCM</h2>
+  <ol>
+    <li><a href="#s9">9 The diode buck <span class="chip" data-chip="q9"></span></a></li>
+    <li><a href="#s10">10 CCM, BCM, DCM <span class="chip" data-chip="q10"></span></a></li>
+    <li><a href="#s11">11 Deriving M in DCM <span class="chip" data-chip="q11"></span></a></li>
+    <li><a href="#s12">12 The CCM/DCM boundary <span class="chip" data-chip="q12"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">ENEL 585 · Lecture 3 · Study guide</div>
+  <h1>Buck II and the boost converter</h1>
+  <p class="lede">Two tools from Lecture 2 do almost all the work here: <b>volt-second balance</b> on the inductor and <b>charge balance</b> on the capacitor. You'll use them to size the buck's L, analyse a converter that steps voltage <i>up</i>, size the buck's C (where the usual shortcut fails), and see what happens when a real diode refuses to carry negative current.</p>
+  <div class="chain" aria-label="Lecture road map">
+    <div class="blk"><b>Buck recap</b><span>balance, ripple, choosing L</span><span class="secs">§1, §2</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Boost</b><span>same tools, new circuit</span><span class="secs">§3 to §6</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Buck ripple</b><span>charge in a triangle</span><span class="secs">§7, §8</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Diode buck</b><span>a switch with no gate</span><span class="secs">§9</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>DCM</b><span>i<sub>L</sub> stops at zero</span><span class="secs">§10 to §12</span></div>
+  </div>
+  <div class="callout example" style="margin-top:22px"><span class="tag">About the numbers in this guide</span>
+  <p>The lecture works everything symbolically. It has no numeric examples. Its only numbers are X = 20% or 40% for current ripple, about 1% for voltage ripple, and the K = 0.01, 0.1, 0.5 and ≥ 1 curves. Those are used as given. The calculators use one <b>running example</b> that I made up so you can check the formulas give sensible answers:</p>
+  <ul>
+    <li><b>Buck:</b> V<sub>g</sub> = 48 V, V = 12 V, f<sub>s</sub> = 100 kHz, R<sub>min</sub> = 2 Ω. Answers: L = 75 µH and C = 12.5 µF.</li>
+    <li><b>Boost:</b> V<sub>g</sub> = 12 V, V = 48 V, f<sub>s</sub> = 100 kHz, R<sub>min</sub> = 24 Ω. Answers: L = 56.25 µH and C = 31.25 µF.</li>
+  </ul>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · Buck, revisited</h2>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>Recall: the two balance principles</h3>
+<p>Three ingredients make converter analysis easy. First, the <b>small ripple approximation (SRA)</b>: the output ripple is tiny, so write v ≈ V inside expressions. Second, look at the <b>inductor over one switching period</b>. Third, assume <b>steady state</b>: i<sub>L</sub> ends each period exactly where it started.</p>
+<p>From those you get two rules. They work for every converter in this course:</p>
+<div class="eq">
+  <span class="row"><b>Volt-second balance:</b> ⟨<i>v<sub>L</sub></i>⟩<sub><i>T<sub>s</sub></i></sub> = 0 <span class="note">buck: (V<sub>g</sub> − V)D + (−V)D′ = 0 ⇒ V = DV<sub>g</sub>, M(D) = D</span></span>
+  <span class="row"><b>Charge balance:</b> ⟨<i>i<sub>C</sub></i>⟩<sub><i>T<sub>s</sub></i></sub> = 0 <span class="note">buck: I<sub>L</sub> = V/R</span></span>
+  <span class="row"><b>Ripple:</b> Δ<i>i<sub>L</sub></i> = <span class="frac"><span><i>DT<sub>s</sub></i>(<i>V<sub>g</sub></i> − <i>V</i>)</span><span><i>L</i></span></span>, &nbsp; peak = <i>I<sub>L</sub></i> + Δ<i>i<sub>L</sub></i>/2 <span class="note">Δi<sub>L</sub> is peak-to-peak</span></span>
+</div>
+<p>Why volt-second balance? The inductor law v<sub>L</sub> = L di<sub>L</sub>/dt means the change in current over a period is (1/L)∫v<sub>L</sub>dt. In steady state that change is zero, so the area under v<sub>L</sub> must be zero. Charge balance is the same idea for the capacitor: i<sub>C</sub> = C dv/dt, and v repeats every period.</p>
+
+<div class="callout analogy"><span class="tag">Analogy · a bank account</span>
+<p>The inductor current is a bank balance. During DT<sub>s</sub> you deposit at a rate of (V<sub>g</sub> − V)/L; during D′T<sub>s</sub> you withdraw at V/L. If deposits and withdrawals don't cancel every month, the balance drifts forever. "Steady state" means the books balance each period.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: pick V and watch i<sub>L</sub> drift unless the volt-seconds balance</div>
+  <div class="dnote">Buck with V<sub>g</sub> = 48 V, L = 75 µH, T<sub>s</sub> = 10 µs (running example). Six switching periods shown.</div>
+  <canvas id="cvVS" height="300" aria-label="Inductor voltage and current over six periods"></canvas>
+  <div class="legend"><span><i style="background:var(--curr)"></i>v<sub>L</sub> area during DT<sub>s</sub></span><span><i style="background:var(--volt)"></i>v<sub>L</sub> area during D′T<sub>s</sub></span><span><i style="background:var(--fund)"></i>i<sub>L</sub></span></div>
+  <div class="controls">
+    <label for="vsD">D <input id="vsD" type="range" min="0.05" max="0.95" step="0.01" value="0.25"><output id="vsDOut">0.25</output></label>
+    <label for="vsV">V (volts) <input id="vsV" type="range" min="0" max="48" step="0.01" value="12"><output id="vsVOut">12.00</output></label>
+    <button class="btn" type="button" id="vsSnap">Set V = D·V<sub>g</sub></button>
+  </div>
+  <div class="readout" id="vsRead" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Δi<sub>L</sub> is peak-to-peak.</b> The peak is I<sub>L</sub> + Δi<sub>L</sub>/2, not I<sub>L</sub> + Δi<sub>L</sub>. Some textbooks (Erickson) use half of this as their Δi, so check which one a formula expects.</li>
+<li><b>D′ means 1 − D.</b> It's the fraction of the period spent in position 2.</li>
+<li><b>Balance is only true in steady state.</b> During start-up or a load step, ⟨v<sub>L</sub>⟩ ≠ 0 and that's exactly what makes i<sub>L</sub> change.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: balance principles"></div>
+</section>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>Choosing L for the buck</h3>
+<p>The load changes, and the average inductor current follows it. For the buck, I<sub>L</sub> = I<sub>o</sub> = V/R. So as R ranges from R<sub>max</sub> down to R<sub>min</sub>, I<sub>L</sub> ranges up to <b>I<sub>L,max</sub> = V/R<sub>min</sub></b>.</p>
+<p>Designers usually allow Δi<sub>L</sub> to be <b>20% to 40% of I<sub>L,max</sub></b>. Smaller ripple needs a bigger, heavier inductor. Bigger ripple means higher peak currents and more stress on the switches. So we want the smallest L that keeps Δi<sub>L</sub> at or under X% of I<sub>L,max</sub>.</p>
+<div class="eq">
+  <span class="row"><i>L</i> &gt; <span class="frac"><span><i>R<sub>min</sub></i>(<i>V<sub>g</sub></i> − <i>V</i>)</span><span><i>V<sub>g</sub> f<sub>s</sub></i>(<i>X</i>/100%)</span></span> <span class="note">buck, ripple ≤ X% of I<sub>L,max</sub></span></span>
+</div>
+
+<details class="work" open><summary>Worked derivation (lecture): minimum L for the buck</summary><div class="body">
+<ol class="deriv">
+<li>Start from the ripple:<span class="m">Δi<sub>L</sub> = DT<sub>s</sub>(V<sub>g</sub> − V)/L</span></li>
+<li>Set it equal to the allowed ripple, X% of the largest average current:<span class="m">Δi<sub>L</sub> = (X/100%) · V/R<sub>min</sub></span></li>
+<li>Substitute D = V/V<sub>g</sub> and T<sub>s</sub> = 1/f<sub>s</sub>:<span class="m">(V/V<sub>g</sub>)(V<sub>g</sub> − V)/(f<sub>s</sub>L) = (X/100%) · V/R<sub>min</sub></span></li>
+<li>V appears on both sides and cancels. Solve for L; any L larger than this gives less ripple:<span class="m">L &gt; R<sub>min</sub>(V<sub>g</sub> − V) / [V<sub>g</sub> f<sub>s</sub> (X/100%)]</span></li>
+</ol>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy · a flywheel getting kicked</span>
+<p>The inductor is a flywheel. Each period it gets a kick of strength (V<sub>g</sub> − V) lasting DT<sub>s</sub>, and its speed wobbles by Δi<sub>L</sub>. A heavier flywheel (bigger L) or shorter kicks (higher f<sub>s</sub>) means less wobble. How much work the flywheel is doing (the load current) doesn't change the wobble at all. The load only matters because the spec says "wobble no more than X% of the <i>biggest</i> speed".</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Calculator: minimum L for the buck</div>
+  <div class="dnote">Loaded with the running example (my numbers, not the lecture's). The lecture's typical X is 20% to 40%.</div>
+  <div class="controls">
+    <label for="bkVg">V<sub>g</sub> (V) <input id="bkVg" type="number" value="48" min="0.1" step="1"></label>
+    <label for="bkV">V (V) <input id="bkV" type="number" value="12" min="0.1" step="1"></label>
+    <label for="bkFs">f<sub>s</sub> (kHz) <input id="bkFs" type="number" value="100" min="0.1" step="10"></label>
+    <label for="bkR">R<sub>min</sub> (Ω) <input id="bkR" type="number" value="2" min="0.01" step="0.5"></label>
+    <label for="bkX">X (%) <input id="bkX" type="number" value="20" min="0.1" step="5"></label>
+  </div>
+  <div class="steps" id="bkSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Use R<sub>min</sub>, not R<sub>max</sub>.</b> The ripple itself doesn't depend on R. R only appears because the spec is a percentage of I<sub>L,max</sub>, which flows at the heaviest load (smallest R).</li>
+<li><b>Convert the percentage.</b> X = 20% goes in as 0.20. Plugging in 20 makes L a hundred times too small.</li>
+<li><b>Units.</b> f<sub>s</sub> in Hz (100 kHz = 100 000), answer in henries. 7.5 × 10<sup>−5</sup> H is 75 µH.</li>
+<li><b>L scales as 1/f<sub>s</sub>.</b> Doubling the switching frequency halves the inductor. That's the main reason converters switch fast.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: choosing L"></div>
+</section>
+
+<h2 class="part">Part 2 · The boost converter</h2>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>The boost converter and its two states</h3>
+<p>A <b>buck</b> steps voltage down (V &lt; V<sub>g</sub>). A <b>boost</b> steps it up (V &gt; V<sub>g</sub>). The boost moves the inductor to the input side. Q<sub>1</sub> connects the inductor's right end to ground, and Q<sub>2</sub> connects it to the output. The two switches are complementary: Q<sub>1</sub> is on for DT<sub>s</sub>, then Q<sub>2</sub> is on for D′T<sub>s</sub>.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: click Q<sub>1</sub> or Q<sub>2</sub> to switch states</div>
+  <svg class="ckt" id="ckBoost" viewBox="0 0 470 250" role="img" aria-labelledby="ckBoostT">
+    <title id="ckBoostT">Boost converter with clickable switches Q1 and Q2</title>
+    <!-- source -->
+    <line class="w" data-seg="src" x1="40" y1="60" x2="40" y2="111"/>
+    <line class="w" data-seg="src" x1="40" y1="149" x2="40" y2="200"/>
+    <circle class="part" cx="40" cy="130" r="19"/>
+    <text class="lbl ink" x="40" y="126" text-anchor="middle">+</text>
+    <text class="lbl ink" x="40" y="143" text-anchor="middle">−</text>
+    <text class="lbl" x="8" y="100">v<tspan baseline-shift="sub" font-size="9">g</tspan></text>
+    <!-- top left + inductor -->
+    <line class="w" data-seg="src" x1="40" y1="60" x2="80" y2="60"/>
+    <path class="w" data-seg="ind" d="M80,60 a9,9 0 0,1 18,0 a9,9 0 0,1 18,0 a9,9 0 0,1 18,0 a9,9 0 0,1 18,0"/>
+    <line class="w" data-seg="ind" x1="152" y1="60" x2="200" y2="60"/>
+    <text class="lbl ink" x="116" y="38" text-anchor="middle">L</text>
+    <text class="lbl" x="116" y="86" text-anchor="middle">+ v<tspan baseline-shift="sub" font-size="9">L</tspan> −</text>
+    <text class="lbl" x="172" y="50" text-anchor="middle">i<tspan baseline-shift="sub" font-size="9">L</tspan> →</text>
+    <!-- Q1 leg -->
+    <line class="w" data-seg="q1" x1="200" y1="60" x2="200" y2="112"/>
+    <line class="w" data-seg="q1" x1="200" y1="148" x2="200" y2="200"/>
+    <g class="sw" data-s="1" tabindex="0" role="button" aria-label="Switch Q1"><rect x="177" y="112" width="46" height="36" rx="7"/><text x="200" y="135" text-anchor="middle">Q1</text></g>
+    <!-- Q2 -->
+    <line class="w" data-seg="q2" x1="200" y1="60" x2="237" y2="60"/>
+    <line class="w" data-seg="q2" x1="283" y1="60" x2="320" y2="60"/>
+    <g class="sw" data-s="2" tabindex="0" role="button" aria-label="Switch Q2"><rect x="237" y="42" width="46" height="36" rx="7"/><text x="260" y="65" text-anchor="middle">Q2</text></g>
+    <!-- C -->
+    <line class="w" data-seg="cap" x1="320" y1="60" x2="320" y2="124"/>
+    <line class="w" data-seg="cap" x1="320" y1="136" x2="320" y2="200"/>
+    <line class="w" data-seg="cap" x1="304" y1="124" x2="336" y2="124"/>
+    <line class="w" data-seg="cap" x1="304" y1="136" x2="336" y2="136"/>
+    <text class="lbl ink" x="296" y="134" text-anchor="end">C</text>
+    <text class="lbl" x="344" y="100">i<tspan baseline-shift="sub" font-size="9">C</tspan>↓</text>
+    <!-- R -->
+    <line class="w" data-seg="load" x1="320" y1="60" x2="410" y2="60"/>
+    <line class="w" data-seg="load" x1="410" y1="60" x2="410" y2="110"/>
+    <line class="w" data-seg="load" x1="410" y1="150" x2="410" y2="200"/>
+    <rect class="part" x="400" y="110" width="20" height="40" rx="2"/>
+    <text class="lbl ink" x="392" y="134" text-anchor="end">R</text>
+    <text class="lbl ink" x="440" y="100">+</text><text class="lbl ink" x="440" y="134">v</text><text class="lbl ink" x="440" y="168">−</text>
+    <!-- bottom -->
+    <line class="w" data-seg="botL" x1="40" y1="200" x2="200" y2="200"/>
+    <line class="w" data-seg="botR" x1="200" y1="200" x2="320" y2="200"/>
+    <line class="w" data-seg="load" x1="320" y1="200" x2="410" y2="200"/>
+    <circle class="node" cx="200" cy="60" r="4"/><circle class="node" cx="320" cy="60" r="4"/><circle class="node" cx="200" cy="200" r="4"/><circle class="node" cx="320" cy="200" r="4"/>
+    <text class="lbl" x="235" y="232" text-anchor="middle" id="ckBoostState"></text>
+  </svg>
+  <div class="btnrow" style="justify-content:center">
+    <div class="seg" role="group" aria-label="Boost state">
+      <button type="button" id="bs1" aria-pressed="true">① Q₁ on, Q₂ off</button>
+      <button type="button" id="bs2" aria-pressed="false">② Q₁ off, Q₂ on</button>
+    </div>
+  </div>
+  <div class="legend" style="justify-content:center"><span><i style="background:var(--curr)"></i>path of i<sub>L</sub></span><span><i style="background:var(--fund)"></i>capacitor feeding the load</span></div>
+  <div class="readout" id="bsRead" aria-live="polite"></div>
+</div>
+
+<div class="tbl"><table>
+<thead><tr><th>State</th><th>Exact</th><th>With the SRA</th></tr></thead>
+<tbody>
+<tr><td>① 0 ≤ t &lt; DT<sub>s</sub>: Q<sub>1</sub> on, Q<sub>2</sub> off</td><td>v<sub>L</sub> = v<sub>g</sub>, &nbsp; i<sub>C</sub> = −v/R</td><td>v<sub>L</sub> = V<sub>g</sub>, &nbsp; i<sub>C</sub> = −V/R</td></tr>
+<tr><td>② DT<sub>s</sub> ≤ t &lt; T<sub>s</sub>: Q<sub>1</sub> off, Q<sub>2</sub> on</td><td>v<sub>L</sub> = v<sub>g</sub> − v, &nbsp; i<sub>C</sub> = i<sub>L</sub> − v/R</td><td>v<sub>L</sub> = V<sub>g</sub> − V, &nbsp; i<sub>C</sub> = I<sub>L</sub> − V/R</td></tr>
+</tbody></table></div>
+
+<div class="callout analogy"><span class="tag">Analogy · the hydraulic ram pump</span>
+<p>A ram pump lifts water higher than its source with no motor. Water runs downhill through a pipe and out a drain valve, picking up speed (state ①: Q<sub>1</sub> on, the inductor current builds). Then the drain slams shut. The moving water can't stop instantly, so it forces its way through a one-way valve into a <i>higher</i> tank (state ②: Q<sub>2</sub> on, the inductor pushes current into the higher output voltage). The inductor's momentum is what lifts the voltage.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>In state ① the load is fed only by C.</b> Q<sub>2</sub> is open, so i<sub>C</sub> = −v/R: the capacitor discharges into R.</li>
+<li><b>v<sub>L</sub> is negative in state ②.</b> Since V &gt; V<sub>g</sub>, v<sub>L</sub> = V<sub>g</sub> − V &lt; 0, so i<sub>L</sub> ramps <i>down</i>. Don't flip the sign because "it's a boost".</li>
+<li><b>i<sub>L</sub> is the input current here.</b> In the buck, i<sub>L</sub> fed the output. In the boost, the inductor is in series with the source, so the source always supplies i<sub>L</sub>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: boost states"></div>
+</section>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Volt-second balance: the conversion ratio M(D)</h3>
+<p>Apply the same rule as the buck. State ① lasts DT<sub>s</sub> with v<sub>L</sub> = V<sub>g</sub>. State ② lasts D′T<sub>s</sub> with v<sub>L</sub> = V<sub>g</sub> − V. The areas must cancel.</p>
+
+<details class="work" open><summary>Worked derivation (lecture): solving for V</summary><div class="body">
+<ol class="deriv">
+<li>Average the inductor voltage over one period and set it to zero:<span class="m">⟨v<sub>L</sub>⟩ = (1/T<sub>s</sub>) ∫<sub>0</sub><sup>T<sub>s</sub></sup> v<sub>L</sub> dt = 0</span></li>
+<li>Split the integral into the two states:<span class="m">= (1/T<sub>s</sub>)[ V<sub>g</sub>·DT<sub>s</sub> + (V<sub>g</sub> − V)·D′T<sub>s</sub> ]</span></li>
+<li>Expand and use D + D′ = 1:<span class="m">= V<sub>g</sub>D + V<sub>g</sub>D′ − VD′ = V<sub>g</sub> − VD′</span></li>
+<li>Set to zero:<span class="m">V = V<sub>g</sub>/D′</span></li>
+</ol>
+</div></details>
+
+<div class="eq">
+  <span class="row"><i>M</i>(<i>D</i>) = <span class="frac"><span><i>V</i></span><span><i>V<sub>g</sub></i></span></span> = <span class="frac"><span>1</span><span><i>D′</i></span></span> = <span class="frac"><span>1</span><span>1 − <i>D</i></span></span> <span class="note">starts at 1 when D = 0, grows without limit as D → 1</span></span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: slide D and watch the two areas stay equal</div>
+  <div class="dnote">V<sub>g</sub> = 12 V, T<sub>s</sub> = 10 µs. Top: v<sub>L</sub> over two periods. Bottom: M(D).</div>
+  <canvas id="cvBoost" height="400" aria-label="Boost inductor voltage and conversion ratio curve"></canvas>
+  <div class="legend"><span><i style="background:var(--curr)"></i>V<sub>g</sub>·DT<sub>s</sub></span><span><i style="background:var(--volt)"></i>(V − V<sub>g</sub>)·D′T<sub>s</sub></span><span><i style="background:var(--volt)"></i>ideal 1/(1 − D)</span><span><i style="background:var(--fund)"></i>practical (illustrative)</span></div>
+  <div class="controls">
+    <label for="bD">D <input id="bD" type="range" min="0" max="0.95" step="0.01" value="0.75"><output id="bDOut">0.75</output></label>
+    <label for="bPr"><input id="bPr" type="checkbox" checked> show a practical converter</label>
+  </div>
+  <div class="readout" id="bRead" aria-live="polite"></div>
+</div>
+
+<p><b>The lecture's question:</b> what does a <i>practical</i> converter's ratio look like as D → 1? It rises with the ideal curve at first, then peaks and falls away. The green curve above is an illustration of that shape (it assumes a small inductor winding resistance, 1% of R; the exact model is beyond this lecture). The reason comes from the next section: the inductor current I<sub>L</sub> = V/(RD′) gets huge as D′ → 0, and real parts lose I²R power that the ideal model ignores.</p>
+
+<div class="callout analogy"><span class="tag">Analogy · a seesaw</span>
+<p>Volt-second balance is a seesaw. On one side sits V<sub>g</sub> for a time D. On the other sits (V − V<sub>g</sub>) for a time D′. If you make D′ short (sit close to the pivot), you need a much heavier weight (V − V<sub>g</sub>) to balance. That's why V shoots up as D′ shrinks.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>D = 0.5 gives M = 2, not 1.5.</b> The ratio is 1/(1 − D), which is nonlinear.</li>
+<li><b>Solving for D.</b> D = 1 − V<sub>g</sub>/V. For 12 V to 48 V: D = 1 − 0.25 = 0.75.</li>
+<li><b>M ≥ 1 always</b> for the ideal boost. At D = 0 the output just equals V<sub>g</sub> (through L and Q<sub>2</sub>).</li>
+<li><b>D = 1 is not "infinite voltage".</b> Q<sub>1</sub> would stay on forever, shorting the source through L, and nothing would reach the output.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: conversion ratio"></div>
+</section>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>Charge balance: the inductor current</h3>
+<p>Now the capacitor. In state ① it only discharges (i<sub>C</sub> = −V/R). In state ② the inductor refills it (i<sub>C</sub> = I<sub>L</sub> − V/R). The charge in must equal the charge out.</p>
+
+<details class="work" open><summary>Worked derivation (lecture): solving for I<sub>L</sub></summary><div class="body">
+<ol class="deriv">
+<li>Average the capacitor current and set it to zero:<span class="m">⟨i<sub>C</sub>⟩ = (1/T<sub>s</sub>) ∫<sub>0</sub><sup>T<sub>s</sub></sup> i<sub>C</sub> dt = 0</span></li>
+<li>Split into the two states:<span class="m">= (1/T<sub>s</sub>)[ −(V/R)·DT<sub>s</sub> + (I<sub>L</sub> − V/R)·D′T<sub>s</sub> ]</span></li>
+<li>Simplify with D + D′ = 1:<span class="m">= −V/R + I<sub>L</sub>D′</span></li>
+<li>Set to zero, then use D′ = V<sub>g</sub>/V from §4:<span class="m">I<sub>L</sub> = V/(RD′) = V²/(RV<sub>g</sub>)</span></li>
+</ol>
+</div></details>
+
+<div class="eq">
+  <span class="row"><i>I<sub>L</sub></i> = <span class="frac"><span><i>V</i></span><span><i>RD′</i></span></span> = <span class="frac"><span><i>V</i><sup>2</sup></span><span><i>RV<sub>g</sub></i></span></span> <span class="note">= I<sub>o</sub>/D′, bigger than the load current</span></span>
+</div>
+<p>A neat check: multiply both sides by V<sub>g</sub>. You get V<sub>g</sub>I<sub>L</sub> = V²/R. Input power equals output power, which it must for an ideal (lossless) converter.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: the capacitor's charge in and out</div>
+  <div class="dnote">V<sub>g</sub> = 12 V, T<sub>s</sub> = 10 µs. Loaded with the running example (D = 0.75, R = 24 Ω).</div>
+  <canvas id="cvIC" height="220" aria-label="Boost capacitor current with shaded charge areas"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>charge out in ① (−V/R)</span><span><i style="background:var(--curr)"></i>charge in during ② (I<sub>L</sub> − V/R)</span></div>
+  <div class="controls">
+    <label for="cD">D <input id="cD" type="range" min="0.05" max="0.9" step="0.01" value="0.75"><output id="cDOut">0.75</output></label>
+    <label for="cR">R (Ω) <input id="cR" type="range" min="6" max="96" step="1" value="24"><output id="cROut">24</output></label>
+  </div>
+  <div class="readout" id="cRead" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a delivery driver on part-time hours</span>
+<p>The inductor is a driver who can only drop parcels at the output during D′ of each hour. The town (load) needs I<sub>o</sub> parcels per hour, steadily. So the driver has to carry I<sub>o</sub>/D′ per hour while on shift. At D′ = 0.25, that's four times the town's demand.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>For the boost, I<sub>L</sub> ≠ I<sub>o</sub>.</b> In the buck they were equal. Here I<sub>L</sub> = I<sub>o</sub>/D′ = M·I<sub>o</sub>.</li>
+<li><b>Two forms, same thing.</b> V/(RD′) and V²/(RV<sub>g</sub>) are equal because D′ = V<sub>g</sub>/V. Use whichever matches the given data.</li>
+<li><b>I<sub>L,max</sub> uses R<sub>min</sub>.</b> The next section needs I<sub>L,max</sub> = V/(R<sub>min</sub>D′).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: inductor current"></div>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Sizing L and C for the boost</h3>
+<p>Both calculations use state ①, because it's the simplest: v<sub>L</sub> = V<sub>g</sub> (constant) and i<sub>C</sub> = −V/R (constant). Constant slopes mean straight-line ramps, and a single ramp gives the full peak-to-peak swing.</p>
+<div class="eq">
+  <span class="row">Δ<i>i<sub>L</sub></i> = <span class="frac"><span><i>V<sub>g</sub>DT<sub>s</sub></i></span><span><i>L</i></span></span> &nbsp;⇒&nbsp; <i>L</i> &gt; <span class="frac"><span><i>V<sub>g</sub></i>(1 − <i>V<sub>g</sub></i>/<i>V</i>)</span><span><i>f<sub>s</sub></i>(<i>X</i>/100%)<i>I<sub>L,max</sub></i></span></span> <span class="note">I<sub>L,max</sub> = V/(R<sub>min</sub>D′)</span></span>
+  <span class="row">Δ<i>v<sub>C</sub></i> = <span class="frac"><span><i>V DT<sub>s</sub></i></span><span><i>RC</i></span></span> &nbsp;⇒&nbsp; <i>C</i> &gt; <span class="frac"><span><i>V</i> − <i>V<sub>g</sub></i></span><span><i>R f<sub>s</sub></i>(<i>X</i>/100%)<i>V</i></span></span> <span class="note">requirement Δv<sub>C</sub> &lt; (X/100%)V</span></span>
+</div>
+
+<details class="work" open><summary>Worked derivation (lecture): minimum L for the boost</summary><div class="body">
+<ol class="deriv">
+<li>Requirement:<span class="m">Δi<sub>L</sub> &lt; (X/100%) I<sub>L,max</sub></span></li>
+<li>The current rises over state ①, where v<sub>L</sub> = V<sub>g</sub>:<span class="m">Δi<sub>L</sub> = (1/L) ∫<sub>0</sub><sup>DT<sub>s</sub></sup> v<sub>L</sub> dt = V<sub>g</sub>DT<sub>s</sub>/L</span></li>
+<li>Substitute Δi<sub>L</sub> = (X/100%) I<sub>L,max</sub>, D = 1 − V<sub>g</sub>/V and T<sub>s</sub> = 1/f<sub>s</sub>, then rearrange:<span class="m">L &gt; V<sub>g</sub>(1 − V<sub>g</sub>/V) / [f<sub>s</sub>(X/100%) I<sub>L,max</sub>]</span></li>
+</ol>
+</div></details>
+
+<details class="work" open><summary>Worked derivation (lecture): minimum C for the boost</summary><div class="body">
+<ol class="deriv">
+<li>Requirement:<span class="m">Δv<sub>C</sub> &lt; (X/100%) V</span></li>
+<li>In state ① the capacitor loses charge at a constant rate V/R, so v falls in a straight line. The drop is the ripple:<span class="m">Δv<sub>C</sub> = −(1/C) ∫<sub>0</sub><sup>DT<sub>s</sub></sup> i<sub>C</sub> dt = −(1/C)(−V/R)DT<sub>s</sub> = V DT<sub>s</sub>/(RC)</span></li>
+<li>Substitute Δv<sub>C</sub> = (X/100%)V, D = 1 − V<sub>g</sub>/V and T<sub>s</sub> = 1/f<sub>s</sub>. V cancels from D·V = V − V<sub>g</sub>:<span class="m">C &gt; (V − V<sub>g</sub>) / [R f<sub>s</sub>(X/100%) V]</span></li>
+</ol>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: minimum L and C for the boost</div>
+  <div class="dnote">Loaded with the running example (my numbers). Waveforms drawn at L = L<sub>min</sub>, C = C<sub>min</sub>, R = R<sub>min</sub>.</div>
+  <div class="controls">
+    <label for="bxVg">V<sub>g</sub> (V) <input id="bxVg" type="number" value="12" min="0.1" step="1"></label>
+    <label for="bxV">V (V) <input id="bxV" type="number" value="48" min="0.1" step="1"></label>
+    <label for="bxFs">f<sub>s</sub> (kHz) <input id="bxFs" type="number" value="100" min="0.1" step="10"></label>
+    <label for="bxR">R<sub>min</sub> (Ω) <input id="bxR" type="number" value="24" min="0.01" step="1"></label>
+    <label for="bxXi">X for Δi<sub>L</sub> (%) <input id="bxXi" type="number" value="20" min="0.1" step="5"></label>
+    <label for="bxXv">X for Δv<sub>C</sub> (%) <input id="bxXv" type="number" value="1" min="0.01" step="0.5"></label>
+  </div>
+  <div class="steps" id="bxSteps" aria-live="polite"></div>
+  <canvas id="cvBR" height="250" style="margin-top:12px" aria-label="Boost inductor current and output voltage ripple"></canvas>
+  <div class="legend"><span><i style="background:var(--fund)"></i>i<sub>L</sub></span><span><i style="background:var(--volt)"></i>v (ripple exaggerated to scale of Δv<sub>C</sub>)</span></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a water tower during a pump outage</span>
+<p>During state ① the pump (the inductor) is cut off from the town, so the water tower (C) alone supplies it at a steady rate V/R. The tower level drops in a straight line for the whole outage, DT<sub>s</sub>. Size the tower so that drop is at most X% of the normal level.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Boost Δi<sub>L</sub> is V<sub>g</sub>DT<sub>s</sub>/L.</b> Don't reuse the buck's DT<sub>s</sub>(V<sub>g</sub> − V)/L; the inductor sees V<sub>g</sub> during the on-time here.</li>
+<li><b>D here is 1 − V<sub>g</sub>/V</b>, not V/V<sub>g</sub>. Mixing up the buck and boost duty ratios is the most common error.</li>
+<li><b>Which R?</b> The lecture writes R in the C formula. The capacitor discharges fastest at the heaviest load, so use the smallest R you must support for a worst-case design.</li>
+<li><b>Using the SRA on i<sub>C</sub> is fine here</b> (i<sub>C</sub> jumps between big levels). It will <i>not</i> be fine for the buck: see §7.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: sizing L and C (boost)"></div>
+</section>
+
+<h2 class="part">Part 3 · Buck output ripple</h2>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Back to the buck: where the SRA breaks</h3>
+<p>Try the boost method on the buck capacitor. KCL at the output node over the whole period gives i<sub>C</sub> = i<sub>L</sub> − v/R. Apply the SRA to both i<sub>L</sub> and v and you get i<sub>C</sub> = I<sub>L</sub> − V/R. But charge balance said I<sub>L</sub> = V/R for the buck. So this predicts <b>i<sub>C</sub> = 0</b> and a perfectly flat v = V. The real converter disagrees: i<sub>C</sub> swings about zero and v ripples about V. The approximation threw away exactly what we need.</p>
+<p><b>The fix: apply the SRA to v only.</b> Both terms put ripple into i<sub>C</sub>: Δi<sub>L</sub> from the inductor and Δv/R from the load. A typical design allows Δi<sub>L</sub> of 20% to 40% of I<sub>L</sub>, but Δv of only about 1% of V. Since I<sub>L</sub> = V/R, Δv/R ≈ 0.01I<sub>L</sub>. So the inductor contributes <b>20 to 40 times</b> more ripple to i<sub>C</sub> than the load does.</p>
+<div class="eq">
+  <span class="row"><i>i<sub>C</sub></i> = <i>i<sub>L</sub></i> − <i>V</i>/<i>R</i> = <i>i<sub>L</sub></i> − <i>I<sub>L</sub></i> <span class="note">the ripple of i<sub>L</sub> alone: a triangle centred on zero</span></span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: compare the two approximations</div>
+  <div class="dnote">Running example buck at R = 2 Ω: I<sub>L</sub> = 6 A, Δi<sub>L</sub> = 1.2 A, C = 12.5 µF, T<sub>s</sub> = 10 µs.</div>
+  <canvas id="cvSRA" height="250" aria-label="Capacitor current and output voltage under two approximations"></canvas>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Approximation">
+      <button type="button" id="sraBoth" aria-pressed="false">SRA on i<sub>L</sub> and v</button>
+      <button type="button" id="sraV" aria-pressed="true">SRA on v only</button>
+    </div>
+  </div>
+  <div class="readout" id="sraRead" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · asking the average sea level how big the waves are</span>
+<p>The average height of the ocean is flat. If you replace the sea with its average before measuring the waves, you'll conclude there are no waves. For the buck capacitor, the inductor ripple <i>is</i> the wave. You can average away the tiny wobble in v, but never the wobble in i<sub>L</sub>.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The SRA is about what's small compared with what you're computing.</b> Sizing L: v's ripple is negligible, so v ≈ V is fine. Sizing the buck's C: i<sub>C</sub> has zero average, so its ripple is the whole signal.</li>
+<li><b>Why the boost got away with it.</b> The boost's i<sub>C</sub> is −V/R in ① and I<sub>L</sub> − V/R in ②: large levels. The small i<sub>L</sub> ripple only slightly tilts the tops.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: where the SRA breaks"></div>
+</section>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>From capacitor charge to C for the buck</h3>
+<p>Since i<sub>C</sub> = C dv/dt, the change in v between two instants is the charge delivered divided by C:</p>
+<div class="eq">
+  <span class="row"><i>v</i>(<i>t</i><sub>2</sub>) − <i>v</i>(<i>t</i><sub>1</sub>) = <span class="frac"><span>1</span><span><i>C</i></span></span>∫<sub><i>t</i><sub>1</sub></sub><sup><i>t</i><sub>2</sub></sup> <i>i<sub>C</sub></i> <i>dt</i> = <span class="frac"><span>Δ<i>Q</i></span><span><i>C</i></span></span> &nbsp;⇒&nbsp; Δ<i>v<sub>C</sub></i> = <span class="frac"><span>Δ<i>Q</i></span><span><i>C</i></span></span></span>
+</div>
+<p>v rises while i<sub>C</sub> &gt; 0 and falls while i<sub>C</sub> &lt; 0. So v is <b>minimum</b> at the upward zero crossing of i<sub>C</sub> (t<sub>1</sub>) and <b>maximum</b> at the downward one (t<sub>2</sub>). Between them i<sub>C</sub> &gt; 0, so ΔQ is the charge in the <b>positive lobe</b>, and Δv<sub>C</sub> is the peak-to-peak ripple.</p>
+<p>Where are the crossings? Each ramp of i<sub>L</sub> is linear, so I<sub>L</sub> sits exactly halfway between I<sub>min</sub> and I<sub>max</sub>. Then i<sub>C</sub> = i<sub>L</sub> − I<sub>L</sub> swings between ±Δi<sub>L</sub>/2 and crosses zero at the <b>midpoint of each ramp</b>:</p>
+<div class="eq">
+  <span class="row"><i>t</i><sub>1</sub> = <i>DT<sub>s</sub></i>/2, &nbsp; <i>t</i><sub>2</sub> = <i>DT<sub>s</sub></i> + <i>D′T<sub>s</sub></i>/2 &nbsp;⇒&nbsp; base = ½(<i>D</i> + <i>D′</i>)<i>T<sub>s</sub></i> = <i>T<sub>s</sub></i>/2 <span class="note">for any D</span></span>
+  <span class="row">Δ<i>v<sub>C</sub></i> = <span class="frac"><span>Δ<i>i<sub>L</sub></i></span><span>8<i>Cf<sub>s</sub></i></span></span> &nbsp;⇒&nbsp; <i>C</i> &gt; <span class="frac"><span><i>V<sub>g</sub></i> − <i>V</i></span><span>8<i>V<sub>g</sub>Lf<sub>s</sub></i><sup>2</sup>(<i>X</i>/100%)</span></span></span>
+</div>
+
+<details class="work" open><summary>Worked derivation (lecture): minimum C for the buck</summary><div class="body">
+<ol class="deriv">
+<li>Requirement:<span class="m">Δv<sub>C</sub> &lt; (X/100%) V</span></li>
+<li>The positive lobe is a triangle, height Δi<sub>L</sub>/2, base T<sub>s</sub>/2:<span class="m">ΔQ = ∫<sub>t<sub>1</sub></sub><sup>t<sub>2</sub></sup> i<sub>C</sub> dt = ½ · (T<sub>s</sub>/2) · (Δi<sub>L</sub>/2) = Δi<sub>L</sub>T<sub>s</sub>/8</span></li>
+<li>That charge raises v from its minimum to its maximum:<span class="m">ΔQ = C[v(t<sub>2</sub>) − v(t<sub>1</sub>)] = CΔv<sub>C</sub> ⇒ Δv<sub>C</sub> = Δi<sub>L</sub>/(8Cf<sub>s</sub>)</span></li>
+<li>Substitute Δv<sub>C</sub> = (X/100%)V and Δi<sub>L</sub> = V(V<sub>g</sub> − V)/(V<sub>g</sub>Lf<sub>s</sub>), then rearrange (V cancels):<span class="m">C &gt; (V<sub>g</sub> − V) / [8V<sub>g</sub>Lf<sub>s</sub><sup>2</sup>(X/100%)]</span></li>
+</ol>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: the positive lobe and the ripple it makes</div>
+  <div class="dnote">Buck, V<sub>g</sub> = 48 V, V = D·V<sub>g</sub>. Loaded with the running example (D = 0.25, L = 75 µH, C = 12.5 µF, f<sub>s</sub> = 100 kHz).</div>
+  <canvas id="cvRip" height="380" aria-label="Buck inductor current, capacitor current with shaded positive lobe, and output ripple"></canvas>
+  <div class="legend"><span><i style="background:var(--fund)"></i>i<sub>L</sub></span><span><i style="background:var(--curr)"></i>i<sub>C</sub> (shaded: ΔQ)</span><span><i style="background:var(--volt)"></i>v − V</span></div>
+  <div class="controls">
+    <label for="rD">D <input id="rD" type="range" min="0.05" max="0.95" step="0.01" value="0.25"><output id="rDOut">0.25</output></label>
+    <label for="rL">L (µH) <input id="rL" type="range" min="10" max="200" step="1" value="75"><output id="rLOut">75</output></label>
+    <label for="rC">C (µF) <input id="rC" type="range" min="2" max="50" step="0.5" value="12.5"><output id="rCOut">12.5</output></label>
+    <label for="rF">f<sub>s</sub> (kHz) <input id="rF" type="range" min="20" max="300" step="10" value="100"><output id="rFOut">100</output></label>
+  </div>
+  <div class="readout" id="rRead" aria-live="polite"></div>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Calculator: minimum C for the buck</div>
+  <div class="dnote">Loaded with the running example (my numbers): L = 75 µH from §2, ripple limit 1% (the lecture's "about 1%").</div>
+  <div class="controls">
+    <label for="cxVg">V<sub>g</sub> (V) <input id="cxVg" type="number" value="48" min="0.1" step="1"></label>
+    <label for="cxV">V (V) <input id="cxV" type="number" value="12" min="0.1" step="1"></label>
+    <label for="cxL">L (µH) <input id="cxL" type="number" value="75" min="0.01" step="5"></label>
+    <label for="cxFs">f<sub>s</sub> (kHz) <input id="cxFs" type="number" value="100" min="0.1" step="10"></label>
+    <label for="cxX">X (%) <input id="cxX" type="number" value="1" min="0.01" step="0.5"></label>
+  </div>
+  <div class="steps" id="cxSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a bathtub with a pulsing tap</span>
+<p>The drain takes out a steady I<sub>L</sub>. The tap (i<sub>L</sub>) pulses a little above and below that. Whenever the tap beats the drain, the water level rises; when it falls behind, the level drops. The total swing in level is the extra water from one "ahead" stretch (ΔQ) divided by the tub's floor area (C).</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The base is T<sub>s</sub>/2 for every D.</b> Half of the rising ramp plus half of the falling ramp is always half a period.</li>
+<li><b>The height is Δi<sub>L</sub>/2, not Δi<sub>L</sub>.</b> That, the ½ for a triangle and the T<sub>s</sub>/2 base give the 8.</li>
+<li><b>v peaks at t<sub>2</sub>, not at DT<sub>s</sub>.</b> At DT<sub>s</sub>, i<sub>C</sub> is largest, so v is rising fastest. It keeps rising until i<sub>C</sub> crosses zero.</li>
+<li><b>f<sub>s</sub> is squared.</b> With L and C fixed, doubling f<sub>s</sub> halves Δi<sub>L</sub> and halves ΔQ again: Δv<sub>C</sub> drops to a quarter.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: sizing C (buck)"></div>
+</section>
+
+<h2 class="part">Part 4 · Real switches and DCM</h2>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Practical realization: the diode buck</h3>
+<p>So far the switches were ideal. Real ones are semiconductors. The buck's two positions can be built two ways:</p>
+<ol class="plain" type="a">
+<li><b>One active switch plus one diode</b>: the <i>diode buck</i>. Q<sub>1</sub> is a MOSFET, or an IGBT with an anti-parallel diode.</li>
+<li><b>Two active switches</b>: the <i>synchronous buck</i>.</li>
+</ol>
+<p>The lecture analyses (a). The diode has no gate. The circuit turns it on and off, not a controller. When Q<sub>1</sub> turns off, the inductor insists on keeping i<sub>L</sub> flowing, so it pulls the switch node down until D<sub>1</sub> is forward biased. The diode then carries i<sub>L</sub> around the output loop.</p>
+<p>In <b>continuous conduction mode (CCM)</b>, i<sub>L</sub> &gt; 0 for the whole period. Then the diode behaves exactly like switch position 2, and everything from Lecture 2 still holds: M = D.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: step through the diode buck's states</div>
+  <svg class="ckt" id="ckDB" viewBox="0 0 470 250" role="img" aria-labelledby="ckDBT">
+    <title id="ckDBT">Diode buck converter showing which path carries current</title>
+    <line class="w" data-seg="src" x1="40" y1="60" x2="40" y2="111"/>
+    <line class="w" data-seg="src" x1="40" y1="149" x2="40" y2="200"/>
+    <circle class="part" cx="40" cy="130" r="19"/>
+    <text class="lbl ink" x="40" y="126" text-anchor="middle">+</text>
+    <text class="lbl ink" x="40" y="143" text-anchor="middle">−</text>
+    <text class="lbl" x="8" y="100">v<tspan baseline-shift="sub" font-size="9">g</tspan></text>
+    <line class="w" data-seg="src" x1="40" y1="60" x2="92" y2="60"/>
+    <g class="sw" data-s="q" tabindex="0" role="button" aria-label="Switch Q1"><rect x="92" y="42" width="46" height="36" rx="7"/><text x="115" y="65" text-anchor="middle">Q1</text></g>
+    <line class="w" data-seg="q" x1="138" y1="60" x2="180" y2="60"/>
+    <!-- diode leg -->
+    <line class="w" data-seg="dio" x1="180" y1="60" x2="180" y2="116"/>
+    <line class="w" data-seg="dio" x1="180" y1="144" x2="180" y2="200"/>
+    <polygon class="solid" points="168,144 192,144 180,120"/>
+    <line class="w" x1="166" y1="118" x2="194" y2="118"/>
+    <text class="lbl ink" x="200" y="136">D<tspan baseline-shift="sub" font-size="9">1</tspan></text>
+    <!-- inductor -->
+    <line class="w" data-seg="ind" x1="180" y1="60" x2="220" y2="60"/>
+    <path class="w" data-seg="ind" d="M220,60 a9,9 0 0,1 18,0 a9,9 0 0,1 18,0 a9,9 0 0,1 18,0 a9,9 0 0,1 18,0"/>
+    <line class="w" data-seg="ind" x1="292" y1="60" x2="330" y2="60"/>
+    <text class="lbl ink" x="256" y="38" text-anchor="middle">L</text>
+    <text class="lbl" x="256" y="86" text-anchor="middle">+ v<tspan baseline-shift="sub" font-size="9">L</tspan> −</text>
+    <text class="lbl" x="310" y="50" text-anchor="middle">i<tspan baseline-shift="sub" font-size="9">L</tspan>→</text>
+    <!-- C -->
+    <line class="w" data-seg="cap" x1="330" y1="60" x2="330" y2="124"/>
+    <line class="w" data-seg="cap" x1="330" y1="136" x2="330" y2="200"/>
+    <line class="w" data-seg="cap" x1="314" y1="124" x2="346" y2="124"/>
+    <line class="w" data-seg="cap" x1="314" y1="136" x2="346" y2="136"/>
+    <text class="lbl ink" x="306" y="134" text-anchor="end">C</text>
+    <!-- R -->
+    <line class="w" data-seg="load" x1="330" y1="60" x2="415" y2="60"/>
+    <line class="w" data-seg="load" x1="415" y1="60" x2="415" y2="110"/>
+    <line class="w" data-seg="load" x1="415" y1="150" x2="415" y2="200"/>
+    <rect class="part" x="405" y="110" width="20" height="40" rx="2"/>
+    <text class="lbl ink" x="397" y="134" text-anchor="end">R</text>
+    <text class="lbl ink" x="443" y="100">+</text><text class="lbl ink" x="443" y="134">v</text><text class="lbl ink" x="443" y="168">−</text>
+    <line class="w" data-seg="botL" x1="40" y1="200" x2="180" y2="200"/>
+    <line class="w" data-seg="botM" x1="180" y1="200" x2="330" y2="200"/>
+    <line class="w" data-seg="load" x1="330" y1="200" x2="415" y2="200"/>
+    <circle class="node" cx="180" cy="60" r="4"/><circle class="node" cx="330" cy="60" r="4"/><circle class="node" cx="180" cy="200" r="4"/><circle class="node" cx="330" cy="200" r="4"/>
+    <text class="lbl" x="235" y="232" text-anchor="middle" id="ckDBState"></text>
+  </svg>
+  <div class="btnrow" style="justify-content:center">
+    <div class="seg" role="group" aria-label="Diode buck state">
+      <button type="button" id="db1" aria-pressed="true">Q₁ on</button>
+      <button type="button" id="db2" aria-pressed="false">Q₁ off, D₁ on</button>
+      <button type="button" id="db3" aria-pressed="false">Both off, i<sub>L</sub> = 0</button>
+    </div>
+  </div>
+  <div class="legend" style="justify-content:center"><span><i style="background:var(--curr)"></i>path of i<sub>L</sub></span><span><i style="background:var(--fund)"></i>capacitor feeding the load</span></div>
+  <div class="readout" id="dbRead" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a check valve</span>
+<p>A diode is a one-way check valve in a water pipe. It opens by itself whenever water pushes forward and slams shut if the flow tries to reverse. Nobody operates it. An active switch is a tap a person controls, and it will pass flow either way once opened.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>In CCM, nothing changes.</b> The diode buck in CCM has the same waveforms and M = D as the ideal buck.</li>
+<li><b>The diode's weakness is direction.</b> It cannot carry a negative i<sub>L</sub>. That single fact is what creates DCM in the next section.</li>
+<li><b>The diode current</b> equals i<sub>L</sub> while Q<sub>1</sub> is off: it jumps up to the peak I<sub>L</sub> + Δi<sub>L</sub>/2 at DT<sub>s</sub> and ramps down to I<sub>L</sub> − Δi<sub>L</sub>/2 at T<sub>s</sub>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: the diode buck"></div>
+</section>
+
+<!-- 10 -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>Light loads: CCM, BCM and DCM</h3>
+<p>In CCM, i<sub>L</sub>(0) = I<sub>L</sub> − Δi<sub>L</sub>/2 and i<sub>L</sub>(DT<sub>s</sub>) = I<sub>L</sub> + Δi<sub>L</sub>/2. Now notice which parts depend on the load:</p>
+<div class="eq">
+  <span class="row"><i>I<sub>L</sub></i> = <i>V</i>/<i>R</i> <span class="note">load dependent</span></span>
+  <span class="row">Δ<i>i<sub>L</sub></i> = <span class="frac"><span><i>V</i>(<i>V<sub>g</sub></i> − <i>V</i>)</span><span><i>V<sub>g</sub>Lf<sub>s</sub></i></span></span> <span class="note">not load dependent</span></span>
+</div>
+<p>As the load lightens (R rises), I<sub>L</sub> falls but the ripple stays put. The bottom of the triangle, I<sub>L</sub> − Δi<sub>L</sub>/2, sinks toward zero:</p>
+<ul class="plain">
+<li><b>BCM (boundary conduction mode)</b>, I<sub>L</sub> = Δi<sub>L</sub>/2: i<sub>L</sub> just reaches zero at the end of the period, the instant Q<sub>1</sub> turns on again. The diode current also just reaches zero.</li>
+<li><b>DCM (discontinuous conduction mode)</b>, I<sub>L</sub> &lt; Δi<sub>L</sub>/2: i<sub>L</sub> hits zero early. The diode turns off. With Q<sub>1</sub> also off, nothing can drive i<sub>L</sub>, so it stays at zero for the rest of the period: a third interval, D<sub>3</sub>T<sub>s</sub> ≠ 0.</li>
+</ul>
+
+<div class="demo">
+  <div class="dtitle">Try it: lighten the load and watch the mode change</div>
+  <div class="dnote">Running example: V<sub>g</sub> = 48 V, L = 75 µH, f<sub>s</sub> = 100 kHz. D is held fixed, so in DCM you'll see V climb above D·V<sub>g</sub> (a real controller would lower D to hold 12 V).</div>
+  <canvas id="cvMode" height="360" aria-label="Q1 gate, inductor current and diode current"></canvas>
+  <div class="legend"><span><i style="background:var(--muted)"></i>Q<sub>1</sub> gate</span><span><i style="background:var(--fund)"></i>i<sub>L</sub></span><span><i style="background:var(--curr)"></i>i<sub>D</sub> (diode)</span></div>
+  <div class="controls">
+    <label for="mR">R (Ω) <input id="mR" type="range" min="0" max="1000" step="1" value="112"><output id="mROut">2.00</output></label>
+    <label for="mD">D <input id="mD" type="range" min="0.05" max="0.95" step="0.01" value="0.25"><output id="mDOut">0.25</output></label>
+  </div>
+  <div class="btnrow">
+    <button class="btn" type="button" data-mr="2">R = 2 Ω (heavy, CCM)</button>
+    <button class="btn" type="button" data-mr="20">R = 20 Ω (BCM)</button>
+    <button class="btn" type="button" data-mr="100">R = 100 Ω (light, DCM)</button>
+  </div>
+  <div class="readout" id="mRead" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a swing you can only push forward</span>
+<p>i<sub>L</sub> is a swing that must only ever move forward (the diode forbids backward). With a strong, steady rider (heavy load) it never slows to a stop between pushes: CCM. With a light rider it coasts to a stop before the next push and just hangs there: DCM. BCM is the exact moment it stops right as the next push arrives.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The condition is I<sub>L</sub> &lt; Δi<sub>L</sub>/2</b>, half the peak-to-peak ripple, not Δi<sub>L</sub>.</li>
+<li><b>In interval ③, v<sub>L</sub> = 0</b> because i<sub>L</sub> is stuck at zero (di<sub>L</sub>/dt = 0), not because any voltage is zero. The switch node floats up to v.</li>
+<li><b>In DCM, M ≠ D.</b> The CCM results no longer apply. §11 derives the new ratio.</li>
+<li><b>D + D<sub>2</sub> + D<sub>3</sub> = 1.</b> D<sub>2</sub>T<sub>s</sub> is the diode's on-time; D<sub>3</sub>T<sub>s</sub> is the dead time at zero current.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: CCM, BCM and DCM"></div>
+</section>
+
+<!-- 11 -->
+<section class="sec" id="s11">
+<h3><span class="num">11</span>Deriving the conversion ratio in DCM</h3>
+<p>The road has four steps: (1) three intervals, not two; (2) volt-second balance gives M in terms of D and an unknown D<sub>2</sub>; (3) a second expression for I<sub>L</sub> fixes D<sub>2</sub>; (4) combine to get M in known quantities (D, L, R, T<sub>s</sub>).</p>
+<div class="tbl"><table>
+<thead><tr><th>Interval</th><th>What's on</th><th>v<sub>L</sub> (SRA)</th><th>i<sub>C</sub></th></tr></thead>
+<tbody>
+<tr><td>① 0 ≤ t &lt; DT<sub>s</sub></td><td>Q<sub>1</sub></td><td>V<sub>g</sub> − V</td><td>i<sub>L</sub> − v/R</td></tr>
+<tr><td>② DT<sub>s</sub> ≤ t &lt; (D + D<sub>2</sub>)T<sub>s</sub></td><td>diode</td><td>−V</td><td>i<sub>L</sub> − v/R</td></tr>
+<tr><td>③ (D + D<sub>2</sub>)T<sub>s</sub> ≤ t &lt; T<sub>s</sub></td><td>both off</td><td>0 (i<sub>L</sub> = 0)</td><td>i<sub>L</sub> − v/R</td></tr>
+</tbody></table></div>
+
+<div class="demo stepper" id="stepper">
+  <div class="dtitle">Worked derivation (lecture), step by step</div>
+  <ol id="stepList">
+    <li><b>Volt-second balance over three intervals</b><span class="m">⟨v<sub>L</sub>⟩ = (1/T<sub>s</sub>)[(V<sub>g</sub> − V)DT<sub>s</sub> + (−V)D<sub>2</sub>T<sub>s</sub> + 0·D<sub>3</sub>T<sub>s</sub>] = (V<sub>g</sub> − V)D − VD<sub>2</sub> = 0</span><div class="why">Interval ③ contributes nothing because v<sub>L</sub> = 0 there.</div></li>
+    <li><b>First result, still with an unknown</b><span class="m">M = V/V<sub>g</sub> = D/(D + D<sub>2</sub>)</span><div class="why">Problem: volt-second and charge balance give two equations, but DCM has three unknowns: V, I<sub>L</sub> and D<sub>2</sub>. We need one more.</div></li>
+    <li><b>I<sub>L</sub>, first way: charge balance</b><span class="m">⟨i<sub>C</sub>⟩ = 0 ⇒ I<sub>L</sub> = V/R</span><div class="why">Same as always for the buck: the capacitor passes no DC.</div></li>
+    <li><b>I<sub>L</sub>, second way: the triangle's area</b><span class="m">⟨i<sub>L</sub>⟩ = (1/T<sub>s</sub>)·½(D + D<sub>2</sub>)T<sub>s</sub>·Δi<sub>L</sub> = ½(D + D<sub>2</sub>)Δi<sub>L</sub> &nbsp;(1)</span><div class="why">i<sub>L</sub> is a triangle of height Δi<sub>L</sub> on a base (D + D<sub>2</sub>)T<sub>s</sub>, then zero. This is where D<sub>2</sub> enters.</div></li>
+    <li><b>The peak comes from interval ①</b><span class="m">Δi<sub>L</sub> = (1/L)∫<sub>0</sub><sup>DT<sub>s</sub></sup> v<sub>L</sub> dt = (V<sub>g</sub> − V)DT<sub>s</sub>/L &nbsp;(2)</span><div class="why">i<sub>L</sub> starts from zero, so the rise over ① is also the peak value.</div></li>
+    <li><b>Combine (2) into (1)</b><span class="m">I<sub>L</sub> = (V<sub>g</sub> − V)(DT<sub>s</sub>/2L)(D + D<sub>2</sub>)</span><div class="why">Now we have I<sub>L</sub> two ways, one of them containing D<sub>2</sub>.</div></li>
+    <li><b>Equate and solve for D + D<sub>2</sub></b>, with K ≡ 2L/(RT<sub>s</sub>)<span class="m">V/R = (V<sub>g</sub> − V)(DT<sub>s</sub>/2L)(D + D<sub>2</sub>) ⇒ D + D<sub>2</sub> = (K/D)·V/(V<sub>g</sub> − V) = (K/D)·M/(1 − M)</span><div class="why">Divide through by V<sub>g</sub> to turn V/(V<sub>g</sub> − V) into M/(1 − M).</div></li>
+    <li><b>Substitute into M = D/(D + D<sub>2</sub>)</b><span class="m">M = (D²/K)·(1 − M)/M ⇒ KM² + D²M − D² = 0</span><div class="why">D<sub>2</sub> is gone. Only known quantities remain.</div></li>
+    <li><b>Take the positive root</b><span class="m">M = 2 / [1 + √(1 + 4K/D²)] = 2 / [1 + √(1 + 8L/(D²RT<sub>s</sub>))]</span><div class="why">The negative root would give a negative output voltage, which is impossible here.</div></li>
+  </ol>
+  <div class="btnrow">
+    <button class="btn" type="button" id="stPrev">← Back</button>
+    <button class="btn" type="button" id="stNext">Next step →</button>
+    <span class="readout" id="stPos" style="margin:0; align-self:center"></span>
+  </div>
+</div>
+
+<div class="eq">
+  <span class="row"><i>M</i> = <span class="frac"><span>2</span><span>1 + √(1 + 4<i>K</i>/<i>D</i><sup>2</sup>)</span></span>, &nbsp; <i>K</i> = <span class="frac"><span>2<i>L</i></span><span><i>RT<sub>s</sub></i></span></span> <span class="note">valid only in DCM (K &lt; 1 − D)</span></span>
+  <span class="row"><i>D</i><sub>2</sub> = <i>D</i>/<i>M</i> − <i>D</i>, &nbsp; <i>D</i><sub>3</sub> = 1 − <i>D</i> − <i>D</i><sub>2</sub></span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Calculator: DCM conversion ratio with a two-way check on I<sub>L</sub></div>
+  <div class="dnote">Loaded with the running example at the light load R = 100 Ω (my numbers).</div>
+  <div class="controls">
+    <label for="dxVg">V<sub>g</sub> (V) <input id="dxVg" type="number" value="48" min="0.1" step="1"></label>
+    <label for="dxD">D <input id="dxD" type="number" value="0.25" min="0.01" max="0.99" step="0.05"></label>
+    <label for="dxL">L (µH) <input id="dxL" type="number" value="75" min="0.01" step="5"></label>
+    <label for="dxR">R (Ω) <input id="dxR" type="number" value="100" min="0.01" step="10"></label>
+    <label for="dxFs">f<sub>s</sub> (kHz) <input id="dxFs" type="number" value="100" min="0.1" step="10"></label>
+  </div>
+  <div class="steps" id="dxSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a detective one clue short</span>
+<p>Two clues (volt-second and charge balance) can't pin down three suspects (V, I<sub>L</sub>, D<sub>2</sub>). The third clue is the <i>shape</i> of i<sub>L</sub>: a triangle whose area you can compute. Once you have I<sub>L</sub> two ways, set them equal and the extra suspect drops out.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Check the mode first.</b> If K ≥ 1 − D the converter is in CCM and M = D. Plugging a CCM case into the DCM formula gives a wrong value, smaller than D.</li>
+<li><b>In DCM, I<sub>L</sub> is not the midpoint of the ramp.</b> It's the triangle's area divided by T<sub>s</sub>: ½(D + D<sub>2</sub>)Δi<sub>L</sub>.</li>
+<li><b>K uses T<sub>s</sub>.</b> K = 2L/(RT<sub>s</sub>) = 2Lf<sub>s</sub>/R. It's dimensionless.</li>
+<li><b>Algebra shortcut.</b> V/(V<sub>g</sub> − V) = M/(1 − M). Dividing top and bottom by V<sub>g</sub> is the step people miss.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q11" data-title="Check: M in DCM"></div>
+</section>
+
+<!-- 12 -->
+<section class="sec" id="s12">
+<h3><span class="num">12</span>The M(D, K) curves and where the boundary lies</h3>
+<p><b>K compares the inductor to the load.</b> Small K (a light load or a small L) is deep DCM: M runs well above D, and V → V<sub>g</sub> long before D → 1. Each curve rejoins the CCM line M = D once the converter is back in CCM. For K ≥ 1 it never leaves it. Why? Evaluate the DCM condition I<sub>L</sub> &lt; Δi<sub>L</sub>/2 using CCM values (V = DV<sub>g</sub>):</p>
+
+<details class="work" open><summary>Worked derivation (lecture): the CCM/DCM boundary</summary><div class="body">
+<ol class="deriv">
+<li>In CCM:<span class="m">I<sub>L</sub> = DV<sub>g</sub>/R, &nbsp; Δi<sub>L</sub>/2 = (V<sub>g</sub> − V)DT<sub>s</sub>/(2L) = V<sub>g</sub>D(1 − D)T<sub>s</sub>/(2L)</span></li>
+<li>DCM when I<sub>L</sub> &lt; Δi<sub>L</sub>/2:<span class="m">DV<sub>g</sub>/R &lt; V<sub>g</sub>D(1 − D)T<sub>s</sub>/(2L)</span></li>
+<li>Cancel DV<sub>g</sub> and rearrange:<span class="m">K = 2L/(RT<sub>s</sub>) &lt; 1 − D ≡ K<sub>crit</sub>(D)</span></li>
+</ol>
+</div></details>
+
+<div class="eq">
+  <span class="row"><b>DCM</b> if <i>K</i> &lt; 1 − <i>D</i>; &nbsp; <b>CCM</b> if <i>K</i> &gt; 1 − <i>D</i> <span class="note">K<sub>crit</sub> ≤ 1 for every D</span></span>
+</div>
+<ul class="plain">
+<li>The boundary moves with D, and a buck enters DCM at <b>small D first</b> (K<sub>crit</sub> = 1 − D is biggest there).</li>
+<li>K<sub>crit</sub> ≤ 1 for every D. So K ≥ 1 (a large L, a heavy load) keeps I<sub>L</sub> ≥ Δi<sub>L</sub>/2 at any duty ratio: never DCM.</li>
+</ul>
+
+<div class="demo">
+  <div class="dtitle">Try it: the lecture's M(D, K) curves</div>
+  <div class="dnote">Grey curves are the lecture's K = 0.01, 0.1, 0.5 and the CCM line (K ≥ 1). The blue curve is your K. Right: the D-K plane, shaded where the buck is in DCM.</div>
+  <canvas id="cvMK" height="330" aria-label="Conversion ratio versus duty ratio for several K, and the CCM/DCM boundary"></canvas>
+  <div class="controls">
+    <label for="kK">K <input id="kK" type="range" min="0" max="1000" step="1" value="500"><output id="kKOut">0.100</output></label>
+    <label for="kD">D <input id="kD" type="range" min="0.01" max="0.99" step="0.01" value="0.25"><output id="kDOut">0.25</output></label>
+  </div>
+  <div class="btnrow">
+    <button class="btn" type="button" data-kk="0.01">K = 0.01</button>
+    <button class="btn" type="button" data-kk="0.1">K = 0.1</button>
+    <button class="btn" type="button" data-kk="0.5">K = 0.5</button>
+    <button class="btn" type="button" data-kk="1">K = 1</button>
+    <button class="btn" type="button" data-kk="0.15">K = 0.15 (running example, R = 100 Ω)</button>
+  </div>
+  <div class="readout" id="kRead" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · flywheel size versus demand</span>
+<p>K is the ratio of flywheel size (L) to how little the load asks for (R). A big flywheel, or a load that asks for a lot, keeps the current spinning through every period. A small flywheel with a light load coasts to a stop between kicks.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Where a curve rejoins M = D:</b> at D = 1 − K. For K = 0.1 that's D = 0.9; for K = 0.5, D = 0.5.</li>
+<li><b>Small D enters DCM first.</b> Δi<sub>L</sub>/2 ∝ D(1 − D) while I<sub>L</sub> ∝ D, so their ratio ∝ (1 − D): biggest at small D.</li>
+<li><b>Convention check.</b> Here Δi<sub>L</sub> is peak-to-peak everywhere. Erickson's Δi is half of it, so his DCM condition reads I &lt; Δi.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q12" data-title="Check: the CCM/DCM boundary"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across the whole lecture, mostly calculations. Grab paper and a calculator. Each explanation tells you which section to review.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Balance principles</h5><div>⟨v<sub>L</sub>⟩<sub>T<sub>s</sub></sub> = 0 (volt-second)<br>⟨i<sub>C</sub>⟩<sub>T<sub>s</sub></sub> = 0 (charge)<br>D′ = 1 − D, T<sub>s</sub> = 1/f<sub>s</sub></div></div>
+  <div class="card"><h5>Buck (CCM)</h5><div>M = D, &nbsp; I<sub>L</sub> = V/R<br>Δi<sub>L</sub> = DT<sub>s</sub>(V<sub>g</sub> − V)/L = V(V<sub>g</sub> − V)/(V<sub>g</sub>Lf<sub>s</sub>)<br>peak = I<sub>L</sub> + Δi<sub>L</sub>/2</div></div>
+  <div class="card"><h5>Buck L and C</h5><div>L &gt; R<sub>min</sub>(V<sub>g</sub> − V)/[V<sub>g</sub>f<sub>s</sub>(X/100%)]<br>Δv<sub>C</sub> = Δi<sub>L</sub>/(8Cf<sub>s</sub>)<br>C &gt; (V<sub>g</sub> − V)/[8V<sub>g</sub>Lf<sub>s</sub><sup>2</sup>(X/100%)]</div></div>
+  <div class="card"><h5>Boost states</h5><div>①: v<sub>L</sub> = V<sub>g</sub>, i<sub>C</sub> = −V/R<br>②: v<sub>L</sub> = V<sub>g</sub> − V, i<sub>C</sub> = I<sub>L</sub> − V/R</div></div>
+  <div class="card"><h5>Boost (CCM)</h5><div>M = 1/(1 − D), &nbsp; D = 1 − V<sub>g</sub>/V<br>I<sub>L</sub> = V/(RD′) = V<sup>2</sup>/(RV<sub>g</sub>)<br>Δi<sub>L</sub> = V<sub>g</sub>DT<sub>s</sub>/L, &nbsp; Δv<sub>C</sub> = VDT<sub>s</sub>/(RC)</div></div>
+  <div class="card"><h5>Boost L and C</h5><div>L &gt; V<sub>g</sub>(1 − V<sub>g</sub>/V)/[f<sub>s</sub>(X/100%)I<sub>L,max</sub>]<br>I<sub>L,max</sub> = V/(R<sub>min</sub>D′)<br>C &gt; (V − V<sub>g</sub>)/[Rf<sub>s</sub>(X/100%)V]</div></div>
+  <div class="card"><h5>Buck ripple geometry</h5><div>i<sub>C</sub> = i<sub>L</sub> − I<sub>L</sub> (SRA on v only)<br>t<sub>1</sub> = DT<sub>s</sub>/2, &nbsp; t<sub>2</sub> = DT<sub>s</sub> + D′T<sub>s</sub>/2<br>ΔQ = Δi<sub>L</sub>T<sub>s</sub>/8</div></div>
+  <div class="card"><h5>Modes (diode buck)</h5><div>CCM: I<sub>L</sub> &gt; Δi<sub>L</sub>/2<br>BCM: I<sub>L</sub> = Δi<sub>L</sub>/2<br>DCM: I<sub>L</sub> &lt; Δi<sub>L</sub>/2 ⇔ K &lt; 1 − D</div></div>
+  <div class="card"><h5>DCM (buck)</h5><div>K = 2L/(RT<sub>s</sub>), &nbsp; K<sub>crit</sub> = 1 − D<br>M = D/(D + D<sub>2</sub>) = 2/[1 + √(1 + 4K/D<sup>2</sup>)]<br>I<sub>L</sub> = ½(D + D<sub>2</sub>)Δi<sub>L</sub>, &nbsp; D<sub>3</sub> = 1 − D − D<sub>2</sub></div></div>
+</div>
+</section>
+
+<footer>Built from the ENEL 585 Lecture 3 notes, "Buck II &amp; Boost Converter" (Dr. Philippe Gray, September 8, 2026). Reading: Kassakian Ch. 5 (pp. 76 to 115); Erickson §2.2, §2.3, §2.5, §4.1 and §5.1 to §5.3; Mohan §7-3 and §7-4. The running-example numbers are illustrative and not from the lecture.</footer>
+</main>
+</div>
+<script>
+(function(){
+"use strict";
+/* ---------------- QUIZ DATA ----------------
+   The first option of every question is the correct one; options are shuffled
+   (deterministically) when displayed. */
+const QUIZ = {
+q1:[
+ {q:"A buck converter has V_g = 24 V and D = 0.4. What is V in steady state?",
+  o:["9.6 V","14.4 V","60 V","24 V"],
+  e:"Volt-second balance gives V = DV_g = 0.4 × 24 = 9.6 V. (14.4 V is D′V_g; 60 V is V_g/D.)"},
+ {q:"Why must ⟨v_L⟩ be zero over a switching period in steady state?",
+  o:["Because i_L ends each period where it started, and the change in i_L is (1/L)∫v_L dt","Because the inductor has no resistance","Because the capacitor holds v constant","Because the switch spends equal time in each position"],
+  e:"v_L = L di_L/dt, so the change in i_L over a period is (1/L)∫v_L dt. Steady state means that change is zero, so the integral (the volt-seconds) must be zero. It has nothing to do with D = 0.5."},
+ {q:"A buck gives V = 12 V into R = 4 Ω. What does charge balance give for I_L?",
+  o:["3 A","12 A","0.33 A","48 A"],
+  e:"⟨i_C⟩ = 0 means the capacitor passes no DC, so all of I_L goes to the load: I_L = V/R = 12/4 = 3 A."},
+ {q:"Running-example buck: V_g = 48 V, V = 12 V, D = 0.25, T_s = 10 µs, L = 75 µH, R = 2 Ω. What is the peak inductor current?",
+  o:["6.6 A","7.2 A","6.0 A","5.4 A"],
+  e:"Δi_L = DT_s(V_g − V)/L = (2.5 µs)(36 V)/(75 µH) = 1.2 A, and I_L = V/R = 6 A. Peak = I_L + Δi_L/2 = 6.6 A. (7.2 A adds the whole Δi_L; 5.4 A is the minimum.)"}
+],
+q2:[
+ {q:"V_g = 48 V, V = 12 V, f_s = 100 kHz, R_min = 2 Ω, and you allow X = 40%. What is the minimum L?",
+  o:["37.5 µH","75 µH","150 µH","18.75 µH"],
+  e:"L > R_min(V_g − V)/(V_g f_s X) = 2 × 36/(48 × 100 000 × 0.40) = 72/1 920 000 = 37.5 µH. Allowing twice the ripple (40% instead of 20%) halves the inductor."},
+ {q:"You double f_s and keep everything else the same. The minimum L…",
+  o:["halves","doubles","stays the same","drops to a quarter"],
+  e:"f_s is in the denominator. Each ramp now lasts half as long, so half the inductance gives the same Δi_L."},
+ {q:"Why does the formula use R_min rather than R_max?",
+  o:["The spec is a percentage of I_L,max = V/R_min; the ripple itself doesn't depend on R","R_min gives the biggest ripple","R_max would push the converter into DCM","R_min gives the smallest L, which is cheapest"],
+  e:"Δi_L = DT_s(V_g − V)/L has no R in it. R only enters through the spec: X% of the largest average current, which flows at the heaviest load (smallest R)."},
+ {q:"V_g = 24 V, V = 5 V, f_s = 200 kHz, R_min = 1 Ω, X = 20%. What is the minimum L?",
+  o:["19.8 µH","0.198 µH","475 µH","5.21 µH"],
+  e:"L > 1 × (24 − 5)/(24 × 200 000 × 0.20) = 19/960 000 = 19.8 µH. 0.198 µH comes from plugging in X = 20 instead of 0.20; 475 µH forgets the V_g in the denominator; 5.21 µH uses V instead of V_g − V."}
+],
+q3:[
+ {q:"Boost with V_g = 12 V, V = 48 V, R = 24 Ω, in state ① (Q₁ on). Using the SRA, what are v_L and i_C?",
+  o:["v_L = 12 V, i_C = −2 A","v_L = −36 V, i_C = 6 A","v_L = 12 V, i_C = 6 A","v_L = 48 V, i_C = −2 A"],
+  e:"Q₁ ties the inductor's right end to ground, so v_L = V_g = 12 V. Q₂ is off, so the capacitor alone feeds the load: i_C = −V/R = −48/24 = −2 A."},
+ {q:"Same boost in state ② (Q₂ on), with I_L = 8 A. What are v_L and i_C?",
+  o:["v_L = −36 V, i_C = 6 A","v_L = 36 V, i_C = 6 A","v_L = −36 V, i_C = 8 A","v_L = 12 V, i_C = −2 A"],
+  e:"v_L = V_g − V = 12 − 48 = −36 V. i_C = I_L − V/R = 8 − 2 = 6 A. (8 A forgets that the load takes 2 A.)"},
+ {q:"In state ②, why does i_L ramp down?",
+  o:["Because V > V_g, so v_L = V_g − V is negative","Because Q₁ is off","Because the capacitor discharges","Because the load current rises"],
+  e:"di_L/dt = v_L/L, and v_L = V_g − V < 0 whenever the output is above the input. Q₁ being off is why the circuit changed, but the sign of v_L is why the current falls."},
+ {q:"In the boost, which current is always equal to i_L?",
+  o:["The current drawn from the source","The load current","The capacitor current","The current through Q₂"],
+  e:"The inductor is in series with the source, so the input current is i_L in both states. Q₂ only carries i_L during state ②."}
+],
+q4:[
+ {q:"An ideal boost has V_g = 12 V and D = 0.6. What is V?",
+  o:["30 V","20 V","7.2 V","4.8 V"],
+  e:"V = V_g/D′ = 12/0.4 = 30 V. (20 V is V_g/D; 7.2 V is DV_g, the buck answer.)"},
+ {q:"You need 48 V from 12 V with a boost. What D?",
+  o:["0.75","0.25","0.80","4"],
+  e:"M = 48/12 = 4 = 1/(1 − D), so 1 − D = 0.25 and D = 0.75. (0.25 is D′, not D.)"},
+ {q:"Why does a real boost's ratio fall away from 1/(1 − D) as D → 1?",
+  o:["I_L = V/(RD′) becomes huge, so resistive losses in real parts overwhelm the gain","The switch can't physically stay on that long","The capacitor can't hold that voltage","Volt-second balance stops applying"],
+  e:"As D′ → 0 the inductor must carry I_o/D′ (§5). Current, and I²R loss in real parts, grows without limit. The ideal model has no loss, so it predicts infinity; a real converter peaks and then drops."},
+ {q:"Put V_g = 24 V and D = 0.5 into a buck and into a boost. What are the outputs?",
+  o:["Buck 12 V, boost 48 V","Buck 12 V, boost 36 V","Both 12 V","Buck 48 V, boost 12 V"],
+  e:"Buck: DV_g = 12 V. Boost: V_g/(1 − D) = 24/0.5 = 48 V. (36 V is the tempting linear guess V_g(1 + D), which is wrong.)"}
+],
+q5:[
+ {q:"Boost: V_g = 12 V, V = 48 V, R = 24 Ω. What is I_L?",
+  o:["8 A","2 A","0.5 A","6 A"],
+  e:"I_L = V/(RD′) with D′ = V_g/V = 0.25: 48/(24 × 0.25) = 8 A. Or I_L = V²/(RV_g) = 2304/288 = 8 A. 2 A is the load current."},
+ {q:"A boost runs at D = 0.8 and delivers I_o = 1 A. What is I_L?",
+  o:["5 A","1.25 A","0.2 A","0.8 A"],
+  e:"I_L = I_o/D′ = 1/0.2 = 5 A. (1.25 A divides by D instead of D′.)"},
+ {q:"An ideal boost has V_g = 10 V, V = 40 V, R = 20 Ω. How much power does the source deliver?",
+  o:["80 W","20 W","320 W","40 W"],
+  e:"I_L = V²/(RV_g) = 1600/200 = 8 A, so P_in = V_g I_L = 10 × 8 = 80 W. That equals V²/R = 1600/20 = 80 W. The charge-balance result is power balance in disguise."},
+ {q:"Why is I_L bigger than the load current in a boost?",
+  o:["The inductor only feeds the output during D′T_s, so it must carry I_o/D′ to average out to I_o","The inductor stores extra charge","The capacitor draws DC current","Q₁ adds its own current"],
+  e:"Charge balance: the capacitor passes no DC, so the output gets I_L only for the fraction D′ of each period. I_L·D′ = I_o."}
+],
+q6:[
+ {q:"Boost: V_g = 12 V, V = 36 V, f_s = 50 kHz, L = 100 µH. What is Δi_L?",
+  o:["1.6 A","0.8 A","4.8 A","3.2 A"],
+  e:"D = 1 − V_g/V = 2/3 and T_s = 20 µs. Δi_L = V_gDT_s/L = 12 × (2/3) × 20 µs/100 µH = 1.6 A. (0.8 A uses D′ instead of D; 4.8 A uses V instead of V_g.)"},
+ {q:"Boost: V_g = 12 V, V = 48 V, R = 24 Ω, f_s = 100 kHz. Minimum C for Δv_C ≤ 0.5% of V?",
+  o:["62.5 µF","31.25 µF","15.6 µF","125 µF"],
+  e:"C > (V − V_g)/(R f_s X V) = 36/(24 × 100 000 × 0.005 × 48) = 36/576 000 = 62.5 µF. Halving the allowed ripple doubles C (31.25 µF is the 1% answer)."},
+ {q:"Boost: V_g = 24 V, V = 48 V, f_s = 100 kHz, R_min = 12 Ω, X = 20%. Minimum L?",
+  o:["75 µH","150 µH","37.5 µH","300 µH"],
+  e:"D = 1 − 24/48 = 0.5, so I_L,max = V/(R_min D′) = 48/(12 × 0.5) = 8 A. L > V_g D/(f_s X I_L,max) = 24 × 0.5/(100 000 × 0.20 × 8) = 12/160 000 = 75 µH. (150 µH uses the load current 4 A instead of I_L,max.)"},
+ {q:"Why does the boost's capacitor calculation only need state ①?",
+  o:["In ① the capacitor alone supplies a constant V/R, so v falls in a straight line by exactly Δv_C","State ② is always shorter","i_C is zero in state ②","The SRA fails in state ②"],
+  e:"A constant discharge current gives a straight-line drop over DT_s. Charge balance guarantees v climbs back by the same amount in ②, so that one ramp is the full peak-to-peak ripple."}
+],
+q7:[
+ {q:"For the buck, apply the SRA to both i_L and v in i_C = i_L − v/R. What do you get?",
+  o:["i_C = 0, so no ripple at all","i_C = Δi_L/2","i_C = V/R","i_C = −V/R during DT_s"],
+  e:"i_C = I_L − V/R, and charge balance says I_L = V/R for the buck. So the prediction is i_C = 0 and a perfectly flat v. That's why this method can't size the buck's C."},
+ {q:"A buck is designed for Δi_L = 30% of I_L and Δv = 1% of V. How many times more ripple does i_L put into i_C than v/R does?",
+  o:["About 30","About 3","About 0.3","The same"],
+  e:"Δv/R = 0.01V/R = 0.01I_L, versus 0.30I_L from the inductor. The ratio is 30. So dropping v's ripple is safe; dropping i_L's ripple throws away almost everything."},
+ {q:"Running example (Δi_L = 1.2 A). With the SRA on v only, i_C = i_L − I_L swings between…",
+  o:["−0.6 A and +0.6 A","0 A and 1.2 A","−1.2 A and +1.2 A","5.4 A and 6.6 A"],
+  e:"Subtracting I_L centres the triangle on zero, and it spans Δi_L peak-to-peak: ±Δi_L/2 = ±0.6 A. (5.4 A to 6.6 A is i_L itself.)"},
+ {q:"The SRA on i_C worked for the boost's capacitor. Why?",
+  o:["The boost's i_C jumps between large levels (−V/R and I_L − V/R), so the small i_L ripple barely changes it","The boost has no inductor ripple","The boost's capacitor is larger","The boost uses a diode"],
+  e:"What matters is whether the ripple is small compared with the quantity you're using. For the boost, i_C is a big square wave and i_L's ripple only tilts its top. For the buck, i_C has no large part at all."}
+],
+q8:[
+ {q:"Δi_L = 1.2 A, C = 12.5 µF, f_s = 100 kHz. What is the peak-to-peak output ripple?",
+  o:["0.12 V","0.96 V","0.48 V","0.06 V"],
+  e:"Δv_C = Δi_L/(8Cf_s) = 1.2/(8 × 12.5 µF × 100 kHz) = 1.2/10 = 0.12 V, which is 1% of 12 V. (0.96 V forgets the 8; 0.48 V uses Δi_L/(2Cf_s).)"},
+ {q:"D = 0.25, T_s = 10 µs. When does i_C cross zero going up (t₁) and going down (t₂)?",
+  o:["t₁ = 1.25 µs, t₂ = 6.25 µs","t₁ = 0 µs, t₂ = 2.5 µs","t₁ = 2.5 µs, t₂ = 10 µs","t₁ = 1.25 µs, t₂ = 5 µs"],
+  e:"t₁ = DT_s/2 = 1.25 µs. t₂ = DT_s + D′T_s/2 = 2.5 + 3.75 = 6.25 µs. The base is 5 µs = T_s/2, as promised for any D. (0 and 2.5 µs are the corners of i_L, not the zero crossings of i_C.)"},
+ {q:"Keep L and C fixed and double f_s. What happens to Δv_C?",
+  o:["It drops to a quarter","It halves","It doubles","No change"],
+  e:"Δi_L ∝ 1/f_s (halves), and Δv_C = Δi_L/(8Cf_s) divides by f_s again. Overall 1/f_s²: a quarter. That's the f_s² in the C formula."},
+ {q:"Buck: V_g = 24 V, V = 12 V, L = 20 µH, f_s = 200 kHz. Minimum C for Δv_C ≤ 0.5% of V?",
+  o:["15.6 µF","7.8 µF","125 µF","1.95 µF"],
+  e:"C > (V_g − V)/(8V_gLf_s²X) = 12/(8 × 24 × 20 µH × (200 kHz)² × 0.005) = 12/768 000 = 15.6 µF. (125 µF forgets the 8; 7.8 µF uses 1% instead of 0.5%.)"},
+ {q:"When is the buck's output voltage at its maximum?",
+  o:["At t₂, where i_C crosses zero going down","At DT_s, where i_L peaks","At t₁, where i_C crosses zero going up","At the start of each period"],
+  e:"v keeps rising as long as i_C > 0 and stops the instant i_C turns negative, at t₂. At DT_s, i_C is at its largest, so v is rising fastest there, not peaking. t₁ is the minimum."}
+],
+q9:[
+ {q:"In the diode buck, what turns D₁ on?",
+  o:["When Q₁ turns off, the inductor keeps i_L flowing and pulls the switch node down until D₁ is forward biased","A gate signal from the controller","The capacitor voltage","The load resistor"],
+  e:"A diode has no gate. The inductor refuses a sudden change in current, so when Q₁ opens it drives the switch node negative just enough to forward bias D₁."},
+ {q:"In CCM, what is the diode buck's conversion ratio?",
+  o:["M = D","M = 1/(1 − D)","M = D/(D + D₂)","It depends on R"],
+  e:"In CCM the diode does exactly what switch position 2 did, so the circuit and its equations are identical: M = D. (D/(D + D₂) is the DCM result.)"},
+ {q:"Running example at R = 2 Ω (I_L = 6 A, Δi_L = 1.2 A). What current does D₁ carry just after Q₁ turns off?",
+  o:["6.6 A","6.0 A","5.4 A","0 A"],
+  e:"At DT_s, i_L is at its peak I_L + Δi_L/2 = 6.6 A, and all of it moves from Q₁ into D₁. It then ramps down to 5.4 A at T_s."},
+ {q:"What can the diode NOT do that a second active switch (synchronous buck) can?",
+  o:["Carry i_L in the negative direction","Block reverse voltage","Carry current while Q₁ is off","Switch at 100 kHz"],
+  e:"A diode conducts in one direction only. That single limitation is what creates DCM at light load."}
+],
+q10:[
+ {q:"Running-example buck (V_g = 48 V, V = 12 V, L = 75 µH, f_s = 100 kHz, so Δi_L = 1.2 A). At what load resistance is it in BCM?",
+  o:["20 Ω","10 Ω","40 Ω","2 Ω"],
+  e:"BCM when I_L = Δi_L/2 = 0.6 A. With I_L = V/R: R = 12/0.6 = 20 Ω. (10 Ω uses I_L = Δi_L.)"},
+ {q:"Same buck with R = 50 Ω. Which mode is it in?",
+  o:["DCM","CCM","BCM","Can't tell without C"],
+  e:"In CCM it would need I_L = 12/50 = 0.24 A, less than Δi_L/2 = 0.6 A. The bottom of the triangle would go negative, which the diode forbids. So it's in DCM."},
+ {q:"The buck is in CCM. You raise R from 2 Ω to 10 Ω. What happens to Δi_L?",
+  o:["Nothing","It falls to a fifth","It grows five times","It halves"],
+  e:"Δi_L = V(V_g − V)/(V_gLf_s) has no R in it. Only I_L = V/R changes."},
+ {q:"During interval ③ in DCM, why is v_L = 0?",
+  o:["Because i_L is stuck at zero, so di_L/dt = 0 and v_L = L di_L/dt = 0","Because v = 0","Because both switches short the inductor","Because D₃ = 0"],
+  e:"Nothing can drive i_L in interval ③ (Q₁ off, diode off), so it stays at zero. A constant current means zero inductor voltage. The output v is still about V."}
+],
+q11:[
+ {q:"DCM buck with V_g = 48 V, D = 0.25, D₂ = 0.5. What is V?",
+  o:["16 V","12 V","36 V","24 V"],
+  e:"M = D/(D + D₂) = 0.25/0.75 = 1/3, so V = 16 V. (12 V is the CCM answer DV_g.)"},
+ {q:"L = 75 µH, R = 100 Ω, f_s = 100 kHz. What is K?",
+  o:["0.15","0.075","1.5","6.67"],
+  e:"K = 2L/(RT_s) = 2 × 75 µH/(100 Ω × 10 µs) = 150/1000 = 0.15. (0.075 forgets the 2; 6.67 is 1/K.)"},
+ {q:"D = 0.5 and K = 0.1. What is M?",
+  o:["0.766","0.5","0.9","0.618"],
+  e:"Check the mode first: K_crit = 1 − D = 0.5 > 0.1, so DCM. 4K/D² = 0.4/0.25 = 1.6. M = 2/(1 + √2.6) = 2/2.612 = 0.766. (0.5 is the CCM answer.)"},
+ {q:"Why do we need a third equation in DCM?",
+  o:["DCM adds a third unknown, D₂, and the two balance rules give only two equations","The SRA fails in DCM","The capacitor is nonlinear","Because v_L = 0 in interval ③"],
+  e:"Unknowns: V, I_L and D₂. Volt-second and charge balance give two equations. The triangle shape of i_L gives the third."},
+ {q:"In DCM, D = 0.25, D₂ = 0.3 and the peak inductor current is 1 A. What is I_L?",
+  o:["0.275 A","0.5 A","0.55 A","0.125 A"],
+  e:"i_L is a triangle of height 1 A on a base (D + D₂)T_s, then zero. Its average is ½(D + D₂)Δi_L = ½(0.55)(1) = 0.275 A. (0.5 A is the CCM-style midpoint, which doesn't apply here.)"}
+],
+q12:[
+ {q:"K = 0.3. For which duty ratios is the buck in CCM?",
+  o:["D > 0.7","D < 0.7","D > 0.3","All D"],
+  e:"CCM when K > K_crit = 1 − D, i.e. 0.3 > 1 − D, so D > 0.7. The K = 0.3 curve rejoins M = D at D = 0.7."},
+ {q:"L = 50 µH, f_s = 200 kHz, R = 10 Ω. Can this buck ever enter DCM?",
+  o:["No: K = 2, and K ≥ 1 never enters DCM","Yes, at small D","Yes, at large D","Only at D = 0.5"],
+  e:"K = 2L/(RT_s) = 2 × 50 µH/(10 Ω × 5 µs) = 2. K_crit = 1 − D ≤ 1 for every D, so K ≥ 1 keeps it in CCM at any duty ratio."},
+ {q:"Why does a buck enter DCM at small D first?",
+  o:["K_crit = 1 − D is largest at small D, because (Δi_L/2)/I_L goes as (1 − D)","Because V is small","Because the diode conducts longer","Because K grows with D"],
+  e:"Divide the two sides of I_L < Δi_L/2: the ratio of ripple to current goes as (1 − D). At small D the ripple is large compared with I_L."},
+ {q:"K = 0.01 (a very light load) and D = 0.2. What is M?",
+  o:["0.83","0.2","0.5","1.0"],
+  e:"K_crit = 0.8 ≫ 0.01: deep DCM. 4K/D² = 0.04/0.04 = 1, so M = 2/(1 + √2) = 0.83. At D = 0.2 the output is already 83% of V_g: V → V_g long before D → 1."}
+],
+qf:[
+ {q:"Buck: V_g = 60 V, D = 0.3, R = 6 Ω. What is I_L?",
+  o:["3 A","10 A","7 A","18 A"],
+  e:"V = DV_g = 18 V, then charge balance gives I_L = V/R = 18/6 = 3 A. (10 A uses V_g instead of V; 18 is V, not a current.) Review §1."},
+ {q:"Buck: V_g = 36 V, V = 12 V, f_s = 150 kHz, R_min = 3 Ω, X = 30%. What is the minimum L?",
+  o:["44.4 µH","13.3 µH","22.2 µH","133 µH"],
+  e:"L > R_min(V_g − V)/(V_g f_s X) = 3 × 24/(36 × 150 000 × 0.30) = 72/1 620 000 = 44.4 µH. (13.3 µH forgets to divide by X; 22.2 µH is what X = 60% would give.) Review §2."},
+ {q:"Boost: V_g = 15 V, V = 60 V. What is v_L in state ② (Q₂ on)?",
+  o:["−45 V","15 V","−60 V","45 V"],
+  e:"v_L = V_g − V = 15 − 60 = −45 V, so i_L ramps down. (15 V is state ①.) Review §3."},
+ {q:"You want 12 V from 5 V with an ideal boost. What D?",
+  o:["0.583","0.417","0.706","2.4"],
+  e:"D = 1 − V_g/V = 1 − 5/12 = 0.583. (0.417 is D′ = V_g/V; 2.4 is M.) Review §4."},
+ {q:"Boost: V_g = 24 V, V = 60 V, R = 30 Ω. What is I_L?",
+  o:["5 A","2 A","0.8 A","12.5 A"],
+  e:"I_L = V²/(RV_g) = 3600/720 = 5 A. Check: I_o = 2 A and D′ = 0.4, so I_o/D′ = 5 A. (2 A is the load current; 12.5 A divides by D′ twice.) Review §5."},
+ {q:"Same boost (V_g = 24 V, V = 60 V, R_min = 30 Ω), f_s = 100 kHz, X = 20%. What is the minimum L?",
+  o:["144 µH","360 µH","57.6 µH","96 µH"],
+  e:"D = 0.6, I_L,max = 5 A. L > V_g D/(f_s X I_L,max) = 24 × 0.6/(100 000 × 0.20 × 5) = 14.4/100 000 = 144 µH. (360 µH uses the load current 2 A instead of I_L,max.) Review §6."},
+ {q:"Same boost, Δv_C ≤ 1% of V. What is the minimum C?",
+  o:["20 µF","13.3 µF","2.5 µF","200 µF"],
+  e:"C > (V − V_g)/(R f_s X V) = 36/(30 × 100 000 × 0.01 × 60) = 36/1 800 000 = 20 µF. (13.3 µF uses V_g instead of V − V_g; 200 µF is the 0.1% answer; 2.5 µF wrongly borrows the buck's factor of 8.) Review §6."},
+ {q:"When sizing a buck's output capacitor, which approximation is right?",
+  o:["SRA on v only; keep the full ripple of i_L","SRA on both i_L and v","SRA on i_L only","No approximation works"],
+  e:"Applying the SRA to i_L predicts i_C = 0. The load's contribution Δv/R is 20 to 40 times smaller than Δi_L, so only v may be approximated. Review §7."},
+ {q:"Buck: V_g = 48 V, V = 12 V, L = 75 µH, f_s = 100 kHz. Minimum C for Δv_C ≤ 0.5% of V?",
+  o:["25 µF","12.5 µF","200 µF","6.25 µF"],
+  e:"C > (V_g − V)/(8V_gLf_s²X) = 36/(8 × 48 × 75 µH × 10¹⁰ × 0.005) = 36/1 440 000 = 25 µF. Half the ripple of the 1% design needs twice the C. (200 µF forgets the 8.) Review §8."},
+ {q:"Diode buck: V_g = 24 V, V = 12 V, L = 10 µH, f_s = 100 kHz. Below what average load current does it enter DCM?",
+  o:["3 A","6 A","1.5 A","12 A"],
+  e:"Δi_L = V(V_g − V)/(V_gLf_s) = 12 × 12/(24 × 10 µH × 100 kHz) = 144/24 = 6 A. DCM when I_L < Δi_L/2 = 3 A (R > 4 Ω). (6 A is the full ripple, not half.) Review §10."},
+ {q:"Diode buck in DCM: V_g = 30 V, D = 0.4, K = 0.04. What is V?",
+  o:["24.9 V","12 V","28.3 V","30 V"],
+  e:"K_crit = 0.6 > 0.04, so DCM. 4K/D² = 0.16/0.16 = 1, M = 2/(1 + √2) = 0.828, V = 24.9 V. (12 V is the CCM answer DV_g; 28.3 V forgets the 4 in 4K/D².) Review §11."},
+ {q:"K = 0.2. For which duty ratios is the buck in DCM?",
+  o:["D < 0.8","D > 0.8","D < 0.2","None, because K < 1"],
+  e:"DCM when K < 1 − D, i.e. D < 1 − K = 0.8. K < 1 only means DCM is possible, not certain. Review §12."}
+]
+};
+/* ---------------- QUIZ ENGINE (scores kept in this browser) ---------------- */
+const LET = "ABCD";
+const SKEY = "enel585-lecture3-guide-v1";
+let store = {};
+try { store = JSON.parse(localStorage.getItem(SKEY) || "{}") || {}; } catch(e){ store = {}; }
+function save(){ try { localStorage.setItem(SKEY, JSON.stringify(store)); } catch(e){} }
+const stats = {};
+function hashStr(s){ let h = 2166136261; for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h>>>0; }
+function order(n, seed){ // deterministic shuffle of 0..n-1
+  const a = [...Array(n).keys()]; let s = seed || 1;
+  for(let i=n-1;i>0;i--){ s = (Math.imul(s ^ (s>>>15), 2246822507) + 0x9E3779B9)>>>0; const j = s % (i+1); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+function chip(id){
+  const c = document.querySelector('[data-chip="'+id+'"]'); const s = stats[id];
+  if(!c || !s) return;
+  if(s.a===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = s.c+"/"+s.t;
+  c.classList.toggle("done", s.a===s.t);
+}
+function totals(){
+  let c=0,a=0,t=0;
+  for(const id in QUIZ){ t += QUIZ[id].length; if(stats[id]){ c += stats[id].c; a += stats[id].a; } }
+  document.getElementById("totScore").textContent = c+" / "+t+" correct";
+  document.getElementById("totSub").textContent = a+" of "+t+" answered";
+  document.getElementById("totBar").style.width = (t? 100*c/t : 0)+"%";
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  const picks = Array.isArray(store[id]) ? store[id] : [];
+  stats[id] = {c:0, a:0, t:qs.length};
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    const s = stats[id];
+    score.textContent = s.c+" / "+qs.length+" correct"+(s.a<qs.length? " · "+(qs.length-s.a)+" left":"");
+    if(s.a===qs.length){
+      const pct = s.c/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id); totals();
+  }
+  qs.forEach((item, qi)=>{
+    const ord = order(item.o.length, hashStr(id+"|"+qi+"|"+item.q));
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(item.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    const btns = [];
+    function answer(orig, persist){
+      btns.forEach(x=>x.disabled=true);
+      const ok = orig===0;
+      const rightPos = ord.indexOf(0);
+      btns[rightPos].classList.add("right");
+      if(!ok) btns[ord.indexOf(orig)].classList.add("wrong");
+      stats[id].a++; if(ok) stats[id].c++;
+      ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[rightPos]+'.</b> ';
+      ex.appendChild(document.createTextNode(item.e));
+      ex.hidden = false;
+      if(persist){ picks[qi] = orig; store[id] = picks; save(); }
+      upd();
+    }
+    ord.forEach((orig, pos)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[pos];
+      const s = document.createElement("span"); s.textContent = item.o[orig];
+      b.append(L, s);
+      b.addEventListener("click", ()=>answer(orig, true));
+      opts.appendChild(b); btns.push(b);
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+    if(Number.isInteger(picks[qi]) && picks[qi]>=0 && picks[qi]<item.o.length){ wrap._restore = ()=>answer(picks[qi], false); }
+  });
+  reset.addEventListener("click", ()=>{ store[id] = []; save(); buildQuiz(box); });
+  box.append(head, list, foot);
+  list.querySelectorAll(".qitem").forEach(w=>{ if(w._restore) w._restore(); });
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+totals();
+
+/* ---------------- HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const $ = id => document.getElementById(id);
+function prep(cv, hOverride){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = hOverride || +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size,bold){ ctx.fillStyle=col; ctx.font=(bold?"600 ":"")+(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function poly(ctx, pts, X, Y, col, wid, dash){
+  ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||2; ctx.lineJoin="round";
+  pts.forEach((p,i)=>{ const x=X(p[0]), y=Y(p[1]); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+  ctx.stroke(); ctx.setLineDash([]);
+}
+function fillBetween(ctx, pts, X, Y, base, col, alpha){
+  ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = col; ctx.beginPath();
+  ctx.moveTo(X(pts[0][0]), Y(base));
+  pts.forEach(p=>ctx.lineTo(X(p[0]), Y(p[1])));
+  ctx.lineTo(X(pts[pts.length-1][0]), Y(base)); ctx.closePath(); ctx.fill(); ctx.restore();
+}
+function fillRect(ctx, x1, y1, x2, y2, col, alpha){ ctx.save(); ctx.globalAlpha=alpha; ctx.fillStyle=col; ctx.fillRect(Math.min(x1,x2), Math.min(y1,y2), Math.abs(x2-x1), Math.abs(y2-y1)); ctx.restore(); }
+function fmtN(x, d){ if(!isFinite(x)) return "n/a"; const v = Math.abs(x)<1e-12 ? 0 : x; return v.toFixed(d).replace(/^-/,"\u2212"); }
+function sig(x, s){ if(!isFinite(x)) return "n/a"; if(x===0) return "0"; const v = Number(x.toPrecision(s||4)); return (Math.abs(v)>=1e6 || Math.abs(v)<1e-4 ? v.toExponential(3) : String(v)).replace(/^-/,"\u2212"); }
+function big(x){ // 100000 -> "100 000"
+  const s = sig(x,6); if(/e/.test(s)) return s;
+  const [i,f] = s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f? "."+f : "");
+}
+/* A plot panel: returns coordinate maps and draws axes */
+function panel(ctx, x, y, w, h, t0, t1, v0, v1, label, ticks){
+  const X = t => x + (t - t0)/(t1 - t0)*w;
+  const Y = v => y + h - (v - v0)/(v1 - v0)*h;
+  const mut = css("--muted"), ln = css("--line"), gr = css("--grid");
+  (ticks||[]).forEach(tk=>{ const yy = Y(tk.v); line(ctx, x, yy, x+w, yy, gr, 1); txt(ctx, tk.s, x-6, yy, mut, "right", 10.5); });
+  if(v0<0 && v1>0) line(ctx, x, Y(0), x+w, Y(0), mut, 1);
+  line(ctx, x, y, x, y+h, mut, 1);
+  if(label){ ctx.font="600 11.5px 'JetBrains Mono', ui-monospace, monospace"; const tw = ctx.measureText(label).width; ctx.save(); ctx.globalAlpha=0.85; ctx.fillStyle=css("--surface"); ctx.fillRect(x+3, y, tw+8, 15); ctx.restore(); txt(ctx, label, x+7, y+7.5, css("--ink"), "left", 11.5, true); }
+  return {X, Y};
+}
+function setPressed(on, offs){ on.setAttribute("aria-pressed","true"); offs.forEach(o=>o.setAttribute("aria-pressed","false")); }
+function num(id){ const v = parseFloat($(id).value); return isFinite(v) ? v : NaN; }
+function stepsOut(el, rows){ el.innerHTML = rows.map(r=>'<div'+(r.c? ' class="'+r.c+'"':'')+'>'+r.t+'</div>').join(""); }
+const tMarks = (Ts, n) => { const a=[]; for(let k=0;k<=n;k++) a.push(k*Ts); return a; };
+
+/* ---------------- §1 VOLT-SECOND DRIFT ---------------- */
+const VS = {Vg:48, L:75, Ts:10}; // V, µH, µs  -> (V·µs)/µH = A
+function drawVS(){
+  const D = +$("vsD").value, V = +$("vsV").value;
+  $("vsDOut").textContent = D.toFixed(2); $("vsVOut").textContent = V.toFixed(2);
+  const {ctx,w} = prep($("cvVS"));
+  const Ts = VS.Ts, N = 6, x0 = 52, pw = w - x0 - 10;
+  // v_L panel
+  const up = VS.Vg - V, dn = -V;
+  const vmin = Math.min(dn, 0) - 4, vmax = Math.max(up, 0) + 4;
+  const P1 = panel(ctx, x0, 12, pw, 118, 0, N*Ts, vmin, vmax, "v_L (V)", [{v:up, s:fmtN(up,1)},{v:dn,s:fmtN(dn,1)},{v:0,s:"0"}]);
+  const cu = css("--curr"), cv = css("--volt"), cf = css("--fund"), ink = css("--ink"), mut = css("--muted");
+  const pts = [];
+  for(let k=0;k<N;k++){
+    const a = k*Ts, b = (k+D)*Ts, c = (k+1)*Ts;
+    fillRect(ctx, P1.X(a), P1.Y(0), P1.X(b), P1.Y(up), cu, 0.2);
+    fillRect(ctx, P1.X(b), P1.Y(0), P1.X(c), P1.Y(dn), cv, 0.2);
+    pts.push([a,up],[b,up],[b,dn],[c,dn]);
+  }
+  poly(ctx, pts, P1.X, P1.Y, ink, 1.6);
+  // i_L panel
+  const di_up = up*D*Ts/VS.L, di_dn = dn*(1-D)*Ts/VS.L;
+  let i = 5.4; const ip = [[0,i]];
+  for(let k=0;k<N;k++){ i += di_up; ip.push([(k+D)*Ts, i]); i += di_dn; ip.push([(k+1)*Ts, i]); }
+  let lo = Math.min(...ip.map(p=>p[1])), hi = Math.max(...ip.map(p=>p[1]));
+  const pad = Math.max(0.3, (hi-lo)*0.12); lo -= pad; hi += pad;
+  const P2 = panel(ctx, x0, 160, pw, 118, 0, N*Ts, lo, hi, "i_L (A)", [{v:hi-pad*0.5, s:fmtN(hi-pad*0.5,1)},{v:lo+pad*0.5, s:fmtN(lo+pad*0.5,1)}]);
+  poly(ctx, ip, P2.X, P2.Y, cf, 2.2);
+  for(let k=0;k<=N;k++) txt(ctx, k*Ts+(k===N?" µs":""), P2.X(k*Ts), 292, mut, k===0?"left":(k===N?"right":"center"), 10);
+  const net = up*D*Ts + dn*(1-D)*Ts, drift = net/VS.L;
+  const steady = Math.abs(drift) < 0.005;
+  $("vsRead").innerHTML =
+    (steady? '<span class="verdict ok">Steady state</span>' : '<span class="verdict no">Not steady: i<sub>L</sub> drifts</span>')+
+    'Area during DT<sub>s</sub>: (V<sub>g</sub> − V)DT<sub>s</sub> = <b>'+fmtN(up*D*Ts,1)+' V·µs</b> · area during D′T<sub>s</sub>: −VD′T<sub>s</sub> = <b>'+fmtN(dn*(1-D)*Ts,1)+' V·µs</b><br>'+
+    'Net = <b>'+fmtN(net,1)+' V·µs</b> → i<sub>L</sub> changes by net/L = <b>'+(drift>=0?"+":"")+fmtN(drift,3)+' A</b> every period. D·V<sub>g</sub> = '+fmtN(D*VS.Vg,2)+' V.';
+}
+["vsD","vsV"].forEach(id=>$(id).addEventListener("input", drawVS));
+$("vsSnap").addEventListener("click", ()=>{ $("vsV").value = (+$("vsD").value*VS.Vg).toFixed(2); drawVS(); });
+
+/* ---------------- §2 BUCK L CALCULATOR ---------------- */
+function calcBK(){
+  const Vg=num("bkVg"), V=num("bkV"), fs=num("bkFs")*1e3, R=num("bkR"), X=num("bkX")/100;
+  const el = $("bkSteps");
+  if(!(Vg>0 && V>0 && fs>0 && R>0 && X>0)) return stepsOut(el, [{t:"Enter positive numbers in every box.", c:"err"}]);
+  if(V>=Vg) return stepsOut(el, [{t:"A buck needs V < V_g. Lower V or raise V_g.", c:"err"}]);
+  const D=V/Vg, Ts=1/fs, IL=V/R, di=X*IL, L=R*(Vg-V)/(Vg*fs*X), chk=D*Ts*(Vg-V)/L;
+  stepsOut(el, [
+    {t:'<span class="c">1.</span> D = V/V<sub>g</sub> = '+sig(V)+'/'+sig(Vg)+' = '+fmtN(D,4)+', &nbsp; T<sub>s</sub> = 1/f<sub>s</sub> = '+sig(Ts*1e6)+' µs'},
+    {t:'<span class="c">2.</span> I<sub>L,max</sub> = V/R<sub>min</sub> = '+sig(V)+'/'+sig(R)+' = '+sig(IL)+' A'},
+    {t:'<span class="c">3.</span> Allowed Δi<sub>L</sub> = (X/100%)·I<sub>L,max</sub> = '+sig(X)+' × '+sig(IL)+' = '+sig(di)+' A'},
+    {t:'<span class="c">4.</span> L &gt; R<sub>min</sub>(V<sub>g</sub> − V)/[V<sub>g</sub>f<sub>s</sub>(X/100%)] = '+sig(R)+' × '+sig(Vg-V)+' / ('+sig(Vg)+' × '+big(fs)+' × '+sig(X)+')'},
+    {t:'&nbsp;&nbsp;&nbsp;L<sub>min</sub> = <span class="ans">'+sig(L*1e6)+' µH</span>', c:""},
+    {t:'<span class="c">Check: at L = L<sub>min</sub>, Δi<sub>L</sub> = DT<sub>s</sub>(V<sub>g</sub> − V)/L = '+sig(chk)+' A ✓</span>'}
+  ]);
+}
+["bkVg","bkV","bkFs","bkR","bkX"].forEach(id=>$(id).addEventListener("input", calcBK));
+
+/* ---------------- §3 BOOST CIRCUIT ---------------- */
+let boostState = 1;
+function drawBoostCkt(){
+  const hot = boostState===1 ? ["src","ind","q1","botL"] : ["src","ind","q2","cap","load","botR","botL"];
+  const feed = boostState===1 ? ["cap","load"] : [];
+  document.querySelectorAll("#ckBoost .w").forEach(l=>{
+    const s = l.dataset.seg;
+    l.classList.toggle("hot", hot.includes(s));
+    l.classList.toggle("feed", !hot.includes(s) && feed.includes(s));
+  });
+  document.querySelectorAll("#ckBoost .sw").forEach(g=>{ const on = (+g.dataset.s)===boostState; g.classList.toggle("on", on); g.setAttribute("aria-pressed", on?"true":"false"); });
+  setPressed(boostState===1? $("bs1"):$("bs2"), [boostState===1? $("bs2"):$("bs1")]);
+  $("ckBoostState").textContent = boostState===1 ? "① 0 ≤ t < DTs: Q1 on, Q2 off" : "② DTs ≤ t < Ts: Q1 off, Q2 on";
+  $("bsRead").innerHTML = boostState===1
+    ? '<b>v<sub>L</sub> = V<sub>g</sub></b> → i<sub>L</sub> ramps up at V<sub>g</sub>/L. &nbsp;<b>i<sub>C</sub> = −V/R</b>: the capacitor alone feeds the load.<br>Running example: v<sub>L</sub> = 12 V, i<sub>C</sub> = −48/24 = −2 A.'
+    : '<b>v<sub>L</sub> = V<sub>g</sub> − V</b> (negative) → i<sub>L</sub> ramps down. &nbsp;<b>i<sub>C</sub> = I<sub>L</sub> − V/R</b>: the inductor feeds the load and recharges C.<br>Running example: v<sub>L</sub> = 12 − 48 = −36 V, i<sub>C</sub> = 8 − 2 = 6 A.';
+}
+$("bs1").addEventListener("click", ()=>{ boostState=1; drawBoostCkt(); });
+$("bs2").addEventListener("click", ()=>{ boostState=2; drawBoostCkt(); });
+document.querySelectorAll("#ckBoost .sw").forEach(g=>{
+  const go = ()=>{ boostState = +g.dataset.s; drawBoostCkt(); };
+  g.addEventListener("click", go);
+  g.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } });
+});
+
+/* ---------------- §4 BOOST M(D) ---------------- */
+const PRACT_A = 0.01; // R_L/R for the illustrative practical curve
+function mPract(D){ const Dp = 1-D; return Dp<=0 ? 0 : (1/Dp)/(1 + PRACT_A/(Dp*Dp)); }
+function drawBoost(){
+  const D = +$("bD").value, pr = $("bPr").checked, Vg = 12, Ts = 10;
+  $("bDOut").textContent = D.toFixed(2);
+  const Dp = 1-D, M = 1/Dp, V = Vg*M;
+  const {ctx,w} = prep($("cvBoost"));
+  const x0 = 52, pw = w - x0 - 14;
+  const cu = css("--curr"), cv = css("--volt"), cf = css("--fund"), ink = css("--ink"), mut = css("--muted");
+  const lo = Math.min(Vg-V, -2) - 3, hi = Vg + 5;
+  const P1 = panel(ctx, x0, 12, pw, 140, 0, 2*Ts, lo, hi, "v_L (V)", [{v:Vg,s:fmtN(Vg,0)},{v:Vg-V,s:fmtN(Vg-V,1)},{v:0,s:"0"}]);
+  const pts = [];
+  for(let k=0;k<2;k++){
+    const a=k*Ts, b=(k+D)*Ts, c=(k+1)*Ts;
+    fillRect(ctx, P1.X(a), P1.Y(0), P1.X(b), P1.Y(Vg), cu, 0.22);
+    fillRect(ctx, P1.X(b), P1.Y(0), P1.X(c), P1.Y(Vg-V), cv, 0.22);
+    pts.push([a,Vg],[b,Vg],[b,Vg-V],[c,Vg-V]);
+  }
+  poly(ctx, pts, P1.X, P1.Y, ink, 1.6);
+  [0,Ts,2*Ts].forEach(t=>txt(ctx, t+" µs", P1.X(t), 162, mut, t===0?"left":(t===2*Ts?"right":"center"), 10));
+  // M(D)
+  const top = 188, ph = w < 480 ? 180 : 190, Mmax = 10;
+  const P2 = panel(ctx, x0, top, pw, ph, 0, 1, 0, Mmax, "M(D)", [{v:1,s:"1"},{v:4,s:"4"},{v:7,s:"7"},{v:10,s:"10"}]);
+  line(ctx, P2.X(1), top, P2.X(1), top+ph, mut, 1, [4,4]);
+  [0,0.25,0.5,0.75,1].forEach(d=>txt(ctx, String(d), P2.X(d), top+ph+12, mut, "center", 10));
+  txt(ctx, "D", P2.X(1)-10, top+ph+12, mut, "right", 10);
+  const ideal = []; for(let d=0; d<=0.9995; d+=0.0025){ const m = 1/(1-d); if(m>Mmax) break; ideal.push([d,m]); }
+  poly(ctx, ideal, P2.X, P2.Y, cv, 2.4);
+  if(pr){ const pp=[]; for(let d=0; d<=0.999; d+=0.0025) pp.push([d, mPract(d)]); poly(ctx, pp, P2.X, P2.Y, cf, 2.2, [6,4]); }
+  if(M<=Mmax){
+    ctx.fillStyle = cu; ctx.beginPath(); ctx.arc(P2.X(D), P2.Y(M), 5, 0, 2*Math.PI); ctx.fill();
+  } else {
+    txt(ctx, "M = "+fmtN(M,1)+" ↑ (off scale)", P2.X(D)-6, top+10, cu, "right", 11, true);
+  }
+  const aOn = Vg*D*Ts, aOff = (V-Vg)*Dp*Ts;
+  $("bRead").innerHTML = 'D = <b>'+D.toFixed(2)+'</b>, D′ = <b>'+Dp.toFixed(2)+'</b> → M = 1/D′ = <b>'+fmtN(M,3)+'</b>, V = <b>'+fmtN(V,2)+' V</b><br>'+
+    'V<sub>g</sub>·DT<sub>s</sub> = <b>'+fmtN(aOn,1)+' V·µs</b> &nbsp;=&nbsp; (V − V<sub>g</sub>)·D′T<sub>s</sub> = <b>'+fmtN(aOff,1)+' V·µs</b>'+
+    (pr? '<br>Practical (illustrative): M ≈ <b>'+fmtN(mPract(D),2)+'</b>' : '');
+}
+$("bD").addEventListener("input", drawBoost); $("bPr").addEventListener("change", drawBoost);
+
+/* ---------------- §5 BOOST i_C CHARGE ---------------- */
+function drawIC(){
+  const D = +$("cD").value, R = +$("cR").value, Vg = 12, Ts = 10;
+  $("cDOut").textContent = D.toFixed(2); $("cROut").textContent = R.toFixed(0);
+  const Dp = 1-D, V = Vg/Dp, Io = V/R, IL = Io/Dp;
+  const {ctx,w} = prep($("cvIC"));
+  const x0 = 52, pw = w - x0 - 14;
+  const cu = css("--curr"), cv = css("--volt"), ink = css("--ink"), mut = css("--muted");
+  const hiV = IL-Io, loV = -Io, pad = Math.max(0.4,(hiV-loV)*0.1);
+  const P = panel(ctx, x0, 10, pw, 180, 0, 2*Ts, loV-pad, hiV+pad, "i_C (A)", [{v:hiV,s:fmtN(hiV,2)},{v:loV,s:fmtN(loV,2)},{v:0,s:"0"}]);
+  const pts=[];
+  for(let k=0;k<2;k++){
+    const a=k*Ts, b=(k+D)*Ts, c=(k+1)*Ts;
+    fillRect(ctx, P.X(a), P.Y(0), P.X(b), P.Y(loV), cv, 0.22);
+    fillRect(ctx, P.X(b), P.Y(0), P.X(c), P.Y(hiV), cu, 0.22);
+    pts.push([a,loV],[b,loV],[b,hiV],[c,hiV]);
+  }
+  poly(ctx, pts, P.X, P.Y, ink, 1.8);
+  [0,Ts,2*Ts].forEach(t=>txt(ctx, t+" µs", P.X(t), 204, mut, t===0?"left":(t===2*Ts?"right":"center"), 10));
+  $("cRead").innerHTML = 'V = V<sub>g</sub>/D′ = <b>'+fmtN(V,2)+' V</b>, I<sub>o</sub> = V/R = <b>'+fmtN(Io,3)+' A</b>, I<sub>L</sub> = V/(RD′) = <b>'+fmtN(IL,3)+' A</b><br>'+
+    'Charge out in ①: (V/R)DT<sub>s</sub> = <b>'+fmtN(Io*D*Ts,2)+' µC</b> · charge in during ②: (I<sub>L</sub> − V/R)D′T<sub>s</sub> = <b>'+fmtN((IL-Io)*Dp*Ts,2)+' µC</b><br>'+
+    'Power in V<sub>g</sub>I<sub>L</sub> = <b>'+fmtN(Vg*IL,1)+' W</b> · power out V²/R = <b>'+fmtN(V*V/R,1)+' W</b>';
+}
+["cD","cR"].forEach(id=>$(id).addEventListener("input", drawIC));
+
+/* ---------------- §6 BOOST L & C CALCULATOR ---------------- */
+let BX = null;
+function calcBX(){
+  const Vg=num("bxVg"), V=num("bxV"), fs=num("bxFs")*1e3, R=num("bxR"), Xi=num("bxXi")/100, Xv=num("bxXv")/100;
+  const el = $("bxSteps");
+  if(!(Vg>0 && V>0 && fs>0 && R>0 && Xi>0 && Xv>0)){ BX=null; drawBR(); return stepsOut(el, [{t:"Enter positive numbers in every box.", c:"err"}]); }
+  if(V<=Vg){ BX=null; drawBR(); return stepsOut(el, [{t:"A boost needs V > V_g. Raise V or lower V_g.", c:"err"}]); }
+  const D = 1-Vg/V, Dp = 1-D, Ts = 1/fs, ILm = V/(R*Dp);
+  const L = Vg*(1-Vg/V)/(fs*Xi*ILm), C = (V-Vg)/(R*fs*Xv*V);
+  const di = Vg*D*Ts/L, dv = V*D*Ts/(R*C);
+  BX = {D, Ts, ILm, di, dv, V};
+  stepsOut(el, [
+    {t:'<span class="c">1.</span> D = 1 − V<sub>g</sub>/V = 1 − '+sig(Vg)+'/'+sig(V)+' = '+fmtN(D,4)+', &nbsp; D′ = '+fmtN(Dp,4)+', &nbsp; T<sub>s</sub> = '+sig(Ts*1e6)+' µs'},
+    {t:'<span class="c">2.</span> I<sub>L,max</sub> = V/(R<sub>min</sub>D′) = '+sig(V)+'/('+sig(R)+' × '+fmtN(Dp,4)+') = '+sig(ILm)+' A'},
+    {t:'<span class="c">3.</span> L &gt; V<sub>g</sub>(1 − V<sub>g</sub>/V)/[f<sub>s</sub>(X/100%)I<sub>L,max</sub>] = '+sig(Vg)+' × '+fmtN(D,4)+' / ('+big(fs)+' × '+sig(Xi)+' × '+sig(ILm)+')'},
+    {t:'&nbsp;&nbsp;&nbsp;L<sub>min</sub> = <span class="ans">'+sig(L*1e6)+' µH</span> <span class="c">→ Δi<sub>L</sub> = V<sub>g</sub>DT<sub>s</sub>/L = '+sig(di)+' A ✓</span>'},
+    {t:'<span class="c">4.</span> C &gt; (V − V<sub>g</sub>)/[R f<sub>s</sub>(X/100%)V] = '+sig(V-Vg)+' / ('+sig(R)+' × '+big(fs)+' × '+sig(Xv)+' × '+sig(V)+')'},
+    {t:'&nbsp;&nbsp;&nbsp;C<sub>min</sub> = <span class="ans">'+sig(C*1e6)+' µF</span> <span class="c">→ Δv<sub>C</sub> = VDT<sub>s</sub>/(RC) = '+sig(dv)+' V ✓</span>'}
+  ]);
+  drawBR();
+}
+function drawBR(){
+  const {ctx,w} = prep($("cvBR"));
+  const mut = css("--muted");
+  if(!BX){ txt(ctx, "Fix the inputs above to see the waveforms.", 14, 20, mut, "left", 12); return; }
+  const {D, Ts, ILm, di, dv, V} = BX, x0 = 60, pw = w - x0 - 14, T = Ts*1e6;
+  const iLo = ILm - di/2, iHi = ILm + di/2, pad = di*0.35;
+  const P1 = panel(ctx, x0, 10, pw, 100, 0, 2*T, iLo-pad, iHi+pad, "i_L (A)", [{v:iHi,s:sig(iHi,3)},{v:iLo,s:sig(iLo,3)}]);
+  const ip=[[0,iLo]]; for(let k=0;k<2;k++){ ip.push([(k+D)*T,iHi],[(k+1)*T,iLo]); }
+  poly(ctx, ip, P1.X, P1.Y, css("--fund"), 2.2);
+  const vLo = V - dv/2, vHi = V + dv/2, pv = dv*0.35;
+  const P2 = panel(ctx, x0, 128, pw, 100, 0, 2*T, vLo-pv, vHi+pv, "v (V)", [{v:vHi,s:sig(vHi,4)},{v:vLo,s:sig(vLo,4)}]);
+  const vp=[[0,vHi]]; for(let k=0;k<2;k++){ vp.push([(k+D)*T,vLo],[(k+1)*T,vHi]); }
+  poly(ctx, vp, P2.X, P2.Y, css("--volt"), 2.2);
+  [0,T,2*T].forEach(t=>txt(ctx, sig(t,3)+" µs", P2.X(t), 240, mut, t===0?"left":(t===2*T?"right":"center"), 10));
+}
+["bxVg","bxV","bxFs","bxR","bxXi","bxXv"].forEach(id=>$(id).addEventListener("input", calcBX));
+
+/* ---------------- buck ripple model (SRA on v only) ---------------- */
+// times in µs, currents in A, C in µF -> charge µC, voltage V
+function buckIC(t, D, Ts, di){ const p = ((t/Ts)%1+1)%1; return p<D ? -di/2 + di*p/D : di/2 - di*(p-D)/(1-D); }
+function buckRipple(D, Ts, di, C, periods, N){
+  const T = periods*Ts, dt = T/N, t=[], i=[], v=[]; let q=0;
+  for(let k=0;k<=N;k++){ const tk=k*dt, ik=buckIC(tk,D,Ts,di); if(k>0) q += 0.5*(ik+i[k-1])*dt; t.push(tk); i.push(ik); v.push(q/C); }
+  // centre the ripple on zero (v is plotted as v − V)
+  const m = (Math.max(...v)+Math.min(...v))/2; for(let k=0;k<v.length;k++) v[k]-=m;
+  return {t,i,v};
+}
+
+/* ---------------- §7 SRA COMPARISON ---------------- */
+let sraMode = "v";
+function drawSRA(){
+  const D=0.25, Ts=10, di=1.2, C=12.5, IL=6;
+  setPressed(sraMode==="v"? $("sraV"):$("sraBoth"), [sraMode==="v"? $("sraBoth"):$("sraV")]);
+  const {ctx,w} = prep($("cvSRA"));
+  const x0 = 58, pw = w - x0 - 14, mut = css("--muted");
+  const r = buckRipple(D, Ts, di, C, 2, 800);
+  const P1 = panel(ctx, x0, 10, pw, 100, 0, 2*Ts, -0.85, 0.85, "i_C (A)", [{v:0.6,s:"+0.6"},{v:-0.6,s:"−0.6"},{v:0,s:"0"}]);
+  const vmv = r.v.map(x=>x*1000);
+  const P2 = panel(ctx, x0, 128, pw, 100, 0, 2*Ts, -85, 85, "v − V (mV)", [{v:60,s:"+60"},{v:-60,s:"−60"},{v:0,s:"0"}]);
+  const iPts = r.t.map((t,k)=>[t, r.i[k]]), vPts = r.t.map((t,k)=>[t, vmv[k]]);
+  if(sraMode==="both"){
+    poly(ctx, iPts, P1.X, P1.Y, mut, 1, [3,4]); poly(ctx, vPts, P2.X, P2.Y, mut, 1, [3,4]);
+    poly(ctx, [[0,0],[2*Ts,0]], P1.X, P1.Y, css("--curr"), 3);
+    poly(ctx, [[0,0],[2*Ts,0]], P2.X, P2.Y, css("--volt"), 3);
+    txt(ctx, "dashed: what really happens", x0+pw, 118, mut, "right", 10.5);
+    $("sraRead").innerHTML = '<span class="verdict no">Useless for sizing C</span>i<sub>C</sub> = I<sub>L</sub> − V/R = 6 − 6 = <b>0 A</b>, so the model predicts a flat v and Δv<sub>C</sub> = 0 for any C.';
+  } else {
+    fillBetween(ctx, iPts.filter(p=>p[1]>0), P1.X, P1.Y, 0, css("--curr"), 0.18);
+    poly(ctx, iPts, P1.X, P1.Y, css("--curr"), 2.2);
+    poly(ctx, vPts, P2.X, P2.Y, css("--volt"), 2.2);
+    const mx = Math.max(...vmv), mn = Math.min(...vmv);
+    $("sraRead").innerHTML = '<span class="verdict ok">Works</span>i<sub>C</sub> = i<sub>L</sub> − I<sub>L</sub> swings <b>±0.6 A</b>. Ripple from the plot: <b>'+fmtN(mx-mn,1)+' mV</b>; formula Δi<sub>L</sub>/(8Cf<sub>s</sub>) = 1.2/(8 × 12.5 µF × 100 kHz) = <b>120 mV</b> (1% of 12 V).';
+  }
+  [0,Ts,2*Ts].forEach(t=>txt(ctx, t+" µs", P2.X(t), 240, mut, t===0?"left":(t===2*Ts?"right":"center"), 10));
+}
+$("sraV").addEventListener("click", ()=>{ sraMode="v"; drawSRA(); });
+$("sraBoth").addEventListener("click", ()=>{ sraMode="both"; drawSRA(); });
+
+/* ---------------- §8 RIPPLE DEMO ---------------- */
+function drawRip(){
+  const D=+$("rD").value, L=+$("rL").value, C=+$("rC").value, fk=+$("rF").value, Vg=48, Rload=2;
+  $("rDOut").textContent=D.toFixed(2); $("rLOut").textContent=L.toFixed(0); $("rCOut").textContent=C.toFixed(1); $("rFOut").textContent=fk.toFixed(0);
+  const Ts = 1000/fk, V = D*Vg, IL = V/Rload, di = (Vg-V)*D*Ts/L; // µs, A (V·µs/µH)
+  const r = buckRipple(D, Ts, di, C, 2, 1000);
+  const {ctx,w} = prep($("cvRip"));
+  const x0 = 60, pw = w - x0 - 14, mut = css("--muted"), cu = css("--curr");
+  const P1 = panel(ctx, x0, 10, pw, 90, 0, 2*Ts, IL-di*0.8, IL+di*0.8, "i_L (A), R = 2 Ω", [{v:IL+di/2,s:sig(IL+di/2,3)},{v:IL-di/2,s:sig(IL-di/2,3)}]);
+  line(ctx, x0, P1.Y(IL), x0+pw, P1.Y(IL), mut, 1, [4,4]); txt(ctx, "I_L", x0+pw-4, P1.Y(IL)-8, mut, "right", 10);
+  poly(ctx, r.t.map((t,k)=>[t, IL + r.i[k]]), P1.X, P1.Y, css("--fund"), 2.2);
+  const P2 = panel(ctx, x0, 122, pw, 110, 0, 2*Ts, -di*0.75, di*0.75, "i_C (A)", [{v:di/2,s:"+"+sig(di/2,3)},{v:-di/2,s:"−"+sig(di/2,3)},{v:0,s:"0"}]);
+  const t1 = D*Ts/2, t2 = D*Ts + (1-D)*Ts/2;
+  // shade the positive lobe of the first period
+  const lobe = r.t.map((t,k)=>[t, r.i[k]]).filter(p=>p[0]>=t1 && p[0]<=t2);
+  fillBetween(ctx, lobe, P2.X, P2.Y, 0, cu, 0.25);
+  poly(ctx, r.t.map((t,k)=>[t, r.i[k]]), P2.X, P2.Y, cu, 2.2);
+  const vmv = r.v.map(x=>x*1000), vm = Math.max(...vmv.map(Math.abs))*1.3 || 1;
+  const P3 = panel(ctx, x0, 254, pw, 100, 0, 2*Ts, -vm, vm, "v − V (mV)", [{v:vm/1.3,s:"+"+sig(vm/1.3,3)},{v:-vm/1.3,s:"−"+sig(vm/1.3,3)},{v:0,s:"0"}]);
+  poly(ctx, r.t.map((t,k)=>[t, vmv[k]]), P3.X, P3.Y, css("--volt"), 2.2);
+  [t1,t2].forEach((tt,j)=>{ line(ctx, P2.X(tt), 122, P2.X(tt), 354, mut, 1, [3,3]); txt(ctx, j? "t₂":"t₁", P2.X(tt)+4, 224, mut, "left", 11, true); });
+  [0,Ts,2*Ts].forEach(t=>txt(ctx, sig(t,3)+" µs", P3.X(t), 366, mut, t===0?"left":(t===2*Ts?"right":"center"), 10));
+  const dQ = di*Ts/8, dv = dQ/C, dvSim = Math.max(...r.v) - Math.min(...r.v);
+  $("rRead").innerHTML = 'V = DV<sub>g</sub> = <b>'+fmtN(V,2)+' V</b>, T<sub>s</sub> = <b>'+sig(Ts,4)+' µs</b>, Δi<sub>L</sub> = <b>'+sig(di,4)+' A</b><br>'+
+    't<sub>1</sub> = DT<sub>s</sub>/2 = <b>'+sig(t1,4)+' µs</b>, t<sub>2</sub> = DT<sub>s</sub> + D′T<sub>s</sub>/2 = <b>'+sig(t2,4)+' µs</b>, base = <b>'+sig(t2-t1,4)+' µs</b> (= T<sub>s</sub>/2)<br>'+
+    'ΔQ = Δi<sub>L</sub>T<sub>s</sub>/8 = <b>'+sig(dQ,4)+' µC</b> → Δv<sub>C</sub> = ΔQ/C = <b>'+sig(dv*1000,4)+' mV</b> ('+fmtN(100*dv/V,2)+'% of V). Plot measures '+sig(dvSim*1000,4)+' mV.';
+}
+["rD","rL","rC","rF"].forEach(id=>$(id).addEventListener("input", drawRip));
+
+function calcCX(){
+  const Vg=num("cxVg"), V=num("cxV"), L=num("cxL")*1e-6, fs=num("cxFs")*1e3, X=num("cxX")/100;
+  const el = $("cxSteps");
+  if(!(Vg>0 && V>0 && L>0 && fs>0 && X>0)) return stepsOut(el, [{t:"Enter positive numbers in every box.", c:"err"}]);
+  if(V>=Vg) return stepsOut(el, [{t:"A buck needs V < V_g. Lower V or raise V_g.", c:"err"}]);
+  const D=V/Vg, di=V*(Vg-V)/(Vg*L*fs), dvA=X*V, C=(Vg-V)/(8*Vg*L*fs*fs*X), chk=di/(8*C*fs);
+  stepsOut(el, [
+    {t:'<span class="c">1.</span> D = V/V<sub>g</sub> = '+fmtN(D,4)+', &nbsp; Δi<sub>L</sub> = V(V<sub>g</sub> − V)/(V<sub>g</sub>Lf<sub>s</sub>) = '+sig(di)+' A'},
+    {t:'<span class="c">2.</span> Allowed Δv<sub>C</sub> = (X/100%)V = '+sig(X)+' × '+sig(V)+' = '+sig(dvA)+' V'},
+    {t:'<span class="c">3.</span> C &gt; (V<sub>g</sub> − V)/[8V<sub>g</sub>Lf<sub>s</sub>²(X/100%)] = '+sig(Vg-V)+' / (8 × '+sig(Vg)+' × '+sig(L*1e6)+' µH × ('+big(fs)+')² × '+sig(X)+')'},
+    {t:'&nbsp;&nbsp;&nbsp;C<sub>min</sub> = <span class="ans">'+sig(C*1e6)+' µF</span>'},
+    {t:'<span class="c">Check: Δv<sub>C</sub> = Δi<sub>L</sub>/(8Cf<sub>s</sub>) at C = C<sub>min</sub> → '+sig(chk)+' V ✓</span>'}
+  ]);
+}
+["cxVg","cxV","cxL","cxFs","cxX"].forEach(id=>$(id).addEventListener("input", calcCX));
+
+/* ---------------- §9 DIODE BUCK CIRCUIT ---------------- */
+let dbState = 1;
+function drawDB(){
+  const hot = dbState===1 ? ["src","q","ind","load","botM","botL"] : dbState===2 ? ["dio","ind","load","botM"] : [];
+  const feed = dbState===3 ? ["cap","load"] : [];
+  document.querySelectorAll("#ckDB .w").forEach(l=>{
+    const s = l.dataset.seg;
+    l.classList.toggle("hot", !!s && hot.includes(s));
+    l.classList.toggle("feed", !!s && !hot.includes(s) && feed.includes(s));
+  });
+  const q = document.querySelector('#ckDB .sw'); q.classList.toggle("on", dbState===1); q.setAttribute("aria-pressed", dbState===1?"true":"false");
+  const b = [$("db1"),$("db2"),$("db3")]; setPressed(b[dbState-1], b.filter((_,i)=>i!==dbState-1));
+  $("ckDBState").textContent = dbState===1 ? "0 ≤ t < DTs" : dbState===2 ? "DTs ≤ t < (D + D2)Ts" : "(D + D2)Ts ≤ t < Ts (DCM only)";
+  $("dbRead").innerHTML = dbState===1
+    ? '<b>v<sub>L</sub> = V<sub>g</sub> − V</b> → i<sub>L</sub> ramps up. D<sub>1</sub> is reverse biased (its cathode sits at V<sub>g</sub>), so i<sub>D</sub> = 0.'
+    : dbState===2
+    ? 'Q<sub>1</sub> opens. The inductor keeps i<sub>L</sub> flowing and pulls the switch node to about 0 V, which forward biases D<sub>1</sub>. <b>v<sub>L</sub> = −V</b> → i<sub>L</sub> ramps down; <b>i<sub>D</sub> = i<sub>L</sub></b>.'
+    : 'i<sub>L</sub> has reached zero and D<sub>1</sub> cannot carry negative current, so it turns off. With Q<sub>1</sub> also off, nothing drives i<sub>L</sub>: it stays at 0, so <b>v<sub>L</sub> = 0</b>. The capacitor alone feeds R. This only happens in DCM (§10).';
+}
+$("db1").addEventListener("click", ()=>{ dbState=1; drawDB(); });
+$("db2").addEventListener("click", ()=>{ dbState=2; drawDB(); });
+$("db3").addEventListener("click", ()=>{ dbState=3; drawDB(); });
+(function(){ const g = document.querySelector('#ckDB .sw'); const go = ()=>{ dbState = dbState===1 ? 2 : 1; drawDB(); };
+  g.addEventListener("click", go); g.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } }); })();
+
+/* ---------------- DCM model ---------------- */
+function buckOp(Vg, D, Lh, R, fs){
+  const Ts = 1/fs, K = 2*Lh/(R*Ts), Kc = 1-D, onB = Math.abs(K/Kc - 1) < 1e-3;
+  if(K >= Kc || onB){
+    const V = D*Vg, di = (Vg-V)*D*Ts/Lh, IL = V/R;
+    const mode = onB ? "BCM" : "CCM";
+    return {mode, K, Kc, M:D, V, di, IL, D2:1-D, D3:0, Ts};
+  }
+  const M = 2/(1+Math.sqrt(1+4*K/(D*D))), V = M*Vg, di = (Vg-V)*D*Ts/Lh, D2 = D/M - D;
+  return {mode:"DCM", K, Kc, M, V, di, IL:V/R, D2, D3:1-D-D2, Ts};
+}
+
+/* ---------------- §10 MODE DEMO ---------------- */
+const MODE = {Vg:48, L:75e-6, fs:1e5, R:2};
+const rFromSlider = x => Math.pow(500, x/1000);
+const sliderFromR = R => Math.round(1000*Math.log(R)/Math.log(500));
+function drawMode(){
+  const D = +$("mD").value, R = MODE.R;
+  $("mDOut").textContent = D.toFixed(2); $("mROut").textContent = R<10? R.toFixed(2) : R.toFixed(1);
+  const op = buckOp(MODE.Vg, D, MODE.L, R, MODE.fs);
+  const T = op.Ts*1e6;
+  const {ctx,w} = prep($("cvMode"));
+  const x0 = 58, pw = w - x0 - 14, mut = css("--muted"), cf = css("--fund"), cu = css("--curr");
+  // gate
+  const P0 = panel(ctx, x0, 8, pw, 50, 0, 2*T, -0.2, 1.3, "Q1", []);
+  const g=[]; for(let k=0;k<2;k++){ g.push([k*T,1],[(k+D)*T,1],[(k+D)*T,0],[(k+1)*T,0]); }
+  poly(ctx, g, P0.X, P0.Y, mut, 1.8);
+  // i_L
+  let il;
+  if(op.mode==="DCM"){ il=[[0,0]]; for(let k=0;k<2;k++){ il.push([(k+D)*T, op.di],[(k+D+op.D2)*T,0],[(k+1)*T,0]); } }
+  else { const lo = op.IL-op.di/2, hi = op.IL+op.di/2; il=[[0,lo]]; for(let k=0;k<2;k++){ il.push([(k+D)*T,hi],[(k+1)*T,lo]); } }
+  const pk = Math.max(...il.map(p=>p[1])), ymax = pk*1.18 || 1;
+  const P1 = panel(ctx, x0, 76, pw, 120, 0, 2*T, -ymax*0.06, ymax, "i_L (A)", [{v:pk,s:sig(pk,3)},{v:0,s:"0"}]);
+  line(ctx, x0, P1.Y(op.IL), x0+pw, P1.Y(op.IL), mut, 1, [4,4]); txt(ctx, "I_L = "+sig(op.IL,3)+" A", x0+pw-4, P1.Y(op.IL)-9, mut, "right", 10);
+  poly(ctx, il, P1.X, P1.Y, cf, 2.4);
+  // i_D
+  const id=[]; for(let k=0;k<2;k++){
+    const a=k*T, b=(k+D)*T;
+    if(op.mode==="DCM"){ id.push([a,0],[b,0],[b,op.di],[(k+D+op.D2)*T,0],[(k+1)*T,0]); }
+    else { id.push([a,0],[b,0],[b,op.IL+op.di/2],[(k+1)*T,op.IL-op.di/2],[(k+1)*T,0]); }
+  }
+  const P2 = panel(ctx, x0, 214, pw, 120, 0, 2*T, -ymax*0.06, ymax, "i_D (A)", [{v:pk,s:sig(pk,3)},{v:0,s:"0"}]);
+  poly(ctx, id, P2.X, P2.Y, cu, 2.2);
+  [0,T,2*T].forEach(t=>txt(ctx, sig(t,3)+" µs", P2.X(t), 346, mut, t===0?"left":(t===2*T?"right":"center"), 10));
+  const cls = op.mode==="CCM" ? "ok" : op.mode==="BCM" ? "mid" : "no";
+  $("mRead").innerHTML = '<span class="verdict '+cls+'">'+op.mode+'</span>'+
+    'I<sub>L</sub> = V/R = <b>'+sig(op.IL,4)+' A</b> vs Δi<sub>L</sub>/2 = <b>'+sig(op.di/2,4)+' A</b> · K = 2L/(RT<sub>s</sub>) = <b>'+sig(op.K,4)+'</b> vs K<sub>crit</sub> = 1 − D = <b>'+fmtN(op.Kc,2)+'</b><br>'+
+    'M = <b>'+fmtN(op.M,4)+'</b>, V = <b>'+fmtN(op.V,2)+' V</b>'+
+    (op.mode==="DCM" ? ', D<sub>2</sub> = <b>'+fmtN(op.D2,4)+'</b>, D<sub>3</sub> = <b>'+fmtN(op.D3,4)+'</b>, peak i<sub>L</sub> = <b>'+sig(op.di,4)+' A</b>' : ', i<sub>L,min</sub> = I<sub>L</sub> − Δi<sub>L</sub>/2 = <b>'+sig(Math.max(0,op.IL-op.di/2),4)+' A</b>')+
+    ' · BCM at R = 2L/[T<sub>s</sub>(1 − D)] = <b>'+sig(2*MODE.L*MODE.fs/(1-D),4)+' Ω</b>';
+}
+$("mR").addEventListener("input", ()=>{ MODE.R = Number(rFromSlider(+$("mR").value).toPrecision(3)); drawMode(); });
+$("mD").addEventListener("input", drawMode);
+document.querySelectorAll("[data-mr]").forEach(b=>b.addEventListener("click", ()=>{ MODE.R = +b.dataset.mr; $("mD").value = 0.25; $("mR").value = sliderFromR(MODE.R); drawMode(); }));
+
+/* ---------------- §11 STEPPER + DCM CALCULATOR ---------------- */
+const stepLis = [...document.querySelectorAll("#stepList li")];
+let stepI = 0;
+function drawStep(){
+  stepLis.forEach((li,i)=>li.classList.toggle("cur", i===stepI));
+  $("stPos").textContent = "Step "+(stepI+1)+" of "+stepLis.length;
+  $("stPrev").disabled = stepI===0; $("stNext").disabled = stepI===stepLis.length-1;
+}
+$("stPrev").addEventListener("click", ()=>{ if(stepI>0){ stepI--; drawStep(); } });
+$("stNext").addEventListener("click", ()=>{ if(stepI<stepLis.length-1){ stepI++; drawStep(); } });
+stepLis.forEach((li,i)=>li.addEventListener("click", ()=>{ stepI=i; drawStep(); }));
+
+function calcDX(){
+  const Vg=num("dxVg"), D=num("dxD"), L=num("dxL")*1e-6, R=num("dxR"), fs=num("dxFs")*1e3;
+  const el = $("dxSteps");
+  if(!(Vg>0 && L>0 && R>0 && fs>0)) return stepsOut(el, [{t:"Enter positive numbers in every box.", c:"err"}]);
+  if(!(D>0 && D<1)) return stepsOut(el, [{t:"D must be between 0 and 1.", c:"err"}]);
+  const op = buckOp(Vg, D, L, R, fs), Ts = op.Ts;
+  const rows = [
+    {t:'<span class="c">1.</span> T<sub>s</sub> = '+sig(Ts*1e6)+' µs, &nbsp; K = 2L/(RT<sub>s</sub>) = 2 × '+sig(L*1e6)+' µH / ('+sig(R)+' Ω × '+sig(Ts*1e6)+' µs) = '+sig(op.K,4)},
+    {t:'<span class="c">2.</span> K<sub>crit</sub> = 1 − D = '+fmtN(op.Kc,4)+' → '+(op.mode==="DCM" ? 'K &lt; K<sub>crit</sub>: <b>DCM</b>' : 'K ≥ K<sub>crit</sub>: <b>'+op.mode+'</b>, so M = D and the DCM formula does not apply')}
+  ];
+  if(op.mode==="DCM"){
+    const q = 4*op.K/(D*D), res = op.K*op.M*op.M + D*D*op.M - D*D;
+    rows.push(
+      {t:'<span class="c">3.</span> 4K/D² = '+sig(q,5)+', &nbsp; M = 2/(1 + √(1 + '+sig(q,5)+')) = <span class="ans">'+fmtN(op.M,4)+'</span>'},
+      {t:'<span class="c">4.</span> V = MV<sub>g</sub> = <span class="ans">'+fmtN(op.V,3)+' V</span> &nbsp; (CCM would give DV<sub>g</sub> = '+fmtN(D*Vg,2)+' V)'},
+      {t:'<span class="c">5.</span> D<sub>2</sub> = D/M − D = '+fmtN(op.D2,4)+', &nbsp; D<sub>3</sub> = 1 − D − D<sub>2</sub> = '+fmtN(op.D3,4)},
+      {t:'<span class="c">6.</span> Peak Δi<sub>L</sub> = (V<sub>g</sub> − V)DT<sub>s</sub>/L = '+sig(op.di,4)+' A'},
+      {t:'<span class="c">Check I<sub>L</sub> two ways: V/R = '+sig(op.IL,4)+' A &nbsp;and&nbsp; ½(D + D<sub>2</sub>)Δi<sub>L</sub> = '+sig(0.5*(D+op.D2)*op.di,4)+' A ✓ &nbsp;·&nbsp; KM² + D²M − D² = '+fmtN(res,6)+'</span>'}
+    );
+  } else {
+    rows.push({t:'<span class="c">3.</span> M = D = <span class="ans">'+fmtN(D,4)+'</span>, V = DV<sub>g</sub> = <span class="ans">'+fmtN(op.V,3)+' V</span>, I<sub>L</sub> = '+sig(op.IL,4)+' A ≥ Δi<sub>L</sub>/2 = '+sig(op.di/2,4)+' A'});
+  }
+  stepsOut(el, rows);
+}
+["dxVg","dxD","dxL","dxR","dxFs"].forEach(id=>$(id).addEventListener("input", calcDX));
+
+/* ---------------- §12 M(D,K) ---------------- */
+const KS = {K:0.1};
+const kFromSlider = x => 0.005*Math.pow(400, x/1000);
+const sliderFromK = K => Math.round(1000*Math.log(K/0.005)/Math.log(400));
+function Mdk(D,K){ if(D<=0) return 0; return K >= 1-D ? D : 2/(1+Math.sqrt(1+4*K/(D*D))); }
+function drawMK(){
+  const K = KS.K, D = +$("kD").value;
+  $("kKOut").textContent = K<0.1? K.toFixed(3) : K.toFixed(2); $("kDOut").textContent = D.toFixed(2);
+  const cv = $("cvMK"), wide = (cv.clientWidth||600) >= 560;
+  const {ctx,w} = prep(cv, wide ? 330 : 600);
+  const mut = css("--muted"), acc = css("--accent"), cf = css("--fund"), cu = css("--curr"), ink = css("--ink");
+  let L1, L2;
+  if(wide){ const lw = Math.floor((w-40)*0.58); L1={x:40,y:12,w:lw-20,h:280}; L2={x:40+lw+34,y:12,w:w-(40+lw+34)-12,h:280}; }
+  else { L1={x:40,y:12,w:w-54,h:270}; L2={x:40,y:318,w:w-54,h:250}; }
+  // left: M vs D
+  const P = panel(ctx, L1.x, L1.y, L1.w, L1.h, 0, 1, 0, 1.05, "M(D, K)", [{v:1,s:"1"},{v:0.5,s:"0.5"},{v:0,s:"0"}]);
+  [0,0.5,1].forEach(d=>txt(ctx, String(d), P.X(d), L1.y+L1.h+12, mut, "center", 10)); txt(ctx, "D", L1.x+L1.w, L1.y+L1.h+24, mut, "right", 10);
+  line(ctx, P.X(0), P.Y(0), P.X(1), P.Y(0), mut, 1);
+  const curve = k => { const a=[]; for(let d=0; d<=1.0001; d+=0.004) a.push([Math.min(d,1), Mdk(Math.min(d,1),k)]); return a; };
+  [0.01,0.1,0.5].forEach(k=>{ const c = curve(k); poly(ctx, c, P.X, P.Y, mut, 1.4); const lab = c[Math.round(c.length*0.2)]; txt(ctx, "K="+k, P.X(lab[0])+4, P.Y(lab[1])-9, mut, "left", 10); });
+  poly(ctx, [[0,0],[1,1]], P.X, P.Y, cf, 2);
+  txt(ctx, "K ≥ 1 (CCM)", P.X(0.62), P.Y(0.5), cf, "left", 10);
+  poly(ctx, curve(K), P.X, P.Y, acc, 3);
+  const m = Mdk(D,K);
+  ctx.fillStyle = cu; ctx.beginPath(); ctx.arc(P.X(D), P.Y(m), 5.5, 0, 2*Math.PI); ctx.fill();
+  // right: D-K plane
+  const Kmax = 1.2;
+  const Q = panel(ctx, L2.x, L2.y, L2.w, L2.h, 0, 1, 0, Kmax, "K vs D", [{v:1,s:"1"},{v:0.5,s:"0.5"},{v:0,s:"0"}]);
+  line(ctx, Q.X(0), Q.Y(0), Q.X(1), Q.Y(0), mut, 1);
+  fillBetween(ctx, [[0,1],[1,0]], Q.X, Q.Y, 0, cu, 0.16);
+  poly(ctx, [[0,1],[1,0]], Q.X, Q.Y, ink, 2);
+  txt(ctx, "DCM", Q.X(0.12), Q.Y(0.28), cu, "left", 12, true);
+  txt(ctx, "CCM", Q.X(0.62), Q.Y(0.85), cf, "left", 12, true);
+  txt(ctx, "K_crit = 1 − D", Q.X(0.5)+6, Q.Y(0.5)-10, mut, "left", 10);
+  [0,0.5,1].forEach(d=>txt(ctx, String(d), Q.X(d), L2.y+L2.h+12, mut, "center", 10)); txt(ctx, "D", L2.x+L2.w, L2.y+L2.h+24, mut, "right", 10);
+  const ky = Math.min(K, Kmax);
+  line(ctx, Q.X(0), Q.Y(ky), Q.X(1), Q.Y(ky), acc, 1.5, [5,4]);
+  ctx.fillStyle = cu; ctx.beginPath(); ctx.arc(Q.X(D), Q.Y(ky), 5.5, 0, 2*Math.PI); ctx.fill();
+  const Kc = 1-D, mode = K < Kc ? "DCM" : "CCM";
+  $("kRead").innerHTML = '<span class="verdict '+(mode==="CCM"?"ok":"no")+'">'+mode+'</span>'+
+    'K = <b>'+sig(K,3)+'</b>, D = <b>'+D.toFixed(2)+'</b>, K<sub>crit</sub> = 1 − D = <b>'+fmtN(Kc,2)+'</b> → M = <b>'+fmtN(m,4)+'</b>'+(mode==="DCM"? ' (CCM would give '+D.toFixed(2)+')':'')+'<br>'+
+    (K<1 ? 'This K is in DCM for D &lt; <b>'+fmtN(1-K,3)+'</b> and rejoins M = D at D = 1 − K = <b>'+fmtN(1-K,3)+'</b>.' : 'K ≥ 1: never DCM, at any D.');
+}
+$("kK").addEventListener("input", ()=>{ KS.K = Number(kFromSlider(+$("kK").value).toPrecision(3)); drawMK(); });
+$("kD").addEventListener("input", drawMK);
+document.querySelectorAll("[data-kk]").forEach(b=>b.addEventListener("click", ()=>{ KS.K = +b.dataset.kk; $("kK").value = sliderFromK(KS.K); drawMK(); }));
+
+/* ---------------- INIT + REDRAW ---------------- */
+$("mR").value = sliderFromR(MODE.R);
+$("kK").value = sliderFromK(KS.K);
+function drawAll(){ drawVS(); drawBoost(); drawIC(); drawBR(); drawSRA(); drawRip(); drawMode(); drawMK(); }
+calcBK(); drawBoostCkt(); calcBX(); calcCX(); drawDB(); drawStep(); calcDX();
+drawAll();
+let rt = null;
+window.addEventListener("resize", ()=>{ clearTimeout(rt); rt = setTimeout(drawAll, 80); });
+try { window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll); } catch(e){}
+new MutationObserver(drawAll).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+</script>
+
+</body></html>

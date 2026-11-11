@@ -1,0 +1,1459 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Waves and Phasors Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num, th.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+td.nil{color:var(--muted); text-align:right}
+.hlcol{background:var(--hl)}
+tr.dim td{opacity:.38}
+.tagpill{display:inline-block; font-family:var(--display); font-size:11px; font-weight:700; letter-spacing:.04em; padding:1px 7px; border-radius:99px; margin-left:6px; vertical-align:1px}
+.tagpill.first{background:var(--accent-soft); color:var(--accent)}
+.tagpill.big{background:var(--bad-bg); color:var(--bad)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls label[hidden]{display:none}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{color:var(--muted)}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} #hb .sw rect{transition:none} }
+
+:root{--accent2:#8A3FA6}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--accent2:#D29BEA} }
+:root[data-theme="dark"]{--accent2:#D29BEA}
+.controls select{font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls select:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.rowtag{font-family:var(--display); font-weight:700; font-size:13px; min-width:64px}
+.calcgrid td input{width:76px; font-family:var(--mono); font-size:13.5px; padding:4px 6px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.calcgrid td input:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.ok-note{color:var(--good); font-weight:600}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <h2>Part 1 · Travelling waves (2a)</h2>
+  <ol>
+    <li><a href="#s1">1 Two kinds of wave <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 The harmonic wave function <span class="chip" data-chip="q2"></span></a></li>
+    <li><a href="#s3">3 The phase constant <span class="chip" data-chip="q3"></span></a></li>
+    <li><a href="#s4">4 Wave speed and direction <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 The wave equation <span class="chip" data-chip="q5"></span></a></li>
+    <li><a href="#s6">6 Wave speed vs particle speed <span class="chip" data-chip="q6"></span></a></li>
+  </ol>
+  <h2>Part 2 · Phasors (2b)</h2>
+  <ol>
+    <li><a href="#s7">7 What a phasor is <span class="chip" data-chip="q7"></span></a></li>
+    <li><a href="#s8">8 Adding waves with phasors <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Writing a signal as a phasor <span class="chip" data-chip="q9"></span></a></li>
+    <li><a href="#s10">10 Adding currents <span class="chip" data-chip="q10"></span></a></li>
+  </ol>
+  <h2>Wrap-up</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">PHYS 365 · Lectures 2a and 2b · Study guide</div>
+  <h1>Travelling waves and phasors</h1>
+  <p class="lede">Lecture 2a writes down one function, <i>y</i>(<i>x</i>, <i>t</i>) = <i>y<sub>m</sub></i> sin(<i>kx</i> − <i>ωt</i> + <i>φ</i>), that describes a whole travelling wave, and pulls the wave speed and the wave equation out of it. Lecture 2b turns that same wave into a rotating arrow (a <b>phasor</b>), so adding two waves becomes adding two arrows.</p>
+  <div class="chain" aria-label="How the lectures connect">
+    <div class="blk"><b>Shake a string</b><span>transverse or longitudinal</span><span class="secs">§1</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Wave function</b><span>y<sub>m</sub>, k, ω, φ</span><span class="secs">§2, §3</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Speed</b><span>v = ω/k = λf</span><span class="secs">§4 to §6</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Phasor</b><span>amplitude and angle</span><span class="secs">§7, §9</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Add waves</b><span>add the arrows</span><span class="secs">§8, §10</span></div>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · Travelling waves (Lecture 2a)</h2>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>Two kinds of wave</h3>
+<p>A wave moves a <b>shape</b> (and energy) along. The material it travels through stays put on average: each little piece just wiggles about its own resting spot. What sorts waves into two kinds is the <b>direction of that wiggle</b> compared with the direction the wave travels.</p>
+<ul class="plain">
+<li><b>Transverse.</b> Shake one end of a string up and down. The wave runs along the string in <i>x</i>, toward the wall, but each particle of string moves up and down in <i>y</i>, at right angles to the wave. These are also called <b>travelling waves</b>.</li>
+<li><b>Longitudinal.</b> Push a piston back and forth in a cylinder of air. Bunches of squeezed air (compressions) travel down the tube, and each air particle moves back and forth <b>parallel</b> to the wave, horizontally.</li>
+</ul>
+<div class="eq">
+  <span class="row">transverse: particle motion ⟂ <i>v⃗</i> &nbsp;&nbsp;·&nbsp;&nbsp; longitudinal: particle motion ∥ <i>v⃗</i></span>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a stadium wave and a line of commuters</span>
+<p>In a stadium wave, each fan just stands up and sits down, yet the "wave" races around the stadium. That's transverse. Now picture a queue where someone at the back gets bumped: each person stumbles forward and steps back, and the bump travels to the front. That's longitudinal. Nobody in either crowd leaves their seat or spot in the queue.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: watch one particle (the dark dot)</div>
+  <canvas id="cvT" height="200" aria-label="Animated row of particles showing transverse or longitudinal motion"></canvas>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Wave type">
+      <button type="button" id="tTr" aria-pressed="true">Transverse (string)</button>
+      <button type="button" id="tLo" aria-pressed="false">Longitudinal (piston)</button>
+    </div>
+    <button class="btn" type="button" id="tPlay">Pause</button>
+  </div>
+  <div class="readout" id="tRead"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The wave moves; the medium doesn't.</b> A piece of string near your hand never reaches the wall. If a question asks how far a particle travels in a period, it's 4<i>y<sub>m</sub></i> of up-and-down motion, not one wavelength along <i>x</i>.</li>
+<li><b>"Perpendicular" or "parallel" compares two directions:</b> the particle's motion and the wave's motion. Don't compare with the string or the tube itself.</li>
+<li>The rest of this lecture uses the string (transverse) picture, but the maths in §2 to §5 works the same for sound: <i>y</i> just becomes a sideways displacement along <i>x</i>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: two kinds of wave"></div>
+</section>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>The harmonic wave function</h3>
+<p>One function tells you the displacement of <b>every</b> piece of string at <b>every</b> moment. Plug in a position <i>x</i> and a time <i>t</i>, and out comes how far that piece sits above or below the resting line.</p>
+<div class="eq">
+  <span class="row"><i>y</i>(<i>x</i>, <i>t</i>) = <i>y<sub>m</sub></i> sin(<i>kx</i> − <i>ωt</i> + <i>φ</i>)</span>
+  <span class="row"><i>k</i> = <span class="frac"><span>2π</span><span>λ</span></span> <span class="note">angular wave number, rad/m</span></span>
+  <span class="row"><i>ω</i> = <span class="frac"><span>2π</span><span>T</span></span> = 2π<i>f</i> <span class="note">angular frequency, rad/s; T = 1/f</span></span>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Symbol</th><th>Name</th><th>What it tells you</th></tr></thead>
+<tbody>
+<tr><td><i>y<sub>m</sub></i></td><td>amplitude</td><td>The biggest displacement. The string swings between +<i>y<sub>m</sub></i> and −<i>y<sub>m</sub></i>.</td></tr>
+<tr><td><i>k</i></td><td>angular wave number</td><td>How fast the phase changes as you walk along <i>x</i>. One wavelength λ is 2π radians of phase.</td></tr>
+<tr><td><i>ω</i></td><td>angular frequency</td><td>How fast the phase changes as time passes at a fixed spot. One period <i>T</i> is 2π radians.</td></tr>
+<tr><td><i>φ</i></td><td>phase angle (phase constant)</td><td>Where the wave starts at <i>x</i> = 0, <i>t</i> = 0 (§3).</td></tr>
+</tbody></table></div>
+<p>Freeze time and you get a snapshot: a sine curve in <i>x</i> that repeats every λ. Stand at one spot and watch: that piece of string does <b>simple harmonic motion</b> in <i>y</i>, repeating every <i>T</i>, perpendicular to the wave's motion.</p>
+
+<div class="callout analogy"><span class="tag">Analogy · k is ω for space</span>
+<p>The lecture boxes <i>k</i> = 2π/λ and says it's "analogous to" <i>ω</i> = 2π/<i>T</i>. Think of a clock hand that does a full turn (2π) per repeat. <i>ω</i> counts how many radians it turns per <b>second</b>; <i>k</i> counts how many radians it turns per <b>metre</b> as you walk along the string.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: the wave explorer</div>
+  <canvas id="cvW" height="230" aria-label="Snapshot of the harmonic wave with one tracked particle"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>snapshot y(x, t)</span><span><i style="background:var(--curr)"></i>one particle at x = 0.25 m</span></div>
+  <div class="controls">
+    <label for="wYm">y<sub>m</sub> <input type="range" id="wYm" min="0.2" max="1" step="0.05" value="1"><output id="wYmO"></output></label>
+    <label for="wLam">λ <input type="range" id="wLam" min="0.5" max="3" step="0.1" value="2"><output id="wLamO"></output></label>
+    <label for="wT">T <input type="range" id="wT" min="0.5" max="4" step="0.1" value="2"><output id="wTO"></output></label>
+    <label for="wPhi">φ <input type="range" id="wPhi" min="0" max="12" step="1" value="0"><output id="wPhiO"></output></label>
+    <button class="btn" type="button" id="wPlay">Play</button>
+  </div>
+  <div class="readout" id="wRead"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>k is not a constant.</b> The lecture underlines this. It's set by the wave (its λ), not a universal number like a spring constant. Don't confuse it with the <i>k</i> in Hooke's law.</li>
+<li><b>Read k and ω straight off the brackets.</b> In 2 sin(4<i>x</i> − 2<i>t</i>), <i>k</i> = 4 and <i>ω</i> = 2. Then λ = 2π/<i>k</i> and <i>T</i> = 2π/<i>ω</i>. A common slip is to treat the 4 as λ.</li>
+<li><b>ω vs f.</b> <i>ω</i> is in rad/s, <i>f</i> in Hz (cycles/s). They differ by 2π. If your answer is off by about 6.28, this is why.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: the wave function"></div>
+</section>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>The phase constant φ</h3>
+<p><i>φ</i> slides the whole wave sideways. It sets the displacement at the origin when the clock starts. Put <i>t</i> = 0 and <i>x</i> = 0 into the wave function and only <i>φ</i> is left inside the sine:</p>
+<div class="eq">
+  <span class="row"><i>y</i>(0, 0) = <i>y<sub>m</sub></i> sin <i>φ</i></span>
+</div>
+<details class="work" open><summary>Lecture example: φ = 0 and φ = π/6</summary><div class="body">
+<div class="steps">
+<div><span class="c">Case I: set φ = 0</span></div>
+<div>at t = 0: y = y_m sin(kx + 0) = y_m sin(kx)</div>
+<div>∴ at x = 0, y = 0 <span class="c">(curve starts at the origin, going up)</span></div>
+<div>&nbsp;</div>
+<div><span class="c">Case II: φ = π/6</span></div>
+<div>at t = 0: y = y_m sin(kx + π/6)</div>
+<div>at x = 0: y = y_m sin(π/6) = y_m/2</div>
+<div><span class="c">The curve now crosses the y-axis at half its height: a phase shift.</span></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: slide the phase (loads with the lecture's φ = π/6)</div>
+  <canvas id="cvP" height="210" aria-label="Wave at t = 0 for phase φ compared with φ = 0"></canvas>
+  <div class="legend"><span><i style="background:var(--muted)"></i>φ = 0</span><span><i style="background:var(--volt)"></i>your φ</span><span><i style="background:var(--curr)"></i>y(0, 0)</span></div>
+  <div class="controls">
+    <label for="pPhi">φ <input type="range" id="pPhi" min="-12" max="12" step="1" value="2"><output id="pPhiO"></output></label>
+  </div>
+  <div class="readout" id="pRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · starting a race late</span>
+<p>Two runners on the same circular track at the same pace, one with a head start. They run identically; the only difference is where each was when the stopwatch started. <i>φ</i> is that head start, measured in radians.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Radians, not degrees.</b> sin(π/6) = 0.5, but your calculator in degree mode gives sin(0.5236°) ≈ 0.009. Check the mode.</li>
+<li><b>φ changes nothing but the start.</b> Amplitude, λ, <i>T</i> and speed are all unchanged.</li>
+<li><b>Positive φ shifts the curve to the left</b> in a snapshot (the wave is "ahead"). In the lecture's sketch the φ = π/6 curve reaches its peak before the φ = 0 curve does.</li>
+<li>Many φ give the same <i>y</i>(0, 0): sin(π/6) = sin(5π/6) = 1/2. To pin φ down you also need to know whether the string at <i>x</i> = 0 is moving up or down.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: phase constant"></div>
+</section>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Wave speed and direction</h3>
+<p>Take two snapshots, at <i>t</i><sub>1</sub> and <i>t</i><sub>2</sub>. The shape is the same, just shifted. Follow one point of the shape (say a particular height <i>y</i>): it sits at <i>x</i><sub>1</sub> in the first frame and <i>x</i><sub>2</sub> in the second. Same height means same phase, and that gives the speed.</p>
+<details class="work" open><summary>Lecture derivation: v = ω/k</summary><div class="body">
+<div class="steps">
+<div><span class="c">Same displacement y₁ = y₂, and let φ = 0:</span></div>
+<div>y_m sin(kx₁ − ωt₁) = y_m sin(kx₂ − ωt₂)</div>
+<div>kx₁ − ωt₁ = kx₂ − ωt₂</div>
+<div>kx₁ − kx₂ = ωt₁ − ωt₂</div>
+<div>k Δx = ω Δt</div>
+<div>∴ Δx/Δt = ω/k = v</div>
+<div>&nbsp;</div>
+<div><span class="c">Another way to express it:</span></div>
+<div>v = ω/k = (2π/T)/(2π/λ) = λ/T = λf &nbsp;<span class="c">since T = 1/f</span></div>
+</div>
+</div></details>
+<div class="eq">
+  <span class="row"><i>v</i> = <span class="frac"><span>ω</span><span>k</span></span> = <span class="frac"><span>λ</span><span>T</span></span> = λ<i>f</i></span>
+  <span class="row"><i>y</i> = <i>y<sub>m</sub></i> sin(<i>kx</i> ∓ <i>ωt</i> + <i>φ</i>) <span class="note">(−) travels toward +x · (+) travels toward −x</span></span>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · surfing one crest</span>
+<p>Imagine riding one crest like a surfer. To stay on it, the stuff inside the sine has to stay constant. If time grows, <i>ωt</i> grows, so <i>kx</i> must grow too: you move toward +<i>x</i>. In one period you travel one wavelength, so your speed is λ/<i>T</i>.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: the crest-rider</div>
+  <canvas id="cvV" height="190" aria-label="Animated travelling wave with a marker riding one crest"></canvas>
+  <div class="controls">
+    <label for="vK">k <input type="number" id="vK" value="4" step="0.5" min="0.5" max="12"></label>
+    <label for="vW">ω <input type="number" id="vW" value="2" step="0.5" min="0.5" max="20"></label>
+    <div class="seg" role="group" aria-label="Sign in front of ωt">
+      <button type="button" id="vMinus" aria-pressed="true">kx − ωt</button>
+      <button type="button" id="vPlus" aria-pressed="false">kx + ωt</button>
+    </div>
+    <button class="btn" type="button" id="vPlay">Pause</button>
+  </div>
+  <div class="readout" id="vRead"></div>
+</div>
+
+<h4>Worked example · Practice Problem 1 (2a): radio waves from a spacecraft</h4>
+<p>Radio waves from a spacecraft have wavelength λ = 0.15 m. What is the frequency? Hint: all electromagnetic waves travel at the speed of light.</p>
+<details class="work" open><summary>Solution, as in the lecture</summary><div class="body">
+<div class="steps">
+<div>v = c = 3 × 10⁸ m/s, &nbsp;λ = 0.15 m</div>
+<div>since v = ω/k = λ/T = λf</div>
+<div>∴ c = λf → f = c/λ</div>
+<div>f = (3 × 10⁸ m/s)/(0.15 m) = 2 × 10⁹ Hz = <b>2000 MHz</b> <span class="c">(2 GHz)</span></div>
+</div>
+</div></details>
+<div class="demo">
+  <div class="dtitle">Calculator: v = λf (loads with Practice Problem 1)</div>
+  <div class="controls">
+    <label for="cV">v (m/s) <input type="number" id="cV" value="300000000" step="any"></label>
+    <label for="cL">λ (m) <input type="number" id="cL" value="0.15" step="any"></label>
+  </div>
+  <div class="readout" id="cRead"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The sign is backwards from what you'd guess.</b> <i>kx</i> <b>minus</b> <i>ωt</i> travels in the <b>+</b><i>x</i> direction.</li>
+<li><b>Speed only needs the numbers in front of x and t.</b> For 2 sin(4<i>x</i> − 2<i>t</i>), <i>v</i> = 2/4 = 0.5. The amplitude 2 has nothing to do with it.</li>
+<li><b>Frequency is set by the source; speed by the medium.</b> Change the medium and λ changes, not <i>f</i>.</li>
+<li>MHz is 10⁶ Hz. 2 × 10⁹ Hz is 2000 MHz, not 2 MHz.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: wave speed"></div>
+</section>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>The wave equation</h3>
+<p>Differentiate <i>y</i> twice in space and twice in time. Both times the sine comes back (with a minus sign), so both second derivatives are just multiples of <i>y</i> itself. Comparing them gives a single equation that any travelling wave obeys.</p>
+<details class="work" open><summary>Lecture derivation, step by step</summary><div class="body">
+<div class="steps">
+<div>y = y_m sin(kx − ωt + φ)</div>
+<div>&nbsp;</div>
+<div><span class="c">With respect to x:</span></div>
+<div>∂y/∂x = k y_m cos(kx − ωt + φ)</div>
+<div>∂²y/∂x² = −k² y_m sin(kx − ωt + φ) = −k² y</div>
+<div>&nbsp;</div>
+<div><span class="c">Repeat with t:</span></div>
+<div>∂y/∂t = −ω y_m cos(kx − ωt + φ)</div>
+<div>∂²y/∂t² = −ω² y_m sin(kx − ωt + φ) = −ω² y</div>
+<div>&nbsp;</div>
+<div><span class="c">Solve each for y:</span></div>
+<div>for x: y = −(1/k²) ∂²y/∂x² &nbsp;&nbsp;|&nbsp;&nbsp; for t: y = −(1/ω²) ∂²y/∂t²</div>
+<div>therefore ∂²y/∂t² = (ω²/k²) ∂²y/∂x²</div>
+<div>and since v = ω/k: &nbsp;∂²y/∂t² = v² ∂²y/∂x²</div>
+</div>
+</div></details>
+<div class="eq">
+  <span class="row"><span class="frac"><span>∂²<i>y</i></span><span>∂<i>t</i>²</span></span> = <i>v</i>² <span class="frac"><span>∂²<i>y</i></span><span>∂<i>x</i>²</span></span> <span class="note">the wave equation</span></span>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · bendier string, faster acceleration</span>
+<p>∂²<i>y</i>/∂<i>x</i>² is how sharply the string is curved at a spot. ∂²<i>y</i>/∂<i>t</i>² is how fast that spot is accelerating. The wave equation says: the more a spot is bent, the harder it gets pulled back, like a bent ruler snapping straight. <i>v</i>² is the exchange rate between the two.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Calculator: check the wave equation at any point (loads with y₁ = 2 sin(4x − 2t))</div>
+  <div class="controls">
+    <label for="eYm">y<sub>m</sub> <input type="number" id="eYm" value="2" step="any"></label>
+    <label for="eK">k <input type="number" id="eK" value="4" step="any"></label>
+    <label for="eW">ω <input type="number" id="eW" value="2" step="any"></label>
+    <label for="eX">x <input type="number" id="eX" value="0.3" step="any"></label>
+    <label for="eT">t <input type="number" id="eT" value="0.1" step="any"></label>
+  </div>
+  <div class="steps" id="eRead"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Partial derivatives.</b> ∂/∂<i>x</i> holds <i>t</i> fixed; ∂/∂<i>t</i> holds <i>x</i> fixed. The chain rule pulls out a factor of <i>k</i> for <i>x</i> and <b>−</b><i>ω</i> for <i>t</i>.</li>
+<li><b>Direction drops out.</b> Waves going either way satisfy it, because ±<i>ω</i> gets squared.</li>
+<li><b>It's v², not v.</b> If an equation reads ∂²<i>y</i>/∂<i>t</i>² = 9 ∂²<i>y</i>/∂<i>x</i>², the speed is 3, not 9.</li>
+<li>Any wave with ω/k = v solves it, whatever its amplitude or phase.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: wave equation"></div>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Wave speed vs particle speed</h3>
+<p>There are two different "speeds" in a wave, and exams love to mix them up.</p>
+<div class="tbl"><table>
+<thead><tr><th>Speed</th><th>Direction</th><th>Formula</th><th>Depends on</th></tr></thead>
+<tbody>
+<tr><td><b>Wave speed</b> <i>u</i> (lecture's symbol)</td><td>along <i>x</i></td><td><i>u</i> = <i>ω</i>/<i>k</i>, constant</td><td>ω and k only</td></tr>
+<tr><td><b>Particle (transverse) speed</b> <i>v</i></td><td>along <i>y</i>, ⟂ to wave</td><td>∂<i>y</i>/∂<i>t</i>, changes in time; max = <i>ωy<sub>m</sub></i></td><td>ω and y<sub>m</sub></td></tr>
+</tbody></table></div>
+<div class="eq">
+  <span class="row"><i>v</i> = <span class="frac"><span>∂<i>y</i></span><span>∂<i>t</i></span></span> = −<i>ωy<sub>m</sub></i> cos(<i>kx</i> − <i>ωt</i>) &nbsp;⇒&nbsp; |<i>v<sub>m</sub></i>| = <i>ωy<sub>m</sub></i></span>
+</div>
+
+<h4>Worked example · Practice Problem 2 (2a)</h4>
+<p>y₁ = 2 sin(4x − 2t), &nbsp;y₂ = sin(3x − 4t), &nbsp;y₃ = 2 sin(3x − 3t). (a) Rank the wave speeds <i>u</i>. (b) Rank the maximum speeds perpendicular to the wave's motion, <i>v</i>.</p>
+<details class="work" open><summary>Solution, as in the lecture</summary><div class="body">
+<div class="steps">
+<div><span class="c">(a) u = ω/k</span></div>
+<div>u₁ = 2/4 = 0.5 &nbsp;;&nbsp; u₂ = 4/3 = 1.333 &nbsp;;&nbsp; u₃ = 3/3 = 1</div>
+<div>∴ <b>u₁ &lt; u₃ &lt; u₂</b></div>
+<div>&nbsp;</div>
+<div><span class="c">(b) v = dy/dt</span></div>
+<div>v₁ = 2 d/dt[sin(4x − 2t)] = 2(−2) cos(4x − 2t) = −4 cos(4x − 2t)</div>
+<div>v₂ = d/dt[sin(3x − 4t)] = −4 cos(3x − 4t)</div>
+<div>v₃ = d/dt[2 sin(3x − 3t)] = −6 cos(3x − 3t)</div>
+<div>∴ velocity amplitudes: |v₁,m| = 4 ; |v₂,m| = 4 ; |v₃,m| = 6</div>
+<div>∴ <b>v₁,m = v₂,m &lt; v₃,m</b></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: rank three waves (loads with Practice Problem 2)</div>
+  <div class="tbl calcgrid"><table>
+  <thead><tr><th>Wave</th><th>y<sub>m</sub></th><th>k</th><th>ω</th><th class="num">u = ω/k</th><th class="num">|v<sub>m</sub>| = ωy<sub>m</sub></th></tr></thead>
+  <tbody>
+  <tr><td>y₁</td><td><input type="number" id="r1y" value="2" step="any" aria-label="y1 amplitude"></td><td><input type="number" id="r1k" value="4" step="any" aria-label="y1 k"></td><td><input type="number" id="r1w" value="2" step="any" aria-label="y1 omega"></td><td class="num" id="r1u"></td><td class="num" id="r1v"></td></tr>
+  <tr><td>y₂</td><td><input type="number" id="r2y" value="1" step="any" aria-label="y2 amplitude"></td><td><input type="number" id="r2k" value="3" step="any" aria-label="y2 k"></td><td><input type="number" id="r2w" value="4" step="any" aria-label="y2 omega"></td><td class="num" id="r2u"></td><td class="num" id="r2v"></td></tr>
+  <tr><td>y₃</td><td><input type="number" id="r3y" value="2" step="any" aria-label="y3 amplitude"></td><td><input type="number" id="r3k" value="3" step="any" aria-label="y3 k"></td><td><input type="number" id="r3w" value="3" step="any" aria-label="y3 omega"></td><td class="num" id="r3u"></td><td class="num" id="r3v"></td></tr>
+  </tbody></table></div>
+  <canvas id="cvR" height="170" aria-label="Bar chart of wave speeds and maximum particle speeds"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>wave speed u</span><span><i style="background:var(--curr)"></i>max particle speed |v<sub>m</sub>|</span></div>
+  <div class="readout" id="rRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · the stadium again</span>
+<p>How fast the stadium wave goes round (wave speed) is a different question from how fast each fan jumps up (particle speed). A lazy crowd can make a fast wave if each person stands up just after their neighbour, and an energetic crowd can make a slow one.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Amplitude affects particle speed, not wave speed.</b> y₁ and y₃ both have amplitude 2, but different <i>u</i>. y₁ and y₂ have different amplitudes but the same |<i>v<sub>m</sub></i>| = 4, because ω makes up for it.</li>
+<li><b>Particle speed is fastest at y = 0</b> (crossing the middle) and zero at the crests, just like a mass on a spring.</li>
+<li>Particle speed can be bigger than the wave speed. Wave 3: |<i>v<sub>m</sub></i>| = 6 but <i>u</i> = 1. Nothing breaks.</li>
+<li>Watch the symbols: in this problem <i>u</i> is the wave speed and <i>v</i> the particle speed, the opposite of §4's <i>v</i> = ω/<i>k</i>. Read which one the question means.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: two kinds of speed"></div>
+</section>
+
+<h2 class="part">Part 2 · Phasors (Lecture 2b)</h2>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>What a phasor is</h3>
+<p>A phasor is a <b>complex</b> (or analytic) way to write a wave. It turns a wave into an <b>arrow</b> (a vector) with a length and an angle. That makes adding waves (§8) a lot easier than juggling trig identities.</p>
+<p>Start from the wave equation. One solution is a sine. Another, the "analytic" one, pairs a cosine with an <i>i</i>·sine:</p>
+<details class="work" open><summary>Lecture build-up: from sin and cos to e<sup>iθ</sup></summary><div class="body">
+<div class="steps">
+<div>y(x,t) = y₁ + i y₂, &nbsp;where</div>
+<div>y₁ = y_m cos(kx + ωt + φ), &nbsp;y₂ = y_m sin(kx + ωt + φ)</div>
+<div>y = y_m [cos(kx + ωt + φ) + i sin(kx + ωt + φ)]</div>
+<div><span class="c">Euler's identity: e^{iθ} = cos θ + i sin θ</span></div>
+<div>y(x,t) = y_m e^{i(kx + ωt + φ)}</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = y_m e^{ikx} · e^{i(ωt + φ)}</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = x_m e^{i(ωt + φ)} = x̃(t) &nbsp;<span class="c">← the phasor (time dependent); x_m = y_m e^{ikx}</span></div>
+<div>&nbsp;</div>
+<div>Re(x̃(t)) = x_m cos(ωt + φ) &nbsp;<span class="c">← the real displacement</span></div>
+<div>x̃(t) = x_m e^{iφ} e^{iωt} = x̃_m e^{iωt}, &nbsp;where x̃_m = x_m e^{iφ}</div>
+</div>
+</div></details>
+<div class="eq">
+  <span class="row">e<sup><i>iθ</i></sup> = cos <i>θ</i> + <i>i</i> sin <i>θ</i></span>
+  <span class="row"><i>x̃</i>(<i>t</i>) = <i>x̃<sub>m</sub></i> e<sup><i>iωt</i></sup>, &nbsp; <i>x̃<sub>m</sub></i> = <i>x<sub>m</sub></i> e<sup><i>iφ</i></sup> <span class="note">complex amplitude: length x<sub>m</sub>, angle φ</span></span>
+  <span class="row"><i>x</i>(<i>t</i>) = Re[<i>x̃</i>(<i>t</i>)] = <i>x<sub>m</sub></i> cos(<i>ωt</i> + <i>φ</i>)</span>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a shadow of a spinning arrow</span>
+<p>Picture an arrow of length <i>x<sub>m</sub></i> spinning counter-clockwise at <i>ω</i> rad/s, starting at angle <i>φ</i>. Shine a light from above: its shadow on the horizontal (real) axis slides back and forth as <i>x<sub>m</sub></i> cos(<i>ωt</i> + <i>φ</i>). The wave is the shadow; the phasor is the arrow. Since every arrow in a problem spins at the same <i>ω</i>, you can freeze them all at <i>t</i> = 0 and just work with <i>x̃<sub>m</sub></i>.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: the spinning phasor and its shadow</div>
+  <canvas id="cvF" height="230" aria-label="Rotating phasor on the complex plane with its real part traced as a cosine"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>phasor x̃(t)</span><span><i style="background:var(--curr)"></i>Re x̃ = x<sub>m</sub> cos(ωt + φ)</span></div>
+  <div class="controls">
+    <label for="fXm">x<sub>m</sub> <input type="range" id="fXm" min="0.3" max="1" step="0.05" value="1"><output id="fXmO"></output></label>
+    <label for="fPhi">φ <input type="range" id="fPhi" min="-12" max="12" step="1" value="0"><output id="fPhiO"></output></label>
+    <button class="btn" type="button" id="fPlay">Play</button>
+  </div>
+  <div class="readout" id="fRead"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The physical wave is the real part.</b> The imaginary part is a bookkeeping helper. When you're done, take Re[ ] to get back a cosine.</li>
+<li><b>Phasors are cosine-based.</b> Re gives <i>cos</i>(<i>ωt</i> + <i>φ</i>). A sine has to be rewritten as a cosine first (§9).</li>
+<li><b>Two names, two things.</b> <i>x̃</i>(<i>t</i>) spins (it has e<sup><i>iωt</i></sup>). <i>x̃<sub>m</sub></i> is the frozen arrow (just length and angle). Most problems ask for <i>x̃<sub>m</sub></i>.</li>
+<li>Lecture 2b writes <i>kx</i> + <i>ωt</i> while 2a used <i>kx</i> − <i>ωt</i>. Both solve the wave equation; they just travel in opposite directions.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: phasors"></div>
+</section>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>Adding waves with phasors</h3>
+<p>Two waves with the <b>same ω</b> on the same string add up to another wave with that same ω. Its amplitude and phase come from adding the two arrows head to tail.</p>
+<details class="work" open><summary>Lecture setup</summary><div class="body">
+<div class="steps">
+<div>wave 1: x₁ = x_m1 cos(ωt + φ₁) &nbsp;→&nbsp; x̃₁ = x̃_m1 e^{iωt}, &nbsp;x̃_m1 = x_m1 e^{iφ₁}</div>
+<div>wave 2: x₂ = x_m2 cos(ωt + φ₂) &nbsp;→&nbsp; x̃₂ = x̃_m2 e^{iωt}, &nbsp;x̃_m2 = x_m2 e^{iφ₂}</div>
+<div>superposition by summation:</div>
+<div>x̃_R = x̃₁ + x̃₂ = (x̃_m1 + x̃_m2) e^{iωt} = x̃_m e^{iωt}</div>
+<div>x̃_m = |x̃_m| e^{iφ} &nbsp;<span class="c">|x̃_m| = amplitude of the sum, φ = its phase constant</span></div>
+</div>
+</div></details>
+<div class="eq">
+  <span class="row">horizontal: <i>X</i> = <i>x</i><sub>m1</sub> cos <i>φ</i><sub>1</sub> + <i>x</i><sub>m2</sub> cos <i>φ</i><sub>2</sub> &nbsp;·&nbsp; vertical: <i>Y</i> = <i>x</i><sub>m1</sub> sin <i>φ</i><sub>1</sub> + <i>x</i><sub>m2</sub> sin <i>φ</i><sub>2</sub></span>
+  <span class="row">amplitude = √(<i>X</i>² + <i>Y</i>²) &nbsp;·&nbsp; <i>φ<sub>R</sub></i> = tan<sup>−1</sup>(<i>Y</i>/<i>X</i>)</span>
+</div>
+
+<h4>Worked example · Practice Problem 1 (2b)</h4>
+<p>Two waves on the same string: y₁ = 5.6 m sin(2πx − 400πt) and y₂ = 6.6 m sin(2πx − 400πt + 0.8π rad). Find (i) the amplitude of the resultant and (ii) its phase angle relative to wave 1.</p>
+<details class="work" open><summary>Solution, as in the lecture</summary><div class="body">
+<div class="steps">
+<div><span class="c">Draw the phasors: y_m1 along the axis (φ₁ = 0), y_m2 at φ₂ = 0.8π ≈ 144°,</span></div>
+<div><span class="c">which is 36° above the negative axis (180° − 144° = 36°).</span></div>
+<div>&nbsp;</div>
+<div>x-axis: y_mx = (y_m1)_x + (y_m2)_x = [5.6 − 6.6 cos 36°] m = 0.261 m</div>
+<div>y-axis: y_my = (y_m1)_y + (y_m2)_y = 0 + [6.6 sin 36°] m = 3.88 m</div>
+<div>&nbsp;</div>
+<div>y_m = √(y_mx² + y_my²) = √(0.261² + 3.88²) = <b>3.89 m</b></div>
+<div>φ_R = tan⁻¹(3.88 m / 0.261 m) ≈ <b>86.15°</b></div>
+</div>
+</div></details>
+<details class="work" open><summary>Follow-up: a third wave of amplitude 5 m. What φ₃ maximises the resultant?</summary><div class="body">
+<div class="steps">
+<div>To maximise the resultant, wave 3 should be in phase with the resultant of the first two:</div>
+<div><b>φ₃ = φ_R</b> &nbsp;<span class="c">(≈ 86.15°; the arrows then line up, giving 3.89 + 5 = 8.89 m)</span></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: phasor adder (loads with Practice Problem 1)</div>
+  <canvas id="cvA" height="300" aria-label="Phasor diagram with arrows added head to tail"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>wave 1</span><span><i style="background:var(--accent2)"></i>wave 2</span><span><i style="background:var(--muted)"></i>wave 3</span><span><i style="background:var(--fund)"></i>resultant</span></div>
+  <div class="controls">
+    <span class="rowtag">Wave 1</span>
+    <label for="a1A">amp <input type="number" id="a1A" value="5.6" step="any"></label>
+    <label for="a1P">φ° <input type="number" id="a1P" value="0" step="any"></label>
+  </div>
+  <div class="controls">
+    <span class="rowtag">Wave 2</span>
+    <label for="a2A">amp <input type="number" id="a2A" value="6.6" step="any"></label>
+    <label for="a2P">φ° <input type="number" id="a2P" value="144" step="any"></label>
+  </div>
+  <div class="controls">
+    <label for="a3On"><input type="checkbox" id="a3On"> <span class="rowtag">Wave 3</span></label>
+    <label for="a3A">amp <input type="number" id="a3A" value="5" step="any"></label>
+    <label for="a3P">φ° <input type="range" id="a3P" min="-180" max="180" step="1" value="0"><output id="a3PO"></output></label>
+    <button class="btn" type="button" id="a3Snap">Set φ₃ = φ<sub>R</sub></button>
+  </div>
+  <div class="steps" id="aRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · two people pulling a sled</span>
+<p>Two people pull a sled with ropes at different angles. The sled feels one combined pull: add the ropes as vectors. If they pull nearly opposite (like 0° and 144° here), the big forces mostly cancel and the sled gets a small sideways tug. A third person adds the most by pulling exactly along that combined direction.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Amplitudes don't simply add.</b> 5.6 + 6.6 = 12.2 m only if the waves are in phase. Here they're 144° apart and the answer is just 3.89 m.</li>
+<li><b>Mind the 36°.</b> The lecture uses the 36° angle to the negative axis, so the x-part is <b>minus</b> 6.6 cos 36°. If you use 144° directly, cos 144° is already negative: 6.6 cos 144° = −5.34. Don't subtract twice.</li>
+<li><b>tan⁻¹ quadrant.</b> Your calculator gives an angle between −90° and 90°. If X is negative, add 180°. Here X = +0.261 is positive, so 86.15° is fine.</li>
+<li><b>Rounding.</b> With unrounded values the angle is 86.16°; the lecture's 86.15° comes from using 0.261 and 3.88. Either is fine on an exam.</li>
+<li>Only waves with the same ω (and same k) can be added this way. All here share 2πx − 400πt.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: adding phasors"></div>
+</section>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Writing a signal as a phasor</h3>
+<p>To turn a real signal into a phasor, get it into the standard form <b>(positive amplitude) × cos(ωt + phase)</b>, then read off the length and angle. Two fixes come up all the time:</p>
+<ul class="plain">
+<li><b>A minus sign out front.</b> −1 = e<sup>−<i>iπ</i></sup>, so a negative amplitude is the same as a positive one with π taken off the phase.</li>
+<li><b>A sine instead of a cosine.</b> sin <i>θ</i> = cos(<i>θ</i> − π/2), so take π/2 off the phase.</li>
+</ul>
+<div class="eq">
+  <span class="row">−<i>A</i> cos(<i>ωt</i> + <i>θ</i>) = <i>A</i> cos(<i>ωt</i> + <i>θ</i> − π) <span class="note">e<sup>−iπ</sup> = −1</span></span>
+  <span class="row"><i>A</i> sin(<i>ωt</i> + <i>θ</i>) = <i>A</i> cos(<i>ωt</i> + <i>θ</i> − π/2) <span class="note">cos(θ − π/2) = sin θ</span></span>
+</div>
+
+<h4>Worked example · Practice Problem 2 (2b)</h4>
+<p>Find the phasor representation of the current i(t) = −4 cos(ωt + 3π/4).</p>
+<details class="work" open><summary>Solution, as in the lecture</summary><div class="body">
+<div class="steps">
+<div>i(t) = −4 cos(ωt + 3π/4)</div>
+<div>ĩ(t) = −4 e^{i(ωt + 3π/4)}</div>
+<div><span class="c">since e^{−iπ} = −1, we can simplify further:</span></div>
+<div>ĩ(t) = 4 e^{−iπ} e^{i(ωt + 3π/4)}</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 4 e^{i(ωt − π/4)}</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 4 e^{−iπ/4} e^{iωt}</div>
+<div>∴ <b>ĩ(t) = ĩ_m e^{iωt}, where ĩ_m = 4 e^{−iπ/4}</b></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: signal → phasor (loads with Practice Problem 2)</div>
+  <div class="controls">
+    <label for="sA">amplitude <input type="number" id="sA" value="-4" step="any"></label>
+    <label for="sF"><select id="sF" aria-label="Function"><option value="cos" selected>cos</option><option value="sin">sin</option></select></label>
+    <label for="sP">(ωt + <input type="number" id="sP" value="0.75" step="any"> π)</label>
+  </div>
+  <canvas id="cvS" height="200" aria-label="Phasor drawn on the complex plane"></canvas>
+  <div class="steps" id="sRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · turning around instead of walking backwards</span>
+<p>"Walk 4 m backwards while facing 135°" puts you in the same place as "walk 4 m forwards facing −45°". A negative amplitude is walking backwards; the phasor convention says always walk forwards, so turn around by 180° (π) instead.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Amplitude stays positive.</b> The answer is 4 e<sup>−<i>iπ</i>/4</sup>, not −4 e<sup><i>i</i>3π/4</sup>. They're equal numbers, but the standard phasor has a positive length.</li>
+<li><b>±π both work.</b> 3π/4 + π = 7π/4 is the same angle as −π/4. Pick the one between −π and π.</li>
+<li><b>Sine shift goes the right way:</b> sin is cos <b>minus</b> π/2 (sine lags cosine). Adding π/2 instead is the classic mistake.</li>
+<li>If both fixes are needed (−A sin), do both: subtract π/2 and add or subtract π.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: converting to phasors"></div>
+</section>
+
+<!-- 10 -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>Adding currents with phasors</h3>
+<p>Put it all together: convert each signal to a cosine phasor (§9), add the complex amplitudes (§8), then read the answer back as a cosine.</p>
+<div class="eq">
+  <span class="row"><i>ĩ</i>(<i>t</i>) = <i>ĩ</i><sub>1</sub>(<i>t</i>) + <i>ĩ</i><sub>2</sub>(<i>t</i>) = (<i>ĩ</i><sub>m1</sub> + <i>ĩ</i><sub>m2</sub>) e<sup><i>iωt</i></sup> &nbsp;⇒&nbsp; <i>i</i>(<i>t</i>) = |<i>ĩ<sub>m</sub></i>| cos(<i>ωt</i> + arg <i>ĩ<sub>m</sub></i>)</span>
+</div>
+
+<h4>Worked example · Practice Problem 3 (2b)</h4>
+<p>Find the superposition of i₁(t) = 5 sin(ωt + π/4) and i₂(t) = 7 cos(ωt − π/4) using phasors.</p>
+<details class="work" open><summary>Solution, as in the lecture</summary><div class="body">
+<div class="steps">
+<div><span class="c">Convert i₁(t) to a cosine via a phase shift, cos(θ − π/2) = sin θ:</span></div>
+<div>i₁(t) = 5 cos(ωt + π/4 − π/2) = 5 cos(ωt − π/4)</div>
+<div>ĩ₁(t) = 5 e^{−iπ/4} e^{iωt}</div>
+<div>ĩ₂(t) = 7 e^{−iπ/4} e^{iωt}</div>
+<div>ĩ(t) = ĩ₁(t) + ĩ₂(t)</div>
+<div><b>ĩ(t) = 12 e^{−iπ/4} e^{iωt}</b>, &nbsp;ĩ_m = 12 e^{−iπ/4}</div>
+<div><span class="c">Back to a real current: i(t) = 12 cos(ωt − π/4)</span></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: add two signals (loads with Practice Problem 3)</div>
+  <div class="controls">
+    <span class="rowtag">i₁(t) =</span>
+    <label for="b1A"><input type="number" id="b1A" value="5" step="any" aria-label="i1 amplitude"></label>
+    <label for="b1F"><select id="b1F" aria-label="i1 function"><option value="cos">cos</option><option value="sin" selected>sin</option></select></label>
+    <label for="b1P">(ωt + <input type="number" id="b1P" value="0.25" step="any" aria-label="i1 phase in units of pi"> π)</label>
+  </div>
+  <div class="controls">
+    <span class="rowtag">i₂(t) =</span>
+    <label for="b2A"><input type="number" id="b2A" value="7" step="any" aria-label="i2 amplitude"></label>
+    <label for="b2F"><select id="b2F" aria-label="i2 function"><option value="cos" selected>cos</option><option value="sin">sin</option></select></label>
+    <label for="b2P">(ωt + <input type="number" id="b2P" value="-0.25" step="any" aria-label="i2 phase in units of pi"> π)</label>
+  </div>
+  <canvas id="cvB" height="260" aria-label="Two current phasors and their sum"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>ĩ<sub>m1</sub></span><span><i style="background:var(--accent2)"></i>ĩ<sub>m2</sub></span><span><i style="background:var(--fund)"></i>sum</span></div>
+  <div class="steps" id="bRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · converting currencies before adding</span>
+<p>You can't add 5 dollars and 7 euros as "12". First convert to one currency. Sines and cosines are different currencies; converting i₁ to a cosine is the exchange. After the conversion, both arrows point at −π/4, so here the lengths really do just add: 5 + 7 = 12.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Convert first, add second.</b> Adding 5 e<sup><i>iπ</i>/4</sup> + 7 e<sup>−<i>iπ</i>/4</sup> (forgetting the sine shift) gives 8.60, not 12.</li>
+<li><b>12 only works because the phases match.</b> In general you must add components (§8), not lengths.</li>
+<li><b>Same ω required.</b> Both currents have the same ω, so e<sup><i>iωt</i></sup> factors out. Different frequencies can't be added as fixed phasors.</li>
+<li>Give the final answer in the form asked: phasor (12 e<sup>−<i>iπ</i>/4</sup>) or time signal (12 cos(<i>ωt</i> − π/4)).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: adding currents"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across both lectures, mostly calculations. Grab paper and a calculator (in radian mode unless the question uses degrees). Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Wave types</h5><div>Transverse: particle motion ⟂ v⃗<br>Longitudinal: particle motion ∥ v⃗<br>The shape travels; the medium doesn't</div></div>
+  <div class="card"><h5>Harmonic wave</h5><div>y(x,t) = y<sub>m</sub> sin(kx − ωt + φ)<br>k = 2π/λ · ω = 2π/T = 2πf<br>y(0,0) = y<sub>m</sub> sin φ</div></div>
+  <div class="card"><h5>Wave speed and direction</h5><div>v = ω/k = λ/T = λf<br>kx − ωt: toward +x<br>kx + ωt: toward −x</div></div>
+  <div class="card"><h5>Wave equation</h5><div>∂²y/∂x² = −k²y · ∂²y/∂t² = −ω²y<br>∂²y/∂t² = v² ∂²y/∂x²</div></div>
+  <div class="card"><h5>Particle (transverse) speed</h5><div>v = ∂y/∂t = −ωy<sub>m</sub> cos(kx − ωt + φ)<br>|v<sub>m</sub>| = ωy<sub>m</sub> (fastest at y = 0)</div></div>
+  <div class="card"><h5>Phasors</h5><div>e<sup>iθ</sup> = cos θ + i sin θ<br>x̃(t) = x̃<sub>m</sub>e<sup>iωt</sup>, x̃<sub>m</sub> = x<sub>m</sub>e<sup>iφ</sup><br>x(t) = Re x̃(t) = x<sub>m</sub> cos(ωt + φ)</div></div>
+  <div class="card"><h5>Adding phasors</h5><div>X = Σ A<sub>j</sub> cos φ<sub>j</sub> · Y = Σ A<sub>j</sub> sin φ<sub>j</sub><br>amplitude = √(X² + Y²)<br>φ<sub>R</sub> = tan⁻¹(Y/X), +180° if X &lt; 0</div></div>
+  <div class="card"><h5>Conversions</h5><div>e<sup>−iπ</sup> = −1: −A cos(θ) = A cos(θ − π)<br>sin θ = cos(θ − π/2)<br>max amplitude: add the in-phase wave (φ<sub>3</sub> = φ<sub>R</sub>)</div></div>
+</div>
+</section>
+
+<footer>Built from the PHYS 365 Lecture 2a (transverse and longitudinal waves, harmonic wave function, the wave equation) and Lecture 2b (phasors) notes, including all five practice problems.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+const PI = Math.PI;
+/* ---------------- QUIZ DATA ---------------- */
+const QUIZ = {
+q1:[
+ {q:"A string lies along x. A wave travels toward +x. Which way does a particle of the string move?",
+  o:["Toward +x, with the wave","Up and down in y, perpendicular to the wave","Back and forth along x","It stays perfectly still"],a:1,
+  e:"A wave on a string is transverse: each particle oscillates in y, at right angles to the wave's motion along x. The particle never travels along to the wall."},
+ {q:"In the piston-cylinder example, why is the sound wave called longitudinal?",
+  o:["The tube is long","The air particles oscillate parallel to the direction the wave travels","The wave has a long wavelength","The piston moves perpendicular to the tube"],a:1,
+  e:"Longitudinal means the particle motion is parallel to the wave velocity. Air particles move back and forth horizontally, the same direction as the compressions travel."},
+ {q:"A wave of amplitude y_m passes a piece of string. During one full period, how far does that piece of string travel along x?",
+  o:["One wavelength λ","Zero: it only moves up and down (total path 4y_m in y)","2y_m","v·T"],a:1,
+  e:"The shape moves λ along x in one period, but the particle doesn't. It goes up y_m, down 2y_m, up y_m: a total path of 4y_m, all in y, ending where it started."},
+ {q:"A stadium crowd does 'the wave': each fan stands up and sits down as it passes. What does this model?",
+  o:["A longitudinal wave","A transverse wave","Neither, since the fans don't move","A standing wave"],a:1,
+  e:"The disturbance moves around the stadium (horizontally) while each fan moves vertically. Perpendicular motion means transverse."}
+],
+q2:[
+ {q:"A wave has wavelength λ = 0.5 m. What is its angular wave number k?",
+  o:["0.5 rad/m","3.14 rad/m","12.57 rad/m","2.0 rad/m"],a:2,
+  e:"k = 2π/λ = 2π/0.5 = 4π ≈ 12.57 rad/m."},
+ {q:"y = 0.03 sin(5x − 20t) (SI units). What is the period T?",
+  o:["0.314 s","20 s","3.18 s","0.05 s"],a:0,
+  e:"ω = 20 rad/s, so T = 2π/ω = 2π/20 = 0.314 s. (3.18 is the frequency f = 1/T in Hz.)"},
+ {q:"For the lecture's y₁ = 2 sin(4x − 2t), what is the wavelength?",
+  o:["4 m","2 m","1.57 m (π/2)","0.5 m"],a:2,
+  e:"k = 4 is the number in front of x. λ = 2π/k = 2π/4 = π/2 ≈ 1.57 m. The '4' is k, not λ."},
+ {q:"You keep the frequency the same but the wavelength doubles. What happens to k?",
+  o:["It doubles","It halves","It stays the same, since k is a constant","It quadruples"],a:1,
+  e:"k = 2π/λ, so doubling λ halves k. This is why the lecture stresses that k is not a constant: it depends on the wave."},
+ {q:"Why does every particle on the string do simple harmonic motion?",
+  o:["Because the string is under tension","At a fixed x, y = y_m sin(constant − ωt), which is a sinusoid in time","Because the wave travels at constant speed","Because k = 2π/λ"],a:1,
+  e:"Fix x and the kx + φ part is just a constant. What's left is y_m sin(constant − ωt): a pure sinusoid in time with angular frequency ω, which is SHM."}
+],
+q3:[
+ {q:"With φ = π/2, what is y(0, 0)?",
+  o:["0","y_m/2","y_m","−y_m"],a:2,
+  e:"y(0,0) = y_m sin(π/2) = y_m. The wave starts at a crest: it looks like a cosine."},
+ {q:"y_m = 6 mm and φ = π/3. What is the displacement at x = 0, t = 0?",
+  o:["3.00 mm","5.20 mm","6.00 mm","0.11 mm"],a:1,
+  e:"y = 6 sin(π/3) = 6(0.866) = 5.20 mm. (0.11 mm is what you get with your calculator in degree mode.)"},
+ {q:"You change φ from 0 to π/6. Which of these changes?",
+  o:["The amplitude","The wavelength","The wave speed","Where the curve sits along x at a given time"],a:3,
+  e:"φ only slides the wave sideways (a phase shift). y_m, λ, T and v are all set by y_m, k and ω, which haven't changed."},
+ {q:"Which φ makes the string start at its lowest point at x = 0, t = 0?",
+  o:["π","π/2","3π/2 (or −π/2)","0"],a:2,
+  e:"You need sin φ = −1, so φ = 3π/2 (same as −π/2). φ = π gives sin π = 0, back at the middle."}
+],
+q4:[
+ {q:"An FM radio station broadcasts at wavelength λ = 3 m. What is its frequency? (c = 3 × 10⁸ m/s)",
+  o:["1 MHz","100 MHz","900 MHz","9 × 10⁸ MHz"],a:1,
+  e:"f = c/λ = 3 × 10⁸ / 3 = 1 × 10⁸ Hz = 100 MHz. Same method as Practice Problem 1, where λ = 0.15 m gave 2000 MHz."},
+ {q:"y = 2 sin(4x − 2t). What are the wave speed and direction?",
+  o:["2 m/s toward +x","0.5 m/s toward +x","0.5 m/s toward −x","8 m/s toward +x"],a:1,
+  e:"v = ω/k = 2/4 = 0.5. The sign in front of ωt is minus, which means travel toward +x. Amplitude doesn't enter."},
+ {q:"y = y_m sin(3x + 6t). What are the wave speed and direction?",
+  o:["2 toward −x","2 toward +x","0.5 toward −x","18 toward −x"],a:0,
+  e:"v = ω/k = 6/3 = 2. A plus sign in front of ωt means the wave travels toward −x."},
+ {q:"In the derivation of v = ω/k, why can we set kx₁ − ωt₁ = kx₂ − ωt₂?",
+  o:["Because the amplitude cancels","We are following one point of the shape, so its displacement (and phase) is the same in both frames","Because t₁ = t₂","Because the wave equation says so"],a:1,
+  e:"We track the same feature of the wave (same y) in two snapshots. Same height on the same sine means the same phase, so the arguments are equal. Rearranging gives Δx/Δt = ω/k."},
+ {q:"Sound travels at 343 m/s. A tone has wavelength 0.686 m. What is its frequency?",
+  o:["235 Hz","500 Hz","2.0 Hz","3140 Hz"],a:1,
+  e:"f = v/λ = 343/0.686 = 500 Hz."}
+],
+q5:[
+ {q:"For y = y_m sin(kx − ωt + φ), what is ∂²y/∂x²?",
+  o:["k² y","−k² y","−ω² y","−k y"],a:1,
+  e:"Differentiate twice in x: each time you pull out a k, and sin → cos → −sin. So ∂²y/∂x² = −k² y_m sin(…) = −k² y."},
+ {q:"y = 3 sin(2x − 8t). Which equation does it satisfy?",
+  o:["∂²y/∂t² = 4 ∂²y/∂x²","∂²y/∂t² = 16 ∂²y/∂x²","∂²y/∂t² = 9 ∂²y/∂x²","∂²y/∂t² = 64 ∂²y/∂x²"],a:1,
+  e:"v = ω/k = 8/2 = 4, so v² = 16. The amplitude 3 doesn't matter."},
+ {q:"A string obeys ∂²y/∂t² = 25 ∂²y/∂x². A harmonic wave on it has k = 3 rad/m. What is ω?",
+  o:["75 rad/s","15 rad/s","8.33 rad/s","5 rad/s"],a:1,
+  e:"v² = 25 → v = 5. ω = vk = 5 × 3 = 15 rad/s."},
+ {q:"Why does a wave travelling toward −x (kx + ωt) satisfy the same wave equation?",
+  o:["It doesn't","Its ∂²y/∂t² has (+ω)² = ω², the same as (−ω)²","Because k changes sign","Because amplitude is always positive"],a:1,
+  e:"The time derivative pulls out +ω instead of −ω, but the second derivative squares it. Both give −ω² y, so both satisfy ∂²y/∂t² = v² ∂²y/∂x²."}
+],
+q6:[
+ {q:"For the lecture's three waves y₁ = 2 sin(4x − 2t), y₂ = sin(3x − 4t), y₃ = 2 sin(3x − 3t), which ranking of wave speeds is right?",
+  o:["u₁ < u₂ < u₃","u₁ < u₃ < u₂","u₃ < u₁ < u₂","u₁ = u₃ < u₂"],a:1,
+  e:"u = ω/k: u₁ = 2/4 = 0.5, u₂ = 4/3 = 1.333, u₃ = 3/3 = 1. So u₁ < u₃ < u₂."},
+ {q:"Same three waves: rank the maximum transverse (particle) speeds.",
+  o:["v₁,m < v₂,m < v₃,m","v₁,m = v₂,m < v₃,m","v₃,m < v₁,m = v₂,m","All equal"],a:1,
+  e:"|v_m| = ωy_m: wave 1: 2 × 2 = 4, wave 2: 4 × 1 = 4, wave 3: 3 × 2 = 6. So v₁,m = v₂,m < v₃,m."},
+ {q:"y = 0.05 sin(10x − 40t) m. What is the maximum speed of a particle on the string?",
+  o:["4 m/s","2 m/s","0.4 m/s","0.5 m/s"],a:1,
+  e:"|v_m| = ωy_m = 40 × 0.05 = 2 m/s. (4 m/s is the wave speed ω/k: a different thing.)"},
+ {q:"Where is a particle of the string moving fastest?",
+  o:["At a crest","At a trough","As it passes through y = 0","It moves at a constant speed"],a:2,
+  e:"v = −ωy_m cos(…) is largest when sin(…) = 0, i.e. y = 0. At a crest or trough the particle is momentarily at rest, like a pendulum at the end of its swing."},
+ {q:"Why can doubling the amplitude change the particle speed but not the wave speed?",
+  o:["Wave speed is ω/k, which has no y_m in it; particle speed is ωy_m","Doubling amplitude also doubles k","Wave speed is always the speed of light","Particle speed depends only on k"],a:0,
+  e:"u = ω/k doesn't involve y_m at all. The particle must cover a bigger swing in the same period T, so its maximum speed ωy_m grows."}
+],
+q7:[
+ {q:"What is Re[5 e^{i(ωt + π/3)}]?",
+  o:["5 sin(ωt + π/3)","5 cos(ωt + π/3)","5 cos(ωt) + 5 sin(π/3)","5"],a:1,
+  e:"By Euler, 5e^{iθ} = 5cos θ + i·5 sin θ. The real part is 5 cos(ωt + π/3)."},
+ {q:"What is e^{iπ}?",
+  o:["1","i","−1","−i"],a:2,
+  e:"e^{iπ} = cos π + i sin π = −1 + 0 = −1. (Likewise e^{−iπ} = −1, the fact used in Practice Problem 2.)"},
+ {q:"The complex amplitude is x̃_m = 3 + 4i. What are the real amplitude and phase?",
+  o:["7 and 45°","5 and 53.13°","5 and 36.87°","25 and 53.13°"],a:1,
+  e:"|x̃_m| = √(3² + 4²) = 5. φ = tan⁻¹(4/3) = 53.13°. So x(t) = 5 cos(ωt + 53.13°)."},
+ {q:"Why can we drop the e^{iωt} factor and work only with x̃_m when adding waves?",
+  o:["Because e^{iωt} = 1","Because all the waves share the same ω, so e^{iωt} is a common factor that can be put back at the end","Because only the imaginary part matters","Because ω is always zero at t = 0"],a:1,
+  e:"Every arrow spins at the same rate, so their relative angles never change. Factor out e^{iωt}, add the frozen arrows x̃_m, then multiply back."},
+ {q:"x̃_m = 2e^{iπ/2}. Which real signal is this?",
+  o:["2 cos(ωt)","2 cos(ωt + π/2) = −2 sin(ωt)","2 sin(ωt + π/2)","2i cos(ωt)"],a:1,
+  e:"Real part of 2e^{i(ωt + π/2)} is 2 cos(ωt + π/2), and cos(θ + π/2) = −sin θ."}
+],
+q8:[
+ {q:"In Practice Problem 1, what is the horizontal (x) component of the resultant?",
+  o:["12.2 m","0.261 m","−0.261 m","5.34 m"],a:1,
+  e:"5.6 − 6.6 cos 36° = 5.6 − 5.340 = 0.261 m. The second wave's arrow points back toward −x, so it subtracts."},
+ {q:"Two waves of amplitude 4, with phases 0 and π/2, are added. What is the resultant amplitude and phase?",
+  o:["8 at 45°","5.66 at 45°","5.66 at 90°","4 at 45°"],a:1,
+  e:"X = 4, Y = 4. Amplitude = √(16 + 16) = 4√2 ≈ 5.66; phase = tan⁻¹(4/4) = 45°."},
+ {q:"Add 3 e^{i0} and 4 e^{iπ}. What do you get?",
+  o:["7 e^{i0}","1 e^{i0}","1 e^{iπ}","5 e^{iπ/2}"],a:2,
+  e:"4e^{iπ} = −4. So 3 + (−4) = −1 = 1·e^{iπ}. The bigger arrow wins and the result points along π."},
+ {q:"A third wave of amplitude 5 m is added with φ₃ = φ_R. What is the new resultant amplitude?",
+  o:["8.89 m","3.89 m","17.2 m","6.33 m"],a:0,
+  e:"In phase means the arrows line up, so lengths add: 3.89 + 5 = 8.89 m. That's the maximum possible, which is why φ₃ = φ_R."},
+ {q:"What is 6.6 cos(144°)?",
+  o:["+5.34","−5.34","+3.88","−3.88"],a:1,
+  e:"cos 144° = −cos 36° = −0.809, so 6.6 cos 144° = −5.34. That's why the lecture writes 5.6 − 6.6 cos 36°. Use one form or the other, not both."}
+],
+q9:[
+ {q:"What is the phasor (complex amplitude) of i(t) = −4 cos(ωt + 3π/4)?",
+  o:["−4 e^{i3π/4}, already standard","4 e^{−iπ/4}","4 e^{i3π/4}","4 e^{iπ/4}"],a:1,
+  e:"Absorb the minus sign with e^{−iπ} = −1: 3π/4 − π = −π/4. So ĩ_m = 4e^{−iπ/4}, exactly the lecture's answer."},
+ {q:"What is the phasor of −10 cos(ωt + π/6)?",
+  o:["10 e^{i7π/6} only","10 e^{−i5π/6}","10 e^{−iπ/6}","10 e^{iπ/6}"],a:1,
+  e:"π/6 − π = −5π/6, so 10 e^{−i5π/6}. (7π/6 is the same angle, but −5π/6 is the version between −π and π.)"},
+ {q:"What is the phasor of 3 sin(ωt)?",
+  o:["3 e^{i0}","3 e^{iπ/2}","3 e^{−iπ/2}","−3i e^{iπ}"],a:2,
+  e:"sin θ = cos(θ − π/2), so 3 sin ωt = 3 cos(ωt − π/2) → 3 e^{−iπ/2}. Sine lags cosine by π/2."},
+ {q:"What is the phasor of 6 sin(ωt + π/3)?",
+  o:["6 e^{iπ/3}","6 e^{i5π/6}","6 e^{−iπ/6}","6 e^{−iπ/3}"],a:2,
+  e:"Convert to cosine: π/3 − π/2 = −π/6. So 6 cos(ωt − π/6) → 6 e^{−iπ/6}."},
+ {q:"Why does the lecture rewrite −4 e^{i(ωt + 3π/4)} instead of leaving it?",
+  o:["It's wrong as written","The standard phasor has a positive length (the amplitude) and the sign belongs in the angle","Negative numbers can't be complex","To change the frequency"],a:1,
+  e:"Both are the same number, but |ĩ_m| is supposed to be the amplitude, which is positive. e^{−iπ} = −1 moves the sign into the phase."}
+],
+q10:[
+ {q:"Practice Problem 3's result ĩ_m = 12 e^{−iπ/4}. What is i(t)?",
+  o:["12 sin(ωt − π/4)","12 cos(ωt − π/4)","12 cos(ωt + π/4)","−12 cos(ωt − π/4)"],a:1,
+  e:"Take the real part of 12 e^{−iπ/4} e^{iωt}: 12 cos(ωt − π/4)."},
+ {q:"In Practice Problem 3, why could the amplitudes 5 and 7 just be added to get 12?",
+  o:["Amplitudes always add","After converting i₁ to a cosine, both phasors had the same angle −π/4","Because ω is the same","Because 5 sin + 7 cos always gives 12"],a:1,
+  e:"5 sin(ωt + π/4) = 5 cos(ωt − π/4). Now both arrows point along −π/4, so they line up and their lengths add. Different angles would need components."},
+ {q:"i₁ = 3 cos(ωt) and i₂ = 4 sin(ωt). What is i₁ + i₂?",
+  o:["7 cos(ωt)","5 cos(ωt − 53.13°)","5 cos(ωt + 53.13°)","5 cos(ωt − 36.87°)"],a:1,
+  e:"i₂ = 4 cos(ωt − π/2) → −4i. Sum: 3 − 4i. Amplitude √(9 + 16) = 5, angle tan⁻¹(−4/3) = −53.13°. So 5 cos(ωt − 53.13°)."},
+ {q:"i₁ = 5 sin(ωt + π/4) and i₂ = 5 cos(ωt + π/4). What is the amplitude of the sum?",
+  o:["10","0","7.07","5"],a:2,
+  e:"i₁ → 5e^{−iπ/4}, i₂ → 5e^{iπ/4}. They're 90° apart: sum = 5√2 ≈ 7.07 at angle 0. So i(t) = 7.07 cos ωt."}
+],
+qf:[
+ {q:"A wave on a rope has frequency 250 Hz and wavelength 1.2 m. What is its speed?",
+  o:["208 m/s","300 m/s","0.0048 m/s","1885 m/s"],a:1,
+  e:"v = λf = 1.2 × 250 = 300 m/s. Review §4."},
+ {q:"y = 0.02 sin(8x − 24t) (SI). What is the wave speed and direction?",
+  o:["3 m/s toward +x","3 m/s toward −x","0.33 m/s toward +x","0.48 m/s toward +x"],a:0,
+  e:"v = ω/k = 24/8 = 3 m/s. Minus sign in front of ωt means +x. Review §4."},
+ {q:"For the same wave, y = 0.02 sin(8x − 24t), what is the maximum transverse speed of a particle?",
+  o:["3 m/s","0.16 m/s","0.48 m/s","24 m/s"],a:2,
+  e:"|v_m| = ωy_m = 24 × 0.02 = 0.48 m/s. Not the wave speed! Review §6."},
+ {q:"A wave has λ = 2 m. What is k?",
+  o:["π rad/m","2π rad/m","4π rad/m","0.5 rad/m"],a:0,
+  e:"k = 2π/λ = 2π/2 = π ≈ 3.14 rad/m. Review §2."},
+ {q:"y_m = 8 cm, φ = π/6. What is y(0, 0)?",
+  o:["6.93 cm","4 cm","0.073 cm","8 cm"],a:1,
+  e:"y = 8 sin(π/6) = 8 × 0.5 = 4 cm, the same y_m/2 result as the lecture. Review §3."},
+ {q:"Which wave satisfies ∂²y/∂t² = 4 ∂²y/∂x²?",
+  o:["y = sin(4x − 2t)","y = sin(3x + 6t)","y = 2 sin(x − 4t)","y = 4 sin(2x − 2t)"],a:1,
+  e:"Need v = ω/k = 2. sin(3x + 6t): 6/3 = 2 ✓ (direction doesn't matter). The others give 0.5, 4 and 1. Review §5."},
+ {q:"Sound travels through air. How do the air molecules move?",
+  o:["Perpendicular to the wave, so it is transverse","Parallel to the wave, so it is longitudinal","They travel with the wave to the listener","In circles"],a:1,
+  e:"Like the piston-cylinder example: molecules oscillate back and forth along the direction of travel. Review §1."},
+ {q:"What is the complex amplitude of x(t) = 2 cos(ωt − π/3)?",
+  o:["2 e^{iπ/3}","2 e^{−iπ/3}","2 e^{−iπ/3} e^{−iωt}","−2 e^{iπ/3}"],a:1,
+  e:"Already in positive-amplitude cosine form, so x̃_m = 2 e^{−iπ/3}. Review §7."},
+ {q:"Add the phasors 6∠0° and 8∠90°. What is the result?",
+  o:["14∠45°","10∠53.13°","10∠36.87°","2∠90°"],a:1,
+  e:"X = 6, Y = 8. Amplitude = √(36 + 64) = 10; angle = tan⁻¹(8/6) = 53.13°. Review §8."},
+ {q:"What is the phasor of −5 cos(ωt − π/4)?",
+  o:["5 e^{−iπ/4}","5 e^{i3π/4}","5 e^{−i3π/4}","−5 e^{iπ/4}"],a:1,
+  e:"Absorb the minus sign by shifting π: −π/4 + π = 3π/4 (subtracting gives −5π/4, which is the same angle but outside −π to π). So 5 e^{i3π/4}. Review §9."},
+ {q:"What is 4 sin(ωt) + 4 cos(ωt) as a single cosine?",
+  o:["8 cos(ωt)","5.66 cos(ωt − π/4)","5.66 cos(ωt + π/4)","4 cos(ωt − π/2)"],a:1,
+  e:"4 sin ωt → 4e^{−iπ/2} = −4i; 4 cos ωt → 4. Sum 4 − 4i: amplitude 4√2 ≈ 5.66, angle −π/4. Review §10."},
+ {q:"Using the two waves of Practice Problem 1 (5.6 m and 6.6 m), what is the LARGEST resultant amplitude you could get by changing only φ₂?",
+  o:["3.89 m","12.2 m","8.6 m","1.0 m"],a:1,
+  e:"With φ₂ = φ₁ the arrows line up and the amplitudes add: 5.6 + 6.6 = 12.2 m. (The smallest, with them opposite, is 1.0 m.) Review §8."}
+]
+};
+
+/* ---------------- QUIZ ENGINE ---------------- */
+const LET = "ABCD";
+function shuffle(arr, key){ // deterministic per question, so the order is stable across visits
+  let h=2166136261; for(const c of String(key)){ h^=c.charCodeAt(0); h=Math.imul(h,16777619); }
+  const rnd=()=>{ h^=h<<13; h^=h>>>17; h^=h<<5; return ((h>>>0)%10000)/10000; };
+  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+function chip(id, correct, answered, total){
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+"/"+total;
+  c.classList.toggle("done", answered===total);
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+  }
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(item.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    const order = shuffle(item.o.map((_,i)=>i), id+qi);
+    const btns = [];
+    order.forEach((oi, pos)=>{ const t=item.o[oi];
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[pos];
+      const s = document.createElement("span"); s.textContent = t;
+      b.append(L, s);
+      b.addEventListener("click", ()=>{
+        btns.forEach(x=>x.disabled=true);
+        const ok = oi===item.a, rp = order.indexOf(item.a);
+        btns[rp].classList.add("right");
+        if(!ok) b.classList.add("wrong");
+        answered++; if(ok) correct++;
+        ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[rp]+'.</b> ';
+        ex.appendChild(document.createTextNode(item.e));
+        ex.hidden = false;
+        upd();
+      });
+      opts.appendChild(b); btns.push(b);
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+  });
+  reset.addEventListener("click", ()=>buildQuiz(box));
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function prep(cv, hOverride){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = hOverride || +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size){ ctx.fillStyle=col; ctx.font=(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function arrow(ctx,x1,y1,x2,y2,col,wid){
+  const L = Math.hypot(x2-x1,y2-y1); if(L<1) return;
+  line(ctx,x1,y1,x2,y2,col,wid||2.4);
+  const a = Math.atan2(y2-y1,x2-x1), hs = Math.min(10, L*0.4);
+  ctx.beginPath(); ctx.fillStyle=col; ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hs*Math.cos(a-0.4), y2-hs*Math.sin(a-0.4));
+  ctx.lineTo(x2-hs*Math.cos(a+0.4), y2-hs*Math.sin(a+0.4)); ctx.closePath(); ctx.fill();
+}
+function dot(ctx,x,y,r,col){ ctx.beginPath(); ctx.fillStyle=col; ctx.arc(x,y,r,0,2*PI); ctx.fill(); }
+function setPressed(on, off){ on.setAttribute("aria-pressed","true"); off.setAttribute("aria-pressed","false"); }
+const fmt = (x,d)=> (Math.abs(x)<1e-9?0:x).toFixed(d);
+const num = el => { const v = parseFloat(el.value); return isFinite(v)? v : 0; };
+const reduce = (()=>{ try{ return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; } })();
+// phase as a nice multiple of pi when possible
+function piStr(rad){
+  let r = rad/PI;
+  if(Math.abs(r)<1e-9) return "0";
+  for(const d of [1,2,3,4,6,8,12]){
+    const n = Math.round(r*d);
+    if(Math.abs(r*d-n)<1e-6){
+      const g = gcd(Math.abs(n),d), nn=n/g, dd=d/g;
+      const sign = nn<0?"−":"", an=Math.abs(nn);
+      return sign+(an===1?"":an)+"π"+(dd===1?"":"/"+dd);
+    }
+  }
+  return fmt(r,3)+"π";
+}
+function gcd(a,b){ return b?gcd(b,a%b):a; }
+function wrapPi(a){ while(a>PI+1e-12) a-=2*PI; while(a<=-PI+1e-12) a+=2*PI; return a; }
+const deg = r => r*180/PI;
+
+/* ---------------- ANIMATION LOOP ---------------- */
+const anims = new Set();
+let last = null;
+function loop(ts){
+  if(last===null) last=ts;
+  const dt = Math.min(0.05,(ts-last)/1000); last=ts;
+  anims.forEach(a=>a.tick(dt));
+  if(anims.size) requestAnimationFrame(loop); else last=null;
+}
+function setAnim(obj, on){
+  const had = anims.size;
+  if(on) anims.add(obj); else anims.delete(obj);
+  if(!had && anims.size){ last=null; requestAnimationFrame(loop); }
+}
+
+/* ---------------- 1 TRANSVERSE / LONGITUDINAL ---------------- */
+const T1 = {t:0, longi:false, play:!reduce, cv:document.getElementById("cvT"), btn:document.getElementById("tPlay")};
+T1.tick = dt=>{ T1.t+=dt; drawT(); };
+function drawT(){
+  const {ctx,w,h} = prep(T1.cv);
+  const mut=css("--muted"), vc=css("--volt"), cc=css("--curr"), ink=css("--ink"), gr=css("--grid");
+  const x0=20, x1=w-20, yc=h/2+6, N=Math.max(24,Math.floor((x1-x0)/14)), lam=(x1-x0)/2.2, A=Math.min(46,h*0.24);
+  const om = 2*PI*0.5, k = 2*PI/lam;
+  line(ctx,x0,yc,x1,yc,gr,1,[3,4]);
+  const hi = Math.floor(N*0.4);
+  if(!T1.longi){
+    ctx.beginPath(); ctx.strokeStyle=vc; ctx.lineWidth=1.6;
+    for(let px=x0;px<=x1;px+=2){ const y=yc-A*Math.sin(k*(px-x0)-om*T1.t); px===x0?ctx.moveTo(px,y):ctx.lineTo(px,y);} ctx.stroke();
+    for(let i=0;i<=N;i++){ const px=x0+(x1-x0)*i/N, y=yc-A*Math.sin(k*(px-x0)-om*T1.t); dot(ctx,px,y,i===hi?6:3,i===hi?ink:mut); }
+    const hx=x0+(x1-x0)*hi/N; line(ctx,hx,yc-A-8,hx,yc+A+8,cc,1.5,[4,3]);
+    txt(ctx,"particle moves ↕ (y)",hx+8,yc+A+6,cc,"left",11);
+  } else {
+    const rows=[-30,-15,0,15,30];
+    for(let i=0;i<=N*2;i++){
+      const ex = x0+(x1-x0)*i/(N*2), dx = 0.55*(x1-x0)/(N*2)*Math.sin(k*(ex-x0)-om*T1.t)*2.2;
+      rows.forEach(r=>dot(ctx,ex+dx,yc+r*A/36,2.4,mut));
+      if(i===hi*2){ dot(ctx,ex+dx,yc,6,ink); line(ctx,ex-14,yc-A-2,ex+14,yc-A-2,cc,1.5,[4,3]); txt(ctx,"particle moves ↔ (x)",ex,yc-A-14,cc,"center",11); }
+    }
+  }
+  arrow(ctx,x1-120,18,x1-40,18,css("--fund"),2); txt(ctx,"wave v⃗",x1-124,18,css("--fund"),"right",11);
+  document.getElementById("tRead").innerHTML = T1.longi
+    ? "<b>Longitudinal:</b> the dark particle slides back and forth <b>parallel</b> to v⃗. Crowded regions are the compressions, and they are what travels."
+    : "<b>Transverse:</b> the dark particle only moves up and down, <b>perpendicular</b> to v⃗. The crest travels right; the particle stays at the same x.";
+}
+document.getElementById("tTr").addEventListener("click",e=>{ T1.longi=false; setPressed(e.currentTarget,document.getElementById("tLo")); drawT(); });
+document.getElementById("tLo").addEventListener("click",e=>{ T1.longi=true; setPressed(e.currentTarget,document.getElementById("tTr")); drawT(); });
+T1.btn.addEventListener("click",()=>{ T1.play=!T1.play; T1.btn.textContent=T1.play?"Pause":"Play"; setAnim(T1,T1.play); });
+T1.btn.textContent = T1.play?"Pause":"Play";
+
+/* ---------------- 2 WAVE EXPLORER ---------------- */
+const W = {t:0, play:false, cv:document.getElementById("cvW"), btn:document.getElementById("wPlay")};
+const wYm=document.getElementById("wYm"), wLam=document.getElementById("wLam"), wT=document.getElementById("wT"), wPhi=document.getElementById("wPhi");
+W.tick = dt=>{ W.t+=dt; drawW(); };
+function drawW(){
+  const {ctx,w,h} = prep(W.cv);
+  const ym=+wYm.value, lam=+wLam.value, T=+wT.value, phi=(+wPhi.value)*PI/12;
+  const k=2*PI/lam, om=2*PI/T, mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), cc=css("--curr");
+  const X0=40, X1=w-14, xmax=4, Y=h/2, A=h*0.36;
+  const sx = x=>X0+(X1-X0)*x/xmax, sy = y=>Y-A*y;
+  line(ctx,X0,Y,X1,Y,gr,1); line(ctx,X0,sy(1),X1,sy(1),gr,1,[2,4]); line(ctx,X0,sy(-1),X1,sy(-1),gr,1,[2,4]);
+  txt(ctx,"+1",X0-6,sy(1),mut,"right",11); txt(ctx,"−1",X0-6,sy(-1),mut,"right",11); txt(ctx,"0",X0-6,Y,mut,"right",11);
+  for(let m=0;m<=xmax;m++){ line(ctx,sx(m),Y-3,sx(m),Y+3,mut,1); txt(ctx,m+" m",sx(m),h-10,mut,"center",10); }
+  ctx.beginPath(); ctx.strokeStyle=vc; ctx.lineWidth=2.2;
+  for(let i=0;i<=400;i++){ const x=xmax*i/400, y=ym*Math.sin(k*x-om*W.t+phi); i?ctx.lineTo(sx(x),sy(y)):ctx.moveTo(sx(x),sy(y)); } ctx.stroke();
+  // wavelength bracket from first crest
+  let xc = ((PI/2-phi+om*W.t)/k)%lam; if(xc<0) xc+=lam;
+  if(xc+lam<=xmax){ line(ctx,sx(xc),sy(ym)-12,sx(xc+lam),sy(ym)-12,mut,1); txt(ctx,"λ",sx(xc+lam/2),sy(ym)-22,mut,"center",11); line(ctx,sx(xc),sy(ym)-16,sx(xc),sy(ym)-8,mut,1); line(ctx,sx(xc+lam),sy(ym)-16,sx(xc+lam),sy(ym)-8,mut,1); }
+  const xp=0.25, yp=ym*Math.sin(k*xp-om*W.t+phi);
+  line(ctx,sx(xp),sy(ym),sx(xp),sy(-ym),cc,1,[3,3]); dot(ctx,sx(xp),sy(yp),6,cc);
+  document.getElementById("wYmO").textContent=ym.toFixed(2)+" m";
+  document.getElementById("wLamO").textContent=lam.toFixed(1)+" m";
+  document.getElementById("wTO").textContent=T.toFixed(1)+" s";
+  document.getElementById("wPhiO").textContent=piStr(phi);
+  document.getElementById("wRead").innerHTML = "k = 2π/λ = <b>"+fmt(k,3)+" rad/m</b> · ω = 2π/T = <b>"+fmt(om,3)+" rad/s</b> · f = 1/T = <b>"+fmt(1/T,3)+" Hz</b> · v = λ/T = <b>"+fmt(lam/T,3)+" m/s</b> · t = "+fmt(W.t,2)+" s<br>y(x, t) = "+ym.toFixed(2)+" sin("+fmt(k,2)+"x − "+fmt(om,2)+"t"+(phi?" + "+piStr(phi):"")+")";
+}
+[wYm,wLam,wT,wPhi].forEach(el=>el.addEventListener("input",drawW));
+W.btn.addEventListener("click",()=>{ W.play=!W.play; W.btn.textContent=W.play?"Pause":"Play"; setAnim(W,W.play); });
+
+/* ---------------- 3 PHASE ---------------- */
+const pPhi=document.getElementById("pPhi");
+function drawP(){
+  const {ctx,w,h} = prep(document.getElementById("cvP"));
+  const phi=(+pPhi.value)*PI/12, mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), cc=css("--curr"), ink=css("--ink");
+  const X0=w*0.18, X1=w-12, Y=h/2, A=h*0.36, xmin=-0.6, xmax=2.2;
+  const sx=u=>X0+(X1-X0)*(u-0)/(xmax), sy=y=>Y-A*y; // u in wavelengths
+  const L = x=>X0+(X1-X0)*x/xmax;
+  line(ctx,8,Y,X1,Y,gr,1); line(ctx,X0,8,X0,h-8,mut,1.2);
+  txt(ctx,"y_m",X0-6,sy(1),mut,"right",11); txt(ctx,"y_m/2",X0-6,sy(0.5),mut,"right",10); txt(ctx,"−y_m",X0-6,sy(-1),mut,"right",11);
+  line(ctx,X0-3,sy(0.5),X0+3,sy(0.5),mut,1);
+  const draw=(ph,col,wd,dash)=>{ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wd;
+    const ua=-(X0-8)/(X1-X0)*xmax; for(let i=0;i<=400;i++){ const u=ua+(xmax-ua)*i/400, y=Math.sin(2*PI*u+ph); i?ctx.lineTo(L(u),sy(y)):ctx.moveTo(L(u),sy(y)); } ctx.stroke(); ctx.setLineDash([]); };
+  draw(0,mut,1.5,[5,4]); draw(phi,vc,2.4);
+  const y0=Math.sin(phi); dot(ctx,X0,sy(y0),6,cc);
+  txt(ctx,"x (in wavelengths)",X1,h-10,mut,"right",10);
+  document.getElementById("pPhiO").textContent=piStr(phi);
+  document.getElementById("pRead").innerHTML="φ = <b>"+piStr(phi)+"</b> ("+fmt(deg(phi),0)+"°) · y(0, 0) = y_m sin φ = <b>"+fmt(y0,3)+" y_m</b>"+(Math.abs(y0-0.5)<1e-9?" <span class='ok-note'>= y_m/2, the lecture's result</span>":"")+(Math.abs(y0)<1e-9 && Math.abs(phi)<1e-9?" <span class='ok-note'>(lecture case I)</span>":"");
+}
+pPhi.addEventListener("input",drawP);
+
+/* ---------------- 4 CREST RIDER + v = λf ---------------- */
+const V = {t:0, play:!reduce, sign:-1, cv:document.getElementById("cvV"), btn:document.getElementById("vPlay")};
+const vK=document.getElementById("vK"), vW=document.getElementById("vW");
+V.tick = dt=>{ V.t+=dt; drawV(); };
+function drawV(){
+  const {ctx,w,h}=prep(V.cv);
+  const k=Math.max(0.1,num(vK)), om=Math.max(0,num(vW)), s=V.sign, v=om/k;
+  const mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), cc=css("--curr"), fc=css("--fund");
+  const X0=12, X1=w-12, Y=h/2+8, A=h*0.3, xmax=2*PI/k*3;
+  const sx=x=>X0+(X1-X0)*x/xmax, sy=y=>Y-A*y;
+  line(ctx,X0,Y,X1,Y,gr,1);
+  ctx.beginPath(); ctx.strokeStyle=vc; ctx.lineWidth=2.2;
+  for(let i=0;i<=500;i++){ const x=xmax*i/500, y=Math.sin(k*x+s*om*V.t); i?ctx.lineTo(sx(x),sy(y)):ctx.moveTo(sx(x),sy(y)); } ctx.stroke();
+  // crest position: kx + s ω t = π/2 + 2πn
+  const lam=2*PI/k; let xc=((PI/2 - s*om*V.t)/k)%xmax; if(xc<0) xc+=xmax;
+  dot(ctx,sx(xc),sy(1),7,cc);
+  const dir = s<0?1:-1;
+  arrow(ctx,w/2-40*dir,16,w/2+40*dir,16,fc,2);
+  txt(ctx,(dir>0?"toward +x":"toward −x"),w/2+(dir>0?50:-50),16,fc,dir>0?"left":"right",11);
+  document.getElementById("vRead").innerHTML="y = sin("+fmt(k,2)+"x "+(s<0?"−":"+")+" "+fmt(om,2)+"t) · v = ω/k = "+fmt(om,2)+"/"+fmt(k,2)+" = <b>"+fmt(v,3)+"</b> · λ = 2π/k = "+fmt(lam,3)+" · T = 2π/ω = "+(om>0?fmt(2*PI/om,3):"∞")+" · direction <b>"+(s<0?"+x":"−x")+"</b>"+(Math.abs(k-4)<1e-9&&Math.abs(om-2)<1e-9&&s<0?" <span class='ok-note'>(lecture's y₁: 0.5 toward +x)</span>":"");
+}
+[vK,vW].forEach(el=>el.addEventListener("input",drawV));
+document.getElementById("vMinus").addEventListener("click",e=>{ V.sign=-1; setPressed(e.currentTarget,document.getElementById("vPlus")); drawV(); });
+document.getElementById("vPlus").addEventListener("click",e=>{ V.sign=1; setPressed(e.currentTarget,document.getElementById("vMinus")); drawV(); });
+V.btn.addEventListener("click",()=>{ V.play=!V.play; V.btn.textContent=V.play?"Pause":"Play"; setAnim(V,V.play); });
+V.btn.textContent = V.play?"Pause":"Play";
+
+const cV=document.getElementById("cV"), cL=document.getElementById("cL");
+function sci(x){ if(x===0||!isFinite(x)) return String(x); const e=Math.floor(Math.log10(Math.abs(x))); const m=x/Math.pow(10,e); return fmt(m,3)+" × 10^"+e; }
+function calcC(){
+  const v=num(cV), L=num(cL);
+  const el=document.getElementById("cRead");
+  if(L<=0){ el.textContent="Enter a positive wavelength."; return; }
+  const f=v/L;
+  el.innerHTML="f = v/λ = "+sci(v)+" / "+L+" = <b>"+sci(f)+" Hz</b> = <b>"+fmt(f/1e6,3)+" MHz</b> · T = 1/f = "+sci(1/f)+" s"+(Math.abs(f-2e9)<1?" <span class='ok-note'>matches the lecture: 2000 MHz</span>":"");
+}
+[cV,cL].forEach(el=>el.addEventListener("input",calcC));
+
+/* ---------------- 5 WAVE EQUATION CHECK ---------------- */
+const eIds=["eYm","eK","eW","eX","eT"].map(i=>document.getElementById(i));
+function calcE(){
+  const [ym,k,om,x,t]=eIds.map(num);
+  const ph=k*x-om*t, y=ym*Math.sin(ph);
+  const dx=k*ym*Math.cos(ph), dxx=-k*k*y, dt=-om*ym*Math.cos(ph), dtt=-om*om*y;
+  const v=om/k;
+  document.getElementById("eRead").innerHTML=
+   "<div>phase kx − ωt = "+fmt(k,3)+"("+x+") − "+fmt(om,3)+"("+t+") = "+fmt(ph,4)+" rad</div>"+
+   "<div>y = "+fmt(ym,3)+" sin("+fmt(ph,4)+") = "+fmt(y,5)+"</div>"+
+   "<div>∂y/∂x = k y_m cos(…) = "+fmt(dx,5)+" &nbsp;&nbsp; ∂²y/∂x² = −k²y = <b>"+fmt(dxx,5)+"</b></div>"+
+   "<div>∂y/∂t = −ω y_m cos(…) = "+fmt(dt,5)+" &nbsp;&nbsp; ∂²y/∂t² = −ω²y = <b>"+fmt(dtt,5)+"</b></div>"+
+   "<div>v = ω/k = "+fmt(v,4)+", &nbsp;v² = "+fmt(v*v,4)+"</div>"+
+   "<div>v² · ∂²y/∂x² = "+fmt(v*v*dxx,5)+" &nbsp;"+(Math.abs(v*v*dxx-dtt)<1e-9*Math.max(1,Math.abs(dtt))?"<span class='ok-note'>= ∂²y/∂t² ✓</span>":"")+"</div>";
+}
+eIds.forEach(el=>el.addEventListener("input",calcE));
+
+/* ---------------- 6 RANK THREE WAVES ---------------- */
+const R = [1,2,3].map(i=>({y:document.getElementById("r"+i+"y"),k:document.getElementById("r"+i+"k"),w:document.getElementById("r"+i+"w"),u:document.getElementById("r"+i+"u"),v:document.getElementById("r"+i+"v")}));
+function rankStr(vals,sym){
+  const idx=[0,1,2].sort((a,b)=>vals[a]-vals[b]);
+  let s=sym+(idx[0]+1);
+  for(let i=1;i<3;i++){ s+= (Math.abs(vals[idx[i]]-vals[idx[i-1]])<1e-9?" = ":" < ")+sym+(idx[i]+1); }
+  return s;
+}
+function calcR(){
+  const us=[], vs=[];
+  R.forEach(r=>{ const ym=num(r.y), k=num(r.k), om=num(r.w); const u=k?om/k:NaN, vm=Math.abs(om*ym); us.push(u); vs.push(vm); r.u.textContent=isFinite(u)?fmt(u,3):"–"; r.v.textContent=fmt(vm,3); });
+  const {ctx,w,h}=prep(document.getElementById("cvR"));
+  const mut=css("--muted"), vc=css("--volt"), cc=css("--curr"), gr=css("--grid");
+  const mx=Math.max(...us.filter(isFinite),...vs,1e-9), X0=46, X1=w-50, rowH=(h-16)/3;
+  for(let i=0;i<3;i++){
+    const yb=8+rowH*i;
+    txt(ctx,"y"+"₁₂₃"[i],8,yb+rowH/2,css("--ink"),"left",12);
+    const bu=(X1-X0)*(isFinite(us[i])?us[i]:0)/mx, bv=(X1-X0)*vs[i]/mx, bh=rowH*0.3;
+    ctx.fillStyle=vc; ctx.fillRect(X0,yb+rowH*0.15,bu,bh); txt(ctx,isFinite(us[i])?fmt(us[i],3):"–",X0+bu+5,yb+rowH*0.15+bh/2,mut,"left",11);
+    ctx.fillStyle=cc; ctx.fillRect(X0,yb+rowH*0.55,bv,bh); txt(ctx,fmt(vs[i],2),X0+bv+5,yb+rowH*0.55+bh/2,mut,"left",11);
+  }
+  line(ctx,X0,4,X0,h-4,gr,1);
+  const lec = rankStr(us,"u")==="u1 < u3 < u2";
+  document.getElementById("rRead").innerHTML="(a) wave speeds: <b>"+rankStr(us,"u").replace(/u(\d)/g,"u$1")+"</b> · (b) max particle speeds: <b>"+rankStr(vs,"v").replace(/v(\d)/g,"v$1,m")+"</b>"+
+   (lec && rankStr(vs,"v")==="v1 = v2 < v3"?" <span class='ok-note'>matches the lecture</span>":"");
+}
+R.forEach(r=>[r.y,r.k,r.w].forEach(el=>el.addEventListener("input",calcR)));
+
+/* ---------------- 7 ROTATING PHASOR ---------------- */
+const F = {t:0, play:false, cv:document.getElementById("cvF"), btn:document.getElementById("fPlay")};
+const fXm=document.getElementById("fXm"), fPhi=document.getElementById("fPhi");
+F.tick = dt=>{ F.t+=dt; drawF(); };
+function drawF(){
+  const stacked=(F.cv.clientWidth||F.cv.parentElement.clientWidth)<520;
+  const {ctx,w,h}=prep(F.cv, stacked?360:230);
+  const xm=+fXm.value, phi=(+fPhi.value)*PI/12, om=2*PI*0.25, th=om*F.t+phi;
+  const mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), cc=css("--curr"), ink=css("--ink");
+  const R0 = stacked? Math.min(70,w*0.2) : Math.min(90,h*0.4);
+  const cx = stacked? w/2 : R0+24, cy = stacked? R0+18 : h/2;
+  ctx.beginPath(); ctx.strokeStyle=gr; ctx.lineWidth=1; ctx.arc(cx,cy,R0,0,2*PI); ctx.stroke();
+  line(ctx,cx-R0-10,cy,cx+R0+10,cy,mut,1); line(ctx,cx,cy-R0-10,cx,cy+R0+10,mut,1);
+  txt(ctx,"Re",cx+R0+12,cy-8,mut,"left",10); txt(ctx,"Im",cx+4,cy-R0-8,mut,"left",10);
+  const hx=cx+R0*xm*Math.cos(th), hy=cy-R0*xm*Math.sin(th);
+  line(ctx,hx,hy,hx,cy,cc,1.2,[3,3]);
+  arrow(ctx,cx,cy,hx,hy,vc,2.6); dot(ctx,hx,cy,5,cc);
+  // trace: Re vs time, time downward if stacked else rightward
+  if(!stacked){
+    const X0=cx+R0+40, X1=w-10, Tspan=8;
+    line(ctx,X0,cy,X1,cy,gr,1); line(ctx,X0,cy-R0,X1,cy-R0,gr,1,[2,4]); line(ctx,X0,cy+R0,X1,cy+R0,gr,1,[2,4]);
+    ctx.beginPath(); ctx.strokeStyle=cc; ctx.lineWidth=2;
+    for(let i=0;i<=300;i++){ const tt=Tspan*i/300, v=xm*Math.cos(om*tt+phi); const X=X0+(X1-X0)*i/300, Yv=cy-R0*v; i?ctx.lineTo(X,Yv):ctx.moveTo(X,Yv);} ctx.stroke();
+    const tn=F.t%Tspan; dot(ctx,X0+(X1-X0)*tn/Tspan,cy-R0*xm*Math.cos(th),5,cc);
+    txt(ctx,"t →",X1,cy+R0+12,mut,"right",10);
+  } else {
+    const Y0=cy+R0+30, Y1=h-8, Tspan=8;
+    line(ctx,cx,Y0,cx,Y1,gr,1);
+    ctx.beginPath(); ctx.strokeStyle=cc; ctx.lineWidth=2;
+    for(let i=0;i<=300;i++){ const tt=Tspan*i/300, v=xm*Math.cos(om*tt+phi); const Yv=Y0+(Y1-Y0)*i/300, X=cx+R0*v; i?ctx.lineTo(X,Yv):ctx.moveTo(X,Yv);} ctx.stroke();
+    const tn=F.t%Tspan; dot(ctx,cx+R0*xm*Math.cos(th),Y0+(Y1-Y0)*tn/Tspan,5,cc);
+    txt(ctx,"t ↓",cx+R0+6,Y1-4,mut,"left",10);
+  }
+  document.getElementById("fXmO").textContent=xm.toFixed(2);
+  document.getElementById("fPhiO").textContent=piStr(phi);
+  document.getElementById("fRead").innerHTML="x̃_m = "+xm.toFixed(2)+" e^{i"+(phi?piStr(phi):"0")+"} = "+fmt(xm*Math.cos(phi),3)+(Math.sin(phi)<0?" − ":" + ")+fmt(Math.abs(xm*Math.sin(phi)),3)+"i · angle now ωt + φ = "+fmt(deg(wrapPi(th)),1)+"° · Re x̃(t) = <b>"+fmt(xm*Math.cos(th),3)+"</b>";
+}
+[fXm,fPhi].forEach(el=>el.addEventListener("input",drawF));
+F.btn.addEventListener("click",()=>{ F.play=!F.play; F.btn.textContent=F.play?"Pause":"Play"; setAnim(F,F.play); });
+
+/* ---------------- shared phasor plot ---------------- */
+function phasorPlot(cv, vecs, res, hOverride){
+  const {ctx,w,h}=prep(cv,hOverride);
+  const mut=css("--muted"), gr=css("--grid");
+  // head-to-tail bounds
+  let pts=[[0,0]], cx=0, cy=0; vecs.forEach(v=>{ cx+=v.re; cy+=v.im; pts.push([cx,cy]); });
+  vecs.forEach(v=>pts.push([v.re,v.im]));
+  let m=0; pts.forEach(p=>m=Math.max(m,Math.abs(p[0]),Math.abs(p[1]))); m=m||1;
+  const S=(Math.min(w,h)/2-26)/m, ox=w/2, oy=h/2;
+  line(ctx,14,oy,w-14,oy,gr,1); line(ctx,ox,10,ox,h-10,gr,1);
+  txt(ctx,"Re",w-14,oy-9,mut,"right",10); txt(ctx,"Im",ox+5,14,mut,"left",10);
+  // origin-drawn faint copies
+  vecs.forEach(v=>{ ctx.globalAlpha=0.28; arrow(ctx,ox,oy,ox+v.re*S,oy-v.im*S,v.col,1.6); ctx.globalAlpha=1; });
+  let px=ox, py=oy;
+  vecs.forEach(v=>{ const nx=px+v.re*S, ny=py-v.im*S; arrow(ctx,px,py,nx,ny,v.col,2.6); px=nx; py=ny; });
+  if(res) arrow(ctx,ox,oy,ox+res.re*S,oy-res.im*S,res.col,3);
+  return {ctx,w,h};
+}
+
+/* ---------------- 8 PHASOR ADDER ---------------- */
+const aIds={a1A:0,a1P:0,a2A:0,a2P:0,a3A:0,a3P:0};
+Object.keys(aIds).forEach(k=>aIds[k]=document.getElementById(k));
+const a3On=document.getElementById("a3On");
+let lastPhiR=0;
+function calcA(){
+  const A1=num(aIds.a1A), P1=num(aIds.a1P), A2=num(aIds.a2A), P2=num(aIds.a2P);
+  const c1=[A1*Math.cos(P1*PI/180), A1*Math.sin(P1*PI/180)], c2=[A2*Math.cos(P2*PI/180), A2*Math.sin(P2*PI/180)];
+  const X=c1[0]+c2[0], Y=c1[1]+c2[1], amp=Math.hypot(X,Y), phR=deg(Math.atan2(Y,X));
+  lastPhiR=phR;
+  const vecs=[{re:c1[0],im:c1[1],col:css("--volt")},{re:c2[0],im:c2[1],col:css("--accent2")}];
+  let html="<div>X = "+fmt(A1,3)+" cos "+fmt(P1,2)+"° + "+fmt(A2,3)+" cos "+fmt(P2,2)+"° = "+fmt(c1[0],4)+" + ("+fmt(c2[0],4)+") = <b>"+fmt(X,4)+"</b></div>"+
+    "<div>Y = "+fmt(A1,3)+" sin "+fmt(P1,2)+"° + "+fmt(A2,3)+" sin "+fmt(P2,2)+"° = "+fmt(c1[1],4)+" + "+fmt(c2[1],4)+" = <b>"+fmt(Y,4)+"</b></div>"+
+    "<div>amplitude = √(X² + Y²) = <b>"+fmt(amp,3)+"</b> &nbsp;·&nbsp; φ_R = atan2(Y, X) = <b>"+fmt(phR,2)+"°</b>"+(X<0?" <span class='c'>(X &lt; 0, so 180° added to tan⁻¹)</span>":"")+"</div>";
+  if(Math.abs(A1-5.6)<1e-9&&Math.abs(P1)<1e-9&&Math.abs(A2-6.6)<1e-9&&Math.abs(P2-144)<1e-9)
+    html+="<div><span class='ok-note'>Matches the lecture: 0.261 m, 3.88 m, 3.89 m.</span> <span class='c'>Full precision gives 86.16°; the lecture's 86.15° uses the rounded 0.261 and 3.88.</span></div>";
+  let res={re:X,im:Y,col:css("--fund")};
+  if(a3On.checked){
+    const A3=num(aIds.a3A), P3=+aIds.a3P.value, c3=[A3*Math.cos(P3*PI/180),A3*Math.sin(P3*PI/180)];
+    vecs.push({re:c3[0],im:c3[1],col:css("--muted")});
+    const X3=X+c3[0], Y3=Y+c3[1], amp3=Math.hypot(X3,Y3);
+    res={re:X3,im:Y3,col:css("--fund")};
+    html+="<div>&nbsp;</div><div>with wave 3 ("+fmt(A3,2)+" at "+P3+"°): amplitude = <b>"+fmt(amp3,3)+"</b> at "+fmt(deg(Math.atan2(Y3,X3)),2)+"° &nbsp;<span class='c'>max possible = "+fmt(amp,3)+" + "+fmt(A3,3)+" = "+fmt(amp+A3,3)+", when φ₃ = φ_R</span></div>";
+  }
+  document.getElementById("a3PO").textContent=aIds.a3P.value+"°";
+  document.getElementById("aRead").innerHTML=html;
+  phasorPlot(document.getElementById("cvA"),vecs,res);
+}
+Object.values(aIds).forEach(el=>el.addEventListener("input",calcA));
+a3On.addEventListener("change",calcA);
+document.getElementById("a3Snap").addEventListener("click",()=>{ a3On.checked=true; aIds.a3P.value=Math.round(lastPhiR); calcA(); });
+
+/* ---------------- 9/10 SIGNAL → PHASOR ---------------- */
+function toPhasor(A, fn, pPi){
+  // returns steps and standard phasor
+  let ph=pPi*PI, amp=A, steps=[];
+  const sig = (a,f,p)=> fmt(a,3)+" "+f+"(ωt"+(Math.abs(p)<1e-12?"":(p<0?" − ":" + ")+piStr(Math.abs(p)))+")";
+  steps.push(sig(amp,fn,ph));
+  if(fn==="sin"){ ph-=PI/2; steps.push(sig(amp,"cos",ph)+" <span class='c'>sin θ = cos(θ − π/2)</span>"); }
+  if(amp<0){ amp=-amp; const p1=ph-PI, p2=ph+PI; ph = Math.abs(wrapPi(p1)-p1)<1e-9? p1 : (Math.abs(wrapPi(p2)-p2)<1e-9? p2 : wrapPi(p1)); steps.push(sig(amp,"cos",ph)+" <span class='c'>−1 = e^{∓iπ}: shift by π</span>"); }
+  const w=wrapPi(ph); if(Math.abs(w-ph)>1e-9){ ph=w; steps.push(sig(amp,"cos",ph)+" <span class='c'>angle wrapped into (−π, π]</span>"); }
+  return {amp, ph, re:amp*Math.cos(ph), im:amp*Math.sin(ph), steps};
+}
+const phStr = (amp,ph)=> fmt(amp,3)+" e^{"+(Math.abs(ph)<1e-12?"i0":(ph<0?"−i":"i")+piStr(Math.abs(ph)))+"}";
+const sA=document.getElementById("sA"), sF=document.getElementById("sF"), sP=document.getElementById("sP");
+function calcS(){
+  const r=toPhasor(num(sA),sF.value,num(sP));
+  let html=r.steps.map((s,i)=>"<div>"+(i?"= ":"i(t) = ")+s+"</div>").join("");
+  html+="<div>ĩ_m = <b>"+phStr(r.amp,r.ph)+"</b> = "+fmt(r.re,4)+(r.im<0?" − ":" + ")+fmt(Math.abs(r.im),4)+"i &nbsp;("+fmt(deg(r.ph),2)+"°)</div>";
+  if(Math.abs(r.amp-4)<1e-9&&Math.abs(r.ph+PI/4)<1e-9) html+="<div><span class='ok-note'>Matches the lecture: ĩ_m = 4e^{−iπ/4}.</span></div>";
+  document.getElementById("sRead").innerHTML=html;
+  phasorPlot(document.getElementById("cvS"),[],{re:r.re,im:r.im,col:css("--volt")});
+}
+[sA,sF,sP].forEach(el=>el.addEventListener("input",calcS));
+
+const bEl=["b1A","b1F","b1P","b2A","b2F","b2P"].map(i=>document.getElementById(i));
+function calcB(){
+  const r1=toPhasor(num(bEl[0]),bEl[1].value,num(bEl[2])), r2=toPhasor(num(bEl[3]),bEl[4].value,num(bEl[5]));
+  const X=r1.re+r2.re, Y=r1.im+r2.im, amp=Math.hypot(X,Y), ph=Math.atan2(Y,X);
+  let html="<div>ĩ_m1: "+r1.steps.join(" → ")+" → <b>"+phStr(r1.amp,r1.ph)+"</b></div>"+
+    "<div>ĩ_m2: "+r2.steps.join(" → ")+" → <b>"+phStr(r2.amp,r2.ph)+"</b></div>"+
+    "<div>sum = ("+fmt(r1.re,4)+(r1.im<0?" − ":" + ")+fmt(Math.abs(r1.im),4)+"i) + ("+fmt(r2.re,4)+(r2.im<0?" − ":" + ")+fmt(Math.abs(r2.im),4)+"i) = "+fmt(X,4)+(Y<0?" − ":" + ")+fmt(Math.abs(Y),4)+"i</div>"+
+    "<div>ĩ_m = <b>"+phStr(amp,ph)+"</b> &nbsp;⇒&nbsp; i(t) = <b>"+fmt(amp,3)+" cos(ωt"+(Math.abs(ph)<1e-12?"":(ph<0?" − ":" + ")+piStr(Math.abs(ph)))+")</b> &nbsp;("+fmt(deg(ph),2)+"°)</div>";
+  if(Math.abs(amp-12)<1e-9&&Math.abs(ph+PI/4)<1e-9) html+="<div><span class='ok-note'>Matches the lecture: 12e^{−iπ/4}.</span></div>";
+  document.getElementById("bRead").innerHTML=html;
+  phasorPlot(document.getElementById("cvB"),[{re:r1.re,im:r1.im,col:css("--volt")},{re:r2.re,im:r2.im,col:css("--accent2")}],{re:X,im:Y,col:css("--fund")});
+}
+bEl.forEach(el=>el.addEventListener("input",calcB));
+
+/* ---------------- INIT + THEME ---------------- */
+function drawAll(){ drawT(); drawW(); drawP(); drawV(); calcR(); drawF(); calcA(); calcS(); calcB(); }
+calcC(); calcE(); drawAll();
+setAnim(T1,T1.play); setAnim(V,V.play);
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(drawAll,80); });
+try{ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll); }catch(e){}
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+</script>
+
+</body></html>

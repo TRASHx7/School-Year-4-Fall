@@ -1,0 +1,2026 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Transformers &amp; Flyback Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+.total{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:14px}
+.total .lab{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700}
+.total .big{font-family:var(--mono); font-size:20px; font-weight:600; margin-top:2px}
+.total .sub{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+.total .bar{height:6px; background:var(--surface-2); border-radius:99px; margin-top:8px; overflow:hidden}
+.total .bar i{display:block; height:100%; width:0; background:var(--good); border-radius:99px; transition:width .25s}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 130px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.example{background:var(--accent-soft); border-color:var(--accent)}
+.example .tag{color:var(--accent)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num, th.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+tr.on td{background:var(--hl)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+.wk{font-family:var(--mono); font-size:13.5px; line-height:1.95; overflow-x:auto; margin:0 0 12px}
+.wk div{white-space:nowrap}
+.wk .c{color:var(--muted); font-family:var(--display); font-size:13px}
+.src{font-family:var(--display); font-size:12px; color:var(--muted); font-weight:500}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .dnote{font-family:var(--display); font-size:12.5px; color:var(--muted); margin:-4px 0 10px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden; flex-wrap:wrap}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:normal}
+.steps .c{color:var(--muted)}
+.steps b{color:var(--ink)}
+
+/* circuits */
+.ckt{width:100%; display:block; margin:0 auto}
+.ckt .w{stroke:var(--muted); stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round}
+.ckt .w.hot{stroke:var(--curr); stroke-width:4}
+.ckt .w.hot2{stroke:var(--fund); stroke-width:4}
+.ckt .w.dead{stroke:var(--grid)}
+.ckt .el{fill:none; stroke:var(--ink); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
+.ckt .el.dead{stroke:var(--grid)}
+.ckt .el.hot{stroke:var(--curr)}
+.ckt .fillbg{fill:var(--surface)}
+.ckt .fillink{fill:var(--ink)}
+.ckt .lbl{fill:var(--ink); font-family:var(--body); font-style:italic; font-size:15px}
+.ckt .lbl.up{font-style:normal}
+.ckt .small{fill:var(--muted); font-family:var(--mono); font-size:11px; font-style:normal}
+.ckt .tag2{fill:var(--curr); font-family:var(--mono); font-size:12px; font-weight:600; font-style:normal}
+.ckt .hit{cursor:pointer}
+.ckt .hit rect.hl{fill:transparent; stroke:transparent; stroke-width:2; rx:6}
+.ckt .hit:hover rect.hl, .ckt .hit:focus-visible rect.hl{stroke:var(--accent)}
+.ckt .hit.sel rect.hl{fill:var(--accent-soft); stroke:var(--accent)}
+.ckt .hit:focus{outline:none}
+.ckt .dot{fill:var(--ink)}
+.ckt .term{fill:var(--surface); stroke:var(--ink); stroke-width:1.8}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card h5 a{color:inherit; text-decoration:none}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} .total .bar i{transition:none} }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="total" aria-live="polite">
+    <div class="lab">Your quiz score</div>
+    <div class="big" id="totBig">0 / 0</div>
+    <div class="sub" id="totSub">0 of 0 questions answered</div>
+    <div class="bar"><i id="totBar"></i></div>
+  </div>
+  <h2>Part 1 · The ideal transformer</h2>
+  <ol>
+    <li><a href="#s1">1 Ideal transformer <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 Flux and the core <span class="chip" data-chip="q2"></span></a></li>
+    <li><a href="#s3">3 Faraday's law <span class="chip" data-chip="q3"></span></a></li>
+    <li><a href="#s4">4 Shared flux, turns ratio <span class="chip" data-chip="q4"></span></a></li>
+  </ol>
+  <h2>Part 2 · The real transformer</h2>
+  <ol>
+    <li><a href="#s5">5 Magnetizing inductance <span class="chip" data-chip="q5"></span></a></li>
+    <li><a href="#s6">6 Volt-seconds, core size <span class="chip" data-chip="q6"></span></a></li>
+    <li><a href="#s7">7 Leakage and the model <span class="chip" data-chip="q7"></span></a></li>
+    <li><a href="#s8">8 Reflecting elements <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Open and short tests <span class="chip" data-chip="q9"></span></a></li>
+  </ol>
+  <h2>Part 3 · Flyback in CCM</h2>
+  <ol>
+    <li><a href="#s10">10 Store, then deliver <span class="chip" data-chip="q10"></span></a></li>
+    <li><a href="#s11">11 Two operating states <span class="chip" data-chip="q11"></span></a></li>
+    <li><a href="#s12">12 V and M(D) <span class="chip" data-chip="q12"></span></a></li>
+    <li><a href="#s13"><span>13 Average current I<sub>m</sub></span> <span class="chip" data-chip="q13"></span></a></li>
+  </ol>
+  <h2>Part 4 · Ripple, stress, DCM</h2>
+  <ol>
+    <li><a href="#s14">14 Ripple <span class="chip" data-chip="q14"></span></a></li>
+    <li><a href="#s15">15 Switch stress <span class="chip" data-chip="q15"></span></a></li>
+    <li><a href="#s16">16 Flyback in DCM <span class="chip" data-chip="q16"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">ENEL 585 · Lectures 4 &amp; 5 · Study guide</div>
+  <h1>Transformers and the flyback converter</h1>
+  <p class="lede">A transformer is two windings sharing one magnetic flux. Understand where that shared flux comes from, what it costs (magnetizing current) and what escapes (leakage), and the flyback falls out naturally: it is a transformer used on purpose as an energy store, <b>charged while the switch is on and emptied into the output while it is off</b>.</p>
+  <div class="chain" aria-label="Lecture roadmap">
+    <div class="blk"><b>Ideal element</b><span>turns ratio, flux, Faraday</span><span class="secs">§1 to §4</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Real model</b><span>L<sub>m</sub>, leakage, tests</span><span class="secs">§5 to §9</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Flyback, averages</b><span>two states, M(D), I<sub>m</sub></span><span class="secs">§10 to §13</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Flyback, details</b><span>ripple, V<sub>Q1,max</sub>, DCM</span><span class="secs">§14 to §16</span></div>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · The ideal transformer</h2>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>Why isolate, and the ideal transformer</h3>
+<p>A transformer does two jobs: <b>galvanic isolation</b> (no wire connects input to output) and <b>changing voltage and current levels</b>. Inside a converter, that buys you safety, a floating supply (for example a high-side gate drive), big step-up or step-down ratios without extreme duty cycles, and several isolated outputs from one core.</p>
+<p>We model it in two layers. The <b>ideal transformer</b> only captures the turns ratio: it neither loses nor stores energy. The <b>practical model</b> (Part 2) adds magnetizing and leakage inductance around it.</p>
+<p>Voltages are positive at the dots. With i<sub>1</sub> entering its dot and i<sub>2</sub> leaving its dot:</p>
+<div class="eq">
+  <span class="row"><i>v</i><sub>1</sub> = <span class="frac"><span><i>N</i><sub>1</sub></span><span><i>N</i><sub>2</sub></span></span> <i>v</i><sub>2</sub> &nbsp;&nbsp;&nbsp; <i>v</i><sub>1</sub><i>i</i><sub>1</sub> = <i>v</i><sub>2</sub><i>i</i><sub>2</sub> &nbsp;⇒&nbsp; <i>i</i><sub>1</sub> = <span class="frac"><span><i>N</i><sub>2</sub></span><span><i>N</i><sub>1</sub></span></span> <i>i</i><sub>2</sub></span>
+</div>
+<p>Power matches <b>at every instant</b>, p<sub>1</sub>(t) = p<sub>2</sub>(t). Whatever waveform you apply, sine or not, appears on the other side immediately, scaled. Nothing is stored or delayed.</p>
+
+<details class="work" open><summary>Worked example (lecture): N<sub>1</sub> : N<sub>2</sub> = 2 : 1</summary><div class="body">
+<div class="wk">
+<div class="c">Given: 20 V on the primary, the secondary supplies 2 A.</div>
+<div>v<sub>2</sub> = (N<sub>2</sub>/N<sub>1</sub>) v<sub>1</sub> = (1/2)(20 V) = <b>10 V</b></div>
+<div>i<sub>1</sub> = (N<sub>2</sub>/N<sub>1</sub>) i<sub>2</sub> = (1/2)(2 A) = <b>1 A</b></div>
+<div class="c">Check: p<sub>1</sub> = 20 V × 1 A = 20 W = p<sub>2</sub> = 10 V × 2 A. Voltage halves, current doubles.</div>
+</div>
+</div></details>
+
+<div class="demo" id="d1">
+  <div class="dtitle">Try it: an ideal transformer with a resistor load</div>
+  <div class="dnote">Loads with the lecture's example: 2 : 1, 20 V in, 5 Ω load (so 10 V and 2 A out).</div>
+  <canvas id="cv1" height="200" aria-label="Primary and secondary voltage waveforms"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>v<sub>1</sub></span><span><i style="background:var(--fund)"></i>v<sub>2</sub></span></div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Waveform">
+      <button type="button" data-wave="dc" aria-pressed="true">DC</button>
+      <button type="button" data-wave="sine" aria-pressed="false">Sine</button>
+      <button type="button" data-wave="square" aria-pressed="false">Square</button>
+      <button type="button" data-wave="tri" aria-pressed="false">Triangle</button>
+    </div>
+    <label for="x1N1">N<sub>1</sub> <input id="x1N1" type="number" value="50" min="1" step="1"></label>
+    <label for="x1N2">N<sub>2</sub> <input id="x1N2" type="number" value="25" min="1" step="1"></label>
+    <label for="x1V1">v<sub>1</sub> peak (V) <input id="x1V1" type="number" value="20" step="1"></label>
+    <label for="x1R">load R (Ω) <input id="x1R" type="number" value="5" min="0.1" step="0.5"></label>
+  </div>
+  <div class="readout" id="r1"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a lever</span>
+<p>A lever trades force for distance: push the long end a long way with a small force, and the short end moves a little with a big force. The work in equals the work out. A transformer trades voltage for current the same way, and the turns ratio is the lever arm ratio.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The current ratio is flipped.</b> Voltage scales with N<sub>1</sub>/N<sub>2</sub>, current with N<sub>2</sub>/N<sub>1</sub>. If you forget which, use power: the side with more voltage has less current.</li>
+<li><b>The ideal element passes DC.</b> Try the DC button above: the equations don't care. A real transformer can't do this (you'll see why in §6). The ideal element is a bookkeeping device, not a physical part.</li>
+<li><b>Dot convention matters.</b> "Positive at the dots" fixes the sign of v<sub>2</sub>. The flyback (§10) depends on a secondary connected with the opposite polarity.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: the ideal transformer"></div>
+</section>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>Magnetic field, flux, and why a core</h3>
+<p>Current in a winding creates a magnetic field. The <b>flux density B</b> (tesla) describes its strength and direction. The part of B perpendicular to a surface tells you how much field passes through each square metre. Add that up over the surface and you get the <b>flux Φ</b> (weber):</p>
+<div class="eq">
+  <span class="row">Φ = ∫<sub>A</sub> <b>B</b>·<b>n̂</b> dA &nbsp;&nbsp;→&nbsp;&nbsp; Φ = <i>BA</i> <span class="note">for uniform B normal to the surface</span></span>
+  <span class="row">1 Wb = 1 T·m²</span>
+</div>
+<p>Flux lines are closed loops. Everything that goes up through the winding has to come back down somewhere outside it. The lecture compares three cases with the <b>same winding (100 turns, 0.10 A) and the same measuring point</b> on the axis:</p>
+<div class="tbl"><table>
+<thead><tr><th>Case</th><th class="num">B on axis</th><th>What limits it</th></tr></thead>
+<tbody>
+<tr><td>Coil in air</td><td class="num">0.47 mT</td><td>The field spreads through the whole surrounding volume.</td></tr>
+<tr><td>Straight core (rod)</td><td class="num">3.78 mT (about 8×)</td><td>Flux crowds into the rod, but every loop still returns through air. That air section limits the flux.</td></tr>
+<tr><td>Closed core</td><td class="num">360 mT (about 100× the rod)</td><td>Each loop closes inside the core. The field outside stays small.</td></tr>
+</tbody></table></div>
+
+<div class="demo" id="d2">
+  <div class="dtitle">Try it: same winding, three magnetic paths</div>
+  <canvas id="cv2" height="260" aria-label="Sketch of flux paths and a log-scale bar of B"></canvas>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Core">
+      <button type="button" data-core="0" aria-pressed="false">Coil in air</button>
+      <button type="button" data-core="1" aria-pressed="false">Straight core</button>
+      <button type="button" data-core="2" aria-pressed="true">Closed core</button>
+    </div>
+  </div>
+  <div class="readout" id="r2"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a water pump and pipes</span>
+<p>The winding is a pump pushing water (flux) around a loop. In open air the water spreads everywhere and the flow at the centre is a trickle. A rod is a pipe for part of the loop, but the water still has to find its way back through a swamp. A closed core is a complete pipe loop: the same pump now drives a strong, well-directed flow, and anything placed along the pipe (a second winding) sees all of it.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The weakest part of the loop wins.</b> The rod only gets 8× because the air return path dominates. Closing the path is what gives the big jump (about 766× the air case).</li>
+<li><b>Why a closed core makes a transformer possible:</b> a second winding placed anywhere on the centre limb links nearly the same Φ. That shared flux is the whole mechanism of §4.</li>
+<li><b>Units:</b> mT vs T and cm² vs m² catch people. 1 cm² = 10<sup>−4</sup> m²; 1 mm² = 10<sup>−6</sup> m².</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: flux and the core"></div>
+</section>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>Flux linkage and Faraday's law</h3>
+<p>A turn <b>links</b> flux when that flux passes through the surface bounded by the turn. A winding links the flux once per turn, so if every turn links the same flux, the <b>flux linkage</b> is</p>
+<div class="eq"><span class="row">λ = Σ<sub>k=1</sub><sup>N</sup> Φ<sub>k</sub> = <i>N</i>Φ <span class="note">units: V·s (same as Wb)</span></span></div>
+<p><b>Faraday's law</b> (terminal voltage, passive sign convention) says the winding voltage is the rate of change of flux linkage. Integrate it and you see that <b>voltage sets how λ changes, not what λ is</b>:</p>
+<div class="eq">
+  <span class="row"><i>v</i><sub>1</sub> = <span class="frac"><span>dλ<sub>1</sub></span><span>dt</span></span> = <i>N</i><sub>1</sub><span class="frac"><span>dΦ</span><span>dt</span></span> &nbsp;&nbsp;&nbsp; λ<sub>1</sub>(t) = λ<sub>1</sub>(0) + ∫<sub>0</sub><sup>t</sup> <i>v</i><sub>1</sub>(τ) dτ</span>
+</div>
+<details class="work" open><summary>Worked example (lecture): +20 V for 5 µs, N<sub>1</sub> = 50</summary><div class="body">
+<div class="wk">
+<div>Δλ<sub>1</sub> = ∫ v<sub>1</sub> dt = (20 V)(5 µs) = <b>100 µV·s</b> <span class="c">(area under the voltage)</span></div>
+<div>ΔΦ = Δλ<sub>1</sub> / N<sub>1</sub> = 100 µV·s / 50 = <b>2 µWb</b></div>
+</div>
+</div></details>
+
+<div class="demo" id="d3">
+  <div class="dtitle">Calculator: volt-seconds to flux</div>
+  <div class="dnote">Loads with the lecture's example. Change any box.</div>
+  <div class="controls">
+    <label for="x3V">v<sub>1</sub> (V) <input id="x3V" type="number" value="20" step="1"></label>
+    <label for="x3t">for t (µs) <input id="x3t" type="number" value="5" min="0" step="0.5"></label>
+    <label for="x3N">N<sub>1</sub> <input id="x3N" type="number" value="50" min="1" step="1"></label>
+    <label for="x3A">A<sub>c</sub> (mm², optional) <input id="x3A" type="number" value="20" min="0" step="1"></label>
+  </div>
+  <div class="steps" id="r3"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a bathtub</span>
+<p>Voltage is the tap, flux linkage is the water level. The tap only sets how fast the level rises or falls. It says nothing about how much water was already in the tub. Open the tap at 20 "units" for 5 µs and the level rises by exactly 100, whatever it started at.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>λ vs Φ.</b> λ is per winding (N times Φ). Φ is the core's flux. Divide by N to go from one to the other.</li>
+<li><b>Zero volts means constant flux, not zero flux.</b> With v<sub>1</sub> = 0, dλ/dt = 0, so λ just stays where it was.</li>
+<li><b>Area, not height.</b> A big voltage for a short time can give the same Δλ as a small voltage for a long time. Always multiply V by time.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: Faraday's law"></div>
+</section>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Shared flux explains the turns ratio</h3>
+<p>If both windings link the <b>same</b> changing core flux, Faraday's law applies to each with the same dΦ/dt. The result: every turn, on either winding, sees the same voltage.</p>
+<div class="eq">
+  <span class="row"><i>v</i><sub>1</sub> = <i>N</i><sub>1</sub><span class="frac"><span>dΦ</span><span>dt</span></span>, &nbsp; <i>v</i><sub>2</sub> = <i>N</i><sub>2</sub><span class="frac"><span>dΦ</span><span>dt</span></span> &nbsp;&nbsp;⇒&nbsp;&nbsp; <span class="frac"><span><i>v</i><sub>1</sub></span><span><i>N</i><sub>1</sub></span></span> = <span class="frac"><span><i>v</i><sub>2</sub></span><span><i>N</i><sub>2</sub></span></span> <span class="note">volts per turn is the same</span></span>
+</div>
+<p>That's exactly the ideal transformer's voltage equation from §1, now with a physical reason. The dots mark the ends that rise together. More turns give more voltage for the same flux change. Flux that is <b>not</b> shared is leakage (§7).</p>
+
+<div class="demo" id="d4">
+  <div class="dtitle">Try it: volts per turn</div>
+  <div class="dnote">Uses the §3 example: ΔΦ = 2 µWb in 5 µs, so dΦ/dt = 0.4 V per turn. N<sub>2</sub> = 25 is this guide's choice (a 2 : 1 ratio).</div>
+  <canvas id="cv4" height="150" aria-label="Turns drawn as ticks, each with the same volts per turn"></canvas>
+  <div class="controls">
+    <label for="x4P">ΔΦ (µWb) <input id="x4P" type="number" value="2" step="0.1"></label>
+    <label for="x4t">in (µs) <input id="x4t" type="number" value="5" min="0.1" step="0.5"></label>
+    <label for="x4N1">N<sub>1</sub> <input id="x4N1" type="range" min="5" max="100" step="1" value="50"><output id="x4N1o">50</output></label>
+    <label for="x4N2">N<sub>2</sub> <input id="x4N2" type="range" min="5" max="100" step="1" value="25"><output id="x4N2o">25</output></label>
+    <button class="btn" type="button" id="x4flip" aria-pressed="false">Flip secondary dot</button>
+  </div>
+  <div class="readout" id="r4"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · stairs in one building</span>
+<p>Two staircases in the same building climb the same total height. Each step (turn) has the same rise (volts per turn). A staircase with more steps covers more height. Sharing the building is what forces the steps to match.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li>This ratio holds only for the <b>shared</b> flux. Leakage adds a small extra voltage drop in a real transformer (§7).</li>
+<li>The ratio says nothing about the current needed to <i>create</i> the flux. That missing current is the magnetizing current (§5).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: shared flux"></div>
+</section>
+
+<h2 class="part">Part 2 · The real transformer</h2>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>Magnetizing current and L<sub>m</sub></h3>
+<p>Leave the secondary open (i<sub>2</sub> = 0) and apply an alternating voltage to the primary. The ideal element predicts i<sub>1</sub> = 0, since there's no load. A real winding still draws current. Why? The voltage sets how the flux <b>changes</b> (§3), but flux in the core needs <b>current in the winding to produce it</b> (§2). That current is the <b>magnetizing current i<sub>m</sub></b>.</p>
+<p>In a linear model, flux linkage is proportional to that current. The constant is the <b>magnetizing inductance L<sub>m</sub></b>, drawn in parallel with the ideal primary:</p>
+<div class="eq">
+  <span class="row">λ<sub>1</sub> = <i>N</i><sub>1</sub>Φ = <i>L<sub>m</sub></i><i>i<sub>m</sub></i> &nbsp;&nbsp;⇒&nbsp;&nbsp; <i>v</i><sub>1</sub> = <i>L<sub>m</sub></i><span class="frac"><span>d<i>i<sub>m</sub></i></span><span>dt</span></span></span>
+  <span class="row">Under load: &nbsp;<i>i</i><sub>1</sub> = <span class="frac"><span><i>N</i><sub>2</sub></span><span><i>N</i><sub>1</sub></span></span><i>i</i><sub>2</sub> + <i>i<sub>m</sub></i> &nbsp;&nbsp;&nbsp; Stored energy: <i>W</i> = <span class="frac"><span>λ²</span><span>2<i>L<sub>m</sub></i></span></span> = ½<i>L<sub>m</sub>i<sub>m</sub></i>²</span>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Large L<sub>m</sub> (mains transformer)</th><th>Small L<sub>m</sub> (flyback, gapped core)</th></tr></thead>
+<tbody><tr><td>i<sub>m</sub> ≈ 0, so it behaves like the ideal element.</td><td>The delivered energy passes through i<sub>m</sub>: it's stored as W = λ²/2L<sub>m</sub>, then released.</td></tr></tbody>
+</table></div>
+
+<details class="work" open><summary>Worked example (lecture waveform): +20 V for 5 µs, then −10 V for 10 µs</summary><div class="body">
+<div class="wk">
+<div class="c">The slide plots v<sub>1</sub>, λ<sub>1</sub> and i<sub>m</sub>. Reading the peaks: λ<sub>1</sub> reaches 100 µV·s while i<sub>m</sub> reaches 0.10 A.</div>
+<div>Rise: Δλ<sub>1</sub> = (20 V)(5 µs) = <b>100 µV·s</b></div>
+<div>Fall: Δλ<sub>1</sub> = (−10 V)(10 µs) = <b>−100 µV·s</b> &nbsp;<span class="c">back to zero each 15 µs: a triangle, like the buck inductor</span></div>
+<div>L<sub>m</sub> = λ<sub>1</sub>/i<sub>m</sub> = 100 µV·s / 0.10 A = <b>1 mH</b> <span class="c">(implied by the plot)</span></div>
+<div>Peak energy: W = λ²/2L<sub>m</sub> = (100 µV·s)² / (2 × 1 mH) = <b>5 µJ</b> = ½(1 mH)(0.10 A)²</div>
+</div>
+</div></details>
+
+<div class="demo" id="d5">
+  <div class="dtitle">Try it: volt-seconds, flux linkage and magnetizing current</div>
+  <div class="dnote">Loads with the lecture's waveform (20 V for 5 µs, −10 V for 10 µs, N<sub>1</sub> = 50, L<sub>m</sub> = 1 mH).</div>
+  <div class="vslab" data-va="20" data-ta="5" data-vb="-10" data-tb="10" data-n="50" data-lm="1" data-cyc="2"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a spring you have to wind</span>
+<p>Even with nothing attached to the output shaft, winding a clock spring takes effort. That effort is the magnetizing current: the price of setting up the flux. A stiff spring (large L<sub>m</sub>) barely needs any current for the flux you want. A soft spring (small L<sub>m</sub>) takes more current but stores more energy for the same volt-seconds, which is exactly what a flyback wants.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>i<sub>m</sub> is not a load current.</b> It flows even with the secondary open, and adds on top of the reflected load current: i<sub>1</sub> = (N<sub>2</sub>/N<sub>1</sub>)i<sub>2</sub> + i<sub>m</sub>.</li>
+<li><b>Smaller L<sub>m</sub>, more energy.</b> W = λ²/2L<sub>m</sub>: the voltage fixes λ, so halving L<sub>m</sub> doubles the energy stored per cycle. That feels backwards if you're used to ½Li² with fixed current.</li>
+<li><b>Same shapes as the buck inductor.</b> Constant voltage gives a straight-line ramp in λ and i<sub>m</sub>. Nothing new to learn, just a new name.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: magnetizing inductance"></div>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Volt-second balance and core size</h3>
+<p>Just like the buck inductor, a transformer in steady state needs <b>volt-second balance</b>:</p>
+<div class="eq"><span class="row">∫<sub>0</sub><sup><i>T<sub>s</sub></i></sup> <i>v</i><sub>1</sub> dt = 0</span></div>
+<p>Excess positive volt-seconds make i<sub>m</sub> and the flux <b>drift upward every cycle</b>, toward saturation. This is why a real transformer can't pass DC.</p>
+
+<details class="work" open><summary>Worked example (lecture): the unbalanced waveform</summary><div class="body">
+<div class="wk">
+<div class="c">Same 20 V for 5 µs, but now −10 V for only 5 µs (T<sub>s</sub> = 10 µs), L<sub>m</sub> = 1 mH.</div>
+<div>Up: (20 V)(5 µs) = 100 µV·s &nbsp;→&nbsp; i<sub>m</sub> rises 100 µV·s / 1 mH = <b>0.10 A</b></div>
+<div>Down: (10 V)(5 µs) = 50 µV·s &nbsp;→&nbsp; i<sub>m</sub> falls <b>0.05 A</b></div>
+<div>Net: +50 µV·s per cycle &nbsp;→&nbsp; i<sub>m</sub> climbs <b>0.05 A every 10 µs</b></div>
+<div class="c">Cycle ends at 0.05, 0.10, 0.15 A, ... with peaks 0.10, 0.15, 0.20 A. It never settles.</div>
+</div>
+</div></details>
+
+<div class="demo" id="d6a">
+  <div class="dtitle">Try it: watch the flux walk toward saturation</div>
+  <div class="dnote">Loads with the lecture's unbalanced waveform. Set t<sub>b</sub> = 10 µs to balance it.</div>
+  <div class="vslab" data-va="20" data-ta="5" data-vb="-10" data-tb="5" data-n="50" data-lm="1" data-cyc="3"></div>
+</div>
+
+<h4>Core size follows volt-seconds</h4>
+<p>From §3, the flux swing over the on-time is the volt-seconds divided by turns. Divide by the core area to get the flux density swing:</p>
+<div class="eq">
+  <span class="row">ΔΦ = <span class="frac"><span>1</span><span><i>N</i><sub>1</sub></span></span>∫<sub>0</sub><sup><i>DT<sub>s</sub></i></sup> <i>v</i><sub>1</sub> dt ≈ <span class="frac"><span><i>VD</i></span><span><i>N</i><sub>1</sub><i>f<sub>s</sub></i></span></span>, &nbsp;&nbsp; ΔΦ = <i>A<sub>c</sub></i>Δ<i>B</i> &nbsp;⇒&nbsp; Δ<i>B</i> ≈ <span class="frac"><span><i>VD</i></span><span><i>N</i><sub>1</sub></span></span> · <span class="frac"><span>1</span><span><i>A<sub>c</sub>f<sub>s</sub></i></span></span></span>
+  <span class="row">Limit is on the peak: <i>B</i><sub>max</sub> &lt; <i>B</i><sub>sat</sub></span>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Swing type</th><th>B<sub>max</sub></th></tr></thead>
+<tbody>
+<tr><td>Bipolar (swings ± around zero)</td><td>ΔB/2</td></tr>
+<tr><td>Unipolar (from zero)</td><td>ΔB</td></tr>
+<tr><td>DC bias (flyback in CCM)</td><td>B<sub>dc</sub> + ΔB/2</td></tr>
+</tbody></table></div>
+<p>VD/N<sub>1</sub> is fixed by the conversion ratio, so the design knob is <b>A<sub>c</sub>f<sub>s</sub></b>: raise f<sub>s</sub> and the core shrinks. That's why converters isolate at the switching frequency, not at the 60 Hz mains.</p>
+
+<div class="demo" id="d6b">
+  <div class="dtitle">Calculator: flux density swing and peak</div>
+  <div class="dnote">V, D, N<sub>1</sub> and f<sub>s</sub> come from the lecture waveform (20 V, 5 µs of a 15 µs period). A<sub>c</sub> = 20 mm² and B<sub>dc</sub> = 0.1875 T are this guide's example values (B<sub>dc</sub> matches the running flyback example in Part 3).</div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Swing type">
+      <button type="button" data-bm="bi" aria-pressed="false">Bipolar</button>
+      <button type="button" data-bm="uni" aria-pressed="false">Unipolar</button>
+      <button type="button" data-bm="dc" aria-pressed="true">DC bias</button>
+    </div>
+    <label for="x6V">V (V) <input id="x6V" type="number" value="20" step="1"></label>
+    <label for="x6D">D <input id="x6D" type="number" value="0.333333" min="0" max="1" step="0.01"></label>
+    <label for="x6N">N<sub>1</sub> <input id="x6N" type="number" value="50" min="1" step="1"></label>
+    <label for="x6A">A<sub>c</sub> (mm²) <input id="x6A" type="number" value="20" min="0.1" step="1"></label>
+    <label for="x6Bdc">B<sub>dc</sub> (T) <input id="x6Bdc" type="number" value="0.1875" min="0" step="0.01"></label>
+    <label for="x6f">f<sub>s</sub> (kHz) <input id="x6f" type="range" min="10" max="500" step="any" value="66.6666667"><output id="x6fo">66.7</output></label>
+  </div>
+  <div class="steps" id="r6"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a swing and a push</span>
+<p>Push a swing forward harder than you pull it back and it goes higher every cycle until it hits the frame (saturation). Balanced pushes keep the same arc. And a faster, smaller push rhythm (higher f<sub>s</sub>) needs a smaller arc, so you can use a smaller swing set (core).</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Drift is per cycle.</b> Net volt-seconds per cycle ÷ L<sub>m</sub> gives the current added each cycle. Multiply by the number of cycles for the total.</li>
+<li><b>Which B<sub>max</sub>?</b> The flyback in CCM carries a DC magnetizing current, so its flux never returns to zero. Use B<sub>dc</sub> + ΔB/2, the worst of the three cases for the same ΔB.</li>
+<li><b>Frequency is in the denominator.</b> Double f<sub>s</sub> with the same V, D and N<sub>1</sub>: ΔB halves, or you can halve A<sub>c</sub> for the same ΔB.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: volt-second balance and core size"></div>
+</section>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Leakage and the equivalent model</h3>
+<p><b>Shared flux</b> links both windings through the core. <b>Leakage flux</b> links one winding without linking the other: its return path passes through the surrounding air. Leakage flux still stores energy and still needs current, so it acts like a small inductor <b>in series</b> with each winding.</p>
+<div class="demo" id="d7">
+  <div class="dtitle">Click each part of the model</div>
+  <div id="ckt7" style="overflow-x:auto"></div>
+  <div class="readout" id="r7" aria-live="polite"></div>
+</div>
+<div class="eq"><span class="row"><i>v</i><sub>1</sub> = <i>v<sub>m</sub></i> + <i>L</i><sub><i>l</i>1</sub><span class="frac"><span>d<i>i</i><sub>1</sub></span><span>dt</span></span> <span class="note">primary terminal = magnetizing voltage + leakage drop</span></span></div>
+<p>In the drawing, L<sub>l2</sub> has already been moved to the primary side as n²L<sub>l2</sub> (see §8 for why it scales by n²).</p>
+
+<div class="callout analogy"><span class="tag">Analogy · a leaky hose</span>
+<p>The core is a hose carrying water (flux) from the primary to the secondary. Leakage is water that squirts out of a crack near one end and never reaches the other. You still had to pump that water, so it costs you something, but the other side never feels it.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Parallel vs series.</b> L<sub>m</sub> is in <b>parallel</b> (it's set by the voltage across the winding, the shared flux). Leakage is in <b>series</b> (it's set by each winding's own current).</li>
+<li><b>A perfect transformer</b> has L<sub>m</sub> → ∞ (no magnetizing current) and L<sub>l1</sub>, L<sub>l2</sub> → 0 (no leakage). Then only the ideal element is left.</li>
+<li>Leakage voltage is L<sub>l1</sub>·di<sub>1</sub>/dt, so it's worst when current changes fast, as in a switching converter.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: leakage and the model"></div>
+</section>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>Reflecting elements through the ideal transformer</h3>
+<p>Let n = N<sub>1</sub>/N<sub>2</sub>. The ideal element gives v<sub>1</sub> = n v<sub>2</sub> and i<sub>1</sub> = i<sub>2</sub>/n, so any impedance on the secondary looks n² times bigger from the primary:</p>
+<div class="eq">
+  <span class="row"><span class="frac"><span><i>v</i><sub>1</sub></span><span><i>i</i><sub>1</sub></span></span> = <i>n</i>²<span class="frac"><span><i>v</i><sub>2</sub></span><span><i>i</i><sub>2</sub></span></span> &nbsp;&nbsp;⇒&nbsp;&nbsp; <i>R</i> → <i>n</i>²<i>R</i>, &nbsp; <i>L</i> → <i>n</i>²<i>L</i>, &nbsp; <i>C</i> → <i>C</i>/<i>n</i>²</span>
+</div>
+<details class="work" open><summary>Worked derivation (lecture): why L becomes n²L</summary><div class="body">
+<div class="wk">
+<div>On the secondary: i<sub>2</sub> = v<sub>2</sub> / (jωL)</div>
+<div>Ideal element: i<sub>1</sub> = i<sub>2</sub>/n &nbsp;and&nbsp; v<sub>2</sub> = v<sub>1</sub>/n</div>
+<div>i<sub>1</sub> = v<sub>2</sub> / (n jωL) = (v<sub>1</sub>/n) / (n jωL) = <b>v<sub>1</sub> / (jω (n²L))</b></div>
+<div class="c">So the primary sees an inductor of n²L. Same steps for R (n²R). For C the impedance is 1/(jωC), so multiplying the impedance by n² means dividing C by n².</div>
+</div>
+</div></details>
+
+<div class="demo" id="d8">
+  <div class="dtitle">Calculator: move an element across the transformer</div>
+  <div class="dnote">Example values: 2 : 1 (as in §1) and L = 2.5 µH on the secondary, which reflects to the 10 µH used in §9. These are this guide's numbers.</div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Element">
+      <button type="button" data-el="R" aria-pressed="false">R</button>
+      <button type="button" data-el="L" aria-pressed="true">L</button>
+      <button type="button" data-el="C" aria-pressed="false">C</button>
+    </div>
+    <div class="seg" role="group" aria-label="Direction">
+      <button type="button" data-dir="s2p" aria-pressed="true">secondary → primary</button>
+      <button type="button" data-dir="p2s" aria-pressed="false">primary → secondary</button>
+    </div>
+    <label for="x8N1">N<sub>1</sub> <input id="x8N1" type="number" value="50" min="1" step="1"></label>
+    <label for="x8N2">N<sub>2</sub> <input id="x8N2" type="number" value="25" min="1" step="1"></label>
+    <label for="x8v">value <input id="x8v" type="number" value="2.5" min="0" step="0.1"></label><span class="mono" id="x8u">µH</span>
+  </div>
+  <div class="steps" id="r8"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a gearbox</span>
+<p>Through a gearbox, a load's resistance to turning looks bigger or smaller depending on the gear ratio. The ratio shows up twice (once for speed, once for torque), so the load scales by the ratio <b>squared</b>. A transformer does the same with voltage and current.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Which way?</b> Secondary to primary: multiply impedance by n² (n = N<sub>1</sub>/N<sub>2</sub>). Primary to secondary: divide by n².</li>
+<li><b>C goes the other way.</b> Because its impedance is 1/(jωC), C is divided by n² when R and L are multiplied.</li>
+<li>For a step-up transformer n &lt; 1, so n² &lt; 1 and secondary elements look <b>smaller</b> from the primary.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: reflecting elements"></div>
+</section>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Measuring the model: open- and short-circuit tests</h3>
+<p>You measure the inductance at the primary terminals twice.</p>
+<ul class="plain">
+<li><b>Secondary open</b> (i<sub>2</sub> = 0): no current enters the ideal primary, so the n²L<sub>l2</sub> branch carries nothing. You see L<sub>oc</sub> = L<sub>l1</sub> + L<sub>m</sub>.</li>
+<li><b>Secondary shorted</b> (v<sub>2</sub> = 0): the ideal primary is shorted too, so L<sub>m</sub> sits in parallel with n²L<sub>l2</sub>. You see L<sub>sc</sub>.</li>
+</ul>
+<div class="eq">
+  <span class="row"><i>L</i><sub>oc</sub> = <i>L</i><sub><i>l</i>1</sub> + <i>L<sub>m</sub></i></span>
+  <span class="row"><i>L</i><sub>sc</sub> = <i>L</i><sub><i>l</i>1</sub> + <i>L<sub>m</sub></i> ∥ <i>n</i>²<i>L</i><sub><i>l</i>2</sub> ≈ <i>L</i><sub><i>l</i>1</sub> + <i>n</i>²<i>L</i><sub><i>l</i>2</sub> <span class="note">needs L<sub>m</sub> ≫ n²L<sub>l2</sub></span></span>
+  <span class="row">Split the leakage evenly: <i>L</i><sub><i>l</i>1</sub> ≈ <i>n</i>²<i>L</i><sub><i>l</i>2</sub> ≈ <i>L</i><sub>sc</sub>/2 &nbsp;⇒&nbsp; <i>L<sub>m</sub></i> ≈ <i>L</i><sub>oc</sub> − <i>L</i><sub>sc</sub>/2</span>
+</div>
+<p>Two measurements, three unknowns, so the even split is an assumption. The ≈ holds for grid transformers, phase-shifted full bridges and flybacks, but not for resonant converters.</p>
+
+<div class="demo" id="d9">
+  <div class="dtitle">Calculator: extract L<sub>m</sub> and leakage</div>
+  <div class="dnote">Loads with the lecture's example: L<sub>oc</sub> = 1.00 mH, L<sub>sc</sub> = 20 µH. Toggle the test to see which parts of the model the meter sees.</div>
+  <div id="ckt9" style="overflow-x:auto"></div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Test">
+      <button type="button" data-test="oc" aria-pressed="true">Secondary open</button>
+      <button type="button" data-test="sc" aria-pressed="false">Secondary shorted</button>
+    </div>
+    <label for="x9oc">L<sub>oc</sub> (µH) <input id="x9oc" type="number" value="1000" min="0" step="10"></label>
+    <label for="x9sc">L<sub>sc</sub> (µH) <input id="x9sc" type="number" value="20" min="0" step="1"></label>
+  </div>
+  <div class="steps" id="r9"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · two doors in a hallway</span>
+<p>Water flows down a hallway (L<sub>l1</sub>) to a fork: a huge side room (L<sub>m</sub>) and a narrow corridor leading on (n²L<sub>l2</sub>). Close the far end (open circuit) and all water goes into the big room. Open the far end wide (short circuit) and water takes the easy corridor, so the big room barely matters.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Short-circuit test measures leakage, not L<sub>m</sub>.</b> The small n²L<sub>l2</sub> in parallel with the big L<sub>m</sub> is ≈ n²L<sub>l2</sub>.</li>
+<li><b>Don't forget the half.</b> L<sub>m</sub> ≈ L<sub>oc</sub> − L<sub>sc</sub>/2, not L<sub>oc</sub> − L<sub>sc</sub>, because only L<sub>l1</sub> (half of L<sub>sc</sub>) is in the open-circuit reading.</li>
+<li><b>When it fails:</b> resonant converters deliberately use an L<sub>m</sub> not much bigger than the leakage, so L<sub>m</sub> ∥ n²L<sub>l2</sub> is no longer ≈ n²L<sub>l2</sub>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: open and short tests"></div>
+</section>
+
+<h2 class="part">Part 3 · The flyback converter in CCM</h2>
+
+<div class="callout example"><span class="tag">The running example for Part 3 and Part 4</span>
+<p>The lecture derives the flyback results with symbols only. To make the calculators land on familiar numbers, this guide reuses the lecture's own waveform from §5: <b>+20 V for 5 µs, then −10 V for 10 µs, L<sub>m</sub> = 1 mH</b>. That is exactly what a flyback's L<sub>m</sub> sees with <b>V<sub>g</sub> = 20 V, N<sub>1</sub> : N<sub>2</sub> = 50 : 25 (2 : 1), D = 1/3, T<sub>s</sub> = 15 µs and V = 5 V</b>, because the off-state voltage is −(N<sub>1</sub>/N<sub>2</sub>)V = −10 V. The load <b>R = 20 Ω</b> and <b>C = 10 µF</b> are this guide's additions.</p>
+</div>
+
+<!-- 10 -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>The flyback: store energy, then deliver it</h3>
+<p>The flyback is a simple and very common isolated dc-dc converter, typically for 1s to 10s of watts: auxiliary supplies for gate drivers or control boards, and chargers for small batteries (phones, laptops).</p>
+<p>The model we analyse is an ideal transformer with a deliberately <b>small L<sub>m</sub></b> in parallel with its primary. L<sub>m</sub> is the energy store:</p>
+<div class="eq"><span class="row"><i>E<sub>m</sub></i> = ½<i>L<sub>m</sub>i<sub>m</sub></i>² <span class="note">Q<sub>1</sub> is on for DT<sub>s</sub>, off for the rest of T<sub>s</sub></span></span></div>
+<div class="tbl"><table>
+<thead><tr><th>Switch on: store</th><th>Switch off: deliver</th></tr></thead>
+<tbody><tr>
+<td>v<sub>g</sub> sits across L<sub>m</sub>, so i<sub>m</sub> ramps up and the stored energy grows. The reversed secondary holds D<sub>1</sub> off, so nothing leaves the transformer yet. C feeds the load.</td>
+<td>i<sub>m</sub> can't stop (it's an inductor current). It transfers to the secondary through the turns ratio, D<sub>1</sub> conducts, and i<sub>m</sub> ramps down as L<sub>m</sub> hands its energy to the output.</td>
+</tr></tbody></table></div>
+<p><b>Note the dots.</b> The secondary is connected so that turning Q<sub>1</sub> on makes the diode reverse biased. That is the whole trick: the input and output never conduct at the same time.</p>
+
+<div class="demo" id="d10">
+  <div class="dtitle">Try it: scrub through one switching period</div>
+  <div class="dnote">Running example (V<sub>g</sub> = 20 V, D = 1/3, T<sub>s</sub> = 15 µs, L<sub>m</sub> = 1 mH, i<sub>m</sub> from 0.1375 A to 0.2375 A).</div>
+  <canvas id="cv10" height="230" aria-label="Magnetizing current and stored energy over one period"></canvas>
+  <div class="legend"><span><i style="background:var(--curr)"></i>i<sub>m</sub></span><span><i style="background:var(--fund)"></i>E<sub>m</sub> = ½L<sub>m</sub>i<sub>m</sub>²</span></div>
+  <div class="controls">
+    <label for="x10t">time in period <input id="x10t" type="range" min="0" max="1" step="0.005" value="0.25"><output id="x10to">3.8 µs</output></label>
+  </div>
+  <div class="readout" id="r10" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a bucket brigade with a flywheel</span>
+<p>Think of spinning up a flywheel with a hand crank (switch on), then letting go and connecting the flywheel to a generator (switch off). You never crank and generate at the same moment. The flywheel is L<sub>m</sub>; its speed is i<sub>m</sub>; the energy it holds is ½L<sub>m</sub>i<sub>m</sub>².</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Not a "normal" transformer.</b> In a mains transformer both windings carry current at once. In a flyback they take turns, so it's really a pair of coupled inductors that stores energy.</li>
+<li><b>Energy per cycle × f<sub>s</sub> = power.</b> In CCM only the part between i<sub>m,min</sub> and i<sub>m,max</sub> is delivered: ½L<sub>m</sub>(i<sub>max</sub>² − i<sub>min</sub>²). The demo shows this equals V²/R.</li>
+<li>That's why the flyback wants a <b>small L<sub>m</sub></b> (gapped core), the opposite of a mains transformer (§5).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: store, then deliver"></div>
+</section>
+
+<!-- 11 -->
+<section class="sec" id="s11">
+<h3><span class="num">11</span>Two operating states</h3>
+<p>In continuous conduction mode (CCM), i<sub>m</sub> never reaches zero, so there are two states. Write v<sub>L</sub> (the voltage across L<sub>m</sub>) and i<sub>C</sub> (the capacitor current) in each. Then apply the <b>small ripple approximation (SRA)</b>: replace v by its average V and i<sub>m</sub> by its average I<sub>m</sub>.</p>
+<div class="tbl"><table>
+<thead><tr><th>State</th><th>Exact</th><th>With SRA</th></tr></thead>
+<tbody>
+<tr><td>① 0 ≤ t &lt; DT<sub>s</sub><br>Q<sub>1</sub> on, D<sub>1</sub> off</td><td>v<sub>L</sub> = v<sub>g</sub><br>i<sub>C</sub> = −v/R</td><td>v<sub>L</sub> = V<sub>g</sub><br>i<sub>C</sub> = −V/R</td></tr>
+<tr><td>② DT<sub>s</sub> ≤ t &lt; T<sub>s</sub><br>Q<sub>1</sub> off, D<sub>1</sub> on</td><td>v<sub>L</sub> = −(N<sub>1</sub>/N<sub>2</sub>) v<br>i<sub>C</sub> = (N<sub>1</sub>/N<sub>2</sub>) i<sub>m</sub> − v/R</td><td>v<sub>L</sub> = −(N<sub>1</sub>/N<sub>2</sub>) V<br>i<sub>C</sub> = (N<sub>1</sub>/N<sub>2</sub>) I<sub>m</sub> − V/R</td></tr>
+</tbody></table></div>
+<p>Where do the state ② terms come from? With D<sub>1</sub> on, the secondary is clamped to the output v. The ideal transformer reflects that to the primary as (N<sub>1</sub>/N<sub>2</sub>)v, with the minus sign from the reversed secondary. The current i<sub>m</sub> leaves L<sub>m</sub> through the ideal primary, and the ideal element sends (N<sub>1</sub>/N<sub>2</sub>)i<sub>m</sub> out of the secondary into the C and R node.</p>
+
+<div class="demo" id="d11">
+  <div class="dtitle">Try it: click the switch (or pick a state)</div>
+  <div class="dnote">Numbers use the running example: V<sub>g</sub> = 20 V, N<sub>1</sub>/N<sub>2</sub> = 2, V = 5 V, R = 20 Ω, I<sub>m</sub> = 0.1875 A.</div>
+  <div id="ckt11" style="overflow-x:auto"></div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="State">
+      <button type="button" data-st="1" aria-pressed="true">① Q<sub>1</sub> on</button>
+      <button type="button" data-st="2" aria-pressed="false">② Q<sub>1</sub> off, D<sub>1</sub> on</button>
+      <button type="button" data-st="3" aria-pressed="false">③ both off (DCM only)</button>
+    </div>
+  </div>
+  <div class="legend"><span><i style="background:var(--curr)"></i>current driven by the source or by L<sub>m</sub></span><span><i style="background:var(--fund)"></i>C feeding the load</span></div>
+  <div class="readout" id="r11" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a relay race with one runner</span>
+<p>i<sub>m</sub> is a single runner who never stops. In state ① he runs laps on the primary track, getting faster. In state ② he's handed over to the secondary track (scaled by the turns ratio) and slows down as he pushes the load. The capacitor is the water station that keeps the load going while the runner is on the other track.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Sign of v<sub>L</sub> in state ②.</b> It's negative: the output is reflected back as −(N<sub>1</sub>/N<sub>2</sub>)V. That negative voltage is what resets L<sub>m</sub>.</li>
+<li><b>Turns ratio direction.</b> Both reflected terms use N<sub>1</sub>/N<sub>2</sub>: output voltage times N<sub>1</sub>/N<sub>2</sub> to reach the primary, primary current times N<sub>1</sub>/N<sub>2</sub> to reach the secondary.</li>
+<li><b>In state ① the ideal primary carries no current.</b> The diode blocks the secondary, so i<sub>2</sub> = 0 and all of the input current is i<sub>m</sub>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q11" data-title="Check: two operating states"></div>
+</section>
+
+<!-- 12 -->
+<section class="sec" id="s12">
+<h3><span class="num">12</span>Volt-second balance: V and the conversion ratio M(D)</h3>
+<p>Steady state first: solve for the <b>averages</b>. The same two tools as the buck and boost, just new state equations. Inductor volt-second balance on L<sub>m</sub> gives V.</p>
+<details class="work" open><summary>Worked derivation (lecture)</summary><div class="body">
+<div class="wk">
+<div>⟨v<sub>L</sub>⟩<sub>T<sub>s</sub></sub> = (1/T<sub>s</sub>) ∫<sub>0</sub><sup>T<sub>s</sub></sup> v<sub>L</sub> dt = 0</div>
+<div>= (1/T<sub>s</sub>) [ V<sub>g</sub>DT<sub>s</sub> − (N<sub>1</sub>/N<sub>2</sub>) V D′T<sub>s</sub> ] = V<sub>g</sub>D − (N<sub>1</sub>/N<sub>2</sub>) V D′</div>
+<div>With D′ = 1 − D: &nbsp;<b>V = (N<sub>2</sub>/N<sub>1</sub>) · D/(1 − D) · V<sub>g</sub></b></div>
+<div class="c">Running example: V = (25/50)(1/3)/(2/3)(20 V) = (0.5)(0.5)(20 V) = 5 V.</div>
+</div>
+</div></details>
+<div class="eq"><span class="row"><i>M</i>(<i>D</i>) = <span class="frac"><span><i>V</i></span><span><i>V<sub>g</sub></i></span></span> = <span class="frac"><span><i>N</i><sub>2</sub></span><span><i>N</i><sub>1</sub></span></span> · <span class="frac"><span><i>D</i></span><span>1 − <i>D</i></span></span></span></div>
+<ul class="plain">
+<li>M = N<sub>2</sub>/N<sub>1</sub> at D = 0.5. Below that it steps down, above it steps up (relative to N<sub>2</sub>/N<sub>1</sub>).</li>
+<li>D/(1 − D) is the buck's D times the boost's 1/(1 − D): <b>the flyback is a buck-boost with a transformer in it</b>.</li>
+<li>The turns ratio is a free design choice: it sets where D sits for a given V/V<sub>g</sub>.</li>
+</ul>
+
+<div class="demo" id="d12">
+  <div class="dtitle">Try it: M(D) and the turns ratio</div>
+  <div class="dnote">Loads with the running example: V<sub>g</sub> = 20 V, 50 : 25, D = 1/3 gives V = 5 V.</div>
+  <canvas id="cv12" height="260" aria-label="Conversion ratio versus duty cycle"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>flyback M(D)</span><span><i style="background:var(--muted)"></i>buck-boost D/(1 − D) (N<sub>1</sub> = N<sub>2</sub>)</span><span><i style="background:var(--curr)"></i>your operating point</span></div>
+  <div class="controls">
+    <label for="x12D">D <input id="x12D" type="range" min="0.02" max="0.9" step="any" value="0.3333333333"><output id="x12Do">0.333</output></label>
+    <label for="x12N1">N<sub>1</sub> <input id="x12N1" type="number" value="50" min="1" step="1"></label>
+    <label for="x12N2">N<sub>2</sub> <input id="x12N2" type="number" value="25" min="1" step="1"></label>
+    <label for="x12Vg">V<sub>g</sub> (V) <input id="x12Vg" type="number" value="20" step="1"></label>
+    <button class="btn" type="button" data-d12="0.3333333333">D = 1/3</button>
+    <button class="btn" type="button" data-d12="0.5">D = 0.5</button>
+  </div>
+  <div class="readout" id="r12"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a bicycle's two gear sets</span>
+<p>The duty cycle is the rear derailleur (fine, continuous adjustment). The turns ratio is the front chainring (picked once, at design time). Choose the chainring so the rear derailleur works in its comfortable middle range instead of at the extremes.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>N<sub>2</sub>/N<sub>1</sub>, not N<sub>1</sub>/N<sub>2</sub>.</b> The output side's turns go on top. A quick check: more secondary turns should mean more output voltage.</li>
+<li><b>Solving for D:</b> set D/(1 − D) = (N<sub>1</sub>/N<sub>2</sub>)M, call it x, then D = x/(1 + x).</li>
+<li><b>Why choose the turns ratio?</b> Without it (a plain buck-boost), a 300 V to 12 V supply would need D ≈ 0.04: tiny pulses, poor control. A turns ratio lets D sit near 0.3 to 0.5.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q12" data-title="Check: V and M(D)"></div>
+</section>
+
+<!-- 13 -->
+<section class="sec" id="s13">
+<h3><span class="num">13</span>Charge balance: the average magnetizing current I<sub>m</sub></h3>
+<p>Capacitor charge balance on C gives the average magnetizing current.</p>
+<details class="work" open><summary>Worked derivation (lecture)</summary><div class="body">
+<div class="wk">
+<div>⟨i<sub>C</sub>⟩<sub>T<sub>s</sub></sub> = (1/T<sub>s</sub>) ∫<sub>0</sub><sup>T<sub>s</sub></sup> i<sub>C</sub> dt = 0</div>
+<div>= (1/T<sub>s</sub>) [ −(V/R) DT<sub>s</sub> + ((N<sub>1</sub>/N<sub>2</sub>) I<sub>m</sub> − V/R) D′T<sub>s</sub> ]</div>
+<div>= −V/R + (N<sub>1</sub>/N<sub>2</sub>) I<sub>m</sub> D′</div>
+<div>⇒ <b>I<sub>m</sub> = (N<sub>2</sub>/N<sub>1</sub>) · 1/(1 − D) · V/R</b></div>
+<div class="c">Running example: I<sub>m</sub> = (0.5)(1.5)(5 V / 20 Ω) = (0.75)(0.25 A) = 0.1875 A.</div>
+</div>
+</div></details>
+<div class="eq"><span class="row"><i>I<sub>m</sub></i> = <span class="frac"><span><i>N</i><sub>2</sub></span><span><i>N</i><sub>1</sub></span></span> · <span class="frac"><span>1</span><span>1 − <i>D</i></span></span> · <span class="frac"><span><i>V</i></span><span><i>R</i></span></span></span></div>
+
+<div class="demo" id="d13">
+  <div class="dtitle">Calculator: V, I<sub>m</sub> and a power check</div>
+  <div class="dnote">Loads with the running example. The power check uses the fact that the source only supplies current (equal to i<sub>m</sub>) during state ①.</div>
+  <div class="controls">
+    <label for="x13Vg">V<sub>g</sub> (V) <input id="x13Vg" type="number" value="20" step="1"></label>
+    <label for="x13N1">N<sub>1</sub> <input id="x13N1" type="number" value="50" min="1" step="1"></label>
+    <label for="x13N2">N<sub>2</sub> <input id="x13N2" type="number" value="25" min="1" step="1"></label>
+    <label for="x13D">D <input id="x13D" type="number" value="0.333333" min="0" max="0.99" step="0.01"></label>
+    <label for="x13R">R (Ω) <input id="x13R" type="number" value="20" min="0.1" step="1"></label>
+  </div>
+  <div class="steps" id="r13"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a part-time delivery driver</span>
+<p>The load needs a steady V/R all the time, but the magnetizing current only delivers during the D′ fraction of each period (and gets scaled by the turns ratio on the way). A driver working 2/3 of the day must carry 1.5× the average demand while on shift. That 1/(1 − D) factor is the "part-time" penalty.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>I<sub>m</sub> is a primary-side current.</b> It's bigger or smaller than the load current by the turns ratio and by 1/(1 − D).</li>
+<li><b>Changing the turns ratio also changes D.</b> Substituting D from M(D): I<sub>m</sub> = (N<sub>2</sub>/N<sub>1</sub> + M)·V/R. A bigger N<sub>1</sub>/N<sub>2</sub> lowers I<sub>m</sub> (but see §15 for the cost).</li>
+<li><b>Sanity check with power.</b> Average input current = D·I<sub>m</sub> (under SRA), and V<sub>g</sub>·D·I<sub>m</sub> should equal V²/R.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q13" data-title="Check: average magnetizing current"></div>
+</section>
+
+<h2 class="part">Part 4 · Ripple, switch stress and DCM</h2>
+
+<!-- 14 -->
+<section class="sec" id="s14">
+<h3><span class="num">14</span>Ripple: Δi<sub>m</sub> and Δv</h3>
+<p>The averages fix V and I<sub>m</sub>. Now the waveshapes around them. As for the buck, integrate the state equation over one interval. The on interval is the easy one because both slopes are constant there.</p>
+<details class="work" open><summary>Worked derivations (lecture)</summary><div class="body">
+<div class="wk">
+<div class="c">Magnetizing current ripple, peak-to-peak, from v<sub>L</sub> = V<sub>g</sub> during 0 ≤ t &lt; DT<sub>s</sub>:</div>
+<div>L<sub>m</sub> di<sub>m</sub>/dt = v<sub>L</sub> &nbsp;⇒&nbsp; Δi<sub>m</sub> = (1/L<sub>m</sub>) ∫<sub>0</sub><sup>DT<sub>s</sub></sup> v<sub>L</sub> dt = <b>V<sub>g</sub> D T<sub>s</sub> / L<sub>m</sub></b></div>
+<div class="c">Output voltage ripple, peak-to-peak, from i<sub>C</sub> = −V/R during 0 ≤ t &lt; DT<sub>s</sub> (v falls by Δv):</div>
+<div>C dv/dt = i<sub>C</sub> &nbsp;⇒&nbsp; Δv = −(1/C) ∫<sub>0</sub><sup>DT<sub>s</sub></sup> i<sub>C</sub> dt = <b>V D T<sub>s</sub> / (R C)</b></div>
+<div class="c">Running example: Δi<sub>m</sub> = (20)(1/3)(15 µs)/(1 mH) = 0.100 A (the lecture's triangle). Δv = (5)(1/3)(15 µs)/((20 Ω)(10 µF)) = 0.125 V.</div>
+</div>
+</div></details>
+<div class="eq">
+  <span class="row">Δ<i>i<sub>m</sub></i> = <span class="frac"><span><i>V<sub>g</sub>DT<sub>s</sub></i></span><span><i>L<sub>m</sub></i></span></span> &nbsp;&nbsp;&nbsp; Δ<i>v</i> = <span class="frac"><span><i>VDT<sub>s</sub></i></span><span><i>RC</i></span></span> <span class="note">both peak-to-peak</span></span>
+  <span class="row"><i>i</i><sub><i>m</i>,max</sub> = <i>I<sub>m</sub></i> + Δ<i>i<sub>m</sub></i>/2 &nbsp;&nbsp; <i>i</i><sub><i>m</i>,min</sub> = <i>I<sub>m</sub></i> − Δ<i>i<sub>m</sub></i>/2 <span class="note">CCM needs i<sub>m,min</sub> &gt; 0</span></span>
+</div>
+
+<div class="demo" id="d14">
+  <div class="dtitle">Flyback workbench: all four waveforms</div>
+  <div class="dnote">Loads with the running example. Waveforms are drawn from the state equations (with v ≈ V inside the state equations, as in the SRA), and v(t) is found by integrating i<sub>C</sub>/C. Shaded bands: Q<sub>1</sub> on.</div>
+  <div class="fbw" data-r="20"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a water tower</span>
+<p>The capacitor is a water tower feeding a town (R) at a steady rate. For DT<sub>s</sub> the pumps are off and the level drops linearly: Δv = (drain rate) × (time) / (tank size). A bigger tank (C) or a shorter gap (higher f<sub>s</sub>) means less droop.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Peak-to-peak, not amplitude.</b> Both formulas give the full swing. The peak is the average plus <b>half</b> the ripple.</li>
+<li><b>Why the on interval?</b> During state ① both slopes are constant (V<sub>g</sub>/L<sub>m</sub> and −V/(RC)), so one multiplication does it. In state ② i<sub>C</sub> changes as i<sub>m</sub> falls, so v curves.</li>
+<li><b>Frequency.</b> Both ripples are proportional to T<sub>s</sub>: double f<sub>s</sub>, halve both.</li>
+<li><b>SRA check.</b> The formulas only make sense if Δv ≪ V. Here 0.125 V vs 5 V is 2.5%.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q14" data-title="Check: ripple"></div>
+</section>
+
+<!-- 15 -->
+<section class="sec" id="s15">
+<h3><span class="num">15</span>Maximum voltage across the switch</h3>
+<p>While Q<sub>1</sub> is off (DT<sub>s</sub> ≤ t &lt; T<sub>s</sub>), D<sub>1</sub> conducts and the output is reflected onto the primary. Q<sub>1</sub> has to block the input <b>plus</b> that reflected output:</p>
+<div class="eq">
+  <span class="row"><i>v</i><sub>Q1</sub> = <i>v<sub>g</sub></i> + <span class="frac"><span><i>N</i><sub>1</sub></span><span><i>N</i><sub>2</sub></span></span> <i>v</i></span>
+  <span class="row"><i>V</i><sub>Q1,max</sub> = <i>V<sub>g</sub></i> + <span class="frac"><span><i>N</i><sub>1</sub></span><span><i>N</i><sub>2</sub></span></span>(<i>V</i> + <span class="frac"><span>Δ<i>v</i></span><span>2</span></span>) <span class="note">at the end of the off interval, where v peaks</span></span>
+</div>
+<details class="work" open><summary>Running example</summary><div class="body">
+<div class="wk">
+<div>Δv = 0.125 V (from §14), so the peak output is V + Δv/2 = 5.0625 V</div>
+<div>V<sub>Q1,max</sub> = 20 V + 2 × 5.0625 V = <b>30.125 V</b></div>
+</div>
+</div></details>
+<p><b>The trade-off:</b> a large N<sub>1</sub>/N<sub>2</sub> lowers I<sub>m</sub> but raises the switch stress. The turns ratio trades one for the other.</p>
+
+<div class="demo" id="d15">
+  <div class="dtitle">Try it: pick the turns ratio</div>
+  <div class="dnote">Holds V<sub>g</sub> = 20 V, V = 5 V, R = 20 Ω, T<sub>s</sub> = 15 µs, C = 10 µF (running example) and recomputes D, I<sub>m</sub> and V<sub>Q1,max</sub> for each N<sub>1</sub>/N<sub>2</sub>.</div>
+  <canvas id="cv15" height="300" aria-label="I_m and V_Q1,max versus turns ratio"></canvas>
+  <div class="controls">
+    <label for="x15n">N<sub>1</sub>/N<sub>2</sub> <input id="x15n" type="range" min="0.5" max="8" step="0.05" value="2"><output id="x15no">2.00</output></label>
+    <label for="x15Vg">V<sub>g</sub> (V) <input id="x15Vg" type="number" value="20" step="1"></label>
+    <label for="x15V">V (V) <input id="x15V" type="number" value="5" step="0.5"></label>
+    <label for="x15R">R (Ω) <input id="x15R" type="number" value="20" min="0.1" step="1"></label>
+  </div>
+  <div class="steps" id="r15"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a seesaw</span>
+<p>Push down on current (bigger N<sub>1</sub>/N<sub>2</sub>) and voltage stress rises on the other end. The designer's job is to find the balance point where both the switch's current rating and its voltage rating are comfortable.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>It's more than V<sub>g</sub>.</b> Students often size the switch for the input voltage only. The reflected output adds (N<sub>1</sub>/N<sub>2</sub>)V on top.</li>
+<li><b>Use the peak of v</b> (V + Δv/2), not V. The peak happens at the end of the off interval.</li>
+<li>A real flyback also sees a spike from the leakage inductance (§7) when Q<sub>1</sub> turns off. The lecture's formula leaves that out.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q15" data-title="Check: switch stress"></div>
+</section>
+
+<!-- 16 -->
+<section class="sec" id="s16">
+<h3><span class="num">16</span>The flyback in DCM</h3>
+<p>At light load the stored energy runs out before the period ends: i<sub>m</sub> reaches zero and D<sub>1</sub> turns off. Now there are <b>three</b> states:</p>
+<div class="tbl"><table>
+<thead><tr><th>State</th><th>Duration</th><th>v<sub>L</sub></th><th>i<sub>C</sub></th></tr></thead>
+<tbody>
+<tr><td>① Q<sub>1</sub> on</td><td>DT<sub>s</sub></td><td>V<sub>g</sub></td><td>−V/R</td></tr>
+<tr><td>② D<sub>1</sub> on</td><td>D<sub>2</sub>T<sub>s</sub></td><td>−(N<sub>1</sub>/N<sub>2</sub>)V</td><td>(N<sub>1</sub>/N<sub>2</sub>)i<sub>m</sub> − V/R</td></tr>
+<tr><td>③ Q<sub>1</sub> off, D<sub>1</sub> off, i<sub>m</sub> = 0</td><td>the rest</td><td>0</td><td>−V/R (C alone feeds the load)</td></tr>
+</tbody></table></div>
+<p><b>D<sub>2</sub> is set by the load, not the controller.</b> You find it with volt-second and charge balance, the same two tools. DCM happens either at light load in a flyback designed for CCM, or at every load when DCM is the design choice (a smaller L<sub>m</sub>, so D<sub>1</sub> is already off when Q<sub>1</sub> turns on).</p>
+
+<details class="work"><summary>Worked approach: solving the DCM case (beyond the slides, using the lecture's tools)</summary><div class="body">
+<p>The lecture gives you the background and leaves the solution to you. Try it first, then check here.</p>
+<div class="wk">
+<div class="c">1. Volt-second balance on L<sub>m</sub> (state ③ adds nothing):</div>
+<div>V<sub>g</sub>DT<sub>s</sub> − (N<sub>1</sub>/N<sub>2</sub>)V D<sub>2</sub>T<sub>s</sub> = 0 &nbsp;⇒&nbsp; <b>D<sub>2</sub> = (N<sub>2</sub>/N<sub>1</sub>)(V<sub>g</sub>/V) D</b></div>
+<div class="c">2. i<sub>m</sub> starts at zero, so its peak is i<sub>pk</sub> = V<sub>g</sub>DT<sub>s</sub>/L<sub>m</sub> (the Δi<sub>m</sub> formula).</div>
+<div class="c">3. Charge balance: the diode current (N<sub>1</sub>/N<sub>2</sub>)i<sub>m</sub> is a triangle of height (N<sub>1</sub>/N<sub>2</sub>)i<sub>pk</sub> lasting D<sub>2</sub>T<sub>s</sub>. Its average must equal V/R:</div>
+<div>(N<sub>1</sub>/N<sub>2</sub>) · i<sub>pk</sub> · D<sub>2</sub>/2 = V/R</div>
+<div class="c">4. Substitute D<sub>2</sub> and i<sub>pk</sub>, and the turns ratio cancels:</div>
+<div><b>V = V<sub>g</sub> D √(R T<sub>s</sub> / (2 L<sub>m</sub>))</b></div>
+<div class="c">5. CCM/DCM boundary: CCM holds while I<sub>m</sub> &gt; Δi<sub>m</sub>/2, that is i<sub>m,min</sub> &gt; 0.</div>
+<div class="c">Example: running converter at R = 150 Ω: V = 20(1/3)√(150 × 15 µs / 2 mH) = 6.667 × 1.061 = 7.07 V, D<sub>2</sub> = (0.5)(20/7.07)(1/3) = 0.471.</div>
+</div>
+</div></details>
+
+<div class="demo" id="d16">
+  <div class="dtitle">Flyback workbench at light load</div>
+  <div class="dnote">Same running converter, but R = 150 Ω. Drag R down past 75 Ω to watch it return to CCM.</div>
+  <div class="fbw" data-r="150"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · an empty bucket</span>
+<p>In CCM you never pour the whole bucket out before refilling. At light load, the town drinks so little that the bucket empties early and sits empty (state ③) until the next fill. The town (C and R) lives off the water tower in the meantime.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>M(D) from §12 no longer applies.</b> In DCM V depends on the load (R), L<sub>m</sub> and T<sub>s</sub>. The turns ratio drops out.</li>
+<li><b>v<sub>L</sub> = 0 in state ③</b> because i<sub>m</sub> = 0 and stays there: no change in current means no inductor voltage.</li>
+<li><b>Don't use I<sub>m</sub> · D′ for charge balance in DCM.</b> The diode only conducts for D<sub>2</sub>T<sub>s</sub>, and i<sub>m</sub> is a triangle down to zero, so use the triangle's area.</li>
+<li><b>The boundary</b> for the running example is R = 75 Ω, where i<sub>m</sub> just touches zero. That's exactly the lecture's slide 12 triangle (0 to 0.10 A).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q16" data-title="Check: DCM"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across both lectures, mostly calculations. Grab paper and a calculator. Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5><a href="#s1">Ideal transformer §1</a></h5><div>v<sub>1</sub> = (N<sub>1</sub>/N<sub>2</sub>) v<sub>2</sub><br>i<sub>1</sub> = (N<sub>2</sub>/N<sub>1</sub>) i<sub>2</sub><br>v<sub>1</sub>i<sub>1</sub> = v<sub>2</sub>i<sub>2</sub> at every instant</div></div>
+  <div class="card"><h5><a href="#s2">Flux §2, §3</a></h5><div>Φ = ∫B·n̂ dA = BA (uniform)<br>λ = NΦ &nbsp; 1 Wb = 1 T·m²<br>v = dλ/dt = N dΦ/dt<br>Δλ = ∫v dt (area under v)</div></div>
+  <div class="card"><h5><a href="#s4">Shared flux §4</a></h5><div>v<sub>1</sub>/N<sub>1</sub> = v<sub>2</sub>/N<sub>2</sub> = dΦ/dt<br>dots mark matching polarity</div></div>
+  <div class="card"><h5><a href="#s5">Magnetizing §5</a></h5><div>λ<sub>1</sub> = L<sub>m</sub>i<sub>m</sub>, &nbsp; v<sub>1</sub> = L<sub>m</sub> di<sub>m</sub>/dt<br>i<sub>1</sub> = (N<sub>2</sub>/N<sub>1</sub>)i<sub>2</sub> + i<sub>m</sub><br>W = λ²/2L<sub>m</sub> = ½L<sub>m</sub>i<sub>m</sub>²</div></div>
+  <div class="card"><h5><a href="#s6">Core §6</a></h5><div>∫<sub>0</sub><sup>T<sub>s</sub></sup> v<sub>1</sub> dt = 0 in steady state<br>ΔB ≈ VD/(N<sub>1</sub>A<sub>c</sub>f<sub>s</sub>)<br>B<sub>max</sub>: ΔB/2 · ΔB · B<sub>dc</sub> + ΔB/2</div></div>
+  <div class="card"><h5><a href="#s7">Model §7, §8</a></h5><div>v<sub>1</sub> = v<sub>m</sub> + L<sub>l1</sub> di<sub>1</sub>/dt<br>n = N<sub>1</sub>/N<sub>2</sub>: R → n²R, L → n²L, C → C/n²<br>(secondary to primary)</div></div>
+  <div class="card"><h5><a href="#s9">Tests §9</a></h5><div>L<sub>oc</sub> = L<sub>l1</sub> + L<sub>m</sub><br>L<sub>sc</sub> ≈ L<sub>l1</sub> + n²L<sub>l2</sub><br>L<sub>l1</sub> ≈ n²L<sub>l2</sub> ≈ L<sub>sc</sub>/2<br>L<sub>m</sub> ≈ L<sub>oc</sub> − L<sub>sc</sub>/2</div></div>
+  <div class="card"><h5><a href="#s11">Flyback states §11</a></h5><div>① v<sub>L</sub> = V<sub>g</sub>, i<sub>C</sub> = −V/R<br>② v<sub>L</sub> = −(N<sub>1</sub>/N<sub>2</sub>)V<br>&nbsp;&nbsp;&nbsp;&nbsp;i<sub>C</sub> = (N<sub>1</sub>/N<sub>2</sub>)I<sub>m</sub> − V/R<br>E<sub>m</sub> = ½L<sub>m</sub>i<sub>m</sub>²</div></div>
+  <div class="card"><h5><a href="#s12">Averages §12, §13</a></h5><div>M(D) = V/V<sub>g</sub> = (N<sub>2</sub>/N<sub>1</sub>)·D/(1 − D)<br>I<sub>m</sub> = (N<sub>2</sub>/N<sub>1</sub>)·1/(1 − D)·V/R<br>input: ⟨i<sub>g</sub>⟩ = D·I<sub>m</sub></div></div>
+  <div class="card"><h5><a href="#s14">Ripple §14</a></h5><div>Δi<sub>m</sub> = V<sub>g</sub>DT<sub>s</sub>/L<sub>m</sub> (p-p)<br>Δv = VDT<sub>s</sub>/(RC) (p-p)<br>CCM: I<sub>m</sub> &gt; Δi<sub>m</sub>/2</div></div>
+  <div class="card"><h5><a href="#s15">Switch §15</a></h5><div>v<sub>Q1</sub> = v<sub>g</sub> + (N<sub>1</sub>/N<sub>2</sub>)v (off)<br>V<sub>Q1,max</sub> = V<sub>g</sub> + (N<sub>1</sub>/N<sub>2</sub>)(V + Δv/2)</div></div>
+  <div class="card"><h5><a href="#s16">DCM §16</a></h5><div>③ v<sub>L</sub> = 0, i<sub>C</sub> = −V/R<br>D<sub>2</sub> = (N<sub>2</sub>/N<sub>1</sub>)(V<sub>g</sub>/V)D<br>V = V<sub>g</sub>D√(RT<sub>s</sub>/2L<sub>m</sub>) (guide's derivation)</div></div>
+</div>
+</section>
+
+<footer>Built from the ENEL 585 Lecture 4 slides, Transformers &amp; Flyback Converter I (Dr. Philippe Gray, September 10, 2026), which also cover the start of Flyback Converter II. Reading: Kassakian §1.3 and §18.1; Erickson §6.3 and §6.3.4; Mohan §3-2 and §10-4-2. The running flyback example (R = 20 Ω, C = 10 µF), A<sub>c</sub> = 20 mm², and the DCM solution in §16 are this guide's additions.</footer>
+</main>
+</div>
+<script>
+(function(){
+"use strict";
+/* ---------------- QUIZ DATA ----------------
+   o[0] is always the correct answer; options are shuffled (deterministically) when the quiz is built. */
+const QUIZ = {
+q1:[
+ {q:"N₁ : N₂ = 1 : 4, v₁ = 12 V, and a 24 Ω resistor sits on the secondary. What is i₁?",
+  o:["8 A","0.5 A","2 A","32 A"],
+  e:"v₂ = (N₂/N₁)v₁ = 4 × 12 = 48 V, so i₂ = 48/24 = 2 A. Then i₁ = (N₂/N₁)i₂ = 4 × 2 = 8 A. Check: 12 V × 8 A = 96 W = 48 V × 2 A. (2 A is i₂; 0.5 A uses the ratio upside down.)"},
+ {q:"Why is the current ratio the inverse of the voltage ratio?",
+  o:["The ideal element neither dissipates nor stores energy, so v₁i₁ = v₂i₂","Because i₂ leaves its dot","Because of the magnetizing current","Because the windings have resistance"],
+  e:"No loss and no storage means power in equals power out at every instant. If voltage goes up by N₂/N₁, current must go down by the same factor."},
+ {q:"A ±30 V square wave drives the primary of an ideal 3 : 1 transformer. What appears on the secondary?",
+  o:["A ±10 V square wave, at the same instant","A 10 V peak sine wave (only the fundamental passes)","A ±90 V square wave","A delayed, rounded ±10 V wave"],
+  e:"The ideal element scales every instant: v₂ = v₁/3. Nothing is stored or delayed, so the shape is unchanged. Any waveform, sine or not, appears immediately on the other side."},
+ {q:"Which of these is NOT a reason the lecture gives for putting a transformer in a converter?",
+  o:["It removes the need for an output capacitor","Safety (galvanic isolation)","A floating supply for a high-side gate drive","Large step ratios without extreme duty cycles"],
+  e:"The lecture lists safety, a floating supply, large step ratios without extreme duty cycles, and multiple isolated outputs from one core. A transformer does nothing to smooth the output; the flyback still needs its capacitor (§14)."}
+],
+q2:[
+ {q:"A uniform B = 0.2 T passes straight through a core cross-section A_c = 1 cm². What is Φ?",
+  o:["20 µWb","2 mWb","0.2 Wb","2 µWb"],
+  e:"Φ = BA = 0.2 T × 1×10⁻⁴ m² = 2×10⁻⁵ Wb = 20 µWb. The usual trap: 1 cm² is 10⁻⁴ m², not 10⁻² m²."},
+ {q:"The straight rod only raises B from 0.47 mT to 3.78 mT, but closing the core gives 360 mT. Why does closing the path help so much more?",
+  o:["With the rod, every flux loop still returns through air, and that air section limits the flux","The closed core has more turns","The closed core carries more current","The rod is saturated"],
+  e:"Same turns, same current. Flux loops are closed, so the flux has to get back to the other end. With the rod, that return is through air, which dominates the loop. The closed core removes the air from the loop."},
+ {q:"Closed core: 100 turns at 0.10 A gives 360 mT. If the core stays linear, what does 50 turns at 0.10 A give?",
+  o:["180 mT","360 mT","720 mT","90 mT"],
+  e:"In a linear core the field is proportional to turns × current (λ = L_m i_m is the same linear idea). Half the turns at the same current: half the B, 180 mT."},
+ {q:"Why does a closed core make a transformer possible?",
+  o:["A second winding placed anywhere on the centre limb links nearly the same flux as the first","It keeps the windings cool","It makes the magnetizing current zero","It removes the need for a turns ratio"],
+  e:"The closed core guides almost all the flux through one path, so a second winding on that path sees (links) nearly the same Φ. Shared flux is what gives v₁/N₁ = v₂/N₂ in §4."}
+],
+q3:[
+ {q:"v₁ = 15 V is applied for 8 µs to a winding with N₁ = 30 turns. What is ΔΦ?",
+  o:["4 µWb","120 µWb","3.6 mWb","0.5 µWb"],
+  e:"Δλ = (15 V)(8 µs) = 120 µV·s. ΔΦ = Δλ/N₁ = 120/30 = 4 µWb. (120 µWb forgets to divide by the turns.)"},
+ {q:"Starting from λ₁ = 0, the lecture applies +20 V for 5 µs. How long at −10 V brings λ₁ back to zero?",
+  o:["10 µs","5 µs","2.5 µs","20 µs"],
+  e:"+20 V × 5 µs = 100 µV·s. To remove it at 10 V: 100/10 = 10 µs. That's the lecture's 15 µs period."},
+ {q:"Two identical windings get exactly the same v₁(t). Must their λ₁(t) be identical?",
+  o:["No: λ₁(t) = λ₁(0) + ∫v₁dt, so they can differ by their starting value","Yes: the voltage fixes the flux linkage","Yes, as long as the turns match","No: λ depends on the load current"],
+  e:"Voltage only sets the rate of change. The starting flux linkage (the integration constant) is extra information. This is the bathtub analogy: same tap, different starting level."},
+ {q:"A winding holding flux linkage λ₀ is suddenly held at v₁ = 0 (ideal, no losses). What happens to λ₁?",
+  o:["It stays at λ₀","It decays to zero","It reverses to −λ₀","It doubles"],
+  e:"dλ₁/dt = v₁ = 0, so λ₁ can't change. Zero volts means constant flux, not zero flux."}
+],
+q4:[
+ {q:"The lecture's ΔΦ = 2 µWb in 5 µs links a secondary with N₂ = 25 turns. What is v₂?",
+  o:["10 V","20 V","0.4 V","62.5 V"],
+  e:"dΦ/dt = 2 µWb / 5 µs = 0.4 V per turn. v₂ = 25 × 0.4 = 10 V. (20 V is the 50-turn primary; 0.4 V is just one turn.)"},
+ {q:"N₁ = 50 and v₁ = 20 V. How many secondary turns give v₂ = 8 V?",
+  o:["20","125","40","8"],
+  e:"Volts per turn = 20/50 = 0.4 V. N₂ = 8/0.4 = 20 turns. Check: v₁/N₁ = v₂/N₂ → 20/50 = 8/20 = 0.4."},
+ {q:"You swap the two secondary leads (so the dot is now at the other end). What changes?",
+  o:["v₂ changes sign; its size stays the same","v₂ doubles","Nothing at all","The turns ratio inverts"],
+  e:"The dots mark ends that rise together. Swapping the leads flips the polarity of v₂ but not its magnitude. The flyback uses exactly this so that D₁ is reverse biased while Q₁ is on (§10)."},
+ {q:"Which effect makes v₁/N₁ = v₂/N₂ only approximately true in a real transformer?",
+  o:["Leakage flux, which links one winding but not the other","The magnetizing current","The dot convention","Volt-second balance"],
+  e:"The ratio comes from both windings sharing the same flux. Leakage is flux that isn't shared; in the model it adds a series voltage drop (§7). Magnetizing current sits across the ideal primary and doesn't upset the ratio of the ideal element."}
+],
+q5:[
+ {q:"Secondary open, L_m = 400 µH, i_m starts at 0. Apply 12 V for 10 µs. What is i_m at the end?",
+  o:["0.3 A","3 A","0.03 A","48 mA"],
+  e:"Δi_m = (1/L_m)∫v₁dt = (12 V × 10 µs)/400 µH = 120 µV·s / 400 µH = 0.3 A."},
+ {q:"The lecture's 2 : 1 transformer carries i₂ = 2 A, and at this instant i_m = 0.1 A. What is i₁?",
+  o:["1.1 A","1.0 A","2.1 A","4.1 A"],
+  e:"i₁ = (N₂/N₁)i₂ + i_m = (1/2)(2 A) + 0.1 A = 1.1 A. The magnetizing current adds on top of the reflected load current."},
+ {q:"The lecture waveform: λ₁ peaks at 100 µV·s with L_m = 1 mH. How much energy is stored at the peak?",
+  o:["5 µJ","10 µJ","50 nJ","5 mJ"],
+  e:"W = λ²/(2L_m) = (100×10⁻⁶)²/(2 × 10⁻³) = 10⁻⁸/(2×10⁻³) = 5×10⁻⁶ J = 5 µJ. Same as ½L_m i_m² = ½(1 mH)(0.1 A)²."},
+ {q:"For the same applied volt-seconds, why does a flyback want a small L_m?",
+  o:["W = λ²/2L_m: the voltage fixes λ, so a smaller L_m stores more energy each cycle","A small L_m makes i_m zero","A small L_m removes leakage","A small L_m makes the transformer ideal"],
+  e:"The volt-seconds set λ. With λ fixed, W = λ²/2L_m grows as L_m shrinks. The flyback passes all its energy through L_m, so it wants a small one (a gapped core). A mains transformer wants the opposite."},
+ {q:"With the secondary open, the ideal model predicts i₁ = 0. Why does a real winding still draw current?",
+  o:["The core flux needs winding current to create it; that current is i_m","Winding resistance draws it","Leakage inductance draws it","The secondary still leaks a little load current"],
+  e:"The applied voltage decides how the flux changes, but some current must flow to produce that flux in the first place (§2). That's the magnetizing current, modelled by L_m."}
+],
+q6:[
+ {q:"The lecture's unbalanced waveform: +20 V for 5 µs, −10 V for 5 µs, L_m = 1 mH. How much does i_m rise each 10 µs cycle?",
+  o:["0.05 A","0.10 A","0.15 A","0 A"],
+  e:"Up 100 µV·s (i_m +0.10 A), down 50 µV·s (i_m −0.05 A). Net +50 µV·s per cycle, so +0.05 A per cycle. (0.10 A is only the rise during the positive part.)"},
+ {q:"Why can't a real transformer pass DC, when the ideal element would?",
+  o:["A constant v₁ keeps adding volt-seconds, so λ and i_m ramp up without limit until the core saturates","The dots only work with AC","Leakage inductance blocks DC","The ideal element can't pass DC either"],
+  e:"Volt-second balance fails completely with DC: ∫v₁dt grows forever. The flux walks up until the core saturates. The ideal element has no L_m, so it doesn't notice."},
+ {q:"V = 20 V, D = 1/3, N₁ = 50, f_s = 66.7 kHz, A_c = 20 mm². What is ΔB?",
+  o:["0.1 T","0.05 T","0.2 T","1 T"],
+  e:"ΔB ≈ VD/(N₁A_cf_s) = (20 × 1/3)/(50 × 20×10⁻⁶ × 66,667) = 6.667/66.67 = 0.1 T. Same as ΔΦ = 2 µWb spread over 20 mm²."},
+ {q:"You double f_s and want the same ΔB (V, D and N₁ unchanged). What happens to the core area A_c?",
+  o:["It can halve","It must double","It stays the same","It can drop by 4×"],
+  e:"ΔB ∝ 1/(A_c f_s). Double f_s and you can halve A_c for the same ΔB. This is why converters isolate at the switching frequency, not at 60 Hz."},
+ {q:"Flyback in CCM with B_dc = 0.2 T and ΔB = 0.1 T. What is B_max?",
+  o:["0.25 T","0.30 T","0.20 T","0.05 T"],
+  e:"DC bias case: B_max = B_dc + ΔB/2 = 0.2 + 0.05 = 0.25 T. (0.30 T adds the full ΔB; 0.05 T is the bipolar case.)"}
+],
+q7:[
+ {q:"Where does leakage flux close its loop?",
+  o:["Through the surrounding air, linking one winding but not the other","Through the core, linking both windings","Through the load","Leakage flux doesn't form loops"],
+  e:"Leakage is the flux that isn't shared. It links only the winding that made it, and its return path passes through the air around that winding."},
+ {q:"At one instant v_m = 20 V, L_l1 = 10 µH and i₁ is rising at 2 A/µs. What is v₁?",
+  o:["40 V","20 V","22 V","0 V"],
+  e:"v₁ = v_m + L_l1 di₁/dt = 20 V + (10×10⁻⁶ H)(2×10⁶ A/s) = 20 + 20 = 40 V. Fast current changes make even a small leakage inductance matter."},
+ {q:"Why is L_m drawn in parallel with the winding while leakage is drawn in series?",
+  o:["L_m depends on the voltage across the winding (the shared flux); leakage flux depends on each winding's own current","It's an arbitrary drawing choice","L_m is larger, so it goes in parallel","Leakage only exists on the secondary"],
+  e:"The shared flux changes with the voltage across the ideal winding, so L_m sits across it. Leakage flux is produced by the current in one winding, so its voltage adds in series with that winding's terminal."},
+ {q:"What does the model of a perfect transformer reduce to?",
+  o:["L_m → ∞ and L_l1, L_l2 → 0, leaving only the ideal element","L_m → 0 and L_l1, L_l2 → ∞","L_m = L_l1 = L_l2","Only L_m remains"],
+  e:"Infinite L_m means no magnetizing current; zero leakage means no series drops. What's left is the ideal element of §1."}
+],
+q8:[
+ {q:"n = N₁/N₂ = 5. A 4 Ω resistor on the secondary looks like what from the primary?",
+  o:["100 Ω","20 Ω","0.8 Ω","0.16 Ω"],
+  e:"R → n²R = 25 × 4 = 100 Ω. (20 Ω uses n instead of n².)"},
+ {q:"n = 2. A 10 µF capacitor on the secondary looks like what from the primary?",
+  o:["2.5 µF","40 µF","20 µF","5 µF"],
+  e:"C → C/n² = 10/4 = 2.5 µF. Capacitors go the opposite way to R and L."},
+ {q:"Step-up transformer, N₁ : N₂ = 1 : 2. A 40 µH inductor on the secondary looks like what from the primary?",
+  o:["10 µH","160 µH","80 µH","20 µH"],
+  e:"n = N₁/N₂ = 0.5, so n² = 0.25 and L → 0.25 × 40 = 10 µH. For a step-up, secondary elements look smaller from the primary."},
+ {q:"Why is C divided by n² when R and L are multiplied by n²?",
+  o:["Every impedance is multiplied by n², and a capacitor's impedance is 1/(jωC)","Capacitors store charge, not flux","Because i₁ = i₂/n","It's only a sign convention"],
+  e:"v₁/i₁ = n²(v₂/i₂) for any element. For a capacitor, n²/(jωC) = 1/(jω(C/n²)), so the equivalent capacitance is C/n²."},
+ {q:"n = 2. Move L_l1 = 10 µH from the primary side to the secondary side. What value does it become?",
+  o:["2.5 µH","40 µH","5 µH","20 µH"],
+  e:"Going primary to secondary, divide the impedance by n²: 10/4 = 2.5 µH."}
+],
+q9:[
+ {q:"L_oc = 2.00 mH and L_sc = 40 µH. Estimate L_m.",
+  o:["1.98 mH","1.96 mH","2.04 mH","2.00 mH"],
+  e:"L_m ≈ L_oc − L_sc/2 = 2000 − 20 = 1980 µH = 1.98 mH. (1.96 mH subtracts all of L_sc; only L_l1 = L_sc/2 is in the open-circuit reading.)"},
+ {q:"Same transformer. Estimate the primary leakage L_l1.",
+  o:["20 µH","40 µH","10 µH","1.98 mH"],
+  e:"Assume the leakage splits evenly: L_l1 ≈ n²L_l2 ≈ L_sc/2 = 20 µH."},
+ {q:"Why does the short-circuit test barely see L_m?",
+  o:["With the secondary shorted, L_m is in parallel with the much smaller n²L_l2, and the pair ≈ n²L_l2","Shorting the secondary removes the core","L_m is zero at the test frequency","The short removes L_l1"],
+  e:"A small inductor in parallel with a big one is about equal to the small one. Most of the test current takes the leakage path, so L_sc ≈ L_l1 + n²L_l2."},
+ {q:"Using the lecture's result (L_l1 = n²L_l2 = 10 µH, L_m = 990 µH), what is the exact L_sc?",
+  o:["19.9 µH","20.0 µH","10.0 µH","1000 µH"],
+  e:"L_sc = L_l1 + (L_m × n²L_l2)/(L_m + n²L_l2) = 10 + (990 × 10)/1000 = 10 + 9.9 = 19.9 µH. The approximation (20 µH) is off by 0.5%."},
+ {q:"The lecture says the approximation fails for resonant converters. Why?",
+  o:["Their L_m is not much larger than the leakage, so L_m ∥ n²L_l2 is not close to n²L_l2","They have no leakage","They have no magnetizing inductance","They run at the mains frequency"],
+  e:"The ≈ needs L_m ≫ n²L_l2. Resonant converters deliberately use an L_m comparable to the leakage, so the parallel combination is noticeably smaller than n²L_l2."}
+],
+q10:[
+ {q:"Q₁ is on. Why is D₁ off?",
+  o:["The secondary is connected with reversed polarity (see the dots), so its voltage reverse-biases D₁","The capacitor voltage is higher than v_g","Q₁ shorts the secondary","D₁ only conducts when i_m = 0"],
+  e:"With Q₁ on, v_g appears across the primary. Because of how the secondary is dotted and connected, the secondary voltage points against D₁. So nothing leaves the transformer and the energy builds up in L_m."},
+ {q:"The lecture's slide 12 triangle: i_m rises from 0 to 0.10 A (L_m = 1 mH) and falls back to 0 every 15 µs, delivering all of its stored energy each cycle. What power is transferred?",
+  o:["0.333 W","5 µJ","0.667 W","75 mW"],
+  e:"Energy per cycle = ½(1 mH)(0.10 A)² = 5 µJ. f_s = 1/15 µs = 66.7 kHz. P = 5 µJ × 66.7 kHz = 0.333 W. (5 µJ is an energy, not a power.)"},
+ {q:"Running example: i_m swings between 0.1375 A and 0.2375 A with L_m = 1 mH. How much energy leaves L_m each cycle?",
+  o:["18.75 µJ","28.2 µJ","9.45 µJ","5 µJ"],
+  e:"½L_m(i_max² − i_min²) = ½(1 mH)(0.05641 − 0.01891) A² = 18.75 µJ. Times f_s = 66.7 kHz gives 1.25 W, which is exactly V²/R = 5²/20. (28.2 µJ is the total at the peak; in CCM the store is never emptied.)"},
+ {q:"Why is a flyback 'transformer' closer to a pair of coupled inductors than to a mains transformer?",
+  o:["The primary and secondary conduct at different times, with energy stored in L_m in between","It has no core","It only works at 60 Hz","It has no turns ratio"],
+  e:"In a mains transformer both windings carry current together and L_m is a nuisance. In a flyback, energy goes in on the primary, waits in L_m, then comes out on the secondary."}
+],
+q11:[
+ {q:"Running example (N₁/N₂ = 2, V = 5 V). What is v_L in state ②?",
+  o:["−10 V","+10 V","−2.5 V","−5 V"],
+  e:"v_L = −(N₁/N₂)V = −2 × 5 = −10 V. That's the lecture waveform's −10 V interval. (−2.5 V uses the ratio upside down.)"},
+ {q:"Running example (V = 5 V, R = 20 Ω). What is i_C in state ①?",
+  o:["−0.25 A","+0.25 A","0 A","−0.1875 A"],
+  e:"D₁ is off, so C alone feeds the load: i_C = −V/R = −5/20 = −0.25 A."},
+ {q:"Running example with SRA, I_m = 0.1875 A. What is i_C in state ②?",
+  o:["+0.125 A","+0.375 A","−0.25 A","+0.0625 A"],
+  e:"i_C = (N₁/N₂)I_m − V/R = 2(0.1875) − 0.25 = 0.375 − 0.25 = +0.125 A. Check charge balance: (−0.25)(1/3) + (0.125)(2/3) = 0. (0.375 A forgets the load.)"},
+ {q:"In state ②, why does the secondary deliver (N₁/N₂)i_m?",
+  o:["i_m can't stop, it flows into the ideal primary, and the ideal element scales current by N₁/N₂ on the secondary","The capacitor forces it","The turns ratio only scales voltage","Because D₁ is ideal"],
+  e:"Inductor current is continuous. When Q₁ opens, i_m's only path is into the ideal primary, and i₂ = (N₁/N₂)i₁ for the ideal element."},
+ {q:"What justifies replacing v with V (and i_m with I_m) in the state equations?",
+  o:["The small ripple approximation: the ripple is small compared with the average","Volt-second balance","The dot convention","Charge balance"],
+  e:"SRA: if Δv ≪ V, treating v as constant at V inside the state equations causes only a small error. Volt-second and charge balance are then applied to these simplified equations."}
+],
+q12:[
+ {q:"V_g = 20 V, N₁ : N₂ = 2 : 1, D = 1/3. What is V?",
+  o:["5 V","10 V","20 V","2.5 V"],
+  e:"V = (N₂/N₁)·D/(1 − D)·V_g = (1/2)(0.5)(20) = 5 V. (10 V is the output reflected to the primary.)"},
+ {q:"V_g = 48 V, V = 12 V, N₁ : N₂ = 2 : 1. What D is needed?",
+  o:["1/3","0.2","0.5","0.25"],
+  e:"M = 12/48 = 0.25. D/(1 − D) = (N₁/N₂)M = 0.5, so D = 0.5/1.5 = 1/3."},
+ {q:"N₁ : N₂ = 4 : 1, V_g = 400 V, D = 0.5. What is V?",
+  o:["100 V","400 V","1600 V","200 V"],
+  e:"At D = 0.5, D/(1 − D) = 1, so M = N₂/N₁ = 1/4 and V = 100 V."},
+ {q:"V_g = 300 V, V = 12 V, and you want D = 0.4. What turns ratio N₁/N₂?",
+  o:["16.7","25","10","0.06"],
+  e:"M = 12/300 = 0.04 = (N₂/N₁)(0.4/0.6). So N₂/N₁ = 0.04/0.667 = 0.06 and N₁/N₂ = 16.7. (0.06 is N₂/N₁; 25 is 300/12, which ignores D.)"},
+ {q:"Why is the flyback called 'a buck-boost with a transformer in it'?",
+  o:["Its M(D) is the buck-boost's D/(1 − D), scaled by N₂/N₁","It contains a buck and a boost in series","It always steps up","It has two switches"],
+  e:"D/(1 − D) is the buck's D times the boost's 1/(1 − D). The transformer multiplies it by N₂/N₁ and adds isolation."}
+],
+q13:[
+ {q:"Running example: V = 5 V, R = 20 Ω, D = 1/3, N₁ : N₂ = 2 : 1. What is I_m?",
+  o:["0.1875 A","0.25 A","0.125 A","0.375 A"],
+  e:"I_m = (N₂/N₁)·1/(1 − D)·V/R = (0.5)(1.5)(0.25 A) = 0.1875 A. (0.25 A is just V/R.)"},
+ {q:"Same converter. What is the average input current?",
+  o:["0.0625 A","0.1875 A","0.125 A","0.25 A"],
+  e:"The source only supplies current in state ①, and then it equals i_m. So ⟨i_g⟩ = D·I_m = (1/3)(0.1875) = 0.0625 A. Check: 20 V × 0.0625 A = 1.25 W = 5²/20."},
+ {q:"Same converter, but R doubles to 40 Ω (same V_g and D, still CCM). What is the new I_m?",
+  o:["0.09375 A","0.1875 A","0.375 A","0.125 A"],
+  e:"In CCM, V is set by M(D) alone, so V stays 5 V and V/R halves. I_m ∝ V/R, so it halves to 0.09375 A."},
+ {q:"Redesign with N₁ : N₂ = 4 : 1, keeping V_g = 20 V, V = 5 V, R = 20 Ω. What is the new I_m?",
+  o:["0.125 A","0.1875 A","0.09375 A","0.25 A"],
+  e:"First find D: D/(1 − D) = (N₁/N₂)M = 4 × 0.25 = 1, so D = 0.5. Then I_m = (1/4)(1/0.5)(0.25 A) = 0.125 A. A larger N₁/N₂ lowers I_m (§15 shows the cost)."}
+],
+q14:[
+ {q:"Running example: V_g = 20 V, D = 1/3, T_s = 15 µs, L_m = 1 mH. What is Δi_m (peak-to-peak)?",
+  o:["0.100 A","0.050 A","0.200 A","0.300 A"],
+  e:"Δi_m = V_gDT_s/L_m = (20)(5 µs)/(1 mH) = 0.100 A. It's the lecture's triangle height. (0.050 A is half the ripple.)"},
+ {q:"Running example: V = 5 V, D = 1/3, T_s = 15 µs, R = 20 Ω, C = 10 µF. What is Δv?",
+  o:["0.125 V","0.0625 V","0.25 V","0.375 V"],
+  e:"Δv = VDT_s/(RC) = (5)(5 µs)/(20 × 10 µF) = 25×10⁻⁶/2×10⁻⁴ = 0.125 V peak-to-peak."},
+ {q:"With I_m = 0.1875 A and Δi_m = 0.1 A, what is the minimum of i_m, and is the converter in CCM?",
+  o:["0.1375 A, CCM","0.0875 A, CCM","0 A, at the boundary","0.2375 A, CCM"],
+  e:"i_m,min = I_m − Δi_m/2 = 0.1875 − 0.05 = 0.1375 A. It stays above zero, so CCM. (0.0875 A subtracts the whole ripple; 0.2375 A is the maximum.)"},
+ {q:"Why does the lecture compute Δv from the on interval rather than the off interval?",
+  o:["During the on interval i_C = −V/R is constant, so v falls in a straight line","The capacitor is disconnected while Q₁ is off","v doesn't change while Q₁ is off","The off interval is always shorter"],
+  e:"Constant current into a capacitor gives a straight-line voltage, so Δv is one multiplication. In the off interval i_C depends on the falling i_m, so v curves."},
+ {q:"You double f_s, keeping everything else the same. What happens to Δi_m and Δv?",
+  o:["Both halve","Both double","Δi_m halves, Δv doesn't change","Neither changes"],
+  e:"Both formulas are proportional to T_s = 1/f_s."}
+],
+q15:[
+ {q:"Running example (V_g = 20 V, N₁/N₂ = 2, V = 5 V, Δv = 0.125 V). What is V_Q1,max?",
+  o:["30.125 V","30.0 V","25.06 V","20 V"],
+  e:"V_Q1,max = V_g + (N₁/N₂)(V + Δv/2) = 20 + 2(5.0625) = 30.125 V. (30.0 V ignores the ripple; 25.06 V forgets the turns ratio.)"},
+ {q:"Same specs, but N₁/N₂ = 4 (so D = 0.5 and Δv = 0.1875 V). What is V_Q1,max?",
+  o:["40.4 V","30.1 V","25.1 V","60.8 V"],
+  e:"V_Q1,max = 20 + 4(5 + 0.09375) = 20 + 20.375 = 40.4 V. Doubling the ratio added about 10 V of switch stress."},
+ {q:"Raising N₁/N₂ (same V_g, V, R) does what to I_m and V_Q1,max?",
+  o:["I_m falls and V_Q1,max rises","Both fall","Both rise","I_m rises and V_Q1,max falls"],
+  e:"I_m = (N₂/N₁ + M)V/R falls as N₁/N₂ grows, while the reflected output (N₁/N₂)V adds to the switch voltage. The turns ratio trades one for the other."},
+ {q:"An offline flyback: V_g = 340 V, V = 12 V, N₁/N₂ = 10. Ignoring ripple, roughly what must Q₁ block?",
+  o:["460 V","340 V","352 V","120 V"],
+  e:"V_Q1 ≈ V_g + (N₁/N₂)V = 340 + 10 × 12 = 460 V. (352 V forgets to reflect the output through the turns ratio.)"},
+ {q:"Why is the maximum switch voltage at the end of the off interval?",
+  o:["v rises through the off interval (C is charging) and peaks at V + Δv/2 there","v_g is largest then","i_m is largest then","Q₁ turns on then"],
+  e:"During state ② the capacitor charges, so v climbs to its peak V + Δv/2 at the end of the interval. V_g is constant, so the switch voltage peaks with v."}
+],
+q16:[
+ {q:"Running example (V_g = 20 V, 2 : 1, D = 1/3, T_s = 15 µs, L_m = 1 mH). At what load R does i_m just touch zero?",
+  o:["75 Ω","20 Ω","150 Ω","37.5 Ω"],
+  e:"Boundary: I_m = Δi_m/2 = 0.05 A. In CCM V = 5 V, so I_m = (0.5)(1.5)(5/R) = 3.75/R. Set 3.75/R = 0.05: R = 75 Ω. That's exactly the lecture's slide 12 triangle, from 0 to 0.10 A."},
+ {q:"Why is v_L = 0 in state ③?",
+  o:["i_m = 0 and stays there, so di_m/dt = 0","Q₁ is on","The diode clamps it to V","C is disconnected"],
+  e:"v_L = L_m di_m/dt. With both switches off and i_m stuck at zero, the current doesn't change, so there is no voltage across L_m."},
+ {q:"What sets D₂, the fraction of the period the diode conducts in DCM?",
+  o:["The load, through volt-second and charge balance","The controller, directly","The turns ratio alone","It's always 1 − D"],
+  e:"The controller sets D. D₂ is however long it takes the stored energy to drain, which depends on V and hence on the load. You solve for it with the same two balance equations."},
+ {q:"At R = 150 Ω the running converter settles at V = 7.07 V. Use volt-second balance to find D₂.",
+  o:["0.471","0.667","0.333","0.195"],
+  e:"V_gD = (N₁/N₂)V D₂, so D₂ = (N₂/N₁)(V_g/V)D = (0.5)(20/7.07)(1/3) = 0.471. D + D₂ = 0.805 < 1, so state ③ lasts 0.195 T_s. (0.667 is 1 − D, the CCM value.)"},
+ {q:"Same D, but at R = 150 Ω V is 7.07 V instead of CCM's 5 V. Why?",
+  o:["Each cycle still stores and delivers ½L_m i_pk² = 5 µJ, so P = 0.333 W, and V = √(P R) rises with R","The turns ratio changes in DCM","D₂ becomes 1 − D","The capacitor gets bigger"],
+  e:"In DCM i_m starts at zero every cycle, so the energy per cycle is fixed by V_g, D, T_s and L_m: ½(1 mH)(0.1 A)² = 5 µJ, or 0.333 W at 66.7 kHz. The load must absorb it: V²/R = 0.333 W gives V = √(0.333 × 150) = 7.07 V."}
+],
+qf:[
+ {q:"Ideal 3 : 1 transformer, v₁ = 120 V, 10 Ω on the secondary. What is i₁?",
+  o:["1.33 A","4 A","12 A","0.44 A"],
+  e:"v₂ = 120/3 = 40 V, i₂ = 40/10 = 4 A, i₁ = (N₂/N₁)i₂ = 4/3 = 1.33 A. Power check: 120 × 1.33 = 160 W = 40 × 4. Review §1."},
+ {q:"A core with A_c = 1 cm² and N₁ = 50 must swing its flux density by 0.1 T. At v₁ = 20 V, how long does that take?",
+  o:["25 µs","2.5 µs","250 µs","0.5 µs"],
+  e:"ΔΦ = ΔB·A_c = 0.1 × 10⁻⁴ = 10 µWb. Δλ = N₁ΔΦ = 500 µV·s. t = Δλ/v₁ = 500/20 = 25 µs. Review §2 and §3."},
+ {q:"Secondary open, L_m = 2 mH, i_m = 0 at t = 0. Apply 20 V for 5 µs. What is i_m?",
+  o:["0.05 A","0.1 A","0.2 A","5 mA"],
+  e:"Δi_m = (20 V × 5 µs)/2 mH = 100 µV·s / 2 mH = 0.05 A. Same volt-seconds as the lecture, twice the L_m, half the current. Review §5."},
+ {q:"+24 V for 4 µs, then −12 V for 6 µs, repeating, into L_m = 1 mH. What does i_m do each cycle?",
+  o:["Rises by 24 mA per cycle","Nothing: it's balanced","Falls by 24 mA per cycle","Rises by 96 mA per cycle"],
+  e:"Up: 24 × 4 = 96 µV·s. Down: 12 × 6 = 72 µV·s. Net +24 µV·s per cycle ÷ 1 mH = +24 mA per cycle, drifting toward saturation. Review §6."},
+ {q:"V = 48 V, D = 0.25, N₁ = 20, A_c = 50 mm², f_s = 100 kHz. What is ΔB?",
+  o:["0.12 T","0.06 T","0.24 T","1.2 T"],
+  e:"ΔB ≈ VD/(N₁A_cf_s) = (48 × 0.25)/(20 × 50×10⁻⁶ × 10⁵) = 12/100 = 0.12 T. Review §6."},
+ {q:"The primary and secondary are wound on opposite legs of the core, far apart. Which model elements grow?",
+  o:["L_l1 and L_l2, because more flux links one winding without the other","Only L_m","The turns ratio","None: the model doesn't change"],
+  e:"Separating the windings lets more of each winding's flux close through air without linking the other one. That is leakage, so L_l1 and L_l2 grow. Review §7."},
+ {q:"L_oc = 500 µH, L_sc = 12 µH, N₁/N₂ = 2. Estimate the secondary leakage L_l2, as seen on the secondary side.",
+  o:["1.5 µH","6 µH","24 µH","3 µH"],
+  e:"n²L_l2 ≈ L_sc/2 = 6 µH (that's the value reflected to the primary). On the secondary side divide by n² = 4: L_l2 ≈ 1.5 µH. Review §8 and §9."},
+ {q:"Flyback: V_g = 24 V, N₁ : N₂ = 1 : 2, D = 0.4, CCM. What is V?",
+  o:["32 V","8 V","16 V","48 V"],
+  e:"V = (N₂/N₁)·D/(1 − D)·V_g = 2 × (0.4/0.6) × 24 = 32 V. Check with the states: ① v_L = +24 V for 0.4 T_s, ② v_L = −(1/2)(32) = −16 V for 0.6 T_s; 9.6 = 9.6, balanced. Review §11 and §12."},
+ {q:"Same flyback (V = 32 V) with R = 64 Ω. What is I_m?",
+  o:["1.67 A","0.5 A","0.83 A","3.33 A"],
+  e:"I_m = (N₂/N₁)·1/(1 − D)·V/R = 2 × (1/0.6) × 0.5 A = 1.67 A. Power check: 24 V × 0.4 × 1.67 A = 16 W = 32²/64. Review §13."},
+ {q:"Same flyback, L_m = 50 µH, f_s = 100 kHz. What is Δi_m, and which mode is it in?",
+  o:["1.92 A, CCM","0.96 A, CCM","1.92 A, DCM","3.84 A, DCM"],
+  e:"Δi_m = V_gDT_s/L_m = 24 × 0.4 × 10 µs / 50 µH = 1.92 A. i_m,min = 1.67 − 0.96 = 0.71 A > 0, so CCM. Review §14."},
+ {q:"Same flyback, C = 47 µF. What is V_Q1,max?",
+  o:["≈ 40.0 V","≈ 88.0 V","≈ 56.0 V","≈ 24.0 V"],
+  e:"Δv = VDT_s/(RC) = 32 × 0.4 × 10 µs/(64 × 47 µF) = 0.043 V. V_Q1,max = 24 + (1/2)(32 + 0.021) = 40.0 V. (88 V uses N₂/N₁; 56 V forgets the ratio.) Review §15."},
+ {q:"Same flyback (V_g = 24 V, 1 : 2, D = 0.4, L_m = 50 µH, f_s = 100 kHz). Above what load resistance does it enter DCM?",
+  o:["≈ 111 Ω","≈ 64 Ω","≈ 222 Ω","≈ 55.6 Ω"],
+  e:"CCM needs I_m > Δi_m/2 = 0.96 A. With V = 32 V fixed by M(D), I_m = 2 × (1/0.6) × 32/R = 106.7/R. Setting 106.7/R = 0.96 gives R ≈ 111 Ω. Any lighter load (larger R) is DCM. Review §16."}
+]
+};
+
+/* ---------------- QUIZ ENGINE ---------------- */
+const LET = "ABCD";
+const SCORE = {};
+function hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+function shuffled(item){
+  const idx = item.o.map((_,i)=>i);
+  let seed = hash(item.q);
+  for(let i=idx.length-1;i>0;i--){ seed = (Math.imul(seed,1103515245)+12345)>>>0; const j = seed % (i+1); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+  return {opts: idx.map(i=>item.o[i]), a: idx.indexOf(0)};
+}
+function updTotal(){
+  let c=0,a=0,t=0; Object.values(SCORE).forEach(s=>{ c+=s.c; a+=s.a; t+=s.t; });
+  document.getElementById("totBig").textContent = c+" / "+a+(a? "  ("+Math.round(100*c/a)+"%)":"");
+  document.getElementById("totSub").textContent = a+" of "+t+" questions answered";
+  document.getElementById("totBar").style.width = (t? 100*a/t : 0)+"%";
+}
+function chip(id, correct, answered, total){
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(c){
+    if(answered===0){ c.textContent=""; c.classList.remove("done"); }
+    else { c.textContent = correct+"/"+total; c.classList.toggle("done", answered===total); }
+  }
+  SCORE[id] = {c:correct, a:answered, t:total}; updTotal();
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+  }
+  qs.forEach((item, qi)=>{
+    const sh = shuffled(item);
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(item.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    const btns = sh.opts.map((t, oi)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[oi];
+      const s = document.createElement("span"); s.textContent = t;
+      b.append(L, s);
+      b.addEventListener("click", ()=>{
+        btns.forEach(x=>x.disabled=true);
+        const ok = oi===sh.a;
+        btns[sh.a].classList.add("right");
+        if(!ok) b.classList.add("wrong");
+        answered++; if(ok) correct++;
+        ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[sh.a]+'.</b> ';
+        ex.appendChild(document.createTextNode(item.e));
+        ex.hidden = false;
+        upd();
+      });
+      opts.appendChild(b); return b;
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+  });
+  reset.addEventListener("click", ()=>buildQuiz(box));
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function prep(cv, hOverride){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = hOverride || +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth || 600;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size){ ctx.fillStyle=col; ctx.font=(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function poly(ctx, pts, col, wid, dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||2; pts.forEach((p,i)=> i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.stroke(); ctx.setLineDash([]); }
+const num = el => { const v = parseFloat(el.value); return isFinite(v) ? v : 0; };
+const f = (x,d)=> (Math.abs(x)<1e-12?0:x).toFixed(d).replace("-","\u2212");
+function sig(x, s){ if(!isFinite(x)) return "∞"; if(x===0) return "0"; const d = Math.max(0, s-1-Math.floor(Math.log10(Math.abs(x)))); return (+x.toFixed(Math.min(d,8))).toString().replace("-","\u2212"); }
+function seg(groupSel, attr, onPick){
+  const btns = document.querySelectorAll(groupSel+" button["+attr+"]");
+  btns.forEach(b=>b.addEventListener("click", ()=>{ btns.forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false")); onPick(b.getAttribute(attr)); }));
+}
+function niceMax(v){ if(v<=0) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); const m = v/p; return (m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10)*p; }
+/* draw a panel: y range [lo,hi], returns y mapper */
+function panel(ctx, x0, x1, top, bot, lo, hi, label, ticks){
+  const mut=css("--muted"), gr=css("--grid");
+  const Y = v => bot - (v-lo)/(hi-lo)*(bot-top);
+  (ticks||[lo,hi]).forEach(t=>{ line(ctx,x0,Y(t),x1,Y(t),gr,1,t===0?[]:[2,4]); txt(ctx,sig(t,3),x0-6,Y(t),mut,"right",10); });
+  if(lo<0 && hi>0) line(ctx,x0,Y(0),x1,Y(0),gr,1);
+  txt(ctx,label,x0,top-9,mut,"left",11);
+  return Y;
+}
+const redraws = [];
+
+/* ---------------- §1 IDEAL TRANSFORMER ---------------- */
+(function(){
+  const cv=document.getElementById("cv1"), r=document.getElementById("r1");
+  const N1=document.getElementById("x1N1"), N2=document.getElementById("x1N2"), V1=document.getElementById("x1V1"), R=document.getElementById("x1R");
+  let wave="dc";
+  function wf(t){ const p=((t%1)+1)%1; if(wave==="dc") return 1; if(wave==="sine") return Math.sin(2*Math.PI*p); if(wave==="square") return p<0.5?1:-1; return p<0.25?4*p:p<0.75?2-4*p:4*p-4; }
+  function draw(){
+    const {ctx,w,h}=prep(cv);
+    const n1=num(N1)||1, n2=num(N2)||1, v1=num(V1), rl=num(R)||1e-9;
+    const v2=v1*n2/n1, i2=v2/rl, i1=i2*n2/n1;
+    const x0=44, x1=w-10, top=20, bot=h-24;
+    const m = niceMax(Math.max(Math.abs(v1),Math.abs(v2),1)*1.1);
+    const Y = panel(ctx,x0,x1,top,bot,-m,m,"volts",[-m,0,m]);
+    const N=400, X=i=>x0+(x1-x0)*i/N;
+    const p1=[],p2=[]; for(let i=0;i<=N;i++){ const t=2*i/N, s=wf(t); p1.push([X(i),Y(v1*s)]); p2.push([X(i),Y(v2*s)]); }
+    poly(ctx,p1,css("--volt"),2.4); poly(ctx,p2,css("--fund"),2.4,[6,4]);
+    txt(ctx,"time →",x1,h-8,css("--muted"),"right",11);
+    r.innerHTML = "N₁ : N₂ = <b>"+sig(n1/n2,4)+" : 1</b><br>v₂ = (N₂/N₁)v₁ = ("+n2+"/"+n1+")("+sig(v1,4)+" V) = <b>"+sig(v2,4)+" V</b> &nbsp;·&nbsp; i₂ = v₂/R = <b>"+sig(i2,4)+" A</b><br>i₁ = (N₂/N₁)i₂ = <b>"+sig(i1,4)+" A</b> &nbsp;·&nbsp; p₁ = v₁i₁ = <b>"+sig(v1*i1,4)+" W</b> = p₂ = v₂i₂ = <b>"+sig(v2*i2,4)+" W</b>"+(wave==="dc"?"<br>The ideal element even passes DC. A real transformer can't (see §6).":" (at the peak; the match holds at every instant)");
+  }
+  seg("#d1","data-wave",v=>{wave=v; draw();});
+  [N1,N2,V1,R].forEach(e=>e.addEventListener("input",draw));
+  redraws.push(draw);
+})();
+
+/* ---------------- §2 CORE ---------------- */
+(function(){
+  const cv=document.getElementById("cv2"), r=document.getElementById("r2");
+  const CASES=[{n:"Coil in air",B:0.47e-3},{n:"Straight core",B:3.78e-3},{n:"Closed core",B:0.36}];
+  let k=2;
+  function coil(ctx,cx,cy,dx){
+    const cc=css("--curr");
+    for(let i=0;i<5;i++){ const y=cy-36+i*18;
+      ctx.beginPath(); ctx.arc(cx-dx,y,5,0,2*Math.PI); ctx.fillStyle=css("--surface"); ctx.fill(); ctx.strokeStyle=cc; ctx.lineWidth=1.6; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx-dx,y,1.6,0,2*Math.PI); ctx.fillStyle=cc; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx+dx,y,5,0,2*Math.PI); ctx.fillStyle=css("--surface"); ctx.fill(); ctx.stroke();
+      line(ctx,cx+dx-3,y-3,cx+dx+3,y+3,cc,1.4); line(ctx,cx+dx+3,y-3,cx+dx-3,y+3,cc,1.4);
+    }
+  }
+  function draw(){
+    const {ctx,w,h}=prep(cv);
+    const stacked = w<560;
+    const sw = stacked ? w : w*0.6;
+    const cx = sw/2, cy = stacked ? 110 : h/2;
+    const vc=css("--volt"), mut=css("--muted"), core=css("--surface-2"), ln=css("--line"), bg=css("--surface");
+    ctx.save(); ctx.beginPath(); ctx.rect(0,0,sw,stacked?220:h); ctx.clip();
+    if(k===0){
+      for(let j=1;j<=4;j++){ const a=18+20*j, b=46+22*j; ctx.globalAlpha=1-0.18*j;
+        [-1,1].forEach(s=>{ ctx.beginPath(); ctx.ellipse(cx+s*a,cy,a,b,0,0,2*Math.PI); ctx.strokeStyle=vc; ctx.lineWidth=1.4; ctx.stroke(); }); }
+      ctx.globalAlpha=1;
+    } else if(k===1){
+      ctx.fillStyle=core; ctx.fillRect(cx-9,cy-88,18,176); ctx.strokeStyle=ln; ctx.strokeRect(cx-9,cy-88,18,176);
+      for(let j=0;j<4;j++){ const o=-4.5+3*j, spread=50+34*j, ext=30+22*j; ctx.globalAlpha=1-0.15*j;
+        [-1,1].forEach(s=>{ ctx.beginPath(); ctx.moveTo(cx+o,cy+88); ctx.lineTo(cx+o,cy-88);
+          ctx.bezierCurveTo(cx+s*spread,cy-88-ext,cx+s*(spread+40),cy+88+ext,cx+o,cy+88); ctx.strokeStyle=vc; ctx.lineWidth=j===0?2:1.4; ctx.stroke(); }); }
+      ctx.globalAlpha=1;
+    } else {
+      const W=112, H=92;
+      ctx.fillStyle=core; ctx.fillRect(cx-W,cy-H,2*W,2*H); ctx.strokeStyle=ln; ctx.strokeRect(cx-W,cy-H,2*W,2*H);
+      ctx.fillStyle=bg; ctx.fillRect(cx-W+20,cy-H+20,W-34,2*H-40); ctx.fillRect(cx+14,cy-H+20,W-34,2*H-40);
+      ctx.strokeRect(cx-W+20,cy-H+20,W-34,2*H-40); ctx.strokeRect(cx+14,cy-H+20,W-34,2*H-40);
+      [-1,1].forEach(s=>{ for(let j=0;j<3;j++){ const ix=cx+s*(4+3*j), ox=cx+s*(W-6-4*j), ty=cy-H+6+4*j, by=cy+H-6-4*j;
+        ctx.beginPath(); ctx.moveTo(ix,by); ctx.lineTo(ix,ty); ctx.lineTo(ox,ty); ctx.lineTo(ox,by); ctx.closePath(); ctx.strokeStyle=vc; ctx.lineWidth=1.8; ctx.stroke(); } });
+    }
+    coil(ctx,cx,cy,k===2?24:22);
+    ctx.beginPath(); ctx.arc(cx,cy,4,0,2*Math.PI); ctx.fillStyle=css("--ink"); ctx.fill();
+    txt(ctx,"B measured here",cx+ (k===2?0:30), cy+ (k===2?106:0), mut, k===2?"center":"left", 10);
+    ctx.restore();
+    // log bars
+    const bx0 = stacked ? 56 : sw+56, bx1 = w-10, by0 = stacked ? h-24 : h-28, btop = stacked ? 248 : 24;
+    const lo=-4, hi=0, Yl = v => by0-(Math.log10(v)-lo)/(hi-lo)*(by0-btop);
+    [1e-4,1e-3,1e-2,1e-1,1].forEach(t=>{ line(ctx,bx0,Yl(t),bx1,Yl(t),css("--grid"),1,[2,4]); txt(ctx,t>=1?"1 T":t>=1e-3?(t*1000)+" mT":"0.1 mT",bx0-6,Yl(t),mut,"right",10); });
+    const slot=(bx1-bx0)/3;
+    CASES.forEach((c,i)=>{ const bw=Math.min(40,slot*0.55), x=bx0+slot*i+(slot-bw)/2;
+      ctx.fillStyle = i===k? vc : css("--grid"); ctx.fillRect(x,Yl(c.B),bw,by0-Yl(c.B));
+      txt(ctx,c.B<0.01?(c.B*1000).toFixed(2)+" mT":(c.B*1000).toFixed(0)+" mT",x+bw/2,Yl(c.B)-9,i===k?css("--ink"):mut,"center",10);
+      txt(ctx,["air","rod","closed"][i],x+bw/2,by0+12,mut,"center",10); });
+    const c=CASES[k];
+    r.innerHTML = "100 turns · 0.10 A · <b>"+c.n+": B = "+(c.B<0.01?(c.B*1000).toFixed(2):(c.B*1000).toFixed(0))+" mT</b> on the axis<br>"+
+      (k===0?"The field spreads through all of the surrounding space.":k===1?"≈ <b>"+(c.B/CASES[0].B).toFixed(1)+"×</b> the coil in air. Flux crowds into the rod, but every loop still returns through air.":"≈ <b>"+(c.B/CASES[1].B).toFixed(0)+"×</b> the rod and <b>"+(c.B/CASES[0].B).toFixed(0)+"×</b> the coil in air. Every loop closes inside the core.")+
+      " (Bars use a log scale.)";
+  }
+  function drawSized(){ const w = cv.clientWidth || cv.parentElement.clientWidth || 600; cv.dataset.h = w<560 ? "420" : "260"; draw(); }
+  seg("#d2","data-core",v=>{k=+v; drawSized();});
+  redraws.push(drawSized);
+})();
+
+/* ---------------- §3 FARADAY ---------------- */
+(function(){
+  const V=document.getElementById("x3V"), T=document.getElementById("x3t"), N=document.getElementById("x3N"), A=document.getElementById("x3A"), r=document.getElementById("r3");
+  function calc(){
+    const v=num(V), t=num(T), n=num(N)||1, ac=num(A);
+    const dl = v*t, dphi = dl/n;
+    let s = "<div>Δλ₁ = v₁ × t = ("+sig(v,4)+" V)("+sig(t,4)+" µs) = <b>"+sig(dl,4)+" µV·s</b></div>"+
+            "<div>ΔΦ = Δλ₁ / N₁ = "+sig(dl,4)+" µV·s / "+n+" = <b>"+sig(dphi,4)+" µWb</b></div>";
+    if(ac>0) s += "<div>ΔB = ΔΦ / A_c = "+sig(dphi,4)+" µWb / "+sig(ac,4)+" mm² = <b>"+sig(dphi/ac,4)+" T</b> <span class='c'>(µWb/mm² = T; A_c is this guide's example)</span></div>";
+    s += "<div class='c'>Lecture check: 20 V for 5 µs with N₁ = 50 gives 100 µV·s and 2 µWb.</div>";
+    r.innerHTML = s;
+  }
+  [V,T,N,A].forEach(e=>e.addEventListener("input",calc)); calc();
+})();
+
+/* ---------------- §4 VOLTS PER TURN ---------------- */
+(function(){
+  const cv=document.getElementById("cv4"), r=document.getElementById("r4");
+  const P=document.getElementById("x4P"), T=document.getElementById("x4t"), N1=document.getElementById("x4N1"), N2=document.getElementById("x4N2"), fl=document.getElementById("x4flip");
+  const o1=document.getElementById("x4N1o"), o2=document.getElementById("x4N2o");
+  let flip=false;
+  function draw(){
+    const {ctx,w,h}=prep(cv);
+    const vpt = num(P)/(num(T)||1e-9), n1=+N1.value, n2=+N2.value;
+    o1.textContent=n1; o2.textContent=n2;
+    const v1=n1*vpt, v2=(flip?-1:1)*n2*vpt;
+    const mx = Math.max(Math.abs(v1),Math.abs(v2),1e-9);
+    const x0 = 96, xm = x0 + (w-x0-14)/2, span=(w-x0-14)/2;
+    const X = v => xm + v/mx*span;
+    const rows=[{lab:"primary",v:v1,n:n1,y:44,c:css("--volt")},{lab:"secondary",v:v2,n:n2,y:104,c:css("--fund")}];
+    line(ctx,xm,14,xm,h-14,css("--grid"),1);
+    rows.forEach(rw=>{
+      txt(ctx,rw.lab,8,rw.y,css("--ink"),"left",12);
+      const x1=X(rw.v), step=(x1-xm)/rw.n;
+      ctx.fillStyle=rw.c;
+      for(let i=0;i<rw.n;i++){ const a=xm+step*i, b=xm+step*(i+1); ctx.globalAlpha = i%2?0.55:0.9; ctx.fillRect(Math.min(a,b),rw.y-12,Math.max(1,Math.abs(b-a)-(Math.abs(step)>3?1:0)),24); }
+      ctx.globalAlpha=1;
+      txt(ctx,sig(rw.v,3)+" V",x1+(rw.v>=0?6:-6),rw.y,css("--ink"),rw.v>=0?"left":"right",11);
+    });
+    txt(ctx,"each block = one turn = "+sig(vpt,3)+" V",xm,h-8,css("--muted"),"center",10);
+    r.innerHTML = "dΦ/dt = "+sig(num(P),4)+" µWb / "+sig(num(T),4)+" µs = <b>"+sig(vpt,4)+" V per turn</b><br>v₁ = N₁ dΦ/dt = "+n1+" × "+sig(vpt,4)+" = <b>"+sig(v1,4)+" V</b> &nbsp;·&nbsp; v₂ = "+(flip?"−":"")+"N₂ dΦ/dt = <b>"+sig(v2,4)+" V</b> &nbsp;·&nbsp; v₁/N₁ = |v₂|/N₂ = "+sig(vpt,4)+" V"+(flip?"<br>Secondary dot flipped: same size, opposite sign. The flyback relies on this.":"");
+  }
+  fl.addEventListener("click",()=>{ flip=!flip; fl.setAttribute("aria-pressed",flip?"true":"false"); fl.textContent = flip?"Restore secondary dot":"Flip secondary dot"; draw(); });
+  [P,T,N1,N2].forEach(e=>e.addEventListener("input",draw));
+  redraws.push(draw);
+})();
+
+/* ---------------- §5/§6 VOLT-SECOND LAB (reusable) ---------------- */
+let labCount=0;
+function makeLab(root){
+  const id="lab"+(++labCount), d=root.dataset;
+  root.innerHTML =
+   '<canvas id="'+id+'cv" height="330" aria-label="v1, flux linkage and magnetizing current over several cycles"></canvas>'+
+   '<div class="controls">'+
+   '<label for="'+id+'va">v<sub>a</sub> (V) <input id="'+id+'va" type="number" value="'+d.va+'" step="1"></label>'+
+   '<label for="'+id+'ta">t<sub>a</sub> (µs) <input id="'+id+'ta" type="number" value="'+d.ta+'" min="0" step="0.5"></label>'+
+   '<label for="'+id+'vb">v<sub>b</sub> (V) <input id="'+id+'vb" type="number" value="'+d.vb+'" step="1"></label>'+
+   '<label for="'+id+'tb">t<sub>b</sub> (µs) <input id="'+id+'tb" type="number" value="'+d.tb+'" min="0" step="0.5"></label>'+
+   '<label for="'+id+'n">N<sub>1</sub> <input id="'+id+'n" type="number" value="'+d.n+'" min="1" step="1"></label>'+
+   '<label for="'+id+'lm">L<sub>m</sub> (mH) <input id="'+id+'lm" type="number" value="'+d.lm+'" min="0.01" step="0.1"></label>'+
+   '<button class="btn" type="button" data-p="bal">Lecture: balanced</button>'+
+   '<button class="btn" type="button" data-p="unb">Lecture: unbalanced</button>'+
+   '</div><div class="steps" id="'+id+'r"></div>';
+  const $ = s => document.getElementById(id+s);
+  const cv=$("cv"), r=$("r"), va=$("va"), ta=$("ta"), vb=$("vb"), tb=$("tb"), nn=$("n"), lm=$("lm");
+  const cyc = +d.cyc || 2;
+  function draw(){
+    const {ctx,w,h}=prep(cv);
+    const A=num(va), a=Math.max(0,num(ta)), B=num(vb), b=Math.max(0,num(tb)), N=num(nn)||1, L=num(lm)||1e-9;
+    const Tp = a+b || 1, tot = Tp*cyc;
+    const up=A*a, dn=B*b, net=up+dn;
+    const lam = t => { const k=Math.floor(t/Tp), p=t-k*Tp; return k*net + (p<a ? A*p : up + B*(p-a)); };
+    const x0=58, x1=w-10;
+    const X = t => x0+(x1-x0)*t/tot;
+    const vmax = niceMax(Math.max(Math.abs(A),Math.abs(B),1)*1.05);
+    const Yv = panel(ctx,x0,x1,22,92,-vmax,vmax,"v₁ (V)",[-vmax,0,vmax]);
+    const pts=[]; for(let k=0;k<cyc;k++){ const t0=k*Tp; pts.push([X(t0),Yv(A)],[X(t0+a),Yv(A)],[X(t0+a),Yv(B)],[X(t0+Tp),Yv(B)]); }
+    poly(ctx,pts,css("--volt"),2.2);
+    // lambda samples
+    const S=600, ls=[]; let lmin=0,lmax=0; for(let i=0;i<=S;i++){ const t=tot*i/S, l=lam(Math.min(t,tot-1e-9)); ls.push([t,l]); lmin=Math.min(lmin,l); lmax=Math.max(lmax,l); }
+    const lhi = niceMax(Math.max(Math.abs(lmax),1e-9)*1.05), llo = lmin<-1e-9 ? -niceMax(Math.abs(lmin)*1.05) : 0;
+    const Yl = panel(ctx,x0,x1,122,202,llo,lhi,"λ₁ (µV·s)",llo<0?[llo,0,lhi]:[0,lhi/2,lhi]);
+    poly(ctx,ls.map(p=>[X(p[0]),Yl(p[1])]),css("--fund"),2.2);
+    const toI = l => l/(L*1000);
+    const ihi=toI(lhi), ilo=toI(llo);
+    const Yi = panel(ctx,x0,x1,232,h-24,ilo,ihi,"i_m (A)",ilo<0?[ilo,0,ihi]:[0,ihi/2,ihi]);
+    poly(ctx,ls.map(p=>[X(p[0]),Yi(toI(p[1]))]),css("--curr"),2.2);
+    for(let k=0;k<=cyc;k++) txt(ctx,sig(k*Tp,3)+(k===cyc?" µs":""),X(k*Tp),h-10,css("--muted"),k===cyc?"right":"center",10);
+    const bal = Math.abs(net) < 1e-9*Math.max(1,Math.abs(up));
+    const ipk = toI(up), drift = toI(net), E = up*up*1e-3/(2*L);
+    r.innerHTML =
+      "<div>Up: v<sub>a</sub>t<sub>a</sub> = "+sig(A,4)+" × "+sig(a,4)+" = <b>"+sig(up,4)+" µV·s</b> &nbsp; ΔΦ = "+sig(up,4)+"/"+N+" = <b>"+sig(up/N,4)+" µWb</b> &nbsp; Δi_m = "+sig(up,4)+" µV·s / "+sig(L,4)+" mH = <b>"+sig(ipk,4)+" A</b></div>"+
+      "<div>Down: v<sub>b</sub>t<sub>b</sub> = "+sig(B,4)+" × "+sig(b,4)+" = <b>"+sig(dn,4)+" µV·s</b> &nbsp; Net per cycle: <b>"+sig(net,4)+" µV·s</b></div>"+
+      "<div>"+(bal?'<span class="verdict ok">Balanced</span>λ₁ and i_m return to their start every '+sig(Tp,4)+" µs.":'<span class="verdict no">Not balanced</span>i_m drifts by <b>'+sig(drift,4)+" A per cycle</b> ("+sig(drift*cyc,4)+" A after "+cyc+" cycles), heading for saturation.")+"</div>"+
+      "<div>Energy at the first peak: W = λ²/2L_m = ("+sig(up,4)+" µV·s)² / (2 × "+sig(L,4)+" mH) = <b>"+sig(E,4)+" µJ</b></div>";
+  }
+  [va,ta,vb,tb,nn,lm].forEach(e=>e.addEventListener("input",draw));
+  root.querySelectorAll("[data-p]").forEach(bt=>bt.addEventListener("click",()=>{ va.value=20; ta.value=5; vb.value=-10; tb.value = bt.dataset.p==="bal"?10:5; nn.value=50; lm.value=1; draw(); }));
+  redraws.push(draw);
+}
+document.querySelectorAll(".vslab").forEach(makeLab);
+
+/* ---------------- §6 CORE SIZE ---------------- */
+(function(){
+  const V=document.getElementById("x6V"), D=document.getElementById("x6D"), N=document.getElementById("x6N"), A=document.getElementById("x6A"), Bdc=document.getElementById("x6Bdc"), F=document.getElementById("x6f"), fo=document.getElementById("x6fo"), r=document.getElementById("r6");
+  let mode="dc";
+  function calc(){
+    const v=num(V), d=num(D), n=num(N)||1, ac=num(A)||1e-9, fs=num(F), bdc=num(Bdc);
+    fo.textContent = sig(fs,3);
+    const dPhi = v*d/(n*fs*1e3);           // Wb
+    const dB = dPhi/(ac*1e-6);
+    const bmax = mode==="bi"? dB/2 : mode==="uni"? dB : bdc+dB/2;
+    r.innerHTML =
+      "<div>ΔΦ ≈ VD/(N₁f_s) = ("+sig(v,4)+")("+sig(d,4)+")/("+n+" × "+sig(fs,4)+" kHz) = <b>"+sig(dPhi*1e6,4)+" µWb</b></div>"+
+      "<div>ΔB = ΔΦ/A_c = "+sig(dPhi*1e6,4)+" µWb / "+sig(ac,4)+" mm² = <b>"+sig(dB,4)+" T</b></div>"+
+      "<div>B_max = "+(mode==="bi"?"ΔB/2 = ":mode==="uni"?"ΔB = ":"B_dc + ΔB/2 = "+sig(bdc,4)+" + "+sig(dB/2,4)+" = ")+"<b>"+sig(bmax,4)+" T</b></div>"+
+      "<div class='c'>Drag f_s: double it and ΔB halves. At 60 Hz the same core would need A_c ≈ "+sig(ac*fs*1e3/60,3)+" mm² for this ΔB.</div>";
+  }
+  seg("#d6b","data-bm",v=>{mode=v; calc();});
+  [V,D,N,A,Bdc,F].forEach(e=>e.addEventListener("input",calc)); calc();
+})();
+
+/* ---------------- MODEL SVG (§7, §9) ---------------- */
+function hcoil(x,y,n){ let s="M"+x+","+y; for(let i=0;i<n;i++) s+=" a7.5,7.5 0 0 1 15,0"; return s; }
+function vcoil(x,y,n,sw){ let s="M"+x+","+y; for(let i=0;i<n;i++) s+=" a7.5,7.5 0 0 "+sw+" 0,15"; return s; }
+function modelSVG(pre){
+  return '<svg class="ckt" viewBox="0 0 540 214" style="min-width:460px;max-width:620px" role="img" aria-label="Transformer equivalent circuit">'+
+  '<g data-part="Ll1" class="hit" tabindex="0" role="button" aria-label="Primary leakage L_l1"><rect class="hl" x="62" y="22" width="76" height="40"/></g>'+
+  '<g data-part="Lm" class="hit" tabindex="0" role="button" aria-label="Magnetizing inductance L_m"><rect class="hl" x="140" y="72" width="70" height="76"/></g>'+
+  '<g data-part="Ll2" class="hit" tabindex="0" role="button" aria-label="Secondary leakage reflected, n squared L_l2"><rect class="hl" x="232" y="22" width="76" height="40"/></g>'+
+  '<g data-part="id" class="hit" tabindex="0" role="button" aria-label="Ideal transformer"><rect class="hl" x="340" y="24" width="80" height="130"/></g>'+
+  '<path class="w" data-seg="in" d="M30,50 H70 M30,170 H180"/>'+
+  '<path class="el" data-seg="l1" d="'+hcoil(70,50,4)+'"/>'+
+  '<path class="w" data-seg="a" d="M130,50 H180"/>'+
+  '<path class="w" data-seg="lm" d="M180,50 V80 M180,140 V170"/>'+
+  '<path class="el" data-seg="lm" d="'+vcoil(180,80,4,1)+'"/>'+
+  '<path class="w" data-seg="l2" d="M180,50 H240 M300,50 H360 V80 M360,140 V170 H180"/>'+
+  '<path class="el" data-seg="l2" d="'+hcoil(240,50,4)+'"/>'+
+  '<path class="el" data-seg="id" d="'+vcoil(360,80,4,1)+' M376,76 V144 M382,76 V144 '+vcoil(398,80,4,0)+'"/>'+
+  '<path class="w" data-seg="out" d="M398,80 V50 H480 M398,140 V170 H480"/>'+
+  '<path class="w hot" data-seg="short" d="M480,50 V170" '+(pre==="m9"?'':'style="display:none"')+'/>'+
+  '<circle class="term" cx="30" cy="50" r="4"/><circle class="term" cx="30" cy="170" r="4"/>'+
+  '<circle class="term" cx="480" cy="50" r="4"/><circle class="term" cx="480" cy="170" r="4"/>'+
+  '<circle class="dot" cx="180" cy="50" r="3.5"/><circle class="dot" cx="180" cy="170" r="3.5"/>'+
+  '<circle class="dot" cx="352" cy="78" r="3"/><circle class="dot" cx="406" cy="78" r="3"/>'+
+  '<text class="lbl" x="100" y="36" text-anchor="middle">L<tspan baseline-shift="sub" font-size="11">l1</tspan></text>'+
+  '<text class="lbl" x="200" y="116">L<tspan baseline-shift="sub" font-size="11">m</tspan></text>'+
+  '<text class="lbl" x="270" y="36" text-anchor="middle">n²L<tspan baseline-shift="sub" font-size="11">l2</tspan></text>'+
+  '<text class="lbl" x="380" y="40" text-anchor="middle">N<tspan baseline-shift="sub" font-size="11">1</tspan> : N<tspan baseline-shift="sub" font-size="11">2</tspan></text>'+
+  '<text class="lbl up" x="16" y="80">+</text><text class="lbl" x="12" y="116">v<tspan baseline-shift="sub" font-size="11">1</tspan></text><text class="lbl up" x="16" y="150">−</text>'+
+  '<text class="lbl up" x="498" y="80">+</text><text class="lbl" x="494" y="116">v<tspan baseline-shift="sub" font-size="11">2</tspan></text><text class="lbl up" x="498" y="150">−</text>'+
+  '<text class="small" x="100" y="200" text-anchor="middle">meter here</text>'+
+  '<text class="tag2" id="'+pre+'tag" x="488" y="200" text-anchor="end"></text>'+
+  '</svg>';
+}
+(function(){
+  const box=document.getElementById("ckt7"), r=document.getElementById("r7");
+  box.innerHTML = modelSVG("m7");
+  const INFO={
+    Ll1:"<b>L<sub>l1</sub>, primary leakage.</b> Flux made by the primary current that closes through air without linking the secondary. It sits in series, so v₁ = v_m + L_l1 di₁/dt.",
+    Lm:"<b>L<sub>m</sub>, magnetizing inductance.</b> Represents the shared core flux: λ₁ = L_m i_m. It sits in parallel with the ideal primary because the shared flux follows the voltage across the winding (v_m). Large for a mains transformer, deliberately small for a flyback.",
+    Ll2:"<b>n²L<sub>l2</sub>, secondary leakage moved to the primary.</b> Secondary flux that misses the primary. It really sits in series with the secondary; reflecting it through the ideal element scales it by n² (§8).",
+    id:"<b>The ideal element.</b> Only the turns ratio: v₁ = (N₁/N₂)v₂ and i₁ = (N₂/N₁)i₂. No loss, no storage."
+  };
+  const hits=box.querySelectorAll(".hit");
+  function pick(p){ hits.forEach(g=>g.classList.toggle("sel",g.dataset.part===p)); r.innerHTML=INFO[p]; }
+  hits.forEach(g=>{ g.addEventListener("click",()=>pick(g.dataset.part)); g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(g.dataset.part);} }); });
+  pick("Lm");
+})();
+
+/* ---------------- §8 REFLECTION ---------------- */
+(function(){
+  const N1=document.getElementById("x8N1"), N2=document.getElementById("x8N2"), V=document.getElementById("x8v"), u=document.getElementById("x8u"), r=document.getElementById("r8");
+  let el="L", dir="s2p";
+  const U={R:"Ω",L:"µH",C:"µF"};
+  function calc(){
+    u.textContent=U[el];
+    const n=(num(N1)||1)/(num(N2)||1), n2=n*n, v=num(V);
+    const toP = dir==="s2p";
+    const res = el==="C" ? (toP? v/n2 : v*n2) : (toP? v*n2 : v/n2);
+    const op = el==="C" ? (toP?"÷":"×") : (toP?"×":"÷");
+    r.innerHTML = "<div>n = N₁/N₂ = "+sig(num(N1),4)+"/"+sig(num(N2),4)+" = <b>"+sig(n,4)+"</b>, &nbsp; n² = <b>"+sig(n2,4)+"</b></div>"+
+      "<div>"+el+" on the "+(toP?"secondary":"primary")+" = "+sig(v,4)+" "+U[el]+" &nbsp;→&nbsp; seen from the "+(toP?"primary":"secondary")+": "+sig(v,4)+" "+op+" "+sig(n2,4)+" = <b>"+sig(res,4)+" "+U[el]+"</b></div>"+
+      "<div class='c'>"+(el==="C"?"Capacitors go the opposite way: impedance 1/(jωC) scales by n², so C scales by 1/n².":"Impedance scales by n² going secondary → primary, by 1/n² going the other way.")+"</div>";
+  }
+  seg("#d8","data-el",v=>{el=v; calc();});
+  seg("#d8","data-dir",v=>{dir=v; calc();});
+  [N1,N2,V].forEach(e=>e.addEventListener("input",calc)); calc();
+})();
+
+/* ---------------- §9 OC / SC ---------------- */
+(function(){
+  const box=document.getElementById("ckt9"), r=document.getElementById("r9"), OC=document.getElementById("x9oc"), SC=document.getElementById("x9sc");
+  box.innerHTML = modelSVG("m9");
+  box.querySelectorAll(".hit").forEach(g=>g.remove());
+  let test="oc";
+  function paint(){
+    const live = test==="oc" ? ["in","l1","a","lm"] : ["in","l1","a","lm","l2","id","out","short"];
+    box.querySelectorAll("[data-seg]").forEach(p=>{
+      const on = live.includes(p.dataset.seg);
+      p.classList.toggle("hot", on && p.classList.contains("w"));
+      p.classList.toggle("dead", !on);
+      if(p.classList.contains("el")) p.classList.toggle("hot", on);
+    });
+    box.querySelector('[data-seg="short"]').style.display = test==="sc" ? "" : "none";
+    document.getElementById("m9tag").textContent = test==="oc" ? "open: i₂ = 0" : "shorted: v₂ = 0";
+  }
+  function calc(){
+    paint();
+    const loc=num(OC), lsc=num(SC);
+    const ll1=lsc/2, ll2=lsc/2, lm=loc-lsc/2;
+    const par = (lm*ll2)/(lm+ll2), exact = ll1+par;
+    r.innerHTML =
+      "<div>"+(test==="oc"?"Meter sees L_oc = L_l1 + L_m (the n²L_l2 branch carries no current).":"Meter sees L_sc = L_l1 + L_m ∥ n²L_l2 ≈ L_l1 + n²L_l2.")+"</div>"+
+      "<div>L_l1 ≈ n²L_l2 ≈ L_sc/2 = "+sig(lsc,4)+"/2 = <b>"+sig(ll1,4)+" µH</b></div>"+
+      "<div>L_m ≈ L_oc − L_sc/2 = "+sig(loc,4)+" − "+sig(ll1,4)+" = <b>"+sig(lm,4)+" µH</b></div>"+
+      "<div class='c'>Check the ≈: with these values, L_sc exact = "+sig(ll1,4)+" + ("+sig(lm,4)+" × "+sig(ll2,4)+")/("+sig(lm+ll2,4)+") = "+sig(exact,4)+" µH ("+sig(100*(exact-lsc)/lsc,2)+"% vs the reading). Valid while L_m ≫ n²L_l2 (here "+sig(lm/ll2,3)+"×).</div>";
+  }
+  seg("#d9","data-test",v=>{test=v; calc();});
+  [OC,SC].forEach(e=>e.addEventListener("input",calc)); calc();
+})();
+
+/* ---------------- RUNNING EXAMPLE SOLVER ---------------- */
+function solveFly(p){ // p: Vg, N1, N2, D, Ts(s), Lm(H), R, C(F)
+  const n=p.N1/p.N2, D=p.D, Dp=1-D, Ts=p.Ts;
+  const di = p.Vg*D*Ts/p.Lm;
+  const Rcrit = 2*p.Lm/(n*n*Ts*Dp*Dp);
+  const ccm = p.R < Rcrit;
+  const o={n,D,Dp,Ts,di,Rcrit,ccm};
+  if(ccm){ o.V = (1/n)*D/Dp*p.Vg; o.Im=(1/n)/Dp*o.V/p.R; o.imin=o.Im-di/2; o.imax=o.Im+di/2; o.D2=Dp; }
+  else { o.V = p.Vg*D*Math.sqrt(p.R*Ts/(2*p.Lm)); o.imin=0; o.imax=di; o.D2 = p.Vg*D/(n*o.V); o.Im = di*(D+o.D2)/2; }
+  // waveform over one period
+  const S=1200, dt=Ts/S; const tt=[], vL=[], im=[], iC=[];
+  for(let k=0;k<S;k++){ const t=k*dt; let v,i,c;
+    if(t<D*Ts){ v=p.Vg; i=o.imin+p.Vg*t/p.Lm; c=-o.V/p.R; }
+    else { i = o.imax - n*o.V*(t-D*Ts)/p.Lm; if(!ccm && i<=0){ i=0; v=0; c=-o.V/p.R; } else { v=-n*o.V; c=n*i-o.V/p.R; } }
+    tt.push(t); vL.push(v); im.push(i); iC.push(c); }
+  const vv=[]; let acc=0; for(let k=0;k<S;k++){ vv.push(acc); acc+=iC[k]*dt/p.C; }
+  const mean = vv.reduce((a,b)=>a+b,0)/S; for(let k=0;k<S;k++) vv[k]+=o.V-mean;
+  o.vmax=Math.max(...vv); o.vmin=Math.min(...vv); o.dvSim=o.vmax-o.vmin;
+  o.dvF = o.V*D*Ts/(p.R*p.C);
+  let vq=0; for(let k=0;k<S;k++){ if(tt[k]>=D*Ts && vL[k]!==0) vq=Math.max(vq, p.Vg+n*vv[k]); }
+  o.vqSim=vq; o.vqF = p.Vg + n*(o.V+o.dvF/2);
+  o.wave={tt,vL,im,iC,vv,S};
+  return o;
+}
+
+/* ---------------- §10 ENERGY SCRUB ---------------- */
+(function(){
+  const cv=document.getElementById("cv10"), T=document.getElementById("x10t"), to=document.getElementById("x10to"), r=document.getElementById("r10");
+  const P={Vg:20,N1:50,N2:25,D:1/3,Ts:15e-6,Lm:1e-3,R:20,C:10e-6};
+  const o=solveFly(P);
+  function draw(){
+    const {ctx,w,h}=prep(cv);
+    const x0=58, x1=w-10, s=+T.value, Ts=P.Ts;
+    const X = u => x0+(x1-x0)*u;
+    ctx.fillStyle=css("--accent-soft"); ctx.fillRect(X(0),14,X(P.D)-X(0),h-40);
+    txt(ctx,"Q₁ on: store",X(P.D/2),24,css("--accent"),"center",11); txt(ctx,"Q₁ off: deliver",X((1+P.D)/2),24,css("--muted"),"center",11);
+    const im=u=> u<P.D ? o.imin+P.Vg*u*Ts/P.Lm : o.imax-o.n*o.V*(u-P.D)*Ts/P.Lm;
+    const E=u=> 0.5*P.Lm*im(u)**2*1e6;
+    const Yi = panel(ctx,x0,x1,48,118,0,0.25,"i_m (A)",[0,0.125,0.25]);
+    const Ye = panel(ctx,x0,x1,150,h-26,0,30,"E_m (µJ)",[0,15,30]);
+    const A=[],B=[]; for(let i=0;i<=300;i++){ const u=i/300; A.push([X(u),Yi(im(u))]); B.push([X(u),Ye(E(u))]); }
+    poly(ctx,A,css("--curr"),2.4); poly(ctx,B,css("--fund"),2.4);
+    line(ctx,X(s),40,X(s),h-26,css("--ink"),1,[3,3]);
+    [[Yi(im(s)),css("--curr")],[Ye(E(s)),css("--fund")]].forEach(([y,c])=>{ ctx.beginPath(); ctx.arc(X(s),y,4.5,0,2*Math.PI); ctx.fillStyle=c; ctx.fill(); });
+    txt(ctx,"0",X(0),h-10,css("--muted"),"center",10); txt(ctx,"DT_s",X(P.D),h-10,css("--muted"),"center",10); txt(ctx,"T_s",X(1),h-10,css("--muted"),"right",10);
+    const tus=s*15; to.textContent = tus.toFixed(1)+" µs";
+    const on = s<P.D;
+    const Ecyc = 0.5*P.Lm*(o.imax**2-o.imin**2);
+    r.innerHTML = '<span class="verdict '+(on?'ok':'mid')+'">'+(on?"Storing":"Delivering")+'</span>'+
+      "t = "+tus.toFixed(1)+" µs · i_m = <b>"+im(s).toFixed(4)+" A</b> · E_m = ½L_m i_m² = <b>"+E(s).toFixed(2)+" µJ</b><br>"+
+      (on?"v_g across L_m, D₁ off: the input fills the store and C alone feeds the load.":"D₁ on: L_m empties into the output through the turns ratio.")+
+      "<br>Delivered per cycle: ½L_m(i_max² − i_min²) = ½(1 mH)("+o.imax.toFixed(4)+"² − "+o.imin.toFixed(4)+"²) = <b>"+(Ecyc*1e6).toFixed(2)+" µJ</b> × f_s "+(1/Ts/1000).toFixed(2)+" kHz = <b>"+(Ecyc/Ts).toFixed(3)+" W</b> = V²/R = 5²/20 = 1.250 W";
+  }
+  T.addEventListener("input",draw); redraws.push(draw);
+})();
+
+/* ---------------- §11 FLYBACK CIRCUIT ---------------- */
+(function(){
+  const box=document.getElementById("ckt11"), r=document.getElementById("r11");
+  box.innerHTML =
+  '<svg class="ckt" viewBox="0 0 560 262" style="min-width:470px;max-width:640px" role="img" aria-label="Flyback converter with clickable switch">'+
+  '<g class="hit" id="q1hit" tabindex="0" role="button" aria-label="Toggle switch Q1"><rect class="hl" x="220" y="180" width="56" height="44"/></g>'+
+  '<circle class="fillbg" cx="60" cy="140" r="18" style="stroke:var(--ink);stroke-width:2"/>'+
+  '<text class="lbl up" x="60" y="136" text-anchor="middle" font-size="13">+</text><text class="lbl up" x="60" y="154" text-anchor="middle" font-size="13">−</text>'+
+  '<path class="w" data-seg="src" d="M60,60 V122 M60,158 V230"/>'+
+  '<path class="w" data-seg="topA" d="M60,60 H150"/>'+
+  '<path class="w" data-seg="topB" d="M150,60 H240"/>'+
+  '<path class="w" data-seg="lm" d="M150,60 V80 M150,140 V175"/>'+
+  '<path class="el" data-seg="lm" d="'+vcoil(150,80,4,1)+'"/>'+
+  '<path class="w" data-seg="lmp" d="M150,175 H240"/>'+
+  '<path class="w" data-seg="pri" d="M240,60 V80 M240,140 V175"/>'+
+  '<path class="el" data-seg="pri" d="'+vcoil(240,80,4,1)+'"/>'+
+  '<path class="el" d="M258,76 V144 M264,76 V144"/>'+
+  '<path class="el" data-seg="sec" d="'+vcoil(282,80,4,0)+'"/>'+
+  '<path class="w" data-seg="q1" d="M240,175 V190 M240,214 V230"/>'+
+  '<line class="el" id="q1blade" x1="240" y1="190" x2="240" y2="214"/>'+
+  '<circle class="dot" cx="240" cy="190" r="2.5"/><circle class="dot" cx="240" cy="214" r="2.5"/>'+
+  '<path class="w" data-seg="bot" d="M240,230 H60"/>'+
+  '<path class="w" data-seg="secT" d="M282,80 V60 H330"/>'+
+  '<path class="el" data-seg="d1" d="M330,48 L330,72 L352,60 Z M352,48 V72"/>'+
+  '<path class="w" data-seg="dOut" d="M352,60 H420"/>'+
+  '<path class="w" data-seg="outTop" d="M420,60 H500"/>'+
+  '<path class="w" data-seg="c" d="M420,60 V132 M420,142 V230"/>'+
+  '<path class="el" data-seg="c" d="M404,132 H436 M404,142 H436"/>'+
+  '<path class="w" data-seg="r" d="M500,60 V112 M500,162 V230"/>'+
+  '<rect class="el fillbg" data-seg="r" x="492" y="112" width="16" height="50"/>'+
+  '<path class="w" data-seg="secB" d="M282,140 V230 H420"/>'+
+  '<path class="w" data-seg="outBot" d="M420,230 H500"/>'+
+  '<circle class="dot" cx="150" cy="60" r="3.5"/><circle class="dot" cx="240" cy="175" r="3.5"/><circle class="dot" cx="420" cy="60" r="3.5"/><circle class="dot" cx="420" cy="230" r="3.5"/>'+
+  '<circle class="dot" cx="231" cy="78" r="3"/><circle class="dot" cx="291" cy="144" r="3"/>'+
+  '<text class="lbl" x="22" y="145">v<tspan baseline-shift="sub" font-size="11">g</tspan></text>'+
+  '<text class="lbl" x="166" y="104">L<tspan baseline-shift="sub" font-size="11">m</tspan></text>'+
+  '<text class="lbl" x="166" y="130">v<tspan baseline-shift="sub" font-size="11">L</tspan></text>'+
+  '<text class="lbl up" x="128" y="88">+</text><text class="lbl up" x="128" y="146">−</text>'+
+  '<text class="lbl" x="160" y="76">i<tspan baseline-shift="sub" font-size="11">m</tspan> ↓</text>'+
+  '<text class="lbl" x="262" y="40" text-anchor="middle">N<tspan baseline-shift="sub" font-size="11">1</tspan> : N<tspan baseline-shift="sub" font-size="11">2</tspan></text>'+
+  '<text class="lbl" x="341" y="94" text-anchor="middle">D<tspan baseline-shift="sub" font-size="11">1</tspan></text>'+
+  '<text class="lbl" x="446" y="118">C</text><text class="lbl" x="516" y="142">R</text>'+
+  '<text class="lbl up" x="536" y="86">+</text><text class="lbl" x="536" y="142">v</text><text class="lbl up" x="536" y="216">−</text>'+
+  '<text class="lbl" x="266" y="208">Q<tspan baseline-shift="sub" font-size="11">1</tspan></text>'+
+  '<text class="lbl up" x="208" y="192">+</text><text class="lbl" x="176" y="208">v<tspan baseline-shift="sub" font-size="11">Q1</tspan></text><text class="lbl up" x="208" y="228">−</text>'+
+  '<text class="tag2" id="fbTag" x="60" y="254"></text>'+
+  '</svg>';
+  let st=1;
+  const HOT={1:["src","topA","lm","lmp","q1","bot"],2:["lm","lmp","pri","topB","sec","secT","d1","dOut","outTop","r","c","secB","outBot"],3:[]};
+  const GRN={1:["outTop","c","r","outBot"],2:[],3:["outTop","c","r","outBot"]};
+  const TXT={
+    1:"<b>① Q₁ on, D₁ off</b> (0 ≤ t &lt; DT_s)<br>v_L = V_g = <b>20 V</b>, so i_m ramps up at V_g/L_m = 20 V/1 mH = 0.02 A/µs.<br>i_C = −V/R = −5/20 = <b>−0.25 A</b>: C alone feeds the load.<br>The ideal primary carries no current (D₁ blocks the secondary), so the input current is i_m.",
+    2:"<b>② Q₁ off, D₁ on</b> (DT_s ≤ t &lt; T_s)<br>v_L = −(N₁/N₂)V = −2 × 5 = <b>−10 V</b>, so i_m ramps down at 10 V/1 mH = 0.01 A/µs.<br>i_C = (N₁/N₂)I_m − V/R = 2(0.1875) − 0.25 = <b>+0.125 A</b> on average: the secondary charges C and feeds R.<br>Q₁ blocks v_Q1 = v_g + (N₁/N₂)v ≈ 20 + 10 = <b>30 V</b> (§15).",
+    3:"<b>③ Q₁ off, D₁ off, i_m = 0</b> (DCM only, §16)<br>v_L = L_m di_m/dt = <b>0</b>. i_C = −V/R: C alone feeds the load.<br>Q₁ blocks just v_g. The running example (R = 20 Ω) never reaches this state; it needs R above 75 Ω."
+  };
+  function paint(){
+    box.querySelectorAll("[data-seg]").forEach(p=>{
+      const s=p.dataset.seg, hot=HOT[st].includes(s), g=GRN[st].includes(s);
+      p.classList.remove("hot","hot2","dead");
+      if(p.classList.contains("w")){ if(hot) p.classList.add("hot"); else if(g) p.classList.add("hot2"); else p.classList.add("dead"); }
+      else { if(hot) p.classList.add("hot"); else if(!g && s!=="c" && s!=="r") p.classList.add("dead"); }
+    });
+    const bl=document.getElementById("q1blade");
+    if(st===1){ bl.setAttribute("x2","240"); bl.setAttribute("y2","214"); bl.classList.add("hot"); } else { bl.setAttribute("x2","257"); bl.setAttribute("y2","208"); bl.classList.remove("hot"); }
+    document.getElementById("fbTag").textContent = st===1?"Q₁ closed · D₁ reverse biased":st===2?"Q₁ open · D₁ conducting":"Q₁ open · D₁ off · i_m = 0";
+    r.innerHTML = TXT[st];
+    document.querySelectorAll('#d11 button[data-st]').forEach(b=>b.setAttribute("aria-pressed", +b.dataset.st===st?"true":"false"));
+  }
+  seg("#d11","data-st",v=>{st=+v; paint();});
+  const q=document.getElementById("q1hit");
+  const tog=()=>{ st = st===1?2:1; paint(); };
+  q.addEventListener("click",tog); q.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); tog(); } });
+  paint();
+})();
+
+/* ---------------- §12 M(D) ---------------- */
+(function(){
+  const cv=document.getElementById("cv12"), Dd=document.getElementById("x12D"), Do=document.getElementById("x12Do"), N1=document.getElementById("x12N1"), N2=document.getElementById("x12N2"), Vg=document.getElementById("x12Vg"), r=document.getElementById("r12");
+  function draw(){
+    const {ctx,w,h}=prep(cv);
+    const D=+Dd.value, k=(num(N2)||1)/(num(N1)||1), vg=num(Vg);
+    Do.textContent=D.toFixed(3);
+    const M=k*D/(1-D);
+    const ymax = niceMax(Math.max(2*k, 1.25*M, 1.2));
+    const x0=46, x1=w-12, top=16, bot=h-28, dmax=0.9;
+    const X=d=>x0+(x1-x0)*d/dmax, Y=m=>bot-(m/ymax)*(bot-top);
+    [0,ymax/2,ymax].forEach(t=>{ line(ctx,x0,Y(t),x1,Y(t),css("--grid"),1,t?[2,4]:[]); txt(ctx,sig(t,3),x0-6,Y(t),css("--muted"),"right",10); });
+    [0,0.25,0.5,0.75].forEach(t=>txt(ctx,t.toFixed(2),X(t),bot+14,css("--muted"),"center",10));
+    txt(ctx,"D",x1,bot+14,css("--muted"),"right",11); txt(ctx,"M(D)",x0,top-4,css("--muted"),"left",11);
+    line(ctx,X(0.5),top,X(0.5),bot,css("--grid"),1,[4,4]);
+    ctx.save(); ctx.beginPath(); ctx.rect(x0,top-2,x1-x0,bot-top+2); ctx.clip();
+    const bb=[], fb=[]; for(let i=0;i<=400;i++){ const d=dmax*i/400; bb.push([X(d),Y(d/(1-d))]); fb.push([X(d),Y(k*d/(1-d))]); }
+    poly(ctx,bb,css("--muted"),1.5,[5,4]); poly(ctx,fb,css("--volt"),2.6);
+    line(ctx,x0,Y(k),X(0.5),Y(k),css("--fund"),1,[2,3]);
+    ctx.restore();
+    txt(ctx,"N₂/N₁ = "+sig(k,3),X(0.5)+6,Y(k)+(Y(k)>top+20?-10:12),css("--fund"),"left",10);
+    if(Y(M)>=top){ ctx.beginPath(); ctx.arc(X(D),Y(M),6,0,2*Math.PI); ctx.fillStyle=css("--curr"); ctx.fill(); }
+    const Vout=M*vg;
+    r.innerHTML="M = (N₂/N₁)·D/(1 − D) = "+sig(k,4)+" × "+D.toFixed(3)+"/"+(1-D).toFixed(3)+" = <b>"+M.toFixed(4)+"</b> &nbsp;·&nbsp; V = M·V_g = <b>"+Vout.toFixed(3)+" V</b><br>"+
+      (Math.abs(D-0.5)<0.0015?"At D = 0.5, M = N₂/N₁ exactly.":D<0.5?"D < 0.5: M is below N₂/N₁.":"D > 0.5: M is above N₂/N₁.")+
+      " Reflected to the primary in state ②: v_L = −(N₁/N₂)V = <b>"+(-Vout/k).toFixed(3)+" V</b>";
+  }
+  [Dd,N1,N2,Vg].forEach(e=>e.addEventListener("input",draw));
+  document.querySelectorAll("[data-d12]").forEach(b=>b.addEventListener("click",()=>{ Dd.value=b.dataset.d12; draw(); }));
+  redraws.push(draw);
+})();
+
+/* ---------------- §13 I_m ---------------- */
+(function(){
+  const Vg=document.getElementById("x13Vg"), N1=document.getElementById("x13N1"), N2=document.getElementById("x13N2"), D=document.getElementById("x13D"), R=document.getElementById("x13R"), r=document.getElementById("r13");
+  function calc(){
+    const vg=num(Vg), k=(num(N2)||1)/(num(N1)||1), d=Math.min(0.99,Math.max(0,num(D))), rl=num(R)||1e-9;
+    const V=k*d/(1-d)*vg, io=V/rl, Im=k/(1-d)*io, ig=d*Im;
+    r.innerHTML=
+      "<div>V = (N₂/N₁)·D/(1 − D)·V_g = "+sig(k,4)+" × "+sig(d/(1-d),4)+" × "+sig(vg,4)+" = <b>"+V.toFixed(3)+" V</b></div>"+
+      "<div>V/R = "+V.toFixed(3)+"/"+sig(rl,4)+" = <b>"+io.toFixed(4)+" A</b></div>"+
+      "<div>I_m = (N₂/N₁)·1/(1 − D)·V/R = "+sig(k,4)+" × "+sig(1/(1-d),4)+" × "+io.toFixed(4)+" = <b>"+Im.toFixed(4)+" A</b></div>"+
+      "<div>⟨i_g⟩ = D·I_m = <b>"+ig.toFixed(4)+" A</b> &nbsp; P_in = V_g⟨i_g⟩ = <b>"+(vg*ig).toFixed(3)+" W</b> &nbsp; P_out = V²/R = <b>"+(V*V/rl).toFixed(3)+" W</b></div>"+
+      "<div class='c'>Charge balance check: (−V/R)D + ((N₁/N₂)I_m − V/R)(1 − D) = "+f((-io)*d+(Im/k-io)*(1-d),6)+"</div>";
+  }
+  [Vg,N1,N2,D,R].forEach(e=>e.addEventListener("input",calc)); calc();
+})();
+
+/* ---------------- §14 / §16 WORKBENCH ---------------- */
+let fbwCount=0;
+function makeFBW(root){
+  const id="fb"+(++fbwCount), R0=root.dataset.r;
+  root.innerHTML =
+   '<canvas id="'+id+'cv" height="470" aria-label="Flyback waveforms: v_L, i_m, i_C and v"></canvas>'+
+   '<div class="controls">'+
+   '<label for="'+id+'R">R (Ω) <input id="'+id+'R" type="range" min="5" max="300" step="1" value="'+R0+'"><output id="'+id+'Ro">'+R0+'</output></label>'+
+   '<label for="'+id+'D">D <input id="'+id+'D" type="range" min="0.05" max="0.85" step="any" value="0.3333333333"><output id="'+id+'Do">0.333</output></label>'+
+   '<label for="'+id+'Vg">V<sub>g</sub> (V) <input id="'+id+'Vg" type="number" value="20" step="1"></label>'+
+   '<label for="'+id+'N1">N<sub>1</sub> <input id="'+id+'N1" type="number" value="50" min="1" step="1"></label>'+
+   '<label for="'+id+'N2">N<sub>2</sub> <input id="'+id+'N2" type="number" value="25" min="1" step="1"></label>'+
+   '<label for="'+id+'Ts">T<sub>s</sub> (µs) <input id="'+id+'Ts" type="number" value="15" min="0.1" step="1"></label>'+
+   '<label for="'+id+'Lm">L<sub>m</sub> (mH) <input id="'+id+'Lm" type="number" value="1" min="0.001" step="0.1"></label>'+
+   '<label for="'+id+'C">C (µF) <input id="'+id+'C" type="number" value="10" min="0.01" step="1"></label>'+
+   '<button class="btn" type="button" data-rst>Running example</button>'+
+   '</div><div class="steps" id="'+id+'r"></div>';
+  const $=s=>document.getElementById(id+s);
+  const cv=$("cv"), r=$("r"), Rr=$("R"), Ro=$("Ro"), Dd=$("D"), Do=$("Do"), Vg=$("Vg"), N1=$("N1"), N2=$("N2"), Ts=$("Ts"), Lm=$("Lm"), C=$("C");
+  function draw(){
+    const p={Vg:num(Vg),N1:num(N1)||1,N2:num(N2)||1,D:+Dd.value,Ts:(num(Ts)||1)*1e-6,Lm:(num(Lm)||1e-3)*1e-3,R:+Rr.value,C:(num(C)||1)*1e-6};
+    Ro.textContent=p.R; Do.textContent=p.D.toFixed(3);
+    const o=solveFly(p), W=o.wave;
+    const {ctx,w,h}=prep(cv);
+    const x0=58, x1=w-10, S=W.S, cyc=2, NN=S*cyc;
+    const X=i=>x0+(x1-x0)*i/NN;
+    const ph=[[18,88],[128,198],[238,308],[348,h-26]];
+    // shade on-intervals
+    ctx.fillStyle=css("--accent-soft");
+    for(let c=0;c<cyc;c++) ctx.fillRect(X(c*S),10,X(c*S+p.D*S)-X(c*S),h-36);
+    function trace(arr, k, lo, hi, lab, col, ticks){
+      const Y=panel(ctx,x0,x1,ph[k][0],ph[k][1],lo,hi,lab,ticks);
+      const pts=[]; for(let i=0;i<NN;i+=2){ pts.push([X(i),Y(arr[i%S])]); } pts.push([X(NN),Y(arr[0])]);
+      poly(ctx,pts,col,2); return Y;
+    }
+    const vmx=niceMax(Math.max(p.Vg,o.n*o.V)*1.1);
+    trace(W.vL,0,-vmx,vmx,"v_L (V)",css("--volt"),[-vmx,0,vmx]);
+    const imx=niceMax(o.imax*1.1);
+    const Yi=trace(W.im,1,0,imx,"i_m (A)",css("--curr"),[0,imx/2,imx]);
+    line(ctx,x0,Yi(o.Im),x1,Yi(o.Im),css("--curr"),1,[4,4]); txt(ctx,"I_m",x1-2,Yi(o.Im)-8,css("--curr"),"right",10);
+    const cmin=Math.min(...W.iC), cmax=Math.max(...W.iC), cm=niceMax(Math.max(Math.abs(cmin),Math.abs(cmax))*1.1);
+    trace(W.iC,2,-cm,cm,"i_C (A)",css("--fund"),[-cm,0,cm]);
+    const vlo=o.vmin-(o.dvSim*0.3||0.01), vhi=o.vmax+(o.dvSim*0.3||0.01);
+    const Yv=trace(W.vv,3,vlo,vhi,"v (V)",css("--volt"),[vlo,vhi]);
+    line(ctx,x0,Yv(o.V),x1,Yv(o.V),css("--muted"),1,[4,4]); txt(ctx,"V",x1-2,Yv(o.V)-8,css("--muted"),"right",10);
+    for(let c=0;c<=cyc;c++) txt(ctx,c===0?"0":c===1?"T_s":"2T_s",X(c*S),h-10,css("--muted"),c===cyc?"right":"center",10);
+    const us=p.Ts*1e6, lm=p.Lm*1e3, cf=p.C*1e6, k=1/o.n;
+    let s = '<div>'+(o.ccm?'<span class="verdict ok">CCM</span>i_m,min = '+o.imin.toFixed(4)+' A &gt; 0':'<span class="verdict mid">DCM</span>i_m hits zero at (D + D₂)T_s = '+((p.D+o.D2)*us).toFixed(2)+' µs, then state ③')+' &nbsp;·&nbsp; boundary at R = '+o.Rcrit.toFixed(1)+' Ω</div>';
+    if(o.ccm){
+      s+='<div>V = (N₂/N₁)·D/(1 − D)·V_g = '+sig(k,4)+' × '+(p.D/(1-p.D)).toFixed(4)+' × '+sig(p.Vg,4)+' = <b>'+o.V.toFixed(4)+' V</b></div>';
+      s+='<div>I_m = (N₂/N₁)·1/(1 − D)·V/R = '+sig(k,4)+' × '+(1/(1-p.D)).toFixed(4)+' × '+(o.V/p.R).toFixed(4)+' = <b>'+o.Im.toFixed(4)+' A</b></div>';
+      s+='<div>Δi_m = V_gDT_s/L_m = '+sig(p.Vg,4)+' × '+p.D.toFixed(4)+' × '+sig(us,4)+' µs / '+sig(lm,4)+' mH = <b>'+o.di.toFixed(4)+' A</b> &nbsp; (i_m from '+o.imin.toFixed(4)+' to '+o.imax.toFixed(4)+' A)</div>';
+      s+='<div>Δv = VDT_s/(RC) = '+o.V.toFixed(3)+' × '+p.D.toFixed(4)+' × '+sig(us,4)+' µs / ('+p.R+' Ω × '+sig(cf,4)+' µF) = <b>'+o.dvF.toFixed(4)+' V</b>'+(Math.abs(o.dvSim-o.dvF)>0.02*o.dvF?' <span class="c">(waveform: '+o.dvSim.toFixed(4)+' V, because i_C turns negative before the end of state ②; the lecture formula assumes it doesn\'t)</span>':'')+'</div>';
+      s+='<div>V_Q1,max = V_g + (N₁/N₂)(V + Δv/2) = '+sig(p.Vg,4)+' + '+sig(o.n,4)+' × ('+o.V.toFixed(3)+' + '+(o.dvF/2).toFixed(4)+') = <b>'+o.vqF.toFixed(3)+' V</b></div>';
+    } else {
+      s+='<div>V = V_g D √(R T_s / 2L_m) = '+sig(p.Vg,4)+' × '+p.D.toFixed(4)+' × √('+p.R+' × '+sig(us,4)+' µs / '+sig(2*lm,4)+' mH) = <b>'+o.V.toFixed(4)+' V</b> <span class="c">(guide\'s DCM result)</span></div>';
+      s+='<div>i_pk = V_gDT_s/L_m = <b>'+o.di.toFixed(4)+' A</b> &nbsp; D₂ = (N₂/N₁)(V_g/V)D = <b>'+o.D2.toFixed(4)+'</b> &nbsp; state ③ lasts '+(1-p.D-o.D2).toFixed(4)+' T_s</div>';
+      s+='<div>Power check: ½L_m i_pk² / T_s = <b>'+(0.5*p.Lm*o.di*o.di/p.Ts).toFixed(4)+' W</b> = V²/R = <b>'+(o.V*o.V/p.R).toFixed(4)+' W</b></div>';
+      s+='<div>Δv (from the waveform) = <b>'+o.dvSim.toFixed(4)+' V</b> &nbsp; V_Q1,max ≈ V_g + (N₁/N₂)·v_peak = <b>'+o.vqSim.toFixed(3)+' V</b> <span class="c">(the CCM formulas don\'t apply)</span></div>';
+    }
+    r.innerHTML=s;
+  }
+  [Rr,Dd,Vg,N1,N2,Ts,Lm,C].forEach(e=>e.addEventListener("input",draw));
+  root.querySelector("[data-rst]").addEventListener("click",()=>{ Rr.value=R0; Dd.value=1/3; Vg.value=20; N1.value=50; N2.value=25; Ts.value=15; Lm.value=1; C.value=10; draw(); });
+  redraws.push(draw);
+}
+document.querySelectorAll(".fbw").forEach(makeFBW);
+
+/* ---------------- §15 TRADE-OFF ---------------- */
+(function(){
+  const cv=document.getElementById("cv15"), Nn=document.getElementById("x15n"), No=document.getElementById("x15no"), Vg=document.getElementById("x15Vg"), V=document.getElementById("x15V"), R=document.getElementById("x15R"), r=document.getElementById("r15");
+  const Ts=15e-6, C=10e-6;
+  function at(n){ const vg=num(Vg), v=num(V), rl=num(R)||1e-9, M=v/(vg||1e-9), x=n*M, D=x/(1+x), Im=(1/n)/(1-D)*v/rl, dv=v*D*Ts/(rl*C), vq=vg+n*(v+dv/2); return {M,D,Im,dv,vq}; }
+  function draw(){
+    const {ctx,w,h}=prep(cv);
+    const n=+Nn.value; No.textContent=n.toFixed(2);
+    const x0=58, x1=w-12, nmin=0.5, nmax=8, X=q=>x0+(x1-x0)*(q-nmin)/(nmax-nmin);
+    const pts=[]; for(let i=0;i<=300;i++){ const q=nmin+(nmax-nmin)*i/300; pts.push([q,at(q)]); }
+    const imx=niceMax(Math.max(...pts.map(p=>p[1].Im))*1.05), vqx=niceMax(Math.max(...pts.map(p=>p[1].vq))*1.05);
+    const Yi=panel(ctx,x0,x1,20,128,0,imx,"I_m (A)",[0,imx/2,imx]);
+    const Yq=panel(ctx,x0,x1,164,h-30,0,vqx,"V_Q1,max (V), horizontal axis N₁/N₂",[0,vqx/2,vqx]);
+    poly(ctx,pts.map(p=>[X(p[0]),Yi(p[1].Im)]),css("--curr"),2.4);
+    poly(ctx,pts.map(p=>[X(p[0]),Yq(p[1].vq)]),css("--volt"),2.4);
+    const a=at(n);
+    line(ctx,X(n),14,X(n),h-30,css("--ink"),1,[3,3]);
+    [[Yi(a.Im),css("--curr")],[Yq(a.vq),css("--volt")]].forEach(([y,c])=>{ ctx.beginPath(); ctx.arc(X(n),y,5,0,2*Math.PI); ctx.fillStyle=c; ctx.fill(); });
+    [1,2,4,6,8].forEach(q=>txt(ctx,String(q),X(q),h-14,css("--muted"),"center",10));
+    r.innerHTML=
+      "<div>M = V/V_g = "+sig(num(V),4)+"/"+sig(num(Vg),4)+" = "+a.M.toFixed(4)+" &nbsp; D/(1 − D) = (N₁/N₂)M = "+(n*a.M).toFixed(4)+" &nbsp;⇒&nbsp; D = <b>"+a.D.toFixed(4)+"</b></div>"+
+      "<div>I_m = (N₂/N₁)·1/(1 − D)·V/R = <b>"+a.Im.toFixed(4)+" A</b></div>"+
+      "<div>Δv = VDT_s/(RC) = "+a.dv.toFixed(4)+" V &nbsp; V_Q1,max = V_g + (N₁/N₂)(V + Δv/2) = <b>"+a.vq.toFixed(3)+" V</b></div>"+
+      "<div class='c'>Assumes CCM. Bigger N₁/N₂: lower I_m, higher V_Q1,max.</div>";
+  }
+  [Nn,Vg,V,R].forEach(e=>e.addEventListener("input",draw)); redraws.push(draw);
+})();
+
+/* ---------------- KEEP LABEL TEXT TOGETHER ---------------- */
+document.querySelectorAll(".controls label").forEach(lb=>{
+  const kids=[...lb.childNodes], cut=kids.findIndex(n=>n.nodeType===1 && (n.tagName==="INPUT"||n.tagName==="OUTPUT"));
+  if(cut<=0) return; const sp=document.createElement("span");
+  kids.slice(0,cut).forEach(n=>sp.appendChild(n)); lb.insertBefore(sp, lb.firstChild);
+  sp.innerHTML = sp.innerHTML.trim();
+});
+
+/* ---------------- MINUS SIGNS IN READOUTS ---------------- */
+function fixMinus(root){ const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT); let n; while((n=tw.nextNode())){ if(/-(?=\d)/.test(n.data)) n.data=n.data.replace(/-(?=\d)/g,"\u2212"); } }
+const mo=new MutationObserver(ms=>ms.forEach(m=>{ const t=m.target.closest && m.target.closest(".readout,.steps"); if(t) fixMinus(t); }));
+document.querySelectorAll(".readout,.steps").forEach(el=>{ fixMinus(el); mo.observe(el,{childList:true,subtree:true}); });
+
+/* ---------------- INIT + THEME ---------------- */
+function drawAll(){ redraws.forEach(fn=>{ try{ fn(); }catch(e){ console.error(e); } }); }
+drawAll();
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(drawAll,80); });
+try{ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll); }catch(e){}
+new MutationObserver(()=>{ drawAll(); }).observe(document.documentElement,{attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,1274 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>DC-Link Power Balance Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --ph3:#6B4FB3; --chg:#DCEFE3; --dis:#F8DEDA; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --ph3:#B49CFF; --chg:#173A26; --dis:#3E2020; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --ph3:#B49CFF; --chg:#173A26; --dis:#3E2020; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num, th.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+td.nil{color:var(--muted); text-align:right}
+.hlcol{background:var(--hl)}
+tr.dim td{opacity:.38}
+.tagpill{display:inline-block; font-family:var(--display); font-size:11px; font-weight:700; letter-spacing:.04em; padding:1px 7px; border-radius:99px; margin-left:6px; vertical-align:1px}
+.tagpill.first{background:var(--accent-soft); color:var(--accent)}
+.tagpill.big{background:var(--bad-bg); color:var(--bad)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls label[hidden]{display:none}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{color:var(--muted)}
+
+/* H-bridge svg */
+.hbbar{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:8px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+/* lecture 8 additions */
+.note-box{background:var(--accent-soft); border:1px solid var(--line); border-radius:8px; padding:10px 14px; font-size:15.5px; margin:0 0 8px; max-width:68ch}
+.note-box b{font-family:var(--display)}
+.beyond{display:inline-block; font-family:var(--display); font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:1px 7px; border-radius:99px; background:var(--surface-2); color:var(--muted); margin-right:6px; vertical-align:1px}
+#eqc{width:100%; max-width:520px; display:block; margin:0 auto}
+#eqc .w{stroke:var(--muted); stroke-width:2.2; fill:none; stroke-linecap:round}
+#eqc .comp{fill:var(--surface); stroke:var(--muted); stroke-width:2}
+#eqc .lbl{fill:var(--muted); font-family:var(--mono); font-size:12px}
+#eqc .lbl.ink{fill:var(--ink); font-weight:600}
+#eqc .pw{stroke-linecap:round; fill:none}
+#eqc .pd{stroke:var(--fund)} #eqc .pt{stroke:var(--volt)} #eqc .pc{stroke:var(--curr)}
+#eqc marker path.pd{fill:var(--fund)} #eqc marker path.pt{fill:var(--volt)} #eqc marker path.pc{fill:var(--curr)}
+#eqc .val{font-family:var(--mono); font-size:12px; font-weight:600}
+#eqc .val.pd{fill:var(--fund)} #eqc .val.pt{fill:var(--volt)} #eqc .val.pc{fill:var(--curr)}
+#eqc .capfill{fill:var(--accent-soft); stroke:none}
+.state{font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; display:inline-block}
+.state.dis{background:var(--dis); color:var(--bad)}
+.state.chg{background:var(--chg); color:var(--good)}
+.state.mid{background:var(--surface-2); color:var(--muted)}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <h2>Part 1 · Single-phase power</h2>
+  <ol>
+    <li><a href="#s1">1 Setup and assumptions <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 Instantaneous power <span class="chip" data-chip="q2"></span></a></li>
+  </ol>
+  <h2>Part 2 · Sizing the DC link</h2>
+  <ol>
+    <li><a href="#s3">3 Why a DC-link capacitor <span class="chip" data-chip="q3"></span></a></li>
+    <li><a href="#s4">4 Capacitor power p<sub>c</sub> <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 Energy swing ΔE <span class="chip" data-chip="q5"></span></a></li>
+    <li><a href="#s6">6 Sizing C <span class="chip" data-chip="q6"></span></a></li>
+  </ol>
+  <h2>Part 3 · Three-phase</h2>
+  <ol>
+    <li><a href="#s7">7 The 2ω terms cancel <span class="chip" data-chip="q7"></span></a></li>
+    <li><a href="#s8">8 What that buys you <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Reactive power case <span class="chip" data-chip="q9"></span></a></li>
+    <li><a href="#s10">10 Single vs three phase <span class="chip" data-chip="q10"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">ENEL 585 · Lecture 8 · Study guide</div>
+  <h1>Power balance and the DC link: where the 120 Hz ripple goes</h1>
+  <p class="lede">A single-phase inverter delivers power to the AC side in pulses, twice per line cycle. The DC side can't supply those pulses on its own, so a <b>DC-link capacitor</b> soaks them up. This lecture finds that pulsation, sizes the capacitor for it, and shows why a <b>three-phase</b> inverter doesn't have the problem at all.</p>
+  <div class="chain" aria-label="Power path from DC source to AC side">
+    <div class="blk"><b>DC source</b><span>not stiff: PV, battery + L<sub>s</sub>, rectifier</span><span class="secs">§3</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>DC-link C</b><span>energy buffer, holds v<sub>d</sub></span><span class="secs">§4 to §6</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Bridge</b><span>draws i<sub>d,inv</sub> pulses</span><span class="secs">§2, §3</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>AC side</b><span>p<sub>t</sub> = P + P cos 2(ωt+θ)</span><span class="secs">§1, §2</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Three-phase</b><span>2ω terms cancel</span><span class="secs">§7 to §10</span></div>
+  </div>
+  <p class="note-box" style="margin-top:20px"><b>About the numbers.</b> Lecture 8's examples are derivations with no numbers in them. Every derivation is here step by step. To give the calculators something real to reproduce, they load with the inverter from your <i>AC Fundamentals</i> notes: <b>340 V peak, 29.5 A peak, P ≈ 5.02 kW, v<sub>d</sub> = 425 V, 60 Hz</b>. The <b>5% ripple spec (Δv<sub>d</sub> = 21.25 V)</b> is added for practice and is not from either lecture.</p>
+</header>
+
+<h2 class="part">Part 1 · Single-phase power balance</h2>
+
+<!-- 1 SETUP -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>The setup and its two assumptions</h3>
+<p>Start with the full-bridge inverter from Lecture 7. A DC source v<sub>d</sub> feeds the bridge with current i<sub>d</sub>. The bridge makes the AC voltage v<sub>t</sub> and pushes AC current i<sub>t</sub> out of node A.</p>
+<p>The lecture makes two simplifying assumptions so the main effect is easy to see:</p>
+<ol class="plain">
+<li><b>Ideal AC-side filter.</b> The output current is a pure sinusoid. No switching harmonics, only the fundamental.</li>
+<li><b>Unity power factor.</b> v<sub>t</sub> and i<sub>t</sub> are exactly in phase (same θ), so reactive power Q = 0. The converter only moves real power.</li>
+</ol>
+<div class="eq">
+  <span class="row"><i>v<sub>t</sub></i> = <i>V̂</i><sub>t,1</sub> cos(<i>ωt</i> + <i>θ</i>), &nbsp; <i>i<sub>t</sub></i> = <i>Î</i><sub>t,1</sub> cos(<i>ωt</i> + <i>θ</i>) <span class="note">same θ: unity pf</span></span>
+  <span class="row"><i>P</i> = ½ <i>V̂</i><sub>t,1</sub> <i>Î</i><sub>t,1</sub> <span class="note">average power, from peak values</span></span>
+</div>
+<details class="work" open><summary>Practice numbers used in this guide (from your AC Fundamentals notes)</summary><div class="body">
+<ul class="plain">
+<li>V̂<sub>t,1</sub> = V̂<sub>g</sub> = 340 V, Î<sub>t,1</sub> ≈ 29.5 A, 60 Hz, v<sub>d</sub> = 425 V (so m<sub>a</sub> = 340/425 = 0.800).</li>
+<li>P = ½ × 340 × 29.5 = 5015 W ≈ <b>5.02 kW</b>, which matches the P<sub>ac</sub> ≈ 5.02 kW in those notes.</li>
+</ul>
+</div></details>
+<div class="callout analogy"><span class="tag">Analogy · the frictionless physics problem</span>
+<p>In first-year physics you ignore friction so you can see the core idea (a ball rolling forever). These two assumptions do the same job. Real inverters have some harmonics and some reactive power, but those would only blur the one effect this lecture is about: <b>AC power arrives in pulses</b>.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The ½ in P.</b> With peak values, P = ½V̂Î. Forgetting the ½ doubles every answer that follows (ΔE, C, I<sub>d</sub>). With RMS values it's P = V<sub>rms</sub>I<sub>rms</sub>, no ½.</li>
+<li><b>The assumptions don't cause the ripple, and removing them won't remove it.</b> The pulsation comes from multiplying two sinusoids. It's there with a perfect filter.</li>
+<li><b>θ is common to v and i.</b> It only slides everything in time. It doesn't change P or the size of the ripple.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: setup and assumptions"></div>
+</section>
+
+<!-- 2 INSTANTANEOUS POWER -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>Instantaneous power: a steady P plus a 2ω pulsation</h3>
+<p>Multiply voltage by current at every instant and you get the power actually flowing at that moment. For two in-phase sinusoids, that product is always positive but it is <b>not constant</b>. It swings between 0 and 2P, at twice the line frequency.</p>
+<div class="eq">
+  <span class="row"><i>p</i>(<i>t</i>) = <i>P</i> + <i>P</i> cos(2(<i>ωt</i> + <i>θ</i>)) <span class="note">average + twice line-frequency</span></span>
+  <span class="row">range 0 to 2<i>P</i> · pulsation frequency 2<i>f</i> (120 Hz at 60 Hz) · pulsation amplitude <i>P</i></span>
+  <span class="row"><i>I<sub>d</sub></i> = <i>P</i>/<i>V<sub>d</sub></i> <span class="note">average DC-side current</span></span>
+</div>
+<details class="work" open><summary>Worked derivation (lecture slide 5)</summary><div class="body">
+<div class="steps">
+<div>p(t) = v<sub>t</sub>(t) · i<sub>t</sub>(t)</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp; = V̂<sub>t,1</sub> cos(ωt+θ) · Î<sub>t,1</sub> cos(ωt+θ)</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp; = V̂<sub>t,1</sub>Î<sub>t,1</sub> cos²(ωt+θ) <span class="c">  same angle, so it's a square</span></div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp; = ½V̂<sub>t,1</sub>Î<sub>t,1</sub> (1 + cos(2(ωt+θ))) <span class="c">  cos²x = ½(1 + cos 2x)</span></div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp; = P + P cos(2(ωt+θ)) <span class="c">  P = ½V̂<sub>t,1</sub>Î<sub>t,1</sub></span></div>
+</div>
+<p style="margin-top:12px">Practice numbers: P = 5.02 kW, so p(t) swings from 0 up to 2P = V̂Î = 340 × 29.5 = <b>10.03 kW</b> and back, 120 times a second.</p>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: v<sub>t</sub> × i<sub>t</sub> = p<sub>t</sub></div>
+  <canvas id="cvPow" height="330" aria-label="Voltage, current and instantaneous power waveforms"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>v<sub>t</sub></span><span><i style="background:var(--curr)"></i>i<sub>t</sub></span><span><i style="background:var(--fund)"></i>p<sub>t</sub></span><span><i style="background:var(--muted)"></i>average P</span></div>
+  <div class="controls">
+    <label for="pwV">V̂<sub>t,1</sub> <input id="pwV" type="range" min="0" max="400" step="5" value="340"><output id="pwVOut">340 V</output></label>
+    <label for="pwI">Î<sub>t,1</sub> <input id="pwI" type="range" min="0" max="40" step="0.5" value="29.5"><output id="pwIOut">29.5 A</output></label>
+    <label for="pwT">θ <input id="pwT" type="range" min="-90" max="90" step="5" value="0"><output id="pwTOut">0°</output></label>
+    <div class="seg" role="group" aria-label="Line frequency">
+      <button type="button" id="pw60" aria-pressed="true">60 Hz</button>
+      <button type="button" id="pw50" aria-pressed="false">50 Hz</button>
+    </div>
+  </div>
+  <div class="readout" id="pwRead"></div>
+</div>
+
+<p>The lecture's last point on this slide: the bridge only connects i<sub>t</sub> to the DC side while a diagonal pair (S<sub>1</sub>S<sub>4</sub> or S<sub>2</sub>S<sub>3</sub>) conducts. So the current the bridge pulls from the DC side, i<sub>d,inv</sub>, is a <b>pulse train</b>. Averaged over each switching period it follows p<sub>t</sub>/V<sub>d</sub>, which wiggles at 2ω around <b>I<sub>d</sub> = P/V<sub>d</sub></b>. Section 3 has a demo of it.</p>
+
+<div class="callout analogy"><span class="tag">Analogy · pedaling a bike</span>
+<p>Your pedal power isn't steady. It peaks when each foot pushes down and drops to almost nothing when the cranks are vertical. <b>Two pushes per revolution</b>, so the power pulses at twice the crank rate, even though your average power is steady. One line cycle is one revolution: the positive half and the negative half each deliver a push.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>2f, not f.</b> The pulsation is at 120 Hz for a 60 Hz system (100 Hz for 50 Hz). Power is v·i, and both flip sign together, so p repeats every <i>half</i> cycle.</li>
+<li><b>The pulsation's amplitude is P itself</b>, not ½P and not 2P. p goes from P − P = 0 to P + P = 2P.</li>
+<li><b>At unity pf, p is never negative.</b> v and i always have the same sign. Power flows one way; it just flows unevenly.</li>
+<li><b>Two different DC currents.</b> I<sub>d</sub> = P/V<sub>d</sub> is the average. The bridge's local average p<sub>t</sub>/V<sub>d</sub> swings from 0 to 2P/V<sub>d</sub>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: instantaneous power"></div>
+</section>
+
+<h2 class="part">Part 2 · Sizing the DC-link capacitor</h2>
+
+<!-- 3 WHY CAP -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>Why a DC-link capacitor?</h3>
+<p>Section 2 pretended v<sub>d</sub> was a <b>stiff</b> source: a perfect voltage that can supply any current, including a 120 Hz pulsation. Real DC sources aren't like that. The lecture shows four examples:</p>
+<div class="tbl"><table>
+<thead><tr><th>DC side</th><th>Why it isn't stiff</th></tr></thead>
+<tbody>
+<tr><td>PV panel</td><td>Its voltage depends on the current you draw; pulsing the current pulls the panel off its operating point.</td></tr>
+<tr><td>Battery pack (cell, R<sub>b</sub>) through series L<sub>s</sub></td><td>R<sub>b</sub> and L<sub>s</sub> drop voltage whenever the current changes, so a pulsing current means a bouncing v<sub>d</sub>.</td></tr>
+<tr><td>Machine through a three-leg active rectifier</td><td>The rectifier regulates an average; it can't track a 120 Hz demand on its own.</td></tr>
+<tr><td>Resistive load (power flowing AC → DC)</td><td>Here <b>i<sub>d</sub> is negative</b>: the converter works as a rectifier. A resistor wants a steady voltage, not pulses.</td></tr>
+</tbody></table></div>
+<p>The fix is a <b>DC-link capacitor C</b> across the DC terminals. It is the intermediate energy store: it absorbs and releases the difference between DC-side and AC-side power. Two consequences:</p>
+<ol class="plain">
+<li><b>The ripple on v<sub>d</sub> stays small.</b> This matters because the bridge passes any v<sub>d</sub> ripple straight on to the AC voltage (v<sub>t</sub> is built from ±v<sub>d</sub>).</li>
+<li><b>The source current i<sub>d</sub> stays nearly DC.</b> By KCL at the top node, the capacitor supplies the pulsating part of what the bridge draws.</li>
+</ol>
+<div class="eq">
+  <span class="row"><i>i<sub>d</sub></i> + <i>i<sub>c</sub></i> = <i>i</i><sub>d,inv</sub> <span class="note">i<sub>c</sub> leaves the capacitor, i<sub>d,inv</sub> enters the bridge</span></span>
+  <span class="row">If <i>i<sub>d</sub></i> = <i>I<sub>d</sub></i> (constant), then <i>i<sub>c</sub></i> = <i>i</i><sub>d,inv</sub> − <i>I<sub>d</sub></i>: everything except the average.</span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: what the bridge draws, and who supplies it</div>
+  <canvas id="cvId" height="400" aria-label="Bridge DC current pulse train, capacitor current and source current"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>i<sub>d,inv</sub> (pulses)</span><span><i style="background:var(--curr)"></i>local average p<sub>t</sub>/V<sub>d</sub></span><span><i style="background:var(--fund)"></i>I<sub>d</sub> = P/V<sub>d</sub></span></div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Capacitor">
+      <button type="button" id="idCap" aria-pressed="true">With DC-link C</button>
+      <button type="button" id="idNo" aria-pressed="false">No capacitor</button>
+    </div>
+    <div class="seg" role="group" aria-label="PWM type">
+      <button type="button" id="idUni" aria-pressed="true">Unipolar</button>
+      <button type="button" id="idBi" aria-pressed="false">Bipolar</button>
+    </div>
+    <label for="idMf">m<sub>f</sub> <input id="idMf" type="range" min="7" max="41" step="2" value="15"><output id="idMfOut">15</output></label>
+  </div>
+  <div class="readout" id="idRead"></div>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · a water tower</span>
+<p>A town's pumps push water in at a steady rate. Households draw it in bursts (morning showers, evening dishes). The water tower sits between them: it fills when demand is low and drains when demand is high, so the pumps never see the bursts. The <b>capacitor is the tower</b>, and <b>v<sub>d</sub> is the water level</b>, which rises and falls a little but stays near its setpoint.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Direction of i<sub>c</sub>.</b> In the lecture's model i<sub>c</sub> leaves the capacitor toward the bridge. i<sub>c</sub> &gt; 0 means the capacitor is discharging.</li>
+<li><b>The capacitor has two jobs:</b> keep v<sub>d</sub> steady (for the AC voltage) and keep i<sub>d</sub> steady (for the source). Same component, two benefits.</li>
+<li><b>i<sub>d</sub> negative isn't an error.</b> With a resistive load on the DC side, power flows from AC to DC, and the sign convention makes i<sub>d</sub> negative.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: why a DC-link capacitor"></div>
+</section>
+
+<!-- 4 PC -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Capacitor power: p<sub>c</sub> = p<sub>t</sub> − p<sub>d</sub></h3>
+<p>Now use the equivalent circuit: a DC current source i<sub>d</sub>, the capacitor C, and the bridge. Power balance at the DC link says the capacitor makes up the difference between what the bridge takes and what the source gives:</p>
+<div class="eq">
+  <span class="row"><i>p<sub>c</sub></i>(<i>t</i>) = <i>p<sub>t</sub></i>(<i>t</i>) − <i>p<sub>d</sub></i>(<i>t</i>) <span class="note">p<sub>c</sub> = power delivered by the capacitor</span></span>
+  <span class="row">With <i>p<sub>d</sub></i> = <i>P</i>: &nbsp; <i>p<sub>c</sub></i> = <i>P</i> cos(2(<i>ωt</i> + <i>θ</i>)) <span class="note">the whole 2ω term</span></span>
+</div>
+<p>The capacitor <b>discharges while p<sub>t</sub> &gt; P</b> (it helps the source) and <b>charges while p<sub>t</sub> &lt; P</b> (the source's spare power fills it). Over a full cycle it gives back exactly what it took, so its average power is zero.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: scrub through time and watch the power flows</div>
+  <svg id="eqc" viewBox="0 0 520 200" role="img" aria-labelledby="eqcTitle">
+    <title id="eqcTitle">Equivalent circuit with power arrows for the source, capacitor and bridge</title>
+    <defs>
+      <marker id="mPd" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path class="pd" d="M0,0 L10,5 L0,10 z"/></marker>
+      <marker id="mPt" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path class="pt" d="M0,0 L10,5 L0,10 z"/></marker>
+      <marker id="mPc" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path class="pc" d="M0,0 L10,5 L0,10 z"/></marker>
+    </defs>
+    <line class="w" x1="50" y1="60" x2="370" y2="60"/>
+    <line class="w" x1="50" y1="170" x2="370" y2="170"/>
+    <line class="w" x1="50" y1="60" x2="50" y2="96"/>
+    <line class="w" x1="50" y1="134" x2="50" y2="170"/>
+    <circle class="comp" cx="50" cy="115" r="19"/>
+    <line class="w" x1="50" y1="126" x2="50" y2="104" style="stroke:var(--ink)"/>
+    <path d="M44,108 L50,100 L56,108" style="fill:none;stroke:var(--ink);stroke-width:2"/>
+    <text class="lbl ink" x="20" y="119" text-anchor="middle">i<tspan baseline-shift="sub" font-size="9">d</tspan></text>
+    <line class="w" x1="140" y1="60" x2="140" y2="108"/>
+    <line class="w" x1="140" y1="122" x2="140" y2="170"/>
+    <rect class="capfill" id="capLevel" x="124" y="108" width="32" height="14"/>
+    <line class="w" x1="122" y1="108" x2="158" y2="108" style="stroke:var(--ink);stroke-width:3"/>
+    <line class="w" x1="122" y1="122" x2="158" y2="122" style="stroke:var(--ink);stroke-width:3"/>
+    <text class="lbl ink" x="112" y="119" text-anchor="end">C</text>
+    <rect class="comp" x="290" y="80" width="80" height="70" rx="6"/>
+    <text class="lbl ink" x="330" y="112" text-anchor="middle">bridge</text>
+    <text class="lbl" x="330" y="130" text-anchor="middle">+ filter</text>
+    <line class="w" x1="370" y1="115" x2="390" y2="115"/>
+    <text class="lbl ink" x="494" y="119" text-anchor="middle">AC</text>
+    <text class="lbl" x="210" y="188" text-anchor="middle">v<tspan baseline-shift="sub" font-size="9">d</tspan> across C</text>
+    <line id="arPd" class="pw pd" x1="70" y1="40" x2="118" y2="40" marker-end="url(#mPd)"/>
+    <text id="txPd" class="val pd" x="94" y="26" text-anchor="middle">p_d</text>
+    <line id="arPc" class="pw pc" x1="172" y1="135" x2="172" y2="80" marker-end="url(#mPc)"/>
+    <text id="txPc" class="val pc" x="182" y="112">p_c</text>
+    <line id="arPt" class="pw pt" x1="395" y1="115" x2="462" y2="115" marker-end="url(#mPt)"/>
+    <text id="txPt" class="val pt" x="430" y="96" text-anchor="middle">p_t</text>
+  </svg>
+  <canvas id="cvPc" height="330" aria-label="p_t with average, capacitor power p_c and DC-link voltage v_d over two line cycles"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>p<sub>t</sub></span><span><i style="background:var(--fund)"></i>p<sub>d</sub> = P</span><span><i style="background:var(--curr)"></i>p<sub>c</sub></span><span><i style="background:var(--ink)"></i>v<sub>d</sub></span><span><i style="background:var(--dis); height:10px"></i>discharging</span><span><i style="background:var(--chg); height:10px"></i>charging</span></div>
+  <div class="controls">
+    <label for="pcT">time <input id="pcT" type="range" min="0" max="1" step="0.0025" value="0.1"><output id="pcTOut"></output></label>
+    <button class="btn" type="button" id="pcPlay">Play</button>
+  </div>
+  <div class="readout" id="pcRead" aria-live="polite"></div>
+</div>
+<p class="note-box">This demo uses v<sub>t</sub> = V̂ sin ωt, the same as the lecture's plots, so p<sub>t</sub> starts at 0. In the lecture's formula that's θ = −90°. The v<sub>d</sub> trace uses the practice capacitor from §6 (C = 1.474 mF, Δv<sub>d</sub> = 21.25 V).</p>
+<div class="callout analogy"><span class="tag">Analogy · a savings account</span>
+<p>You earn a steady salary P (the DC source). Your spending p<sub>t</sub> swings between 0 and 2P. When you spend more than you earn, the difference comes out of savings (the capacitor discharges). When you spend less, the surplus goes back in. Your balance (the stored energy, and so v<sub>d</sub>) wobbles, but on average it stays put.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Sign convention.</b> p<sub>c</sub> as defined here is power <i>delivered by</i> the capacitor. p<sub>c</sub> &gt; 0 means discharging, and v<sub>d</sub> is falling.</li>
+<li><b>v<sub>d</sub> peaks don't line up with p<sub>t</sub> peaks.</b> v<sub>d</sub> is highest at the <i>end</i> of charging (when p<sub>t</sub> rises back through P) and lowest at the end of discharging (when p<sub>t</sub> falls back through P). Scrub the demo to see it.</li>
+<li><b>Average p<sub>c</sub> = 0.</b> A capacitor stores energy; it doesn't produce or consume it.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: capacitor power"></div>
+</section>
+
+<!-- 5 DELTA E -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>The energy swing ΔE = P/ω</h3>
+<p>How much energy does the capacitor have to give up in one discharge stretch? It's the area under one positive lobe of the 2ω pulsation. The lecture writes the lobe as P sin(2ωt), which is positive from t = 0 to t = π/(2ω):</p>
+<div class="eq">
+  <span class="row">Δ<i>E</i> = ∫<sub>0</sub><sup>π/2ω</sup> <i>P</i> sin(2<i>ωt</i>) d<i>t</i> = <span class="frac"><span><i>P</i></span><span>2<i>ω</i></span></span>[1 − cos π] = <span class="frac"><span><i>P</i></span><span><i>ω</i></span></span></span>
+  <span class="row">Lobe length π/(2ω) = <i>T</i>/4, a quarter of the line period (4.17 ms at 60 Hz)</span>
+</div>
+<details class="work" open><summary>Worked integral (lecture slide 9), step by step</summary><div class="body">
+<div class="steps">
+<div>ΔE = ∫₀^(π/2ω) P sin(2ωt) dt</div>
+<div>&nbsp;&nbsp;&nbsp; = P [ −cos(2ωt) / (2ω) ]₀^(π/2ω) <span class="c">  antiderivative of sin(2ωt) is −cos(2ωt)/(2ω)</span></div>
+<div>&nbsp;&nbsp;&nbsp; = (P/2ω) [ −cos(π) + cos(0) ] <span class="c">  2ω · π/(2ω) = π</span></div>
+<div>&nbsp;&nbsp;&nbsp; = (P/2ω) [ 1 − cos π ] = (P/2ω)(1 + 1)</div>
+<div>&nbsp;&nbsp;&nbsp; = P/ω</div>
+</div>
+<p style="margin-top:12px">Practice numbers: ω = 2π(60) = 377.0 rad/s, so ΔE = 5020/377.0 = <b>13.32 J</b>.</p>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: the shaded area is ΔE</div>
+  <canvas id="cvDE" height="220" aria-label="Capacitor power pulsation with one lobe shaded"></canvas>
+  <div class="controls">
+    <label for="deP">P <input id="deP" type="range" min="500" max="10000" step="10" value="5020"><output id="dePOut">5.02 kW</output></label>
+    <div class="seg" role="group" aria-label="Line frequency">
+      <button type="button" id="de60" aria-pressed="true">60 Hz</button>
+      <button type="button" id="de50" aria-pressed="false">50 Hz</button>
+    </div>
+  </div>
+  <div class="readout" id="deRead"></div>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · the longest overspend</span>
+<p>Back to the savings account. The size of the dip in your balance isn't set by how much you spend at the worst instant. It's set by the <b>total overspend</b> during one stretch of spending more than you earn: the area of one lobe.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Use ω, not f and not 2ω.</b> ΔE = P/ω with ω = 2πf in rad/s. The 2 from 2ω cancels against the "1 − cos π = 2". Using f gives an answer 2π times too big; using 2ω gives half.</li>
+<li><b>Why only one lobe?</b> Over a full ripple cycle the net energy is zero. The voltage swing depends on how much energy moves one way between the minimum and the maximum, which is one lobe.</li>
+<li><b>Lower line frequency = more energy.</b> At 50 Hz each lobe lasts longer, so ΔE is 60/50 = 1.2× bigger for the same P.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: energy swing"></div>
+</section>
+
+<!-- 6 SIZING C -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Sizing the capacitor for a ripple spec</h3>
+<p>You're told the peak-to-peak ripple must be at most Δv<sub>d</sub>. The capacitor's stored energy is E = ½Cv<sub>d</sub>². Moving ΔE in or out swings the voltage from v<sub>d,min</sub> = v<sub>d</sub> − Δv<sub>d</sub>/2 to v<sub>d,max</sub> = v<sub>d</sub> + Δv<sub>d</sub>/2:</p>
+<div class="eq">
+  <span class="row">Δ<i>E</i> = ½<i>C</i>[(<i>v<sub>d</sub></i> + Δ<i>v<sub>d</sub></i>/2)² − (<i>v<sub>d</sub></i> − Δ<i>v<sub>d</sub></i>/2)²] = ½<i>C</i>[2<i>v<sub>d</sub></i>Δ<i>v<sub>d</sub></i>] = <i>C v<sub>d</sub></i> Δ<i>v<sub>d</sub></i></span>
+  <span class="row"><i>C</i> = <span class="frac"><span>Δ<i>E</i></span><span><i>v<sub>d</sub></i> Δ<i>v<sub>d</sub></i></span></span> &nbsp;⇒&nbsp; <b><i>C</i> ≥ <span class="frac"><span><i>P</i>/<i>ω</i></span><span><i>v<sub>d</sub></i> Δ<i>v<sub>d</sub></i></span></span></b> <span class="note">the boxed result</span></span>
+</div>
+<details class="work" open><summary>Worked derivation (lecture slide 9), step by step</summary><div class="body">
+<div class="steps">
+<div>v<sub>d,max</sub>² − v<sub>d,min</sub>² = (v<sub>d</sub> + Δv<sub>d</sub>/2)² − (v<sub>d</sub> − Δv<sub>d</sub>/2)²</div>
+<div>&nbsp;&nbsp; = [v<sub>d</sub>² + v<sub>d</sub>Δv<sub>d</sub> + Δv<sub>d</sub>²/4] − [v<sub>d</sub>² − v<sub>d</sub>Δv<sub>d</sub> + Δv<sub>d</sub>²/4]</div>
+<div>&nbsp;&nbsp; = 2v<sub>d</sub>Δv<sub>d</sub> <span class="c">  squares cancel exactly, no approximation</span></div>
+<div>ΔE = ½C · 2v<sub>d</sub>Δv<sub>d</sub> = C v<sub>d</sub> Δv<sub>d</sub></div>
+<div>C = ΔE/(v<sub>d</sub>Δv<sub>d</sub>), and with ΔE = P/ω (§5): C ≥ (P/ω)/(v<sub>d</sub>Δv<sub>d</sub>)</div>
+</div>
+<h4>Practice example (numbers from your AC Fundamentals notes, 5% ripple spec added)</h4>
+<div class="steps">
+<div>P = 5020 W, v<sub>d</sub> = 425 V, f = 60 Hz, Δv<sub>d</sub> = 0.05 × 425 = 21.25 V</div>
+<div>ω = 2π(60) = 377.0 rad/s</div>
+<div>ΔE = P/ω = 5020/377.0 = 13.32 J</div>
+<div>C ≥ 13.32/(425 × 21.25) = 13.32/9031 = <b>1.474 mF</b></div>
+<div class="c">check: E = ½(1.474 mF)(425)² = 133.2 J, and ΔE/E = 13.32/133.2 = 10% = 2Δv<sub>d</sub>/v<sub>d</sub> ✓</div>
+</div>
+</div></details>
+
+<div class="demo" id="capDemo">
+  <div class="dtitle">Calculator: DC-link capacitor (loaded with the practice example)</div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Solve for">
+      <button type="button" id="cmC" aria-pressed="true">Find C</button>
+      <button type="button" id="cmV" aria-pressed="false">Find ripple Δv<sub>d</sub></button>
+    </div>
+    <label for="cP">P (W) <input id="cP" type="number" value="5020" min="1" step="10"></label>
+    <label for="cVd">v<sub>d</sub> (V) <input id="cVd" type="number" value="425" min="1" step="1"></label>
+    <label for="cF">f (Hz) <input id="cF" type="number" value="60" min="1" step="1"></label>
+    <label for="cDv" id="cDvWrap">Δv<sub>d</sub> (V) <input id="cDv" type="number" value="21.25" min="0.01" step="0.25"></label>
+    <label for="cC" id="cCWrap" hidden>C (mF) <input id="cC" type="number" value="1.474" min="0.001" step="0.1"></label>
+  </div>
+  <div class="steps" id="cSteps"></div>
+  <canvas id="cvRip" height="200" aria-label="DC-link voltage ripple over two line cycles"></canvas>
+  <div class="legend"><span><i style="background:var(--ink)"></i>v<sub>d</sub>(t), y axis zoomed around v<sub>d</sub></span><span><i style="background:var(--curr)"></i>v<sub>d,max</sub>, v<sub>d,min</sub></span></div>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · a wide bathtub</span>
+<p>Pour the same bucket of water (ΔE) into a narrow tub and the level jumps; pour it into a wide tub and the level barely moves. C is the width of the tub. And since energy goes as v<sub>d</sub>², a tub that's already "full" to a high v<sub>d</sub> takes the same bucket with an even smaller level change.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Δv<sub>d</sub> is peak-to-peak</b> (v<sub>d,max</sub> − v<sub>d,min</sub>). If a question gives "±10 V", that's Δv<sub>d</sub> = 20 V. Using the half-swing doubles C.</li>
+<li><b>It's a minimum.</b> "C ≥" means any bigger capacitor also meets the spec. Round up when picking a part.</li>
+<li><b>Scaling.</b> C ∝ P, ∝ 1/f, ∝ 1/(v<sub>d</sub>Δv<sub>d</sub>). Double v<sub>d</sub> at the same <i>percentage</i> ripple and Δv<sub>d</sub> doubles too, so C drops by 4×.</li>
+<li><b>Handy check:</b> ΔE/E = 2Δv<sub>d</sub>/v<sub>d</sub>. A 5% ripple means the capacitor swings 10% of its stored energy.</li>
+<li><b>Units.</b> Answers land in the mF range for kW inverters. If you get µF or farads, check ω and the ½.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: sizing C"></div>
+</section>
+
+<h2 class="part">Part 3 · Three-phase power balance</h2>
+
+<!-- 7 3PH CANCEL -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Three phases: the 2ω terms cancel</h3>
+<p>Now a three-leg inverter feeds phases A, B and C, with a split DC-link capacitor (two 2C in series, midpoint N). Same assumptions: ideal filter, unity power factor. The three voltages and currents are 120° apart:</p>
+<div class="eq">
+  <span class="row"><i>v</i><sub>tAN</sub> = <i>V̂</i><sub>t,1</sub> cos(<i>ωt</i> + <i>θ</i>), &nbsp; <i>i</i><sub>tA</sub> = <i>Î</i><sub>t,1</sub> cos(<i>ωt</i> + <i>θ</i>)</span>
+  <span class="row"><i>v</i><sub>tBN</sub> = <i>V̂</i><sub>t,1</sub> cos(<i>ωt</i> − 2π/3 + <i>θ</i>), &nbsp; <i>i</i><sub>tB</sub> = <i>Î</i><sub>t,1</sub> cos(<i>ωt</i> − 2π/3 + <i>θ</i>)</span>
+  <span class="row"><i>v</i><sub>tCN</sub> = <i>V̂</i><sub>t,1</sub> cos(<i>ωt</i> + 2π/3 + <i>θ</i>), &nbsp; <i>i</i><sub>tC</sub> = <i>Î</i><sub>t,1</sub> cos(<i>ωt</i> + 2π/3 + <i>θ</i>)</span>
+</div>
+<p>Each phase on its own still has p = P + P cos(2(·)). But added together, the three pulsations wipe each other out:</p>
+<details class="work" open><summary>Worked sum (lecture slide 11), step by step</summary><div class="body">
+<div class="steps">
+<div>p(t) = p<sub>A</sub> + p<sub>B</sub> + p<sub>C</sub></div>
+<div>&nbsp;&nbsp;&nbsp; = 3P + P[cos(2(ωt+θ)) + cos(2(ωt−2π/3+θ)) + cos(2(ωt+2π/3+θ))]</div>
+<div class="c">let x = 2(ωt+θ). The other two angles are x − 4π/3 and x + 4π/3.</div>
+<div class="c">−4π/3 and +2π/3 point the same way (they differ by 2π); so do +4π/3 and −2π/3.</div>
+<div>&nbsp;&nbsp;&nbsp; = 3P + P[cos x + cos(x + 2π/3) + cos(x − 2π/3)]</div>
+<div>&nbsp;&nbsp;&nbsp; = 3P + P · 0 <span class="c">  cos x + cos(x − 2π/3) + cos(x + 2π/3) = 0</span></div>
+<div>&nbsp;&nbsp;&nbsp; = <b>3P</b>, constant</div>
+</div>
+<p style="margin-top:12px">Quick check at x = 0: cos 0 + cos(−120°) + cos(120°) = 1 − 0.5 − 0.5 = 0. When phase A is at its peak 2P, phases B and C are each at P/2, and 2P + P/2 + P/2 = 3P.</p>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: three pulsations, one flat total</div>
+  <canvas id="cv3p" height="300" aria-label="Per-phase instantaneous power and total, plus a phasor diagram of the 2 omega terms"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>p<sub>A</sub></span><span><i style="background:var(--fund)"></i>p<sub>B</sub></span><span><i style="background:var(--ph3)"></i>p<sub>C</sub></span><span><i style="background:var(--ink)"></i>total p</span><span><i style="background:var(--muted)"></i>3P</span></div>
+  <div class="controls">
+    <label for="tpD">phase spacing <input id="tpD" type="range" min="0" max="180" step="5" value="120"><output id="tpDOut">120°</output></label>
+    <label for="tpB"><span><span class="beyond">beyond lecture</span>phase B current</span> <input id="tpB" type="range" min="0.5" max="1.5" step="0.05" value="1"><output id="tpBOut">100%</output></label>
+    <button class="btn" type="button" id="tpReset">Balanced (lecture)</button>
+  </div>
+  <div class="readout" id="tpRead"></div>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · three riders on one chain</span>
+<p>One cyclist's pedal power pulses. Put three riders on one drive chain, each with their cranks rotated a third of a turn from the next. Whenever one rider is at a dead spot, the other two are mid-push. The pulses fill each other's gaps and the chain sees <b>steady power</b>.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Doubling the angle keeps the balance.</b> The phases are at 0, −120°, +120°. At 2ω they sit at 0, −240°, +240°, which is the same set as 0, +120°, −120°. Still three equal arrows 120° apart, still summing to zero. Try the phase-spacing slider: the total is flat only at 120° (the lecture's case) and at 60°, where the doubled angles land on the same balanced set.</li>
+<li><b>P is per phase.</b> Total power is 3P. For the same total 5.02 kW, each phase carries 1.67 kW.</li>
+<li><b>It needs balance.</b> The cancellation relies on three equal amplitudes 120° apart. Unbalance one phase (slider, beyond the lecture) and some 2ω ripple returns.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: three-phase cancellation"></div>
+</section>
+
+<!-- 8 CONSEQUENCES -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>What that buys you: p<sub>d</sub> = p<sub>t</sub></h3>
+<p>Since the total AC power is constant, the instantaneous power into the inverter equals the instantaneous power out: <b>p<sub>d</sub> = p<sub>t</sub></b>. The lecture draws two conclusions:</p>
+<ol class="plain">
+<li><b>No 2ω energy storage.</b> The DC capacitor doesn't have to supply any 2ω power, so the energy requirement from §5 and §6 disappears. The DC capacitance can be much smaller.</li>
+<li><b>A capacitor is still required</b> for switching-ripple mitigation. i<sub>d,inv</sub> is still a pulse train at the switching frequency, and something has to supply those fast pulses locally.</li>
+</ol>
+<div class="demo" id="dc3Demo">
+  <div class="dtitle">Try it: DC side of a three-phase inverter (sine-triangle PWM)</div>
+  <canvas id="cv3i" height="420" aria-label="Three-phase currents, bridge DC current pulses, capacitor current and source current"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>i<sub>tA</sub> / i<sub>d,inv</sub></span><span><i style="background:var(--fund)"></i>i<sub>tB</sub></span><span><i style="background:var(--ph3)"></i>i<sub>tC</sub></span><span><i style="background:var(--curr)"></i>local average of i<sub>d,inv</sub></span><span><i style="background:var(--ink)"></i>i<sub>d</sub></span></div>
+  <div class="controls">
+    <label for="d3Phi">current lag φ <input id="d3Phi" type="range" min="0" max="90" step="1" value="0"><output id="d3PhiOut">0° (pf 1.00)</output></label>
+    <label for="d3Mf">m<sub>f</sub> <input id="d3Mf" type="range" min="9" max="41" step="2" value="15"><output id="d3MfOut">15</output></label>
+    <button class="btn" type="button" data-pf="0">pf = 1</button>
+    <button class="btn" type="button" data-pf="90">pf = 0</button>
+  </div>
+  <div class="readout" id="d3Read"></div>
+</div>
+<p class="note-box">Demo numbers: the same 5.02 kW total from 425 V, split over three phases (1.67 kW each), m = 0.8, so each leg's phase voltage to the midpoint N is 0.8 × 425/2 = 170 V peak and Î = 19.7 A peak. The 2ω ripple is gone; the capacitor only carries the switching-frequency pulses.</p>
+<div class="callout analogy"><span class="tag">Analogy · smooth road, small shocks</span>
+<p>Single-phase is a road with a big dip every few metres: you need big suspension (a big C). Three-phase smooths out the dips completely, but the road still has small gravel (switching ripple). You still need shock absorbers, just much smaller ones.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>"No 2ω energy requirement" is not "no capacitor".</b> Exam answers that say the three-phase inverter needs no DC capacitor are wrong.</li>
+<li><b>Split capacitor.</b> Two 2C capacitors in series give 2C·2C/(2C+2C) = <b>C</b> total. The midpoint N is the reference for the phase voltages v<sub>tAN</sub>, v<sub>tBN</sub>, v<sub>tCN</sub>.</li>
+<li><b>I<sub>d</sub> is still total P over v<sub>d</sub>.</b> 5.02 kW / 425 V = 11.8 A, the same average as single-phase at the same power. What changes is the 120 Hz part, which is now zero.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: consequences"></div>
+</section>
+
+<!-- 9 REACTIVE -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>The other extreme: pure reactive power (pf = 0)</h3>
+<p>At the other extreme, the three-phase inverter only delivers or absorbs reactive power (currents 90° from voltages). Each phase sloshes energy back and forth, but the three sloshes cancel, so:</p>
+<div class="eq">
+  <span class="row"><i>p<sub>t</sub></i>(<i>t</i>) = 0 <span class="note">"as expected": no real power, and no 2ω either</span></span>
+  <span class="row"><i>I<sub>d</sub></i> = 0 <span class="note">the DC source current has no DC component</span></span>
+</div>
+<p>The DC side still isn't quiet, though. The lecture's last slide traces it:</p>
+<ol class="plain">
+<li>The inverter's switching puts <b>harmonic current into i<sub>d,inv</sub></b>: pulses that average to zero.</li>
+<li>The DC-link capacitor carries those harmonics (i<sub>c</sub> ≈ i<sub>d,inv</sub>), so v<sub>d</sub> doesn't see them.</li>
+<li>Hence there's very little harmonic content in the source current i<sub>d</sub>.</li>
+</ol>
+<p>See it in the §8 demo: <button class="btn" type="button" data-pf="90">set pf = 0</button> <button class="btn" type="button" data-pf="60">set φ = 60°</button>. The pulses stay, their average drops to zero, and i<sub>d</sub> goes flat at 0.</p>
+<div class="callout analogy"><span class="tag">Analogy · passing buckets in a circle</span>
+<p>Reactive power is energy carried out to the grid and brought right back, every half cycle. With three phases, one phase's returning bucket arrives exactly as another phase needs one to go out, so buckets pass hand to hand around the triangle and <b>nothing ever needs to come from the DC well</b>.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>I<sub>d</sub> = 0 doesn't mean i<sub>d,inv</sub> = 0.</b> The bridge still draws switching pulses; they just average to zero, and the capacitor supplies them.</li>
+<li><span class="beyond">beyond lecture</span><b>Single-phase is different.</b> A single-phase inverter at pf = 0 has zero average power, but its p(t) still pulses at 2ω with amplitude ½V̂Î. It still needs the big 2ω capacitor. The "p<sub>t</sub> = 0" result is a three-phase result.</li>
+<li><b>In between.</b> For any pf, the balanced three-phase total is constant at 3 × ½V̂Î cos φ. Drag φ in the §8 demo: I<sub>d</sub> scales with cos φ, and the ripple stays gone.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: reactive power case"></div>
+</section>
+
+<!-- 10 COMPARE -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>Single phase vs three phase at a glance</h3>
+<p>Same job for both: deliver 5.02 kW from a 425 V DC link at 60 Hz, with unity power factor.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Single-phase</th><th>Three-phase (balanced)</th></tr></thead>
+<tbody>
+<tr><td>Instantaneous AC power</td><td>P + P cos 2(ωt+θ): 0 to 2P ≈ 10.0 kW</td><td>3P = 5.02 kW, constant</td></tr>
+<tr><td>2ω pulsation</td><td>Yes, 120 Hz, amplitude P</td><td>Cancels between phases</td></tr>
+<tr><td>Average DC current I<sub>d</sub></td><td class="num">11.8 A</td><td class="num">11.8 A</td></tr>
+<tr><td>Who supplies the 2ω part</td><td>DC-link capacitor (ΔE = P/ω = 13.3 J)</td><td>Nobody needs to</td></tr>
+<tr><td>C sizing</td><td>C ≥ (P/ω)/(v<sub>d</sub>Δv<sub>d</sub>) = 1.47 mF at 5% ripple</td><td>Switching ripple only, much smaller</td></tr>
+<tr><td>At pf = 0</td><td>p averages 0 but still pulses at 2ω <span class="beyond">beyond lecture</span></td><td>p<sub>t</sub> = 0, I<sub>d</sub> = 0</td></tr>
+</tbody></table></div>
+<div class="callout analogy"><span class="tag">The whole lecture in one picture</span>
+<p>AC power in one phase arrives in pulses, like a single cyclist pedaling. A single-phase inverter needs a flywheel (the DC-link capacitor) big enough to ride out one pulse: that's ΔE = P/ω, and C follows from how much speed wobble (Δv<sub>d</sub>) you'll accept. Three phases are three riders offset by a third of a turn: the pulses fill each other in, and the flywheel only has to smooth out the tiny switching bumps.</p>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: single vs three phase"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across the whole lecture, mostly calculations. Grab paper and a calculator. Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Single-phase power (pf = 1)</h5><div>p(t) = v<sub>t</sub>i<sub>t</sub> = P + P cos 2(ωt+θ)<br>P = ½V̂<sub>t,1</sub>Î<sub>t,1</sub><br>range 0 to 2P, frequency 2f</div></div>
+  <div class="card"><h5>DC-side current</h5><div>I<sub>d</sub> = P/V<sub>d</sub><br>local avg of i<sub>d,inv</sub> = p<sub>t</sub>/V<sub>d</sub><br>KCL: i<sub>d</sub> + i<sub>c</sub> = i<sub>d,inv</sub></div></div>
+  <div class="card"><h5>Capacitor power</h5><div>p<sub>c</sub> = p<sub>t</sub> − p<sub>d</sub><br>p<sub>d</sub> = P ⇒ p<sub>c</sub> = P cos 2(ωt+θ)<br>p<sub>c</sub> &gt; 0: discharging</div></div>
+  <div class="card"><h5>Energy swing</h5><div>ΔE = ∫<sub>0</sub><sup>π/2ω</sup> P sin(2ωt) dt = P/ω<br>ω = 2πf (rad/s)<br>lobe length = T/4</div></div>
+  <div class="card"><h5>DC-link capacitor</h5><div>E = ½Cv<sub>d</sub>², ΔE = Cv<sub>d</sub>Δv<sub>d</sub><br><b>C ≥ (P/ω)/(v<sub>d</sub>Δv<sub>d</sub>)</b><br>Δv<sub>d</sub> = P/(ωCv<sub>d</sub>), peak-to-peak</div></div>
+  <div class="card"><h5>Quick checks</h5><div>ΔE/E = 2Δv<sub>d</sub>/v<sub>d</sub><br>C ∝ P/(f v<sub>d</sub>Δv<sub>d</sub>)<br>two 2C in series = C</div></div>
+  <div class="card"><h5>Three-phase (balanced)</h5><div>phases at 0, −2π/3, +2π/3<br>cos x + cos(x−2π/3) + cos(x+2π/3) = 0<br>p(t) = 3P, so p<sub>d</sub> = p<sub>t</sub></div></div>
+  <div class="card"><h5>Three-phase, pf = 0</h5><div>p<sub>t</sub>(t) = 0, I<sub>d</sub> = 0<br>capacitor carries switching harmonics<br>i<sub>d</sub> nearly harmonic-free</div></div>
+</div>
+</section>
+
+<footer>Built from the ENEL 585 Lecture 8 notes, "Power Balance and the DC Link" (Dr. Philippe Gray, September 24, 2026). Practice numbers from the AC Fundamentals and Single-Phase Inverters notes; the 5% ripple spec is added for practice. Reading: Kassakian Ch. 8, Mohan §8-3. Next lecture: rectifiers.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------------- QUIZ DATA (correct option listed first; order is shuffled for display) ---------------- */
+const QUIZ = {
+q1:[
+ {q:"v_t = 340 cos(ωt) V and i_t = 29.5 cos(ωt) A. What is the average power P?",
+  o:["5.02 kW","10.03 kW","7.09 kW","3.55 kW"],
+  e:"P = ½V̂Î = ½ × 340 × 29.5 = 5015 W ≈ 5.02 kW. 10.03 kW forgets the ½ (that's actually the peak of p(t)). 7.09 kW and 3.55 kW come from mixing peak and RMS values."},
+ {q:"The lecture assumes unity power factor. What does that mean for v_t and i_t?",
+  o:["They share the same phase angle θ, so Q = 0 and all the power is real","They have the same amplitude","The current has no harmonics","The DC voltage is constant"],
+  e:"Unity pf means voltage and current are in phase (same θ in both cosines), so reactive power is zero. 'No harmonics' is the other assumption (ideal filter)."},
+ {q:"Why does the lecture assume an ideal AC-side filter?",
+  o:["So i_t is a pure sinusoid and p(t) contains only fundamental terms, making the 2ω pulsation easy to see","Because the filter removes the 2ω pulsation","Because real inverters produce no harmonics","So that v_d becomes a stiff source"],
+  e:"With a pure sinusoidal current, v·i only has the fundamental product, so the 2ω pulsation stands out. The filter does NOT remove the pulsation: it comes from multiplying two sinusoids and is there even with a perfect filter."},
+ {q:"A question gives RMS values: V_rms = 240 V, I_rms = 20 A, in phase. What is P?",
+  o:["4.8 kW","2.4 kW","9.6 kW","3.39 kW"],
+  e:"With RMS values there's no ½: P = V_rms I_rms = 240 × 20 = 4.8 kW. The ½ in P = ½V̂Î only applies to PEAK values (V̂ = 339 V, Î = 28.3 A gives the same 4.8 kW)."}
+],
+q2:[
+ {q:"The grid is 60 Hz. At what frequency does p(t) pulse?",
+  o:["120 Hz","60 Hz","30 Hz","180 Hz"],
+  e:"p = P + P cos(2(ωt+θ)): the pulsation is at 2ω, so 120 Hz. v and i flip sign together each half cycle, so their product repeats every half cycle."},
+ {q:"V̂_t,1 = 340 V and Î_t,1 = 29.5 A, in phase. What are the maximum and minimum of p(t)?",
+  o:["10.03 kW and 0","5.02 kW and 0","5.02 kW and −5.02 kW","10.03 kW and −10.03 kW"],
+  e:"Max = 2P = V̂Î = 340 × 29.5 = 10.03 kW; min = P − P = 0. At unity pf the power never goes negative."},
+ {q:"Why is p(t) never negative at unity power factor?",
+  o:["v_t and i_t always have the same sign, so their product is ≥ 0","The filter blocks negative power","The DC source can't absorb power","The pulsation amplitude is smaller than P"],
+  e:"In phase means both are positive together and negative together, so the product is never negative. The pulsation amplitude EQUALS P, which is exactly why p just touches 0."},
+ {q:"v_d = 425 V and P = 5.02 kW. What is the average DC current I_d?",
+  o:["11.8 A","23.6 A","29.5 A","8.35 A"],
+  e:"I_d = P/V_d = 5020/425 = 11.8 A. 23.6 A is the peak of the local average (2P/V_d); 29.5 A is the AC peak current."},
+ {q:"Same inverter. At the instant p_t reaches its peak 2P, what is the local (switching-period) average of i_d,inv?",
+  o:["23.6 A","11.8 A","0 A","29.5 A"],
+  e:"The local average follows p_t/V_d. At the peak: 2 × 5020/425 = 23.6 A, twice I_d. At the zero crossings of v_t it drops to 0."}
+],
+q3:[
+ {q:"The source holds i_d = I_d = 11.8 A. At one instant the bridge's local average current is 23.6 A. What is i_c, and what is the capacitor doing?",
+  o:["11.8 A out of the capacitor: discharging","11.8 A into the capacitor: charging","35.4 A out of the capacitor: discharging","0 A: the source covers it"],
+  e:"KCL: i_d + i_c = i_d,inv, so i_c = 23.6 − 11.8 = 11.8 A. i_c is defined leaving the capacitor, so a positive value means it's discharging."},
+ {q:"At a zero crossing of v_t, the bridge's local average current is 0 while i_d = 11.8 A. What is i_c?",
+  o:["−11.8 A: 11.8 A flows into the capacitor, charging it","+11.8 A: discharging","0 A","−23.6 A"],
+  e:"i_c = i_d,inv − i_d = 0 − 11.8 = −11.8 A. Negative 'out of' means 11.8 A flows IN: the source's current has nowhere else to go, so it charges C."},
+ {q:"Why does ripple on v_d matter for the AC side?",
+  o:["The bridge passes any v_d ripple on to the AC voltage, since v_t is built from ±v_d","It changes the switching frequency","It only affects the DC source","It doesn't; the AC filter removes it"],
+  e:"The bridge just connects the load to ±v_d. If v_d wobbles at 120 Hz, the pulses that build v_t wobble too, which distorts the AC voltage. That's one of the two reasons for the capacitor."},
+ {q:"In the lecture's resistive-load example, i_d is negative. Why?",
+  o:["Power flows from the AC side to the DC side, so the converter is working as a rectifier","The resistor generates power","The capacitor is connected backwards","The lecture's sign convention is wrong there"],
+  e:"i_d is defined flowing into the bridge from the DC side. When the DC side is a resistive load, power flows AC → DC and i_d comes out negative."},
+ {q:"A battery pack (cell plus R_b) feeds the bridge through series inductance L_s. Why isn't it a stiff source?",
+  o:["R_b and L_s drop voltage whenever the current changes, so a 120 Hz current pulsation makes v_d bounce","Batteries can't supply DC","L_s blocks DC current","The battery voltage is too low for the bridge"],
+  e:"A stiff source holds its voltage whatever the current does. L_s (L di/dt) and R_b (iR) both turn current changes into voltage changes. The capacitor supplies the pulsating current locally so they don't have to."}
+],
+q4:[
+ {q:"P = 5.02 kW. At some instant p_t = 7.50 kW. What is p_c, and what is the capacitor doing?",
+  o:["2.48 kW, discharging","2.48 kW, charging","7.50 kW, discharging","−2.48 kW, charging"],
+  e:"p_c = p_t − p_d = 7.50 − 5.02 = 2.48 kW. p_c > 0 is power delivered BY the capacitor, so it's discharging. The source can only give P, so C covers the extra."},
+ {q:"At a zero crossing of v_t, p_t = 0 (P = 5.02 kW). What is p_c?",
+  o:["−5.02 kW: the capacitor absorbs the source's full 5.02 kW","0","+5.02 kW","−10.04 kW"],
+  e:"p_c = 0 − 5.02 = −5.02 kW. The bridge takes nothing, but the source keeps delivering P, so all of it goes into C. This is the fastest charging moment."},
+ {q:"In a single-phase inverter, when is v_d at its maximum?",
+  o:["When p_t rises back up through P, at the end of the charging interval","When p_t peaks at 2P","When p_t = 0","When p_t falls through P"],
+  e:"C charges the whole time p_t < P, so v_d keeps rising until p_t climbs back past P. At p_t = 0 it's charging fastest, but still rising. At p_t = 2P it's discharging fastest."},
+ {q:"What is the average of p_c over one line cycle?",
+  o:["0, because the capacitor only stores and returns energy","P","2P","P/2"],
+  e:"p_c = P cos(2(ωt+θ)) averages to zero. A capacitor can't produce or consume energy on average; it just buffers it."}
+],
+q5:[
+ {q:"P = 5.02 kW, f = 60 Hz. What is ΔE?",
+  o:["13.3 J","6.66 J","26.6 J","83.7 J"],
+  e:"ΔE = P/ω = 5020/(2π·60) = 5020/377.0 = 13.3 J. 6.66 J uses 2ω in the denominator, 26.6 J drops the ½ from the antiderivative, and 83.7 J uses f instead of ω."},
+ {q:"At 60 Hz, how long does one discharge lobe (t = 0 to π/2ω) last?",
+  o:["4.17 ms","8.33 ms","16.7 ms","2.08 ms"],
+  e:"π/(2ω) = π/(2 × 377.0) = 4.17 ms, a quarter of the 16.7 ms line period (half of the 8.33 ms ripple period)."},
+ {q:"Same P = 5.02 kW, but on a 50 Hz grid. What is ΔE?",
+  o:["16.0 J","11.1 J","13.3 J","26.6 J"],
+  e:"ΔE = 5020/(2π·50) = 5020/314.2 = 16.0 J. A lower line frequency means longer lobes, so more energy per lobe (60/50 = 1.2× more)."},
+ {q:"Why integrate over one lobe instead of a whole ripple cycle?",
+  o:["Over a full cycle the net energy is zero; the voltage swing is set by the energy moved one way, from v_d,min to v_d,max","Because the second lobe is smaller","It's just easier; a full cycle gives the same answer","Because the capacitor only works for a quarter cycle"],
+  e:"The capacitor goes from its lowest to its highest voltage during one charging lobe (and back during one discharging lobe). A full cycle integrates to zero, which says nothing about the swing."}
+],
+q6:[
+ {q:"P = 5.02 kW, v_d = 425 V, 60 Hz, Δv_d = 21.25 V. What is the minimum C?",
+  o:["1.47 mF","0.737 mF","2.95 mF","9.26 mF"],
+  e:"C ≥ (P/ω)/(v_d Δv_d) = 13.32/(425 × 21.25) = 1.47 mF. 0.737 mF uses 2ω; 2.95 mF uses Δv_d/2; 9.26 mF uses f instead of ω."},
+ {q:"You halve the allowed ripple (21.25 V → 10.6 V). What happens to C_min?",
+  o:["It doubles","It halves","It quadruples","It doesn't change"],
+  e:"C ∝ 1/Δv_d. Half the ripple needs twice the capacitance: about 2.95 mF."},
+ {q:"Same inverter (5.02 kW, 425 V, 60 Hz), but you fit C = 2.0 mF. What is the peak-to-peak ripple?",
+  o:["15.7 V","21.3 V","7.83 V","31.3 V"],
+  e:"Δv_d = P/(ωCv_d) = 5020/(377.0 × 0.002 × 425) = 15.7 V. 7.83 V is the half-swing (±7.83 V)."},
+ {q:"A spec says 'v_d = 425 V ± 10 V'. What Δv_d goes into the formula?",
+  o:["20 V","10 V","5 V","425 V"],
+  e:"Δv_d is peak-to-peak: v_d,max − v_d,min = 435 − 415 = 20 V. Plugging in 10 V would double C."},
+ {q:"Redesign at v_d = 850 V with the same P and the same 5% ripple. New C_min, versus 1.47 mF?",
+  o:["0.369 mF (4× smaller)","0.737 mF (2× smaller)","1.47 mF (unchanged)","5.90 mF (4× bigger)"],
+  e:"5% of 850 V is 42.5 V, so v_d Δv_d grows by 2 × 2 = 4. C = 13.32/(850 × 42.5) = 0.369 mF. Higher bus voltage is a big win for capacitor size."}
+],
+q7:[
+ {q:"Each phase delivers P = 1.673 kW at unity pf. What is the total instantaneous power?",
+  o:["5.02 kW, constant","5.02 kW average, pulsing between 0 and 10.04 kW","1.673 kW","3.35 kW, pulsing at 2ω"],
+  e:"p(t) = 3P = 3 × 1.673 = 5.02 kW, with no ripple at all. The three 2ω terms cancel."},
+ {q:"At the instant phase A is at its peak (p_A = 2P), what are p_B and p_C?",
+  o:["P/2 each","0 each","P each","2P each"],
+  e:"With x = 0, p_B = P(1 + cos(−4π/3)) = P(1 − ½) = P/2, and the same for p_C. Total: 2P + P/2 + P/2 = 3P."},
+ {q:"The three 2ω terms have angles x, x − 4π/3 and x + 4π/3. Why do they still cancel?",
+  o:["−4π/3 points the same way as +2π/3 (they differ by 2π), so the three are still equal phasors 120° apart","Because 4π/3 is larger than π","They don't; only the averages cancel","Because cosine is an even function"],
+  e:"Doubling −120° and +120° gives −240° and +240°, which are the same directions as +120° and −120°. Three equal arrows 120° apart always sum to zero."},
+ {q:"Phase B's current is 20% low (unbalanced; beyond the lecture). Does the 2ω ripple still cancel?",
+  o:["No: a 2ω ripple of about 0.2P remains","Yes, the sum is always constant","Yes, but only at unity pf","The ripple doubles to 2P"],
+  e:"The cancellation needs three EQUAL phasors. Phase B's 2ω term is 0.8P instead of P, so the missing 0.2P is left over. Try the phase-B slider in the §7 demo."}
+],
+q8:[
+ {q:"Why can a balanced three-phase inverter use a much smaller DC capacitor?",
+  o:["p_d = p_t, so there's no 2ω energy for the capacitor to store","Three-phase inverters switch more slowly","The split capacitor doubles the capacitance","The 2ω ripple is at a higher frequency, so it's easier to filter"],
+  e:"Total AC power is constant, so the DC side can supply it directly. The ΔE = P/ω requirement disappears; only switching ripple is left."},
+ {q:"Does the three-phase inverter still need a DC-link capacitor?",
+  o:["Yes, for switching-ripple mitigation","No, p_d = p_t makes it unnecessary","Only at pf = 0","Only if the source is a battery"],
+  e:"i_d,inv is still a pulse train at the switching frequency. Something close to the bridge must supply those fast pulses, and that's the (now much smaller) capacitor."},
+ {q:"The split DC link uses two capacitors of 2C each, in series. What total capacitance is across v_d?",
+  o:["C","4C","2C","C/2"],
+  e:"Series: (2C × 2C)/(2C + 2C) = C. The midpoint N gives the reference for the phase voltages."},
+ {q:"Balanced three-phase, 5.02 kW total at pf = 1, from 425 V. Ideally, what does i_d look like?",
+  o:["A constant 11.8 A with no 120 Hz component","11.8 A average plus ±11.8 A at 120 Hz","A constant 3.94 A","Zero"],
+  e:"I_d = total P/V_d = 5020/425 = 11.8 A. With no 2ω power, there's no 2ω current either. (±11.8 A at 120 Hz is what a single-phase capacitor has to carry.)"}
+],
+q9:[
+ {q:"A balanced three-phase inverter supplies only reactive power (pf = 0). What is I_d?",
+  o:["0","11.8 A","P/V_d with P per phase","It pulses at 2ω"],
+  e:"p_t(t) = 0 at every instant, so no DC current is needed on average: I_d = 0."},
+ {q:"At pf = 0, is the bridge's DC current i_d,inv zero?",
+  o:["No: it's a train of switching pulses that averages to zero, and the capacitor supplies them","Yes, the bridge stops drawing current","Yes, because p_t = 0","No: it has a large 2ω component"],
+  e:"The switches still connect phase currents to the DC rails, so i_d,inv has switching harmonics. They average to zero, the capacitor carries them, and i_d stays nearly clean."},
+ {q:"Balanced three-phase, each leg 170 V peak (to N) and 19.7 A peak, current lagging by φ = 60°, v_d = 425 V. What is I_d?",
+  o:["5.91 A","11.8 A","0 A","10.2 A"],
+  e:"Total P = 3 × ½ × 170 × 19.7 × cos 60° = 2.51 kW, so I_d = 2512/425 = 5.91 A. Only the real part of the power reaches the DC side. (10.2 A uses cos 30° by mistake.)"},
+ {q:"Beyond the lecture: a SINGLE-phase inverter supplies pure reactive power. Does its DC link still need the big 2ω capacitor?",
+  o:["Yes: its average power is 0, but p(t) still pulses at 2ω with amplitude ½V̂Î","No: p_t = 0, just like three-phase","No: reactive power never reaches the DC side","Only if pf is exactly 0"],
+  e:"For one phase, p(t) = ½V̂Î[cos φ + cos(2ωt − φ)]. At φ = 90° the average is 0 but the 2ω term is full size. Only the three-phase sum cancels it."}
+],
+q10:[
+ {q:"Deliver 5.02 kW at pf = 1. Peak instantaneous AC power: single-phase vs balanced three-phase?",
+  o:["About 10.0 kW vs 5.02 kW","5.02 kW vs 5.02 kW","About 10.0 kW vs 15.1 kW","5.02 kW vs 1.67 kW"],
+  e:"Single-phase swings from 0 to 2P ≈ 10.0 kW. Three-phase is flat at 3 × P_phase = 5.02 kW."},
+ {q:"A single-phase inverter runs on a 50 Hz grid. At what frequency does the DC-link voltage ripple?",
+  o:["100 Hz","50 Hz","150 Hz","25 Hz"],
+  e:"The power pulsation is at 2f = 100 Hz, and so is the capacitor's charge-discharge cycle."},
+ {q:"Which change does NOT reduce the single-phase C_min?",
+  o:["Increasing the power P","Raising v_d","Allowing more ripple Δv_d","Moving from 50 Hz to 60 Hz"],
+  e:"C ≥ P/(ω v_d Δv_d): C grows with P. Higher v_d, bigger Δv_d and higher ω all shrink it."},
+ {q:"5.02 kW from 425 V. Average DC current I_d: single-phase vs three-phase?",
+  o:["11.8 A for both","11.8 A vs 3.94 A","23.6 A vs 11.8 A","11.8 A vs 0 A"],
+  e:"I_d = P/V_d = 11.8 A either way. The difference is the 120 Hz part: single-phase needs the capacitor to supply it, three-phase doesn't have one."}
+],
+qf:[
+ {q:"v_t = 240 cos(ωt) V and i_t = 10 cos(ωt) A on a 50 Hz grid. Average power and pulsation frequency?",
+  o:["1.2 kW, pulsing at 100 Hz","2.4 kW, pulsing at 100 Hz","1.2 kW, pulsing at 50 Hz","2.4 kW, pulsing at 50 Hz"],
+  e:"P = ½ × 240 × 10 = 1.2 kW, and the pulsation is at 2f = 100 Hz. Review §1 and §2."},
+ {q:"Same inverter (240 V, 10 A peak, in phase). What is the peak instantaneous power?",
+  o:["2.4 kW","1.2 kW","1.7 kW","4.8 kW"],
+  e:"p_max = 2P = V̂Î = 240 × 10 = 2.4 kW. Review §2."},
+ {q:"P = 3 kW and v_d = 400 V. What is the average DC current I_d?",
+  o:["7.5 A","15 A","5.3 A","3.75 A"],
+  e:"I_d = P/V_d = 3000/400 = 7.5 A. (15 A is the peak of the local average, 2P/V_d.) Review §2."},
+ {q:"i_d is held at 7.5 A. At one instant the bridge's local average current is 15 A. What is the capacitor current?",
+  o:["7.5 A out of the capacitor (discharging)","7.5 A into the capacitor (charging)","22.5 A out of the capacitor","0 A"],
+  e:"KCL: i_c = i_d,inv − i_d = 15 − 7.5 = 7.5 A leaving C, so it's discharging. Review §3."},
+ {q:"P = 3 kW. At an instant when p_t = 0, what is p_c?",
+  o:["−3 kW: the capacitor is charging","+3 kW: discharging","0","−6 kW: charging"],
+  e:"p_c = p_t − p_d = 0 − 3 = −3 kW. The source's whole output goes into C. Review §4."},
+ {q:"P = 3 kW on a 50 Hz grid. What is ΔE?",
+  o:["9.55 J","4.77 J","19.1 J","60 J"],
+  e:"ΔE = P/ω = 3000/(2π·50) = 3000/314.2 = 9.55 J. 60 J uses f instead of ω; 4.77 J uses 2ω. Review §5."},
+ {q:"P = 3 kW, 50 Hz, v_d = 400 V, ripple must be ≤ 8 V peak-to-peak. Minimum C?",
+  o:["2.98 mF","1.49 mF","5.97 mF","18.8 mF"],
+  e:"C ≥ 9.55/(400 × 8) = 2.98 mF. 1.49 mF uses 2ω, 5.97 mF uses the half-swing 4 V, 18.8 mF uses f. Review §6."},
+ {q:"Same inverter (3 kW, 50 Hz, 400 V) but with C = 1 mF. What is the peak-to-peak ripple?",
+  o:["23.9 V","11.9 V","47.7 V","7.5 V"],
+  e:"Δv_d = P/(ωCv_d) = 3000/(314.2 × 0.001 × 400) = 23.9 V. Review §6."},
+ {q:"The DC-link capacitor stores 150 J at nominal v_d and must swing ΔE = 6 J. What is the peak-to-peak ripple as a percentage of v_d?",
+  o:["2%","4%","8%","1%"],
+  e:"ΔE = Cv_dΔv_d and E = ½Cv_d², so ΔE/E = 2Δv_d/v_d. 6/150 = 4% = 2Δv_d/v_d, so Δv_d/v_d = 2%. Review §6."},
+ {q:"In a single-phase inverter, when is v_d at its minimum?",
+  o:["When p_t falls back through P, at the end of the discharge interval","When p_t peaks at 2P","When p_t = 0","When p_t rises through P"],
+  e:"C discharges the whole time p_t > P, so v_d keeps falling until p_t drops back below P. Review §4."},
+ {q:"A balanced three-phase inverter delivers 6 kW total at pf = 1 from v_d = 400 V. Which is true?",
+  o:["i_d is a constant 15 A, and the capacitor only handles switching ripple","i_d averages 15 A with a ±15 A ripple at 2ω","i_d is 5 A, one-third per phase","i_d = 0 because the ripple cancels"],
+  e:"I_d = 6000/400 = 15 A. The 2ω terms cancel, so p_d = p_t is constant and there's no 2ω current; the capacitor is only there for switching ripple. Review §7 and §8."},
+ {q:"A balanced three-phase inverter runs at pf = 0. Which statement is correct?",
+  o:["p_t = 0 and I_d = 0, but the capacitor still carries the switching harmonics of i_d,inv","p_t = 0, so no DC capacitor is needed","I_d = 0 and i_d,inv = 0","p_t pulses at 2ω with amplitude ½V̂Î"],
+  e:"No real power and no 2ω pulsation, so I_d = 0. The bridge still draws switching pulses, which the capacitor supplies, keeping i_d clean. Review §9."}
+]
+};
+
+/* ---------------- QUIZ ENGINE ---------------- */
+const LET = "ABCD";
+function hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+function shuffled(item){ // stable order per question; returns {o, a}
+  const idx = item.o.map((_,i)=>i); let s = hash(item.q) || 1;
+  for(let i=idx.length-1;i>0;i--){ s = (Math.imul(s,1103515245)+12345)>>>0; const j = s % (i+1); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+  return {o: idx.map(i=>item.o[i]), a: idx.indexOf(0)};
+}
+function chip(id, correct, answered, total){
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+"/"+total;
+  c.classList.toggle("done", answered===total);
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+  }
+  qs.forEach((raw, qi)=>{
+    const item = shuffled(raw);
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(raw.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    const btns = item.o.map((t, oi)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[oi];
+      const s = document.createElement("span"); s.textContent = t;
+      b.append(L, s);
+      b.addEventListener("click", ()=>{
+        btns.forEach(x=>x.disabled=true);
+        const ok = oi===item.a;
+        btns[item.a].classList.add("right");
+        if(!ok) b.classList.add("wrong");
+        answered++; if(ok) correct++;
+        ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[item.a]+'.</b> ';
+        ex.appendChild(document.createTextNode(raw.e));
+        ex.hidden = false;
+        upd();
+      });
+      opts.appendChild(b); return b;
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+  });
+  reset.addEventListener("click", ()=>buildQuiz(box));
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const $ = id => document.getElementById(id);
+function prep(cv, hOverride){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = hOverride || +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size){ ctx.fillStyle=col; ctx.font=(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function setPressed(on, off){ on.setAttribute("aria-pressed","true"); off.setAttribute("aria-pressed","false"); }
+const fmt = (x,d)=> (Math.abs(x)<1e-9?0:x).toFixed(d);
+const kW = x => { const r=Math.round(x/10)/100; return (Math.abs(r)<1e-9?0:r).toFixed(2)+" kW"; };
+function tri(ph){ const p=((ph%1)+1)%1; return p<0.5 ? 1-4*p : -3+4*p; }
+/* a panel: time u in [0,1] across, values ymin..ymax */
+function panel(ctx, x, y, w, h, ymin, ymax, name, ticks){
+  const X = u => x + u*w, Y = v => y + h - (v-ymin)/(ymax-ymin)*h;
+  const mu = css("--muted"), gr = css("--grid");
+  (ticks||[]).forEach(t=>{ line(ctx,x,Y(t.v),x+w,Y(t.v),gr,1); txt(ctx,t.l,x-6,Y(t.v),mu,"right",11); });
+  line(ctx,x,y,x,y+h,mu,1);
+  const z = (ymin<0 && ymax>0) ? Y(0) : y+h;
+  line(ctx,x,z,x+w,z,mu,1);
+  txt(ctx,name,x+6,y+7,css("--ink"),"left",12);
+  return {X,Y,x,y,w,h};
+}
+function trace(ctx,M,fn,N,col,wid,dash){
+  ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||2; ctx.lineJoin="round";
+  for(let i=0;i<=N;i++){ const u=i/N, X=M.X(u), Y=M.Y(fn(u)); if(i) ctx.lineTo(X,Y); else ctx.moveTo(X,Y); }
+  ctx.stroke(); ctx.setLineDash([]);
+}
+function fillBetween(ctx,M,f,g,N,colPos,colNeg){ // fill between f and g, colour by sign of f-g
+  for(let i=0;i<N;i++){
+    const u0=i/N, u1=(i+1)/N, a=f(u0), b=g(u0), a1=f(u1), b1=g(u1);
+    ctx.fillStyle = (a+a1-b-b1)>=0 ? colPos : colNeg;
+    ctx.beginPath(); ctx.moveTo(M.X(u0),M.Y(a)); ctx.lineTo(M.X(u1),M.Y(a1)); ctx.lineTo(M.X(u1),M.Y(b1)); ctx.lineTo(M.X(u0),M.Y(b)); ctx.closePath(); ctx.fill();
+  }
+}
+function timeAxis(ctx,M,f,cycles,y){ // ms labels at each half cycle
+  const mu=css("--muted"), T=1000/f;
+  for(let k=0;k<=cycles*2;k++){ const u=k/(cycles*2); line(ctx,M.X(u),M.y+M.h,M.X(u),M.y+M.h+4,mu,1); txt(ctx,fmt(k*T/2,1),M.X(u),y,mu,"center",11); }
+  txt(ctx,"ms",M.x-16,y,mu,"right",11);
+}
+const L0 = 52, R0 = 26; // left/right margins for plots
+
+/* ---------------- §2 POWER ---------------- */
+const pw = {f:60};
+function drawPow(){
+  const V=+$("pwV").value, I=+$("pwI").value, th=+$("pwT").value*Math.PI/180, f=pw.f;
+  $("pwVOut").textContent=V+" V"; $("pwIOut").textContent=fmt(I,1)+" A"; $("pwTOut").textContent=$("pwT").value+"°";
+  const {ctx,w,h} = prep($("cvPow"));
+  const pw_ = w-L0-R0, ph=(h-50)/3;
+  const ang = u => 4*Math.PI*u + th;
+  const P = 0.5*V*I;
+  const A = panel(ctx,L0,6,pw_,ph-8,-420,420,"v_t (V)",[{v:400,l:"400"},{v:-400,l:"−400"}]);
+  trace(ctx,A,u=>V*Math.cos(ang(u)),400,css("--volt"),2.2);
+  const B = panel(ctx,L0,6+ph,pw_,ph-8,-42,42,"i_t (A)",[{v:40,l:"40"},{v:-40,l:"−40"}]);
+  trace(ctx,B,u=>I*Math.cos(ang(u)),400,css("--curr"),2.2);
+  const C = panel(ctx,L0,6+2*ph,pw_,ph+6,0,16800,"p_t (kW)",[{v:8000,l:"8"},{v:16000,l:"16"}]);
+  fillBetween(ctx,C,u=>V*I*Math.cos(ang(u))**2,u=>0,200,css("--accent-soft"),css("--accent-soft"));
+  trace(ctx,C,u=>V*I*Math.cos(ang(u))**2,400,css("--fund"),2.4);
+  line(ctx,C.X(0),C.Y(P),C.X(1),C.Y(P),css("--muted"),1.5,[6,4]);
+  if(P>200) txt(ctx,"P",C.X(1)+4,C.Y(P),css("--muted"),"left",12);
+  timeAxis(ctx,C,f,2,h-10);
+  const w1=2*Math.PI*f;
+  $("pwRead").innerHTML = "P = ½V̂Î = ½ × "+V+" × "+fmt(I,1)+" = <b>"+kW(P)+"</b> · p swings <b>0 to "+kW(2*P)+"</b> (= V̂Î)<br>"+
+   "pulsation: <b>"+(2*f)+" Hz</b> (period "+fmt(1000/(2*f),2)+" ms), amplitude P · two power pulses per "+fmt(1000/f,2)+" ms line cycle<br>"+
+   "I<sub>d</sub> = P/V<sub>d</sub> at v<sub>d</sub> = 425 V: <b>"+fmt(P/425,1)+" A</b> · ω = "+fmt(w1,1)+" rad/s";
+}
+["pwV","pwI","pwT"].forEach(i=>$(i).addEventListener("input",drawPow));
+$("pw60").addEventListener("click",()=>{pw.f=60; setPressed($("pw60"),$("pw50")); drawPow();});
+$("pw50").addEventListener("click",()=>{pw.f=50; setPressed($("pw50"),$("pw60")); drawPow();});
+
+/* ---------------- §3 DC CURRENT ---------------- */
+const idS = {cap:true, uni:true};
+function drawId(){
+  const mf=+$("idMf").value; $("idMfOut").textContent=mf;
+  const V=340, I=29.5, vd=425, m=V/vd, Id=m*I/2;
+  const {ctx,w,h} = prep($("cvId"));
+  const pw_=w-L0-R0, ph=(h-34)/3, N=Math.max(1500, Math.round(pw_*6));
+  const sw = u => { const th=4*Math.PI*u, c=tri(u*2*mf), r=m*Math.sin(th);
+    if(idS.uni){ const a = r>c?1:0, b = -r>c?1:0; return (a-b)*I*Math.sin(th); }
+    return (r>c?1:-1)*I*Math.sin(th); };
+  const avg = u => m*I*Math.sin(4*Math.PI*u)**2;
+  const tk=[{v:30,l:"30"},{v:0,l:"0"},{v:-30,l:"−30"}];
+  const A = panel(ctx,L0,6,pw_,ph-10,-34,34,"i_d,inv (A): what the bridge draws",tk);
+  trace(ctx,A,sw,N,css("--volt"),1.1);
+  trace(ctx,A,avg,300,css("--curr"),2.4);
+  line(ctx,A.X(0),A.Y(Id),A.X(1),A.Y(Id),css("--fund"),2,[6,4]);
+  const B = panel(ctx,L0,6+ph,pw_,ph-10,-34,34,"i_c (A): out of the capacitor",tk);
+  if(idS.cap){ trace(ctx,B,u=>sw(u)-Id,N,css("--curr"),1.1); }
+  else { line(ctx,B.X(0),B.Y(0),B.X(1),B.Y(0),css("--curr"),2); txt(ctx,"no capacitor, so i_c = 0",B.X(0.5),B.Y(18),css("--muted"),"center",12); }
+  const C = panel(ctx,L0,6+2*ph,pw_,ph-10,-34,34,"i_d (A): what the source supplies",tk);
+  if(idS.cap){ line(ctx,C.X(0),C.Y(Id),C.X(1),C.Y(Id),css("--fund"),2.6); }
+  else { trace(ctx,C,sw,N,css("--bad"),1.1); }
+  timeAxis(ctx,C,60,2,h-10);
+  $("idRead").innerHTML = "Practice inverter: V̂ = 340 V, Î = 29.5 A, v<sub>d</sub> = 425 V (m = 0.800), "+(idS.uni?"unipolar":"bipolar")+" PWM, m<sub>f</sub> = "+mf+"<br>"+
+   "I<sub>d</sub> = P/V<sub>d</sub> = 5015/425 = <b>"+fmt(Id,1)+" A</b> · local average p<sub>t</sub>/V<sub>d</sub> swings 0 to <b>"+fmt(2*Id,1)+" A</b> at 120 Hz<br>"+
+   (idS.cap ? "<span class='verdict ok'>With C</span>the source sees a flat "+fmt(Id,1)+" A; the capacitor supplies everything else (switching pulses and the 120 Hz swing)."
+            : "<span class='verdict no'>No C</span>the source must deliver every pulse, up to "+fmt(I,1)+" A, switching on and off. A non-stiff source can't, so v<sub>d</sub> would collapse and bounce.");
+}
+$("idMf").addEventListener("input",drawId);
+$("idCap").addEventListener("click",()=>{idS.cap=true; setPressed($("idCap"),$("idNo")); drawId();});
+$("idNo").addEventListener("click",()=>{idS.cap=false; setPressed($("idNo"),$("idCap")); drawId();});
+$("idUni").addEventListener("click",()=>{idS.uni=true; setPressed($("idUni"),$("idBi")); drawId();});
+$("idBi").addEventListener("click",()=>{idS.uni=false; setPressed($("idBi"),$("idUni")); drawId();});
+
+/* ---------------- §4 CAPACITOR POWER ---------------- */
+const PC = {P:5020, vd:425, dv:21.25, f:60};
+const pcPt = u => PC.P*(1-Math.cos(8*Math.PI*u));      // v_t = V sin(wt): p_t = P(1 - cos 2wt), 2 line cycles
+const pcPc = u => pcPt(u) - PC.P;                        // delivered by C
+const pcVd = u => PC.vd + PC.dv/2*Math.sin(8*Math.PI*u);
+function setArrow(el, x1,y1,x2,y2, wid, show){ el.setAttribute("x1",x1); el.setAttribute("y1",y1); el.setAttribute("x2",x2); el.setAttribute("y2",y2); el.style.strokeWidth = wid; el.style.opacity = show?1:0; }
+function drawPc(){
+  const u=+$("pcT").value, T=1000/PC.f, tms=u*2*T;
+  $("pcTOut").textContent = fmt(tms,2)+" ms";
+  const {ctx,w,h} = prep($("cvPc"));
+  const pw_=w-L0-R0, ph=(h-34)/3, P=PC.P;
+  const A = panel(ctx,L0,6,pw_,ph-10,0,2.15*P,"p_t (kW)",[{v:P,l:"5.02"},{v:2*P,l:"10.04"}]);
+  fillBetween(ctx,A,pcPt,()=>P,240,css("--dis"),css("--chg"));
+  trace(ctx,A,pcPt,400,css("--volt"),2.4);
+  line(ctx,A.X(0),A.Y(P),A.X(1),A.Y(P),css("--fund"),2,[6,4]);
+  txt(ctx,"p_d = P",A.X(1)-4,A.Y(P)-9,css("--fund"),"right",11);
+  const B = panel(ctx,L0,6+ph,pw_,ph-10,-1.15*P,1.15*P,"p_c = p_t − p_d (kW)",[{v:P,l:"5.02"},{v:-P,l:"−5.02"}]);
+  fillBetween(ctx,B,pcPc,()=>0,240,css("--dis"),css("--chg"));
+  trace(ctx,B,pcPc,400,css("--curr"),2.4);
+  const lo=PC.vd-PC.dv*0.8, hi=PC.vd+PC.dv*0.8;
+  const C = panel(ctx,L0,6+2*ph,pw_,ph-10,lo,hi,"v_d (V), zoomed",[{v:PC.vd+PC.dv/2,l:fmt(PC.vd+PC.dv/2,1)},{v:PC.vd,l:"425"},{v:PC.vd-PC.dv/2,l:fmt(PC.vd-PC.dv/2,1)}]);
+  trace(ctx,C,pcVd,400,css("--ink"),2.2);
+  timeAxis(ctx,C,PC.f,2,h-10);
+  // cursor
+  const cx=A.X(u); line(ctx,cx,4,cx,C.y+C.h,css("--accent"),1.5,[3,3]);
+  [[A,pcPt(u),css("--volt")],[B,pcPc(u),css("--curr")],[C,pcVd(u),css("--ink")]].forEach(([M,v,c])=>{ ctx.fillStyle=c; ctx.beginPath(); ctx.arc(cx,M.Y(v),4.5,0,7); ctx.fill(); });
+  // svg
+  const pt=pcPt(u), pc=pcPc(u), scale=v=>2+9*Math.abs(v)/(2*P);
+  setArrow($("arPd"),70,40,118,40,scale(P),true);
+  $("txPd").textContent="p_d = "+kW(P);
+  setArrow($("arPt"),395,115,462,115,scale(pt),pt>0.03*P);
+  $("txPt").textContent="p_t = "+kW(pt);
+  if(pc>=0) setArrow($("arPc"),172,140,172,78,scale(pc),Math.abs(pc)>0.03*P); else setArrow($("arPc"),172,78,172,140,scale(pc),Math.abs(pc)>0.03*P);
+  $("txPc").textContent="p_c = "+(pc>=0?"+":"")+kW(pc);
+  $("capLevel").style.opacity = fmt(0.25+0.75*(pcVd(u)-(PC.vd-PC.dv/2))/PC.dv,2);
+  const dvdt = Math.cos(8*Math.PI*u);
+  const st = Math.abs(pc)<0.03*P ? "<span class='state mid'>turning point</span>" : pc>0 ? "<span class='state dis'>C discharging</span>" : "<span class='state chg'>C charging</span>";
+  $("pcRead").innerHTML = st+" &nbsp;t = "+fmt(tms,2)+" ms · p<sub>t</sub> = <b>"+kW(pt)+"</b> · p<sub>d</sub> = "+kW(P)+" · p<sub>c</sub> = <b>"+(pc>=0?"+":"")+kW(pc)+"</b><br>"+
+    "v<sub>d</sub> = <b>"+fmt(pcVd(u),2)+" V</b> "+(Math.abs(dvdt)<0.05 ? (Math.sin(8*Math.PI*u)>0?"(at its maximum)":"(at its minimum)") : dvdt>0 ? "and rising" : "and falling");
+}
+$("pcT").addEventListener("input",()=>{ stopPlay(); drawPc(); });
+let pcRAF=null, pcLast=0;
+function stepPlay(ts){ if(!pcLast) pcLast=ts; const dt=(ts-pcLast)/1000; pcLast=ts; const el=$("pcT"); let v=+el.value + dt/8; if(v>1) v-=1; el.value=v; drawPc(); pcRAF=requestAnimationFrame(stepPlay); }
+function stopPlay(){ if(pcRAF){ cancelAnimationFrame(pcRAF); pcRAF=null; $("pcPlay").textContent="Play"; } }
+$("pcPlay").addEventListener("click",()=>{ if(pcRAF){ stopPlay(); } else { pcLast=0; $("pcPlay").textContent="Pause"; pcRAF=requestAnimationFrame(stepPlay); } });
+
+/* ---------------- §5 ENERGY SWING ---------------- */
+const de = {f:60};
+function drawDE(){
+  const P=+$("deP").value, f=de.f, w1=2*Math.PI*f;
+  $("dePOut").textContent = kW(P);
+  const {ctx,w,h} = prep($("cvDE"));
+  const pw_=w-L0-R0;
+  // one line period T; lobe 0..T/4 shaded
+  const M = panel(ctx,L0,8,pw_,h-40,-10500,10500,"p_c = P sin(2ωt) (kW)",[{v:10000,l:"10"},{v:5000,l:"5"},{v:-5000,l:"−5"},{v:-10000,l:"−10"}]);
+  const fn = u => P*Math.sin(4*Math.PI*u);
+  ctx.fillStyle = css("--dis"); ctx.beginPath(); ctx.moveTo(M.X(0),M.Y(0));
+  for(let i=0;i<=120;i++){ const u=0.25*i/120; ctx.lineTo(M.X(u),M.Y(fn(u))); } ctx.lineTo(M.X(0.25),M.Y(0)); ctx.closePath(); ctx.fill();
+  trace(ctx,M,fn,400,css("--curr"),2.4);
+  txt(ctx,"ΔE",M.X(0.125),M.Y(P*0.45),css("--ink"),"center",14);
+  const T=1000/f, mu=css("--muted");
+  [0,0.25,0.5,0.75,1].forEach(u=>{ line(ctx,M.X(u),M.Y(0)-3,M.X(u),M.Y(0)+3,mu,1); txt(ctx,fmt(u*T,2),M.X(u),h-12,mu,"center",11); });
+  txt(ctx,"ms",M.x-16,h-12,mu,"right",11);
+  // numeric integral
+  let s=0; const n=2000, tl=Math.PI/(2*w1); for(let i=0;i<n;i++){ const t=(i+0.5)*tl/n; s+=P*Math.sin(2*w1*t)*tl/n; }
+  $("deRead").innerHTML = "ω = 2π("+f+") = "+fmt(w1,1)+" rad/s · lobe from 0 to π/(2ω) = <b>"+fmt(tl*1000,2)+" ms</b> (a quarter of "+fmt(T,2)+" ms)<br>"+
+   "formula: ΔE = P/ω = "+fmt(P,0)+"/"+fmt(w1,1)+" = <b>"+fmt(P/w1,2)+" J</b> · numerical area of the shaded lobe: "+fmt(s,2)+" J";
+}
+$("deP").addEventListener("input",drawDE);
+$("de60").addEventListener("click",()=>{de.f=60; setPressed($("de60"),$("de50")); drawDE();});
+$("de50").addEventListener("click",()=>{de.f=50; setPressed($("de50"),$("de60")); drawDE();});
+
+/* ---------------- §6 CAPACITOR CALCULATOR ---------------- */
+let cMode="C";
+function calcCap(){
+  const P=+$("cP").value, vd=+$("cVd").value, f=+$("cF").value;
+  const S=$("cSteps");
+  if(!(P>0 && vd>0 && f>0)){ S.innerHTML="<div>Enter positive values for P, v<sub>d</sub> and f.</div>"; return; }
+  const w1=2*Math.PI*f, dE=P/w1;
+  let C, dv;
+  if(cMode==="C"){ dv=+$("cDv").value; if(!(dv>0)){ S.innerHTML="<div>Enter a positive ripple Δv<sub>d</sub>.</div>"; return; } C=dE/(vd*dv); }
+  else { C=+$("cC").value/1000; if(!(C>0)){ S.innerHTML="<div>Enter a positive capacitance.</div>"; return; } dv=dE/(vd*C); }
+  const E=0.5*C*vd*vd, Id=P/vd;
+  let html = "<div>ω = 2π("+f+") = "+fmt(w1,1)+" rad/s</div>"+
+    "<div>ΔE = P/ω = "+fmt(P,0)+"/"+fmt(w1,1)+" = <b>"+fmt(dE,2)+" J</b></div>";
+  if(cMode==="C") html += "<div>C ≥ ΔE/(v<sub>d</sub>Δv<sub>d</sub>) = "+fmt(dE,2)+"/("+fmt(vd,0)+" × "+fmt(dv,2)+") = <b>"+fmt(C*1000,3)+" mF</b> <span class='c'> ("+fmt(C*1e6,0)+" µF)</span></div>";
+  else html += "<div>Δv<sub>d</sub> = ΔE/(v<sub>d</sub>C) = "+fmt(dE,2)+"/("+fmt(vd,0)+" × "+fmt(C*1000,3)+" mF) = <b>"+fmt(dv,2)+" V</b> peak-to-peak</div>";
+  html += "<div class='c'>ripple = "+fmt(100*dv/vd,2)+"% of v<sub>d</sub> · v<sub>d</sub> swings "+fmt(vd-dv/2,2)+" V to "+fmt(vd+dv/2,2)+" V at "+fmt(2*f,0)+" Hz</div>"+
+    "<div class='c'>check: E = ½Cv<sub>d</sub>² = "+fmt(E,1)+" J, ΔE/E = "+fmt(100*dE/E,2)+"% = 2Δv<sub>d</sub>/v<sub>d</sub> ✓</div>"+
+    "<div class='c'>I<sub>d</sub> = P/v<sub>d</sub> = "+fmt(Id,2)+" A; the capacitor's 2ω current is about ±"+fmt(Id,2)+" A (p<sub>c</sub>/v<sub>d</sub>)</div>";
+  S.innerHTML = html;
+  // ripple plot
+  const {ctx,w,h} = prep($("cvRip"));
+  const pw_=w-L0-R0, span=Math.max(dv*0.8,0.5);
+  const M = panel(ctx,L0,8,pw_,h-40,vd-span,vd+span,"v_d (V)",[{v:vd+dv/2,l:fmt(vd+dv/2,1)},{v:vd,l:fmt(vd,0)},{v:vd-dv/2,l:fmt(vd-dv/2,1)}]);
+  line(ctx,M.X(0),M.Y(vd+dv/2),M.X(1),M.Y(vd+dv/2),css("--curr"),1.5,[6,4]);
+  line(ctx,M.X(0),M.Y(vd-dv/2),M.X(1),M.Y(vd-dv/2),css("--curr"),1.5,[6,4]);
+  trace(ctx,M,u=>vd+dv/2*Math.sin(8*Math.PI*u),400,css("--ink"),2.4);
+  const xa=M.X(0.0625+0.25); line(ctx,xa,M.Y(vd+dv/2),xa,M.Y(vd-dv/2),css("--accent"),1.5);
+  txt(ctx,"Δv_d = "+fmt(dv,2)+" V",xa+6,M.Y(vd),css("--accent"),"left",12);
+  timeAxis(ctx,M,f,2,h-12);
+}
+["cP","cVd","cF","cDv","cC"].forEach(i=>$(i).addEventListener("input",calcCap));
+$("cmC").addEventListener("click",()=>{ cMode="C"; setPressed($("cmC"),$("cmV")); $("cDvWrap").hidden=false; $("cCWrap").hidden=true; calcCap(); });
+$("cmV").addEventListener("click",()=>{
+  if(cMode==="C"){ const P=+$("cP").value, vd=+$("cVd").value, f=+$("cF").value, dv=+$("cDv").value; const C=P/(2*Math.PI*f)/(vd*dv); if(isFinite(C)&&C>0) $("cC").value=(C*1000).toFixed(3); }
+  cMode="V"; setPressed($("cmV"),$("cmC")); $("cDvWrap").hidden=true; $("cCWrap").hidden=false; calcCap(); });
+
+/* ---------------- §7 THREE-PHASE CANCELLATION ---------------- */
+function draw3p(){
+  const dg=+$("tpD").value, d=dg*Math.PI/180, b=+$("tpB").value;
+  $("tpDOut").textContent=dg+"°"; $("tpBOut").textContent=Math.round(b*100)+"%";
+  const narrow = ($("cv3p").clientWidth||600) < 540;
+  const {ctx,w,h} = prep($("cv3p"), narrow ? 470 : 300);
+  const plotW = narrow ? w-L0-R0 : w-L0-R0-190, plotH = narrow ? 260 : h-40;
+  const x2 = u => 8*Math.PI*u; // 2wt over two line cycles
+  const pA=u=>1+Math.cos(x2(u)), pB=u=>b*(1+Math.cos(x2(u)-2*d)), pC=u=>1+Math.cos(x2(u)+2*d);
+  const M = panel(ctx,L0,8,plotW,plotH,0,4.4,"p (in units of P)",[{v:1,l:"P"},{v:2,l:"2P"},{v:3,l:"3P"},{v:4,l:"4P"}]);
+  line(ctx,M.X(0),M.Y(3),M.X(1),M.Y(3),css("--muted"),1.5,[6,4]);
+  trace(ctx,M,pA,300,css("--volt"),1.8); trace(ctx,M,pB,300,css("--fund"),1.8); trace(ctx,M,pC,300,css("--ph3"),1.8);
+  trace(ctx,M,u=>pA(u)+pB(u)+pC(u),300,css("--ink"),3);
+  timeAxis(ctx,M,60,2,8+plotH+14);
+  // phasor diagram of 2w terms
+  const cx = narrow ? w/2 : w-R0-90, cy = narrow ? 8+plotH+30+85 : 8+plotH/2+6, r=62;
+  const mu=css("--muted");
+  ctx.beginPath(); ctx.strokeStyle=css("--grid"); ctx.lineWidth=1; ctx.arc(cx,cy,r,0,7); ctx.stroke();
+  txt(ctx,"2ω terms",cx,cy-r-12,css("--ink"),"center",12);
+  const arrow=(ang,len,col,wid,x0,y0)=>{ const X0=x0??cx, Y0=y0??cy, x=X0+r*len*Math.cos(ang), y=Y0-r*len*Math.sin(ang);
+    line(ctx,X0,Y0,x,y,col,wid); const a=Math.atan2(y-Y0,x-X0); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x-8*Math.cos(a-0.4),y-8*Math.sin(a-0.4)); ctx.lineTo(x-8*Math.cos(a+0.4),y-8*Math.sin(a+0.4)); ctx.closePath(); ctx.fill(); return [x,y]; };
+  arrow(0,1,css("--volt"),2.2); arrow(-2*d,b,css("--fund"),2.2); arrow(2*d,1,css("--ph3"),2.2);
+  const re = 1 + b*Math.cos(-2*d) + Math.cos(2*d), im = b*Math.sin(-2*d) + Math.sin(2*d), mag=Math.hypot(re,im);
+  if(mag>0.02) arrow(Math.atan2(im,re),Math.min(mag,1.35),css("--ink"),3); else { ctx.fillStyle=css("--ink"); ctx.beginPath(); ctx.arc(cx,cy,4,0,7); ctx.fill(); }
+  txt(ctx,"sum = "+fmt(mag,2)+"P",cx,cy+r+14,css("--ink"),"center",12);
+  const flat = mag<0.01;
+  $("tpRead").innerHTML = "phases at 0°, −"+dg+"°, +"+dg+"° → their 2ω terms at 0°, −"+(2*dg)+"°, +"+(2*dg)+"°<br>"+
+   "total p = "+fmt(2+b,2)+"P average, 2ω ripple amplitude <b>"+fmt(mag,2)+"P</b> "+(flat ? "<span class='verdict ok'>flat: p = 3P</span>" : "<span class='verdict no'>ripple remains</span>");
+}
+["tpD","tpB"].forEach(i=>$(i).addEventListener("input",draw3p));
+$("tpReset").addEventListener("click",()=>{ $("tpD").value=120; $("tpB").value=1; draw3p(); });
+
+/* ---------------- §8 THREE-PHASE DC SIDE ---------------- */
+const D3 = {vd:425, m:0.8, I:19.69};
+function draw3i(){
+  const phiD=+$("d3Phi").value, phi=phiD*Math.PI/180, mf=+$("d3Mf").value;
+  $("d3PhiOut").textContent = phiD+"° (pf "+fmt(Math.cos(phi),2)+")"; $("d3MfOut").textContent=mf;
+  const {ctx,w,h} = prep($("cv3i"));
+  const pw_=w-L0-R0, ph=(h-34)/4, N=Math.max(1500,Math.round(pw_*6)), I=D3.I, m=D3.m;
+  const Vph = m*D3.vd/2, Ptot = 1.5*Vph*I*Math.cos(phi), Id = Ptot/D3.vd;
+  const th = (u,k) => 4*Math.PI*u - 2*Math.PI*k/3;
+  const ik = (u,k) => I*Math.cos(th(u,k)-phi);
+  const idinv = u => { const c=tri(u*2*mf); let s=0; for(let k=0;k<3;k++){ if(m*Math.cos(th(u,k))>c) s+=ik(u,k); } return s; };
+  const tk=[{v:20,l:"20"},{v:-20,l:"−20"}];
+  const A = panel(ctx,L0,6,pw_,ph-10,-24,24,"i_tA, i_tB, i_tC (A)",tk);
+  [css("--volt"),css("--fund"),css("--ph3")].forEach((c,k)=>trace(ctx,A,u=>ik(u,k),300,c,1.8));
+  const B = panel(ctx,L0,6+ph,pw_,ph-10,-24,24,"i_d,inv (A)",tk);
+  trace(ctx,B,idinv,N,css("--volt"),1.1);
+  line(ctx,B.X(0),B.Y(Id),B.X(1),B.Y(Id),css("--curr"),2.4);
+  const C = panel(ctx,L0,6+2*ph,pw_,ph-10,-34,24,"i_c = i_d,inv − i_d (A)",[{v:-30,l:"−30"},{v:20,l:"20"}]);
+  trace(ctx,C,u=>idinv(u)-Id,N,css("--curr"),1.1);
+  const D = panel(ctx,L0,6+3*ph,pw_,ph-10,-6,16,"i_d (A)",[{v:12,l:"12"}]);
+  line(ctx,D.X(0),D.Y(Id),D.X(1),D.Y(Id),css("--ink"),2.6);
+  timeAxis(ctx,D,60,2,h-10);
+  $("d3Read").innerHTML = "per phase: 170 V peak to N, 19.7 A peak, lag φ = "+phiD+"° · total P = 3 × ½ × 170 × 19.69 × cos φ = <b>"+kW(Ptot)+"</b><br>"+
+   "I<sub>d</sub> = P/v<sub>d</sub> = <b>"+fmt(Id,2)+" A</b>, constant: the local average of i<sub>d,inv</sub> has no 120 Hz part at any pf"+
+   (phiD>=89 ? "<br><span class='verdict mid'>pf = 0</span>p<sub>t</sub> = 0 and I<sub>d</sub> = 0. The pulses are still there; the capacitor carries them." : "");
+}
+["d3Phi","d3Mf"].forEach(i=>$(i).addEventListener("input",draw3i));
+document.querySelectorAll("[data-pf]").forEach(bt=>bt.addEventListener("click",()=>{
+  $("d3Phi").value = bt.dataset.pf; draw3i();
+  if(!bt.closest("#dc3Demo")) $("dc3Demo").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"center"});
+}));
+
+/* ---------------- INIT + THEME ---------------- */
+function drawAll(){ drawPow(); drawId(); drawPc(); drawDE(); calcCap(); draw3p(); draw3i(); }
+drawAll();
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(drawAll,80); });
+try{ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll); }catch(e){}
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,1432 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Superposition and Wave Speed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num, th.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+td.nil{color:var(--muted); text-align:right}
+.hlcol{background:var(--hl)}
+tr.dim td{opacity:.38}
+.tagpill{display:inline-block; font-family:var(--display); font-size:11px; font-weight:700; letter-spacing:.04em; padding:1px 7px; border-radius:99px; margin-left:6px; vertical-align:1px}
+.tagpill.first{background:var(--accent-soft); color:var(--accent)}
+.tagpill.big{background:var(--bad-bg); color:var(--bad)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls label[hidden]{display:none}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{color:var(--muted)}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} #hb .sw rect{transition:none} }
+/* additions for this guide */
+.controls select{font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls select:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls input[type=checkbox]{accent-color:var(--accent); width:16px; height:16px}
+.btnrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.chain{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px}
+.chain .arrow{display:none}
+@media (max-width:700px){ .chain{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:420px){ .chain{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.note{font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:8px}
+.bigbr{font-size:2.1em; font-weight:300; vertical-align:middle; line-height:1}
+.flag{background:var(--hl); border-radius:4px; padding:0 4px}
+.steps .ans{color:var(--good); font-weight:600}
+.steps .err{color:var(--bad); font-weight:600}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <h2>Part 1 · Adding waves (3a)</h2>
+  <ol>
+    <li><a href="#s1">1 Adding two waves <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 In step, out of step <span class="chip" data-chip="q2"></span></a></li>
+    <li><a href="#s3">3 Exercise 1 <span class="chip" data-chip="q3"></span></a></li>
+  </ol>
+  <h2>Part 2 · Sound and strings (3a)</h2>
+  <ol>
+    <li><a href="#s4">4 Travelling sound wave <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 Speed on a string <span class="chip" data-chip="q5"></span></a></li>
+    <li><a href="#s6">6 The wave equation <span class="chip" data-chip="q6"></span></a></li>
+  </ol>
+  <h2>Part 3 · Speed of sound in matter (3b)</h2>
+  <ol>
+    <li><a href="#s7">7 Fluids and bulk modulus <span class="chip" data-chip="q7"></span></a></li>
+    <li><a href="#s8"><span>8 Proof of ΔP<sub>m</sub> = vρωs<sub>m</sub></span> <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Ideal gas and Mars <span class="chip" data-chip="q9"></span></a></li>
+    <li><a href="#s10">10 Solids <span class="chip" data-chip="q10"></span></a></li>
+  </ol>
+  <h2>Wrap-up</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+  <h2>Your scores</h2>
+  <ol>
+    <li><a href="#final" aria-live="polite">Total <span class="chip" id="totalChip">0/0</span></a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">PHYS 365 · Lectures 3a and 3b · Study guide</div>
+  <h1>Superposition and wave speed</h1>
+  <p class="lede">Two ideas run through these lectures. First, when waves overlap you just <b>add their displacements</b>, and the phase difference φ decides whether they build up or cancel. Second, every mechanical wave's speed follows one rule: <b>v = √(restoring force ÷ inertia)</b>. Strings, fluids, gases and solids only differ in what plays those two roles.</p>
+  <div class="chain" aria-label="Topics in lecture order">
+    <div class="blk"><b>Two waves add</b><span>y<sub>R</sub> = y<sub>1</sub> + y<sub>2</sub></span><span class="secs">§1 to §3</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Sound wave</b><span>displacement and pressure</span><span class="secs">§4</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>String</b><span>√(τ/μ)</span><span class="secs">§5, §6</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Fluid</b><span>√(B/ρ)</span><span class="secs">§7, §8</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Ideal gas</b><span>√(γRT/M)</span><span class="secs">§9</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Solid</b><span>√(Y/ρ)</span><span class="secs">§10</span></div>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · Adding waves (Lecture 3a)</h2>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>Adding two waves: the superposition formula</h3>
+<p>Two travelling waves run along the same stretched string. They have the same amplitude y<sub>m</sub>, the same k and the same ω. The only difference is that the second one is shifted by a <b>phase constant φ</b>:</p>
+<div class="eq">
+  <span class="row"><i>y</i><sub>1</sub>(<i>x,t</i>) = <i>y<sub>m</sub></i> sin(<i>kx</i> − <i>ωt</i>) <span class="note">call the bracket α</span></span>
+  <span class="row"><i>y</i><sub>2</sub>(<i>x,t</i>) = <i>y<sub>m</sub></i> sin(<i>kx</i> − <i>ωt</i> + <i>φ</i>) <span class="note">call the bracket β</span></span>
+</div>
+<p>The <b>principle of superposition</b> says the string's actual displacement is simply the sum, point by point and instant by instant: y<sub>R</sub> = y<sub>1</sub> + y<sub>2</sub>. To tidy the sum up, the lecture uses the sum-to-product identity:</p>
+<div class="eq">
+  <span class="row">sin α + sin β = 2 sin<span class="frac"><span>α + β</span><span>2</span></span> cos<span class="frac"><span>α − β</span><span>2</span></span></span>
+</div>
+<p>Here (α + β)/2 = kx − ωt + φ/2 and (α − β)/2 = −φ/2. Cosine doesn't care about the sign, so cos(−φ/2) = cos(φ/2). The result:</p>
+<div class="eq">
+  <span class="row"><i>y<sub>R</sub></i> = [2<i>y<sub>m</sub></i> cos(<i>φ</i>/2)] sin(<i>kx</i> − <i>ωt</i> + <i>φ</i>/2)</span>
+  <span class="row"><i>A<sub>m</sub></i> = 2<i>y<sub>m</sub></i> cos(<i>φ</i>/2) <span class="note">amplitude of the resultant</span></span>
+</div>
+<p>Read it in two pieces. The sine part is a normal travelling wave with the <b>same k and ω</b> as before, just with phase constant φ/2. The bracket in front is its amplitude, and it is set entirely by φ.</p>
+
+<div class="callout analogy"><span class="tag">Analogy · two people pushing a swing</span>
+<p>Two people push the same swing with equal strength and the same rhythm. If they push at the same moment (φ = 0), the swing goes twice as high. If one pushes exactly when the other pulls (φ = π), nothing happens. Anything in between gives something in between, and cos(φ/2) is the exact "how in sync are they" score.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: two waves and their sum</div>
+  <canvas id="cvS1" height="300" aria-label="Wave 1, wave 2 and their sum"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>y<sub>1</sub></span><span><i style="background:var(--curr)"></i>y<sub>2</sub></span><span><i style="background:var(--fund)"></i>y<sub>R</sub> = y<sub>1</sub> + y<sub>2</sub></span></div>
+  <div class="controls">
+    <label for="s1ym">y<sub>m</sub> <input type="range" id="s1ym" min="1" max="10" step="0.5" value="9"><output id="s1ymO"></output></label>
+    <label for="s1phi">φ <input type="range" id="s1phi" min="0" max="6.2832" step="0.0001" value="2.6934"><output id="s1phiO"></output></label>
+  </div>
+  <div class="btnrow">
+    <button class="btn" type="button" data-s1="2.6934">Exercise 1 (φ = 2.69 rad)</button>
+    <button class="btn" type="button" data-s1="0">φ = 0</button>
+    <button class="btn" type="button" data-s1="3.14159">φ = π</button>
+    <button class="btn" type="button" id="s1play">Pause</button>
+  </div>
+  <div class="readout" id="s1read"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>φ/2 shows up twice.</b> Once inside the cosine (amplitude) and once inside the sine (phase constant). Students often write φ in one of them.</li>
+<li><b>The amplitude is the size of 2y<sub>m</sub>cos(φ/2).</b> If cos(φ/2) is negative (φ between π and 3π), the minus sign just flips the wave. Report a positive amplitude.</li>
+<li>This tidy formula needs <b>equal amplitudes and the same k and ω</b>. With different k or ω the sum is not a single sinusoid any more.</li>
+<li>Superposition doesn't change either wave. Each keeps travelling as if the other weren't there; only the string's total displacement is the sum.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: adding two waves"></div>
+</section>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>Fully in step and fully out of step</h3>
+<p>The lecture sketches the two extreme cases.</p>
+<h4>φ = 0: constructive</h4>
+<p>With y<sub>1</sub> = y<sub>m1</sub> sin(kx − ωt) and y<sub>2</sub> = y<sub>m2</sub> sin(kx − ωt), the crests line up exactly. Every point's displacements add, so the resultant has amplitude <b>y<sub>m1</sub> + y<sub>m2</sub></b>. (The amplitudes don't even have to be equal for this.)</p>
+<h4>φ = π: destructive</h4>
+<p>With y<sub>2</sub> = y<sub>m</sub> sin(kx − ωt + π), wave 2 is wave 1 flipped upside down. Where wave 1 has +y<sub>m</sub>, wave 2 has −y<sub>m</sub>, and y<sub>m</sub> − y<sub>m</sub> = 0. The lecture's picture: a <b>flat string</b>. The waves cancel off.</p>
+<div class="eq">
+  <span class="row">φ = 0: &nbsp;<i>A</i> = <i>y</i><sub>m1</sub> + <i>y</i><sub>m2</sub> &nbsp;(equal: 2<i>y<sub>m</sub></i>)</span>
+  <span class="row">φ = π: &nbsp;<i>A</i> = |<i>y</i><sub>m1</sub> − <i>y</i><sub>m2</sub>| &nbsp;(equal: 0)</span>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>φ</th><th class="num">cos(φ/2)</th><th class="num">A<sub>m</sub> (equal amplitudes)</th><th>Name</th></tr></thead>
+<tbody>
+<tr><td>0</td><td class="num">1.000</td><td class="num">2y<sub>m</sub></td><td>fully constructive</td></tr>
+<tr><td>π/2</td><td class="num">0.707</td><td class="num">1.41y<sub>m</sub></td><td>intermediate</td></tr>
+<tr><td>2π/3</td><td class="num">0.500</td><td class="num">y<sub>m</sub></td><td>intermediate</td></tr>
+<tr><td>π</td><td class="num">0.000</td><td class="num">0</td><td>fully destructive</td></tr>
+<tr><td>2π</td><td class="num">−1.000</td><td class="num">2y<sub>m</sub></td><td>fully constructive again</td></tr>
+</tbody></table></div>
+
+<div class="callout analogy"><span class="tag">Analogy · noise-cancelling headphones</span>
+<p>Headphones play a copy of the outside noise shifted by π. Your eardrum receives the sum, which is (nearly) nothing. Both sound waves still exist in the air; they just add to zero where your ear is.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: unequal amplitudes, φ = 0 or π</div>
+  <canvas id="cvS2" height="300" aria-label="Constructive and destructive superposition"></canvas>
+  <div class="controls">
+    <label for="s2a">y<sub>m1</sub> <input type="range" id="s2a" min="0" max="10" step="0.5" value="5"><output id="s2aO"></output></label>
+    <label for="s2b">y<sub>m2</sub> <input type="range" id="s2b" min="0" max="10" step="0.5" value="5"><output id="s2bO"></output></label>
+    <span class="seg" role="group" aria-label="Phase difference"><button type="button" id="s2p0" aria-pressed="false">φ = 0</button><button type="button" id="s2pi" aria-pressed="true">φ = π</button></span>
+  </div>
+  <div class="readout" id="s2read"></div>
+  <div class="note">Starts at the lecture's page 3 case: equal amplitudes, φ = π, flat string. Slide the amplitudes apart to see that cancellation is only complete when they match.</div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>φ = 2π is the same as φ = 0.</b> A shift of a whole cycle lines the crests up again. The formula agrees: |2y<sub>m</sub>cos(π)| = 2y<sub>m</sub>.</li>
+<li><b>φ = π only gives a flat string if the amplitudes are equal.</b> With 3 mm and 5 mm you're left with 2 mm.</li>
+<li>"Flat" means flat <b>at every instant</b>, not just at one moment. That's because both waves move together at the same speed.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: constructive and destructive"></div>
+</section>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>Worked example: Exercise 1</h3>
+<p><b>The problem (lecture 3a, p. 4).</b> Two sinusoidal waves travel on a string with A<sub>1</sub> = A<sub>2</sub> = 9 mm. They have the same λ and ω: λ<sub>1</sub> = λ<sub>2</sub> = 0.4 m. Their resultant has A<sub>R</sub> = 4 mm, has λ<sub>R</sub> = λ<sub>1</sub> = λ<sub>2</sub>, and travels in the <b>negative x-direction</b> by 56 cm in 8 ms. If y<sub>1</sub> = y<sub>m</sub> sin(kx ± ωt + φ<sub>1</sub>) with φ<sub>1</sub> = 0, find y<sub>m</sub>, k, ω, φ and the sign in front of ω for the resultant wave.</p>
+
+<details class="work" open><summary>Full solution, step by step</summary><div class="body">
+<p><b>a) Amplitude.</b> Write both waves with the unknown sign:</p>
+<div class="eq"><span class="row"><i>y</i><sub>1</sub> = <i>y<sub>m</sub></i> sin(<i>kx</i> ± <i>ωt</i>), &nbsp; <i>y</i><sub>2</sub> = <i>y<sub>m</sub></i> sin(<i>kx</i> ± <i>ωt</i> + <i>φ</i>)</span>
+<span class="row"><i>A</i><sub>1</sub> = <i>A</i><sub>2</sub> = <i>y<sub>m</sub></i> = <b>9 × 10<sup>−3</sup> m</b></span></div>
+<p><b>b) Wave number.</b> The resultant has the same wavelength, λ<sub>R</sub> = 0.4 m, so it shares k:</p>
+<div class="eq"><span class="row"><i>k</i><sub>2</sub> = <span class="frac"><span>2π</span><span>λ<sub>2</sub></span></span> = <span class="frac"><span>2π</span><span>0.4 m</span></span> = 15.7 ≈ <b>16 rad/m</b> = <i>k<sub>R</sub></i></span></div>
+<p><b>c) Speed, then angular frequency.</b> The resultant moves 56 cm in 8 ms:</p>
+<div class="eq"><span class="row"><i>v<sub>R</sub></i> = <span class="frac"><span>Δx</span><span>Δt</span></span> = <span class="frac"><span>0.56 m</span><span>8 × 10<sup>−3</sup> s</span></span> = <b>70 m/s</b></span>
+<span class="row"><i>v<sub>R</sub></i> = <span class="frac"><span><i>ω<sub>R</sub></i></span><span><i>k<sub>R</sub></i></span></span> → <i>ω</i><sub>2</sub> = <i>ω<sub>R</sub></i> = (70)(16) = <b>1120 rad/s</b></span></div>
+<p><b>d) Phase constant and sign.</b> Use the superposition result with the + sign:</p>
+<div class="eq"><span class="row"><i>y<sub>R</sub></i> = 2<i>y<sub>m</sub></i> cos(<i>φ</i>/2) sin(<i>k<sub>R</sub>x</i> + <i>ω<sub>R</sub>t</i> + <i>φ</i>/2)</span>
+<span class="row"><i>A<sub>R</sub></i> = 2(9 mm) cos(<i>φ</i>/2) = 4 mm</span>
+<span class="row">cos(<i>φ</i>/2) = 4/18 = 0.222 → <i>φ</i>/2 = 1.347 rad → <i>φ</i> = <b>2.69 rad</b></span></div>
+<p>The sign in front of ω is <b>+</b>, because the resultant travels in the (−) x-direction.</p>
+<p><b>Putting it together:</b> y<sub>R</sub> = (4 mm) sin(16x + 1120t + 1.35), with x in m and t in s.</p>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Exercise 1 calculator (loaded with the lecture's numbers)</div>
+  <div class="controls">
+    <label for="e1A">A<sub>1</sub> = A<sub>2</sub> (mm) <input type="number" id="e1A" value="9" step="0.5" min="0"></label>
+    <label for="e1AR">A<sub>R</sub> (mm) <input type="number" id="e1AR" value="4" step="0.5" min="0"></label>
+    <label for="e1lam">λ (m) <input type="number" id="e1lam" value="0.4" step="0.05" min="0"></label>
+    <label for="e1dx">distance (cm) <input type="number" id="e1dx" value="56" step="1" min="0"></label>
+    <label for="e1dt">time (ms) <input type="number" id="e1dt" value="8" step="0.5" min="0"></label>
+    <span class="seg" role="group" aria-label="Direction of travel"><button type="button" id="e1neg" aria-pressed="true">moves −x</button><button type="button" id="e1pos" aria-pressed="false">moves +x</button></span>
+    <label for="e1round"><input type="checkbox" id="e1round" checked> round k like the lecture</label>
+  </div>
+  <div class="steps" id="e1out"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · reading a race result backwards</span>
+<p>You're told how far the runner went and how long it took (speed), and how long each stride is (λ). From those you rebuild the cadence (ω = vk). The amplitude clue works the same way: the final height of 4 mm tells you how badly out of sync the two waves were.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Rounding k changes ω.</b> 2π/0.4 = 15.7 rad/m. The lecture rounds to 16 and gets 1120 rad/s. Keeping 15.7 gives 1100 rad/s. Either is fine if you show the work; untick the box in the calculator to see both.</li>
+<li><b>Convert units first.</b> 56 cm → 0.56 m and 8 ms → 8 × 10<sup>−3</sup> s, or you're off by a factor of 1000 or 100.</li>
+<li><b>Sign rule:</b> kx − ωt moves toward +x, kx + ωt moves toward −x. Ask: "to keep the phase constant as t grows, which way must x go?"</li>
+<li><b>arccos gives φ/2, not φ.</b> Double it. And put your calculator in radians.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: Exercise 1 style problems"></div>
+</section>
+
+<h2 class="part">Part 2 · Sound and strings (Lecture 3a)</h2>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>The travelling sound wave: displacement and pressure</h3>
+<p>Sound in a pipe is a <b>longitudinal</b> wave: the air molecules jiggle back and forth <b>along</b> the direction the wave travels. Where they bunch up you get a compression (higher pressure); where they spread out you get a rarefaction (lower pressure). The lecture describes the same wave in two ways:</p>
+<div class="eq">
+  <span class="row"><i>s</i>(<i>x,t</i>) = <i>s<sub>m</sub></i> cos(<i>kx</i> − <i>ωt</i>) <span class="note">longitudinal displacement</span></span>
+  <span class="row">Δ<i>P</i>(<i>x,t</i>) = Δ<i>P<sub>m</sub></i> sin(<i>kx</i> − <i>ωt</i>) <span class="note">pressure change</span></span>
+  <span class="row">Δ<i>P<sub>m</sub></i> = (<i>vρω</i>) <i>s<sub>m</sub></i> <span class="note">v = wave speed, ρ = fluid density</span></span>
+</div>
+<p>One is a cosine and the other a sine, so they are a <b>quarter cycle (90°) apart</b>. Where the molecules are displaced the most, they are momentarily at the edge of their swing and the pressure change is zero. The pressure change is largest where the displacement is zero, because that's where neighbours on either side are pushed toward (or pulled away from) the same spot.</p>
+<p><b>Unit check</b> on ΔP<sub>m</sub> = vρω s<sub>m</sub>: (m/s)(kg/m³)(1/s)(m) = kg/(m·s²) = N/m² = Pa. That's a pressure, as it should be.</p>
+
+<div class="demo">
+  <div class="dtitle">Watch it: particles in a pipe, with s(x) and ΔP(x)</div>
+  <canvas id="cvSnd" height="300" aria-label="Particles in a pipe with displacement and pressure graphs"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>displacement s</span><span><i style="background:var(--curr)"></i>pressure change ΔP</span></div>
+  <div class="btnrow"><button class="btn" type="button" id="sndPlay">Pause</button></div>
+  <h4>ΔP<sub>m</sub> calculator</h4>
+  <div class="controls">
+    <label for="sndV">v (m/s) <input type="number" id="sndV" value="343" step="1"></label>
+    <label for="sndRho">ρ (kg/m³) <input type="number" id="sndRho" value="1.21" step="0.01"></label>
+    <label for="sndF">f (Hz) <input type="number" id="sndF" value="1000" step="10"></label>
+    <label for="sndS">s<sub>m</sub> (µm) <input type="number" id="sndS" value="1.0" step="0.1"></label>
+  </div>
+  <div class="steps" id="sndOut"></div>
+  <div class="note">The notes give no numbers here, so these are example values for air at 20 °C. Particle motion is exaggerated so you can see it.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a crowd doing "the wave" sideways</span>
+<p>Picture a queue of people who each shuffle forward and back. A person at the far end of their shuffle (biggest displacement) isn't squeezed: their neighbours shuffled the same way. The squeeze is worst at the person standing in their normal spot while the people behind are pushed forward and the people ahead are pushed back toward them.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li>The displacement graph is drawn going up and down, but the <b>motion is along x</b>. The graph's height means "how far left or right."</li>
+<li><b>ΔP is the change from normal air pressure</b>, not the total pressure. ΔP<sub>m</sub> is usually a few pascals, against about 10<sup>5</sup> Pa ambient.</li>
+<li>ΔP<sub>m</sub> uses <b>ω = 2πf</b>, not f. Plugging f in makes your answer 2π too small.</li>
+<li>Because of the 90° shift: s maximum ⇔ ΔP = 0, and s = 0 ⇔ |ΔP| maximum.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: sound waves"></div>
+</section>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>Wave speed on a stretched string</h3>
+<p>Two things set how fast a pulse runs along a string:</p>
+<ul class="plain">
+<li><b>Linear density μ</b> (mass per length). More mass per metre means more inertia: each bit of string responds more sluggishly, so the wave is <b>slower</b>.</li>
+<li><b>Tension τ</b>. Higher tension means a stronger pull back toward straight, so the wave is <b>faster</b>.</li>
+</ul>
+<div class="eq">
+  <span class="row"><i>v</i> = √(<i>τ</i>/<i>μ</i>), &nbsp; <i>μ</i> = <span class="frac"><span><i>m</i></span><span><i>L</i></span></span> <span class="note">linear density (kg/m)</span></span>
+</div>
+<p>The lecture's sketch of a moving pulse shows why: at each point on the hump the tension pulls along the string on both sides. Those two pulls don't quite cancel, and the leftover <b>τ<sub>net</sub></b> points toward the straight line. That net pull is the restoring force; μ is the inertia it fights.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: string speed calculator with a live pulse</div>
+  <canvas id="cvStr" height="130" aria-label="Pulse travelling on a string"></canvas>
+  <div class="controls">
+    <label for="strT">τ (N) <input type="number" id="strT" value="100" step="5" min="0"></label>
+    <label for="strM">m (g) <input type="number" id="strM" value="10" step="1" min="0"></label>
+    <label for="strL">L (m) <input type="number" id="strL" value="1.0" step="0.1" min="0"></label>
+  </div>
+  <div class="steps" id="strOut"></div>
+  <div class="note">Example values (no numbers in the notes). The pulse's on-screen speed is proportional to v, so try quadrupling τ.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a tug-of-war rope vs a slinky</span>
+<p>Flick a tight, light fishing line and the bump is gone in an instant. Flick a heavy, saggy rope and you can watch the bump crawl. Tight and light is fast; slack and heavy is slow.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>τ here is tension</b> (newtons), not torque and not a period.</li>
+<li><b>Grams to kilograms.</b> μ must be in kg/m. Using g/m makes v about 31.6× too small (√1000).</li>
+<li><b>Square root.</b> Quadrupling τ only doubles v.</li>
+<li><b>v belongs to the string, not the wave.</b> Shaking faster changes f and λ, not v. When a wave enters a different string, f stays the same (set by the source) and λ = v/f changes.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: string speed"></div>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Deriving the wave equation for a string</h3>
+<p>This is where v = √(τ/μ) comes from. Zoom in on a tiny piece of string between x and x + Δx. Tension τ<sub>1</sub> pulls its left end (down and left), and τ<sub>2</sub> pulls its right end (up and right), each along the string's direction at that end.</p>
+
+<details class="work" open><summary>The derivation, step by step (lecture pp. 10 to 12)</summary><div class="body">
+<p><b>1. x-components.</b> The string only moves up and down, and the slopes are small, so the horizontal pulls balance:</p>
+<div class="eq"><span class="row"><i>τ</i><sub>1x</sub> = <i>τ</i><sub>2x</sub> = <i>τ</i></span></div>
+<p><b>2. y-components.</b> The net vertical force is</p>
+<div class="eq"><span class="row"><i>τ<sub>y</sub></i> = <i>τ</i><sub>2y</sub> − <i>τ</i><sub>1y</sub> &nbsp; ①</span></div>
+<p><b>3. Slopes.</b> Each tension points along the string, so its components are in the same ratio as the slope:</p>
+<div class="eq"><span class="row">At x: &nbsp;(∂<i>y</i>/∂<i>x</i>)<sub>x</sub> = <i>τ</i><sub>1y</sub>/<i>τ</i><sub>1x</sub> = <i>τ</i><sub>1y</sub>/<i>τ</i> &nbsp; ②</span>
+<span class="row">At x + Δx: &nbsp;(∂<i>y</i>/∂<i>x</i>)<sub>x+Δx</sub> = <i>τ</i><sub>2y</sub>/<i>τ</i> &nbsp; ③</span></div>
+<p><b>4. Put ② and ③ into ①:</b></p>
+<div class="eq"><span class="row"><i>τ<sub>y</sub></i> = <i>τ</i>(∂<i>y</i>/∂<i>x</i>)<sub>x+Δx</sub> − <i>τ</i>(∂<i>y</i>/∂<i>x</i>)<sub>x</sub></span></div>
+<p><b>5. Newton's law.</b> τ<sub>y</sub> = m a<sub>y</sub>, and the segment's mass is m = μΔx (μ = m/Δx, the segment is nearly a straight line). Divide both sides by τΔx:</p>
+<div class="eq"><span class="row"><span class="frac"><span>(∂<i>y</i>/∂<i>x</i>)<sub>x+Δx</sub> − (∂<i>y</i>/∂<i>x</i>)<sub>x</sub></span><span>Δ<i>x</i></span></span> = <span class="frac"><span><i>μ</i></span><span><i>τ</i></span></span> <i>a<sub>y</sub></i></span></div>
+<p><b>6. Let Δx → 0.</b> The left side is the change in slope per length, which is ∂²y/∂x². And a<sub>y</sub> = ∂²y/∂t²:</p>
+<div class="eq"><span class="row"><span class="frac"><span>∂²<i>y</i></span><span>∂<i>x</i>²</span></span> = <span class="frac"><span><i>μ</i></span><span><i>τ</i></span></span> <span class="frac"><span>∂²<i>y</i></span><span>∂<i>t</i>²</span></span></span></div>
+<p><b>7. Compare</b> with the general wave equation ∂²y/∂x² = (1/v²) ∂²y/∂t². Matching gives 1/v² = μ/τ, so <b>v = √(τ/μ)</b>.</p>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: slope difference = net force</div>
+  <canvas id="cvWE" height="260" aria-label="String segment with tension arrows"></canvas>
+  <div class="controls">
+    <label for="weX">segment position <input type="range" id="weX" min="0" max="0.92" step="0.01" value="0.18"><output id="weXO"></output></label>
+    <label for="weT">τ (N) <input type="range" id="weT" min="1" max="50" step="1" value="10"><output id="weTO"></output></label>
+  </div>
+  <div class="readout" id="weRead"></div>
+  <div class="note">String shape y = (5 cm) sin(2πx/1 m), Δx = 0.08 m. Arrows are drawn steeper than real so you can see them.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a hammock</span>
+<p>A straight, tight rope feels no sideways push: both ends pull in exactly opposite directions. Bend it (curvature) and the two end pulls now point slightly the same way, giving a net push back toward straight. More bend, more push. That's exactly "acceleration ∝ ∂²y/∂x²."</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Slope alone gives no force.</b> A tilted but straight segment has equal slopes at both ends, so τ<sub>y</sub> = 0. You need a <b>change</b> in slope.</li>
+<li><b>Coefficient is 1/v², not v².</b> If an equation reads ∂²y/∂x² = C ∂²y/∂t², then v = 1/√C.</li>
+<li>The derivation assumes <b>small slopes</b>, so τ<sub>x</sub> ≈ τ along the whole string.</li>
+<li>At a crest the curvature is negative, so the segment accelerates <b>down</b>; in a trough it accelerates up.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: the wave equation"></div>
+</section>
+
+<h2 class="part">Part 3 · Speed of sound in matter (Lecture 3b)</h2>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Wave speed in a fluid: bulk modulus</h3>
+<p>For every mechanical wave:</p>
+<div class="eq"><span class="row">wave speed = <span class="bigbr">(</span><span class="frac"><span>restoring force</span><span>inertia</span></span><span class="bigbr">)</span><sup>1/2</sup> = √<span class="bigbr">(</span><span class="frac"><span>restoring force</span><span>inertia</span></span><span class="bigbr">)</span></span></div>
+<p>In a fluid, the restoring force comes from <b>how hard it is to compress</b>. That stiffness is the <b>bulk modulus B</b>: squeeze the fluid with an extra pressure ΔP, see how much its volume changes.</p>
+<div class="eq">
+  <span class="row"><i>B</i> = −<i>V</i><sub>0</sub> <span class="frac"><span>Δ<i>P</i></span><span>Δ<i>V</i></span></span> &nbsp; or &nbsp; Δ<i>P</i> = −<i>B</i> Δ<i>V</i>/<i>V</i><sub>0</sub> <span class="note">V<sub>0</sub> = initial volume</span></span>
+  <span class="row"><i>B</i> = −<i>V</i><sub>0</sub> <span class="frac"><span>d<i>P</i></span><span>d<i>V</i></span></span> <span class="note">small changes</span></span>
+  <span class="row"><i>v</i> = √(<i>B</i>/<i>ρ</i>) <span class="note">ρ = m/ΔV, the inertia</span></span>
+</div>
+<p>The <b>minus sign</b> is there because a positive change in pressure gives a negative change in volume. With it, B comes out positive. <b>Units:</b> ΔV/V<sub>0</sub> has none, so B has the units of pressure, Pa.</p>
+<p>Compare with the string: v = √(tension/linear density) became v = √(B/ρ). Same recipe, different ingredients.</p>
+<div class="tbl"><table>
+<thead><tr><th>Medium (lecture table)</th><th class="num">B (Pa)</th></tr></thead>
+<tbody>
+<tr><td>Hg (20 °C)</td><td class="num">2.85 × 10<sup>10</sup></td></tr>
+<tr><td>Air (0 °C, 1 atm)</td><td class="num"><span class="flag">1.485 × 10<sup>10</sup></span> as written</td></tr>
+</tbody></table></div>
+<p class="note">Check this with your instructor: the usual textbook bulk modulus for air is about 1.42 × 10<sup>5</sup> Pa. With the value as written, air would carry sound at over 100 000 m/s. The calculator below has both so you can see the difference.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: speed of sound in a fluid</div>
+  <div class="btnrow">
+    <button class="btn" type="button" data-fl="hg">Mercury (lecture B)</button>
+    <button class="btn" type="button" data-fl="water">Water</button>
+    <button class="btn" type="button" data-fl="air">Air (textbook B)</button>
+    <button class="btn" type="button" data-fl="airlec">Air (B as written)</button>
+  </div>
+  <div class="controls">
+    <label for="flB">B (Pa) <input type="number" id="flB" value="2.85e10" step="any"></label>
+    <label for="flRho">ρ (kg/m³) <input type="number" id="flRho" value="13600" step="any"></label>
+    <label for="flV0">V<sub>0</sub> (L) <input type="number" id="flV0" value="1.0" step="0.1"></label>
+    <label for="flP">ΔP (Pa) <input type="number" id="flP" value="1e7" step="any"></label>
+  </div>
+  <div class="steps" id="flOut"></div>
+  <div class="note">Loads with the lecture's B for mercury. The densities (13 600, 1000 and 1.29 kg/m³) are standard values, not from the notes.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a spring and a bowling ball</span>
+<p>B is the stiffness of the spring, ρ is the heaviness of the ball on it. A stiff spring snaps back fast; a heavy ball slows everything down. Water is very stiff (hard to compress) and fairly heavy; air is very soft and very light.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Don't drop the minus sign</b> when solving for ΔV: more pressure means ΔV &lt; 0.</li>
+<li><b>B is not pressure itself.</b> It has pressure units, but it's a property of the material (how much pressure per fractional squeeze).</li>
+<li>ρ here is <b>volume</b> density (kg/m³), unlike the string's μ (kg/m).</li>
+<li>Forgetting the square root gives absurd speeds like 2 × 10<sup>6</sup> m/s for mercury. Sanity check: liquids are around 1000 to 1500 m/s.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: bulk modulus and fluids"></div>
+</section>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>Proof: ΔP<sub>m</sub> = (vρω) s<sub>m</sub></h3>
+<p>Section 4 stated how the pressure amplitude relates to the displacement amplitude. Here's where it comes from. Take a thin slab of fluid in a pipe of cross-section A, between x and x + Δx. When the wave passes, its two faces move by <b>different</b> amounts, s(x,t) and s(x + Δx,t), so the slab's volume changes.</p>
+
+<details class="work" open><summary>The proof, step by step (lecture 3b pp. 4 to 6)</summary><div class="body">
+<p><b>1. Change in volume.</b></p>
+<div class="eq"><span class="row">Δ<i>V</i> = <i>A</i>[<i>s</i>(<i>x</i> + Δ<i>x</i>, <i>t</i>) − <i>s</i>(<i>x</i>, <i>t</i>)] = <i>A</i> Δ<i>x</i> <span class="frac"><span>∂<i>s</i></span><span>∂<i>x</i></span></span></span>
+<span class="row">using &nbsp;<span class="frac"><span>∂<i>s</i></span><span>∂<i>x</i></span></span> = lim<sub>Δx→0</sub> <span class="frac"><span><i>s</i>(<i>x</i> + Δ<i>x</i>) − <i>s</i>(<i>x</i>)</span><span>Δ<i>x</i></span></span></span></div>
+<p><b>2. Fractional change.</b> The initial volume is V = AΔx, so</p>
+<div class="eq"><span class="row"><span class="frac"><span>Δ<i>V</i></span><span><i>V</i></span></span> = <span class="frac"><span><i>A</i>Δ<i>x</i> ∂<i>s</i>/∂<i>x</i></span><span><i>A</i>Δ<i>x</i></span></span> = <span class="frac"><span>∂<i>s</i></span><span>∂<i>x</i></span></span> &nbsp; ①</span></div>
+<p><b>3. Bulk modulus.</b> From §7, ΔV/V = −ΔP/B &nbsp; ②. Set ① = ②:</p>
+<div class="eq"><span class="row">−Δ<i>P</i>/<i>B</i> = ∂<i>s</i>/∂<i>x</i></span></div>
+<p><b>4. Plug in the wave.</b> Let s(x,t) = s<sub>m</sub> cos(kx − ωt):</p>
+<div class="eq"><span class="row">−Δ<i>P</i>/<i>B</i> = ∂/∂<i>x</i>[<i>s<sub>m</sub></i> cos(<i>kx</i> − <i>ωt</i>)] = −<i>k s<sub>m</sub></i> sin(<i>kx</i> − <i>ωt</i>)</span></div>
+<p><b>5. Match to ΔP = ΔP<sub>m</sub> sin(kx − ωt).</b> The sines cancel:</p>
+<div class="eq"><span class="row">−Δ<i>P<sub>m</sub></i>/<i>B</i> = −<i>k s<sub>m</sub></i> &nbsp;→&nbsp; Δ<i>P<sub>m</sub></i> = <i>B k s<sub>m</sub></i></span></div>
+<p><b>6. Use B = ρv²</b> (from v = √(B/ρ)):</p>
+<div class="eq"><span class="row">Δ<i>P<sub>m</sub></i> = <i>ρv</i>²<i>k s<sub>m</sub></i></span></div>
+<p><b>7. Last step</b> (not written in the notes): v k = ω, so ρv²k = ρv(vk) = vρω, giving <b>ΔP<sub>m</sub> = (vρω) s<sub>m</sub></b>. ∎</p>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Check it: two routes, one answer</div>
+  <div class="controls">
+    <label for="prB">B (Pa) <input type="number" id="prB" value="1.42e5" step="any"></label>
+    <label for="prRho">ρ (kg/m³) <input type="number" id="prRho" value="1.29" step="any"></label>
+    <label for="prF">f (Hz) <input type="number" id="prF" value="1000" step="10"></label>
+    <label for="prS">s<sub>m</sub> (µm) <input type="number" id="prS" value="1.0" step="0.1"></label>
+  </div>
+  <div class="steps" id="prOut"></div>
+  <div class="note">Example: air at 0 °C (standard values). Both lines always agree, which is the whole point of the proof.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · an accordion</span>
+<p>If both ends of an accordion move left by the same amount, it doesn't squeeze at all; it just slides. It only squeezes when one end moves more than the other. That difference per length is ∂s/∂x, and it's what sets the pressure.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li>The notes write the derivative in step 4 as ∂/∂s. It should be <b>∂/∂x</b> (you differentiate s with respect to position).</li>
+<li>The sketch on p. 4 labels the slab under +ΔP as "expands." By the sign in B, a <b>positive ΔP means the slab shrinks</b> (ΔV &lt; 0). The algebra works either way, because the sign is carried by ∂s/∂x.</li>
+<li><b>Why a sine from a cosine?</b> Differentiating cos gives −sin. That's the 90° shift between s and ΔP from §4.</li>
+<li>Two equivalent final forms: B k s<sub>m</sub> and vρω s<sub>m</sub>. Use whichever matches the data you're given.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: the proof"></div>
+</section>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Speed of sound in an ideal gas, and the Mars example</h3>
+<p>For an ideal gas, the bulk modulus and density can both be written in terms of temperature, and they combine into:</p>
+<div class="eq">
+  <span class="row"><i>v</i> = √(<i>γRT</i>/<i>M</i>)</span>
+  <span class="row"><i>T</i>: absolute temperature (K) &nbsp;·&nbsp; <i>R</i> = 8.31 J/(mol·K) &nbsp;·&nbsp; <i>M</i>: molar mass (kg/mol)</span>
+  <span class="row"><i>γ</i> = <i>C<sub>P</sub></i>/<i>C<sub>V</sub></i>: 1.67 monatomic, 1.40 diatomic, 1.3 triatomic</span>
+  <span class="row"><i>M</i> = <i>N<sub>A</sub></i> · <i>m</i>, &nbsp; <i>N<sub>A</sub></i> = 6.022 × 10<sup>23</sup> <span class="note">m = mass of one molecule (kg)</span></span>
+</div>
+<p>Hotter gas means faster molecules, which pass the push along faster. Heavier molecules (bigger M) are more sluggish. Pressure doesn't appear at all.</p>
+
+<p><b>Example (lecture 3b, p. 8): speed of sound on Mars.</b> A typical Martian morning has T = −100 °C, and the atmosphere is (taken as) entirely CO<sub>2</sub>. Find (i) the speed of sound that morning and (ii) the approximate T (K) at which the speed would double.</p>
+<details class="work" open><summary>Full solution</summary><div class="body">
+<p><b>(i)</b> CO<sub>2</sub> is triatomic, so γ = 1.3.</p>
+<div class="eq"><span class="row"><i>T</i> = 273 − 100 = <b>173 K</b></span>
+<span class="row"><i>M</i><sub>CO₂</sub> = <i>M</i><sub>C</sub> + 2<i>M</i><sub>O</sub> = 12 g/mol + 2(16 g/mol) = <b>44 g/mol</b> = 0.044 kg/mol</span>
+<span class="row"><i>v</i> = √(<i>γRT</i>/<i>M</i><sub>CO₂</sub>) = √[(1.3)(8.31)(173)/0.044] = √42 475 = 206 ≈ <b>210 m/s</b></span></div>
+<p><b>(ii)</b> The notes pose this but don't work it, so here is the solution. Everything except T is fixed, so v ∝ √T. To double v, T must go up by 2² = 4:</p>
+<div class="eq"><span class="row"><i>T</i>′ = 4 × 173 K = <b>692 K</b> &nbsp;(about 419 °C)</span></div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Ideal-gas sound speed calculator (loaded with the Mars example)</div>
+  <div class="btnrow">
+    <button class="btn" type="button" data-gas="mars">Mars CO₂ (lecture)</button>
+    <button class="btn" type="button" data-gas="air">Air, 20 °C</button>
+    <button class="btn" type="button" data-gas="he">Helium, 27 °C</button>
+  </div>
+  <div class="controls">
+    <label for="gasG">γ <select id="gasG"><option value="1.67">1.67 monatomic</option><option value="1.40">1.40 diatomic</option><option value="1.3" selected>1.3 triatomic</option></select></label>
+    <label for="gasT">T (°C) <input type="number" id="gasT" value="-100" step="1"></label>
+    <label for="gasM">M (g/mol) <input type="number" id="gasM" value="44" step="1" min="0"></label>
+  </div>
+  <canvas id="cvGas" height="210" aria-label="Speed of sound against temperature"></canvas>
+  <div class="steps" id="gasOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · passing a rumour</span>
+<p>Sound is a push handed from molecule to molecule. Warm, light molecules are fast messengers. Cold, heavy CO<sub>2</sub> on a Martian morning is a slow one, which is why sound there moves at about 60% of its speed in Earth air.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Kelvin, always.</b> T = −100 °C is 173 K. A negative T under a square root is a sure sign you forgot.</li>
+<li><b>M in kg/mol.</b> Using 44 instead of 0.044 makes v √1000 ≈ 31.6× too small.</li>
+<li><b>Doubling v needs 4× T</b>, not 2×. Speed goes as √T.</li>
+<li>γ for CO<sub>2</sub> is <b>1.3</b> (triatomic). Air is mostly N<sub>2</sub> and O<sub>2</sub>, so 1.40.</li>
+<li>The lecture rounds 206 m/s to "≈ 210 m/s". Either is fine with the work shown.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: ideal gases"></div>
+</section>
+
+<!-- 10 -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>Wave speed in a solid</h3>
+<p>In a solid rod, the restoring force comes from the material's stiffness when stretched or squashed: <b>Young's modulus Y</b> (the elastic modulus). Sound travels faster in stiffer materials.</p>
+<div class="eq">
+  <span class="row"><i>v</i> = √(<i>Y</i>/<i>ρ</i>) <span class="note">ρ = material density</span></span>
+  <span class="row"><i>Y</i> = <i>σ</i>/<i>ε</i>, &nbsp; <i>σ</i> = <i>F</i>/<i>A</i> (stress), &nbsp; <i>ε</i> = Δ<i>L</i>/<i>L</i> (strain)</span>
+  <span class="row">e.g. Al: <i>Y</i> = 7 × 10<sup>10</sup> N/m²</span>
+</div>
+<p>Pull on a rod of length L with force F over cross-section A (stress σ) and it stretches by ΔL (strain ε). Y is the ratio: how much stress you need per unit of fractional stretch.</p>
+<h4>The whole lecture in one table</h4>
+<div class="tbl"><table>
+<thead><tr><th>Medium</th><th>Restoring (stiffness)</th><th>Inertia</th><th>Speed</th></tr></thead>
+<tbody>
+<tr><td>String</td><td>tension τ (N)</td><td>μ (kg/m)</td><td>√(τ/μ)</td></tr>
+<tr><td>Fluid</td><td>bulk modulus B (Pa)</td><td>ρ (kg/m³)</td><td>√(B/ρ)</td></tr>
+<tr><td>Ideal gas</td><td>γRT</td><td>M (kg/mol)</td><td>√(γRT/M)</td></tr>
+<tr><td>Solid rod</td><td>Young's modulus Y (Pa)</td><td>ρ (kg/m³)</td><td>√(Y/ρ)</td></tr>
+</tbody></table></div>
+
+<div class="demo">
+  <div class="dtitle">Try it: speed in a solid, compared with everything else</div>
+  <div class="btnrow">
+    <button class="btn" type="button" data-sol="al">Aluminium (lecture Y)</button>
+    <button class="btn" type="button" data-sol="steel">Steel</button>
+    <button class="btn" type="button" data-sol="lead">Lead</button>
+  </div>
+  <div class="controls">
+    <label for="solY">Y (Pa) <input type="number" id="solY" value="7e10" step="any"></label>
+    <label for="solRho">ρ (kg/m³) <input type="number" id="solRho" value="2700" step="any"></label>
+  </div>
+  <div class="steps" id="solOut"></div>
+  <canvas id="cvSol" height="250" aria-label="Bar chart of sound speeds"></canvas>
+  <div class="note">Y for aluminium is the lecture's value; all densities and the steel and lead values are standard textbook figures. Bars for the other media come from §7 and §9.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a stiff ruler vs a wet noodle</span>
+<p>Tap one end of a metal ruler and the other end feels it almost instantly: the atoms are linked by very stiff springs. A noodle is soft, so the push takes its time getting through.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Strain has no units</b> (m/m), so Y has stress units: N/m² = Pa, same as B.</li>
+<li><b>Stiffer isn't automatically faster.</b> Steel is about 3× stiffer than aluminium but also about 3× denser, so their speeds are nearly equal. Always look at the ratio Y/ρ.</li>
+<li>Solids beat gases by a lot because their modulus is ~10<sup>5</sup> to 10<sup>6</sup> times bigger, while their density is only ~10<sup>3</sup> times bigger.</li>
+<li>The notes give Y for aluminium but not its density. Use ρ = 2700 kg/m³ unless a problem gives you one.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: solids"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across both lectures, mostly calculations. Grab paper and a calculator (in radians). Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Superposition</h5><div>y<sub>R</sub> = y<sub>1</sub> + y<sub>2</sub><br>y<sub>R</sub> = 2y<sub>m</sub>cos(φ/2) sin(kx − ωt + φ/2)<br>A<sub>m</sub> = |2y<sub>m</sub>cos(φ/2)|</div></div>
+  <div class="card"><h5>Special cases</h5><div>φ = 0, 2π: A = y<sub>m1</sub> + y<sub>m2</sub><br>φ = π: A = |y<sub>m1</sub> − y<sub>m2</sub>| (0 if equal)<br>sin α + sin β = 2sin(½(α+β))cos(½(α−β))</div></div>
+  <div class="card"><h5>Wave basics</h5><div>k = 2π/λ, &nbsp;ω = 2πf<br>v = ω/k = Δx/Δt<br>kx − ωt → +x &nbsp;·&nbsp; kx + ωt → −x</div></div>
+  <div class="card"><h5>Sound wave</h5><div>s = s<sub>m</sub>cos(kx − ωt)<br>ΔP = ΔP<sub>m</sub>sin(kx − ωt)<br>ΔP<sub>m</sub> = vρω s<sub>m</sub> = B k s<sub>m</sub></div></div>
+  <div class="card"><h5>String</h5><div>v = √(τ/μ), &nbsp;μ = m/L<br>∂²y/∂x² = (μ/τ) ∂²y/∂t²<br>general: ∂²y/∂x² = (1/v²) ∂²y/∂t²</div></div>
+  <div class="card"><h5>Fluid</h5><div>B = −V<sub>0</sub>ΔP/ΔV = −V<sub>0</sub> dP/dV<br>ΔP = −BΔV/V<sub>0</sub><br>v = √(B/ρ), &nbsp;B = ρv²</div></div>
+  <div class="card"><h5>Ideal gas</h5><div>v = √(γRT/M), T in K, M in kg/mol<br>R = 8.31 J/(mol·K); γ = 1.67 / 1.40 / 1.3<br>M = N<sub>A</sub>m, N<sub>A</sub> = 6.022 × 10<sup>23</sup></div></div>
+  <div class="card"><h5>Solid rod</h5><div>v = √(Y/ρ)<br>Y = σ/ε, σ = F/A, ε = ΔL/L<br>Al: Y = 7 × 10<sup>10</sup> N/m²</div></div>
+  <div class="card"><h5>Lecture answers</h5><div>Ex 1: y<sub>m</sub> = 9 mm, k = 16 rad/m, v = 70 m/s, ω = 1120 rad/s, φ = 2.69 rad, +ωt<br>Mars: T = 173 K, M = 44 g/mol, v ≈ 210 m/s; 2v at 692 K</div></div>
+</div>
+</section>
+
+<footer>Built from the PHYS 365 Lecture 3a notes (superposition, travelling sound wave, string speed, wave equation) and Lecture 3b notes (wave speed in fluids, ideal gases and solids). Values marked "standard" or "example" are not in the notes.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------------- QUIZ DATA ---------------- */
+const QUIZ = {
+q1:[
+ {q:"Two waves on a string each have y_m = 5.0 mm and differ in phase by φ = π/2. What is the resultant amplitude?",
+  o:["10.0 mm","7.07 mm","5.00 mm","3.54 mm"],a:1,
+  e:"A_m = 2y_m cos(φ/2) = 2(5.0)cos(π/4) = 10 × 0.707 = 7.07 mm. (10 mm would need φ = 0; 3.54 mm is y_m cos(π/4), missing the 2.)"},
+ {q:"Two equal waves combine into a resultant with the SAME amplitude as each one. What is φ?",
+  o:["π/3","π/2","2π/3 (2.09 rad)","π"],a:2,
+  e:"2y_m cos(φ/2) = y_m, so cos(φ/2) = 0.5, φ/2 = π/3 and φ = 2π/3 = 2.09 rad. (π/3 is φ/2: don't forget to double.)"},
+ {q:"In y_R = 2y_m cos(φ/2) sin(kx − ωt + φ/2), why does the resultant keep the same k and ω?",
+  o:["Because the amplitudes are equal","Both waves share k and ω, so the average of their phases, (α + β)/2, still contains kx − ωt","Because cos(φ/2) cancels them","It doesn't: ω doubles"],a:1,
+  e:"(α + β)/2 = [(kx − ωt) + (kx − ωt + φ)]/2 = kx − ωt + φ/2. Averaging two identical kx − ωt terms gives the same kx − ωt back."},
+ {q:"y_m = 9 mm and φ = 3π/2 (4.71 rad). What does 2y_m cos(φ/2) give, and what is the amplitude?",
+  o:["−12.7 mm, so the amplitude is 12.7 mm (the sign only flips the wave)","−12.7 mm, so the waves cancel","+12.7 mm, amplitude 25.5 mm","0 mm"],a:0,
+  e:"cos(3π/4) = −0.707, so 2(9)(−0.707) = −12.7 mm. A negative amplitude is the same as a positive one with the wave flipped (a phase shift of π). Amplitude = 12.7 mm."}
+],
+q2:[
+ {q:"φ = 0, y_m1 = 3 mm, y_m2 = 5 mm. Resultant amplitude?",
+  o:["2 mm","4 mm","8 mm","15 mm"],a:2,
+  e:"In step, the crests line up, so the amplitudes add: 3 + 5 = 8 mm."},
+ {q:"Same two waves (3 mm and 5 mm), now with φ = π. Resultant amplitude?",
+  o:["0 mm","2 mm","8 mm","4 mm"],a:1,
+  e:"3 sin θ + 5 sin(θ + π) = 3 sin θ − 5 sin θ = −2 sin θ. Amplitude 2 mm. Complete cancellation only happens when the amplitudes match."},
+ {q:"Two equal waves with φ = 2π. What do you get?",
+  o:["A flat string","Amplitude 2y_m (fully constructive)","Amplitude y_m","Amplitude √2 y_m"],a:1,
+  e:"A shift of a full cycle puts the crests back on top of each other. Formula: |2y_m cos(π)| = 2y_m."},
+ {q:"At φ = π (equal amplitudes) the string is flat. What happened to the two waves?",
+  o:["They were destroyed and their energy is lost","Each wave still travels; at every point their displacements are equal and opposite, so they add to zero","They reflected backwards","They became one wave with double frequency"],a:1,
+  e:"Superposition doesn't change the individual waves. They still exist; their sum is zero everywhere at every instant because they travel together at the same speed."}
+],
+q3:[
+ {q:"Exercise 1 setup, but λ = 0.5 m. What is k?",
+  o:["12.6 rad/m","3.14 rad/m","0.08 rad/m","25.1 rad/m"],a:0,
+  e:"k = 2π/λ = 2π/0.5 = 12.6 rad/m. (25.1 would be 4π/λ; 0.08 is λ/2π flipped.)"},
+ {q:"The resultant moves 30 cm in 5.0 ms and k = 12.6 rad/m. What is ω?",
+  o:["754 rad/s","60 rad/s","4.8 rad/s","1508 rad/s"],a:0,
+  e:"v = 0.30 m / 0.005 s = 60 m/s. ω = vk = 60 × 12.57 = 754 rad/s. (60 is v, not ω; 4.8 is v/k.)"},
+ {q:"A₁ = A₂ = 9 mm and A_R = 12 mm. What is φ?",
+  o:["0.84 rad","1.68 rad","2.69 rad","0.67 rad"],a:1,
+  e:"cos(φ/2) = 12/18 = 0.667, so φ/2 = 0.841 rad and φ = 1.68 rad. (0.84 forgets to double; 0.67 is the cosine itself.)"},
+ {q:"If the resultant in Exercise 1 moved in the +x direction instead, which form would it take?",
+  o:["sin(kx + ωt + φ/2)","sin(kx − ωt + φ/2)","sin(−kx − ωt + φ/2)","The sign doesn't matter"],a:1,
+  e:"For kx − ωt to stay constant (follow a crest) as t grows, x must grow: the wave moves toward +x. kx + ωt moves toward −x, which is the lecture's case."},
+ {q:"In Exercise 1, a student keeps k = 15.7 rad/m instead of rounding to 16. What ω do they get?",
+  o:["1100 rad/s","1120 rad/s","4.49 rad/s","70 rad/s"],a:0,
+  e:"ω = vk = 70 × 15.71 = 1100 rad/s. The lecture's 1120 comes from rounding k to 16 first. Both are acceptable with the work shown."}
+],
+q4:[
+ {q:"At some instant the pressure change at a point is at its maximum. What is the displacement s there?",
+  o:["Maximum, s_m","Zero","−s_m","s_m/2"],a:1,
+  e:"s uses cos(kx − ωt) and ΔP uses sin(kx − ωt). When sin = ±1, cos = 0. They are a quarter cycle apart."},
+ {q:"Air: v = 343 m/s, ρ = 1.21 kg/m³, f = 1000 Hz, s_m = 1.0 µm. What is ΔP_m?",
+  o:["0.415 Pa","2.61 Pa","2610 Pa","0.0026 Pa"],a:1,
+  e:"ω = 2π(1000) = 6283 rad/s. ΔP_m = vρω s_m = 343 × 1.21 × 6283 × 1.0×10⁻⁶ = 2.61 Pa. (0.415 Pa uses f instead of ω; 2610 forgets µm → m.)"},
+ {q:"Same sound, frequency doubled, s_m unchanged. What happens to ΔP_m?",
+  o:["Halves","Unchanged","Doubles","Quadruples"],a:2,
+  e:"ΔP_m = vρω s_m. v and ρ belong to the air and don't change, so ΔP_m ∝ ω. Double f, double ΔP_m."},
+ {q:"Unit check: what are the units of vρω s_m?",
+  o:["N","Pa (N/m²)","J","kg/m³"],a:1,
+  e:"(m/s)(kg/m³)(1/s)(m) = kg/(m·s²). Since N = kg·m/s², that's N/m² = Pa. Good: it's a pressure."}
+],
+q5:[
+ {q:"τ = 100 N and μ = 0.010 kg/m. Wave speed?",
+  o:["10 m/s","100 m/s","1000 m/s","10 000 m/s"],a:1,
+  e:"v = √(100/0.010) = √10 000 = 100 m/s. (10 000 forgets the square root.)"},
+ {q:"A 2.0 m string has mass 5.0 g and tension 50 N. Wave speed?",
+  o:["141 m/s","4.47 m/s","100 m/s","20 000 m/s"],a:0,
+  e:"μ = 0.0050 kg / 2.0 m = 0.0025 kg/m. v = √(50/0.0025) = √20 000 = 141 m/s. (4.47 m/s comes from leaving μ in g/m.)"},
+ {q:"You quadruple the tension. What happens to v?",
+  o:["×4","×2","×½","Unchanged"],a:1,
+  e:"v ∝ √τ, so √4 = 2. The speed doubles."},
+ {q:"A wave of fixed frequency passes from a light string into a string with 4× the μ (same tension). What happens to λ?",
+  o:["Doubles","Halves","Unchanged","Quarters"],a:1,
+  e:"v = √(τ/μ) halves. The frequency is set by the source and stays the same, so λ = v/f halves too."}
+],
+q6:[
+ {q:"In the derivation, why are τ₁ₓ and τ₂ₓ both equal to τ?",
+  o:["The string only moves up and down (no x acceleration) and the slopes are small","Tension has no x-component","Because μ is constant","Because ∂y/∂x = 0 everywhere"],a:0,
+  e:"No horizontal motion means the horizontal forces balance, and with small slopes each one is essentially the full tension τ."},
+ {q:"The net vertical force on the segment depends on…",
+  o:["The slope at x only","The difference in slope between the two ends (the curvature)","The displacement y itself","The wave speed"],a:1,
+  e:"τ_y = τ[(∂y/∂x)ₓ₊Δₓ − (∂y/∂x)ₓ]. A straight segment, even a tilted one, has no net vertical force."},
+ {q:"A string obeys ∂²y/∂x² = 0.040 ∂²y/∂t² (SI units). Wave speed?",
+  o:["0.2 m/s","5 m/s","25 m/s","0.04 m/s"],a:1,
+  e:"The coefficient is 1/v² = 0.040 s²/m², so v² = 25 and v = 5 m/s. (0.2 is √0.04, which is 1/v.)"},
+ {q:"A small segment sits right at a crest. Which way does it accelerate?",
+  o:["Up","Down","It doesn't accelerate","Along x"],a:1,
+  e:"At a crest the slope goes from positive to negative, so ∂²y/∂x² < 0 and a_y < 0. Both end tensions tip downward and pull it back toward the axis."}
+],
+q7:[
+ {q:"ΔV/V₀ has no units. So what are the units of B?",
+  o:["Pa","Pa·m³","m³/Pa","No units"],a:0,
+  e:"B = −ΔP/(ΔV/V₀): pressure divided by a pure number. So B is in Pa (N/m²), like pressure."},
+ {q:"Mercury: B = 2.85×10¹⁰ Pa (lecture table) and ρ = 13 600 kg/m³. Speed of sound?",
+  o:["1450 m/s","2.10×10⁶ m/s","38.1 m/s","3.88×10¹⁴ m/s"],a:0,
+  e:"v = √(2.85×10¹⁰ / 13 600) = √(2.10×10⁶) = 1450 m/s. (2.10×10⁶ forgets the square root.)"},
+ {q:"Water has B = 2.2×10⁹ Pa. You raise the pressure by 1.0×10⁷ Pa. Fractional volume change?",
+  o:["−0.45 %","+0.45 %","−4.5 %","−220 %"],a:0,
+  e:"ΔV/V₀ = −ΔP/B = −1.0×10⁷ / 2.2×10⁹ = −0.0045 = −0.45 %. Negative: more pressure, smaller volume."},
+ {q:"Why is there a minus sign in B = −V₀ΔP/ΔV?",
+  o:["To make B negative for liquids","Pressure up makes volume go down, so ΔP/ΔV is negative; the minus sign makes B positive","Because pressure is a vector","It only applies to gases"],a:1,
+  e:"As the lecture says, a positive change in P gives a negative change in volume. The minus sign turns that into a positive stiffness."}
+],
+q8:[
+ {q:"s = s_m cos(kx − ωt). What is ∂s/∂x?",
+  o:["−k s_m sin(kx − ωt)","k s_m sin(kx − ωt)","−ω s_m sin(kx − ωt)","s_m cos(k − ωt)"],a:0,
+  e:"Chain rule: d/dx cos(kx − ωt) = −k sin(kx − ωt). (−ω would be ∂/∂t with the opposite sign.)"},
+ {q:"The last step turns ρv²k s_m into vρω s_m. Which fact does it use?",
+  o:["B = ρv²","ω = vk","k = 2π/λ","ΔV/V = ∂s/∂x"],a:1,
+  e:"ρv²k = ρv(vk), and vk = ω, so ρv²k s_m = vρω s_m. (B = ρv² is the step before.)"},
+ {q:"Air: B = 1.42×10⁵ Pa, k = 18.3 rad/m, s_m = 1.0 µm. Use ΔP_m = B k s_m.",
+  o:["2.60 Pa","0.142 Pa","2.60×10⁶ Pa","26.0 Pa"],a:0,
+  e:"1.42×10⁵ × 18.3 × 1.0×10⁻⁶ = 2.60 Pa. Same answer as §4's vρω s_m for a 1 kHz tone, as it should be."},
+ {q:"Where does ΔV/V = ∂s/∂x come from?",
+  o:["The two faces of the fluid slab move by different amounts, so its length changes by s(x+Δx) − s(x)","Newton's second law","The ideal gas law","B = ρv²"],a:0,
+  e:"ΔV = A[s(x+Δx) − s(x)] = AΔx ∂s/∂x, and V = AΔx. Dividing gives ∂s/∂x. It's pure geometry."}
+],
+q9:[
+ {q:"Mars example, but a student plugs in M = 44 without converting to kg/mol. What do they get?",
+  o:["6.5 m/s","206 m/s","6520 m/s","0.21 m/s"],a:0,
+  e:"M is 1000× too big, so v is √1000 ≈ 31.6× too small: 206/31.6 = 6.5 m/s. Always use M = 0.044 kg/mol."},
+ {q:"Mars example, part (ii): what T makes the speed double?",
+  o:["346 K","692 K","419 K","1384 K"],a:1,
+  e:"v ∝ √T, so doubling v needs 4× T: 4 × 173 = 692 K. (346 K only multiplies v by √2. 419 is the answer in °C.)"},
+ {q:"Helium (γ = 1.67, M = 4.0 g/mol) at 300 K. Speed of sound?",
+  o:["1020 m/s","32.3 m/s","343 m/s","1.04×10⁶ m/s"],a:0,
+  e:"v = √(1.67 × 8.31 × 300 / 0.0040) = √(1.04×10⁶) = 1020 m/s. (32.3 uses M = 4; 1.04×10⁶ forgets the root.)"},
+ {q:"One CO₂ molecule has mass 7.31×10⁻²⁶ kg. What is the molar mass?",
+  o:["0.0440 kg/mol","44.0 kg/mol","1.21×10⁻⁴⁹ kg/mol","8.24×10⁻⁴ kg/mol"],a:0,
+  e:"M = N_A m = 6.022×10²³ × 7.31×10⁻²⁶ = 0.0440 kg/mol = 44 g/mol, matching 12 + 2(16)."},
+ {q:"At the same temperature, why is sound much faster in helium than in CO₂?",
+  o:["Helium has a higher γ AND a much smaller M, and v ∝ √(γ/M)","Helium is denser","Helium molecules have more atoms","Helium's pressure is higher"],a:0,
+  e:"γ: 1.67 vs 1.3. M: 4 vs 44 g/mol. Both push v up for helium. Pressure doesn't appear in √(γRT/M) at all."}
+],
+q10:[
+ {q:"Aluminium: Y = 7×10¹⁰ N/m² (lecture), ρ = 2700 kg/m³. Speed of sound in a rod?",
+  o:["5090 m/s","2.59×10⁷ m/s","161 m/s","509 m/s"],a:0,
+  e:"v = √(7×10¹⁰ / 2700) = √(2.59×10⁷) = 5090 m/s. (2.59×10⁷ forgets the root.)"},
+ {q:"A 2.0 m aluminium rod (Y = 7×10¹⁰ Pa) is under a stress of 7.0×10⁷ Pa. How much does it stretch?",
+  o:["2.0 mm","1.0 mm","0.5 mm","2.0 m"],a:0,
+  e:"ε = σ/Y = 7.0×10⁷ / 7×10¹⁰ = 1.0×10⁻³. ΔL = εL = 1.0×10⁻³ × 2.0 m = 2.0 mm."},
+ {q:"Steel (Y ≈ 2.0×10¹¹ Pa) is about 3× stiffer than aluminium, yet sound moves at nearly the same speed (≈ 5050 m/s). Why?",
+  o:["Steel is also about 3× denser, so Y/ρ barely changes","Steel's strain is larger","Speed doesn't depend on Y","Steel behaves like a fluid"],a:0,
+  e:"v = √(Y/ρ). Steel: √(2.0×10¹¹/7850) = 5050 m/s. Stiffness went up, but so did inertia, by a similar factor."},
+ {q:"Why is sound so much faster in a solid than in air?",
+  o:["The solid's modulus is ~10⁵ to 10⁶ times larger, while its density is only ~10³ times larger","Solids are less dense","Molecules move faster in solids","Solids are warmer"],a:0,
+  e:"Al vs air: 7×10¹⁰/1.42×10⁵ ≈ 5×10⁵ in stiffness, but only 2700/1.29 ≈ 2×10³ in density. The ratio Y/ρ wins by a factor of ~240, so v by √240 ≈ 15."}
+],
+qf:[
+ {q:"Two equal waves have y_m = 6.0 mm and φ = π/3. Resultant amplitude?",
+  o:["10.4 mm","12.0 mm","6.0 mm","3.1 mm"],a:0,
+  e:"2(6.0)cos(π/6) = 12 × 0.866 = 10.4 mm. Review §1."},
+ {q:"Waves of 4.0 mm and 7.0 mm meet with φ = π. Resultant amplitude?",
+  o:["11 mm","3.0 mm","0 mm","5.5 mm"],a:1,
+  e:"Fully out of step, the amplitudes subtract: |4.0 − 7.0| = 3.0 mm. Only equal amplitudes cancel completely. Review §2."},
+ {q:"Two waves have λ = 0.25 m. Their resultant moves 84 cm in 12 ms toward −x. What is ω?",
+  o:["1.76×10³ rad/s","70 rad/s","280 rad/s","2.79 rad/s"],a:0,
+  e:"k = 2π/0.25 = 25.1 rad/m. v = 0.84/0.012 = 70 m/s. ω = vk = 70 × 25.1 = 1760 rad/s. (280 uses 1/λ instead of 2π/λ.) Review §3."},
+ {q:"A₁ = A₂ = 5.0 mm and the resultant has A_R = 8.0 mm. What is φ?",
+  o:["0.64 rad","1.29 rad","1.85 rad","0.80 rad"],a:1,
+  e:"cos(φ/2) = 8.0/10.0 = 0.80, φ/2 = 0.644 rad, φ = 1.29 rad. (0.64 forgets to double; 0.80 is the cosine.) Review §3."},
+ {q:"In a sound wave, at an instant where a molecule's displacement equals s_m, the pressure change there is…",
+  o:["ΔP_m","0","−ΔP_m","ΔP_m/2"],a:1,
+  e:"s ∝ cos and ΔP ∝ sin: when cos = 1, sin = 0. Displacement and pressure are 90° apart. Review §4."},
+ {q:"Water: v = 1480 m/s, ρ = 1000 kg/m³, f = 500 Hz, s_m = 1.0 nm. ΔP_m?",
+  o:["4.65 Pa","0.74 Pa","4.65×10⁻⁹ Pa","4650 Pa"],a:0,
+  e:"ω = 2π(500) = 3142 rad/s. ΔP_m = 1480 × 1000 × 3142 × 1.0×10⁻⁹ = 4.65 Pa. (0.74 uses f instead of ω.) Review §4 and §8."},
+ {q:"A guitar string is 0.65 m long, has mass 3.0 g and tension 70 N. Wave speed?",
+  o:["123 m/s","15 200 m/s","3.9 m/s","153 m/s"],a:0,
+  e:"μ = 0.0030/0.65 = 4.62×10⁻³ kg/m. v = √(70/4.62×10⁻³) = √15 200 = 123 m/s. (3.9 m/s leaves μ in g/m.) Review §5."},
+ {q:"A string has τ = 40 N and μ = 0.010 kg/m. Which is its wave equation?",
+  o:["∂²y/∂x² = (2.5×10⁻⁴) ∂²y/∂t²","∂²y/∂x² = 4000 ∂²y/∂t²","∂²y/∂t² = (2.5×10⁻⁴) ∂²y/∂x²","∂y/∂x = 63 ∂y/∂t"],a:0,
+  e:"∂²y/∂x² = (μ/τ) ∂²y/∂t² with μ/τ = 0.010/40 = 2.5×10⁻⁴ s²/m², i.e. 1/v² with v = 63 m/s. Review §6."},
+ {q:"A fluid has B = 2.0×10⁹ Pa and ρ = 800 kg/m³. Speed of sound?",
+  o:["1580 m/s","2.5×10⁶ m/s","50 m/s","1250 m/s"],a:0,
+  e:"v = √(2.0×10⁹/800) = √(2.5×10⁶) = 1580 m/s. Review §7."},
+ {q:"On the Martian morning (173 K) sound moves at about 206 m/s. At what T would it be 1.5× faster?",
+  o:["260 K","389 K","346 K","692 K"],a:1,
+  e:"v ∝ √T, so T must rise by 1.5² = 2.25: 2.25 × 173 = 389 K. (260 K scales T by 1.5; 692 K is the doubling answer.) Review §9."},
+ {q:"Nitrogen, N₂ (M = 28 g/mol), at 300 K. Speed of sound?",
+  o:["353 m/s","340 m/s","386 m/s","11.2 m/s"],a:0,
+  e:"N₂ is diatomic, γ = 1.40: v = √(1.40 × 8.31 × 300 / 0.028) = 353 m/s. 340 uses γ = 1.3, 386 uses γ = 1.67, 11.2 uses M = 28. Review §9."},
+ {q:"A sound pulse travels 5.0 m along a metal rod in 1.0 ms. The rod's density is 7800 kg/m³. What is Y?",
+  o:["1.95×10¹¹ Pa","3.9×10⁷ Pa","2.5×10⁷ Pa","0.64 Pa"],a:0,
+  e:"v = 5.0/0.0010 = 5000 m/s. Y = ρv² = 7800 × (5000)² = 1.95×10¹¹ Pa (steel-like). (3.9×10⁷ is ρv without squaring.) Review §10."}
+]
+};
+
+/* ---------------- QUIZ ENGINE ---------------- */
+const LET = "ABCD";
+const scores = {};
+function updTotal(){
+  let c=0, n=0, ans=0;
+  Object.keys(QUIZ).forEach(k=>{ n+=QUIZ[k].length; if(scores[k]){ c+=scores[k].c; ans+=scores[k].a; } });
+  const t = document.getElementById("totalChip");
+  t.textContent = c+"/"+n;
+  t.classList.toggle("done", ans===n);
+}
+function chip(id, correct, answered, total){
+  scores[id] = {c:correct, a:answered};
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(c){
+    if(answered===0){ c.textContent=""; c.classList.remove("done"); }
+    else { c.textContent = correct+"/"+total; c.classList.toggle("done", answered===total); }
+  }
+  updTotal();
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+  }
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(item.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    const btns = item.o.map((t, oi)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[oi];
+      const s = document.createElement("span"); s.textContent = t;
+      b.append(L, s);
+      b.addEventListener("click", ()=>{
+        btns.forEach(x=>x.disabled=true);
+        const ok = oi===item.a;
+        btns[item.a].classList.add("right");
+        if(!ok) b.classList.add("wrong");
+        answered++; if(ok) correct++;
+        ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[item.a]+'.</b> ';
+        ex.appendChild(document.createTextNode(item.e));
+        ex.hidden = false;
+        upd();
+      });
+      opts.appendChild(b); return b;
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+  });
+  reset.addEventListener("click", ()=>buildQuiz(box));
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const $ = id => document.getElementById(id);
+function prep(cv){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size){ ctx.fillStyle=col; ctx.font=(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function arrow(ctx,x1,y1,x2,y2,col,wid){
+  line(ctx,x1,y1,x2,y2,col,wid||2);
+  const a = Math.atan2(y2-y1,x2-x1), L = 8;
+  if(Math.hypot(x2-x1,y2-y1)<2) return;
+  ctx.beginPath(); ctx.fillStyle=col; ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-L*Math.cos(a-0.4), y2-L*Math.sin(a-0.4)); ctx.lineTo(x2-L*Math.cos(a+0.4), y2-L*Math.sin(a+0.4)); ctx.closePath(); ctx.fill();
+}
+function plotFn(ctx, x0, x1, f, col, wid){
+  ctx.beginPath(); ctx.strokeStyle=col; ctx.lineWidth=wid||2;
+  for(let x=x0; x<=x1; x+=1){ const y=f(x); if(x===x0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+  ctx.stroke();
+}
+const SUP = {"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(x, s){
+  s = s||3;
+  if(!isFinite(x)) return "n/a";
+  if(x===0) return "0";
+  const e = Math.floor(Math.log10(Math.abs(x)));
+  let m = x/Math.pow(10,e);
+  let ms = m.toFixed(s-1);
+  let ee = e;
+  if(Math.abs(+ms)>=10){ ee=e+1; ms=(x/Math.pow(10,ee)).toFixed(s-1); }
+  return ms.replace("-","−")+" × 10"+String(ee).split("").map(c=>SUP[c]).join("");
+}
+function nf(x, s){
+  s = s||3;
+  if(!isFinite(x)) return "n/a";
+  const a = Math.abs(x);
+  if(a!==0 && (a>=1e6 || a<1e-3)) return sci(x,s);
+  if(a===0) return "0";
+  const d = Math.max(0, s-1-Math.floor(Math.log10(a)));
+  const r = (+x.toFixed(d)).toLocaleString("en-US",{maximumFractionDigits:d, minimumFractionDigits:0, useGrouping:a>=10000}).replace(/,/g," ");
+  return r.replace("-","−");
+}
+function setPressed(on, off){ on.setAttribute("aria-pressed","true"); off.setAttribute("aria-pressed","false"); }
+const num = id => parseFloat($(id).value);
+function steps(el, rows){ el.innerHTML = rows.map(r=>"<div>"+r+"</div>").join(""); }
+const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* visibility tracking for animation */
+const visible = new Set();
+const io = ("IntersectionObserver" in window) ? new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) visible.add(e.target.id); else visible.delete(e.target.id); })) : null;
+function watch(cv){ if(io) io.observe(cv); else visible.add(cv.id); }
+
+/* ---------------- §1 SUPERPOSITION ---------------- */
+const cvS1=$("cvS1"), s1ym=$("s1ym"), s1phi=$("s1phi");
+let s1run = !reduce, tS1 = 0;
+function rowsPlot(cv, fs, cols, labels, ymax, t){
+  const {ctx,w,h} = prep(cv);
+  const mut=css("--muted"), gr=css("--grid");
+  const x0=44, x1=w-10, rh=h/3;
+  fs.forEach((f,i)=>{
+    const mid = rh*i + rh/2, sc = (rh/2-10)/ymax;
+    line(ctx,x0,mid,x1,mid,gr,1);
+    line(ctx,x0,rh*i+6,x0,rh*(i+1)-6,gr,1);
+    txt(ctx,labels[i],6,mid,cols[i],"left",12);
+    plotFn(ctx,x0,x1,px=>{ const th = (px-x0)/(x1-x0)*4*Math.PI; return mid - f(th - t)*sc; }, cols[i], i===2?3:2);
+  });
+  txt(ctx,"x →",x1,h-8,mut,"right",11);
+}
+function drawS1(){
+  const ym=+s1ym.value, phi=+s1phi.value;
+  $("s1ymO").textContent = ym.toFixed(1)+" mm";
+  $("s1phiO").textContent = phi.toFixed(2)+" rad";
+  rowsPlot(cvS1,[th=>ym*Math.sin(th), th=>ym*Math.sin(th+phi), th=>ym*Math.sin(th)+ym*Math.sin(th+phi)],
+    [css("--volt"),css("--curr"),css("--fund")],["y₁","y₂","y_R"],20,tS1);
+  const c = Math.cos(phi/2), A = 2*ym*c;
+  let r = "<b>A_m = 2y_m cos(φ/2) = 2("+ym.toFixed(1)+" mm) cos("+phi.toFixed(2)+"/2) = 2("+ym.toFixed(1)+")("+c.toFixed(3)+") = "+A.toFixed(2)+" mm</b>";
+  if(A < -0.005) r += "<br>Negative: the wave is flipped. Amplitude = "+Math.abs(A).toFixed(2)+" mm.";
+  r += "<br>Phase constant of y_R: φ/2 = "+(phi/2).toFixed(3)+" rad";
+  if(Math.abs(A)<0.05) r += "<br>Fully destructive: flat string.";
+  else if(Math.abs(Math.abs(A)-2*ym)<0.05) r += "<br>Fully constructive: amplitudes add.";
+  $("s1read").innerHTML = r;
+}
+[s1ym,s1phi].forEach(e=>e.addEventListener("input",drawS1));
+document.querySelectorAll("[data-s1]").forEach(b=>b.addEventListener("click",()=>{ s1phi.value=b.dataset.s1; if(b.dataset.s1==="2.6934") s1ym.value=9; drawS1(); }));
+$("s1play").textContent = s1run? "Pause":"Play";
+$("s1play").addEventListener("click",()=>{ s1run=!s1run; $("s1play").textContent = s1run?"Pause":"Play"; });
+watch(cvS1);
+
+/* ---------------- §2 ---------------- */
+const cvS2=$("cvS2"), s2a=$("s2a"), s2b=$("s2b");
+let s2phi = Math.PI;
+function drawS2(){
+  const a=+s2a.value, b=+s2b.value;
+  $("s2aO").textContent = a.toFixed(1)+" mm"; $("s2bO").textContent = b.toFixed(1)+" mm";
+  rowsPlot(cvS2,[th=>a*Math.sin(th), th=>b*Math.sin(th+s2phi), th=>a*Math.sin(th)+b*Math.sin(th+s2phi)],
+    [css("--volt"),css("--curr"),css("--fund")],["y₁","y₂","y_R"],20,tS1);
+  const A = s2phi===0 ? a+b : Math.abs(a-b);
+  $("s2read").innerHTML = s2phi===0
+    ? "<b>φ = 0: A = y_m1 + y_m2 = "+a.toFixed(1)+" + "+b.toFixed(1)+" = "+A.toFixed(1)+" mm</b>"
+    : "<b>φ = π: A = |y_m1 − y_m2| = |"+a.toFixed(1)+" − "+b.toFixed(1)+"| = "+A.toFixed(1)+" mm</b>"+(A<0.01?"<br>Equal amplitudes: the waves cancel off and the string is flat.":"<br>Unequal amplitudes: only partial cancellation.");
+}
+[s2a,s2b].forEach(e=>e.addEventListener("input",drawS2));
+$("s2p0").addEventListener("click",()=>{ s2phi=0; setPressed($("s2p0"),$("s2pi")); drawS2(); });
+$("s2pi").addEventListener("click",()=>{ s2phi=Math.PI; setPressed($("s2pi"),$("s2p0")); drawS2(); });
+watch(cvS2);
+
+/* ---------------- §3 EXERCISE 1 ---------------- */
+let e1dir = -1;
+function calcE1(){
+  const A=num("e1A"), AR=num("e1AR"), lam=num("e1lam"), dx=num("e1dx"), dt=num("e1dt"), rnd=$("e1round").checked;
+  const out=$("e1out");
+  if(!(A>0&&lam>0&&dt>0&&dx>=0&&AR>=0)){ steps(out,['<span class="err">Enter positive values in every box.</span>']); return; }
+  const k = 2*Math.PI/lam, kU = rnd? Math.round(k) : k;
+  const v = (dx/100)/(dt/1000), w = v*kU;
+  const ch = AR/(2*A);
+  const rows = [
+    '<span class="c">a) amplitude</span>',
+    'y_m = A₁ = A₂ = '+nf(A)+' mm = <span class="ans">'+sci(A/1000,2)+' m</span>',
+    '<span class="c">b) wave number</span>',
+    'k = 2π/λ = 2π/'+nf(lam)+' = '+k.toFixed(2)+' rad/m'+(rnd? ' ≈ <span class="ans">'+kU+' rad/m</span>':' → <span class="ans">'+k.toFixed(2)+' rad/m</span>'),
+    '<span class="c">c) speed and angular frequency</span>',
+    'v = Δx/Δt = '+nf(dx/100)+' m / '+sci(dt/1000,2)+' s = <span class="ans">'+nf(v)+' m/s</span>',
+    'ω = v k = '+nf(v)+' × '+(rnd?kU:k.toFixed(2))+' = <span class="ans">'+nf(w,4)+' rad/s</span>',
+    '<span class="c">d) phase constant</span>'
+  ];
+  let phiTxt = "";
+  if(ch>1){ rows.push('<span class="err">A_R/(2A) = '+ch.toFixed(3)+' &gt; 1: the resultant can\'t be bigger than 2A. Check A_R.</span>'); }
+  else {
+    const h = Math.acos(ch), phi = 2*h;
+    rows.push('cos(φ/2) = A_R/(2A) = '+nf(AR)+'/'+nf(2*A)+' = '+ch.toFixed(4));
+    rows.push('φ/2 = arccos('+ch.toFixed(4)+') = '+h.toFixed(3)+' rad → φ = <span class="ans">'+phi.toFixed(2)+' rad</span>');
+    phiTxt = h.toFixed(2);
+  }
+  rows.push('<span class="c">sign</span>');
+  rows.push('moves '+(e1dir<0?'−x':'+x')+' → <span class="ans">'+(e1dir<0?'+ωt':'−ωt')+'</span>');
+  if(phiTxt) rows.push('<span class="c">result</span> y_R = ('+nf(AR)+' mm) sin('+(rnd?kU:k.toFixed(1))+'x '+(e1dir<0?'+':'−')+' '+nf(w,4)+'t + '+phiTxt+')');
+  steps(out, rows);
+}
+["e1A","e1AR","e1lam","e1dx","e1dt","e1round"].forEach(i=>$(i).addEventListener("input",calcE1));
+$("e1neg").addEventListener("click",()=>{ e1dir=-1; setPressed($("e1neg"),$("e1pos")); calcE1(); });
+$("e1pos").addEventListener("click",()=>{ e1dir=1; setPressed($("e1pos"),$("e1neg")); calcE1(); });
+
+/* ---------------- §4 SOUND ---------------- */
+const cvSnd=$("cvSnd");
+let sndRun = !reduce, tSnd = 0;
+const jit = []; for(let i=0;i<70*7;i++){ jit.push([Math.sin(i*12.9898)*43758.5453%1, Math.sin(i*78.233)*12345.678%1]); }
+function drawSnd(){
+  const {ctx,w,h} = prep(cvSnd);
+  const mut=css("--muted"), gr=css("--grid"), ink=css("--ink"), vc=css("--volt"), cc=css("--curr");
+  const x0=40, x1=w-10, W=x1-x0, lamV=W/2, k=2*Math.PI/lamV, Sv=lamV*0.07;
+  // pipe
+  line(ctx,x0,14,x1,14,mut,2); line(ctx,x0,96,x1,96,mut,2);
+  txt(ctx,"pipe",6,55,mut,"left",11);
+  const cols=70, rows=7;
+  ctx.fillStyle=ink;
+  for(let c=0;c<cols;c++){
+    for(let r=0;r<rows;r++){
+      const j = jit[c*rows+r];
+      const xe = x0 + (c+0.5+0.3*j[0])*W/cols;
+      const xs = xe + Sv*Math.cos(k*(xe-x0) - tSnd);
+      const y = 22 + (r+0.5+0.3*j[1])*(68/rows);
+      if(xs<x0||xs>x1) continue;
+      ctx.beginPath(); ctx.arc(xs,y,1.8,0,7); ctx.fill();
+    }
+  }
+  // graphs
+  const g1=158, g2=250, amp=34;
+  line(ctx,x0,g1,x1,g1,gr,1); line(ctx,x0,g2,x1,g2,gr,1);
+  txt(ctx,"s",8,g1,vc,"left",13); txt(ctx,"ΔP",6,g2,cc,"left",13);
+  plotFn(ctx,x0,x1,x=>g1-amp*Math.cos(k*(x-x0)-tSnd),vc,2);
+  plotFn(ctx,x0,x1,x=>g2-amp*Math.sin(k*(x-x0)-tSnd),cc,2);
+  // marker at max pressure: k(x-x0) - t = π/2 + 2πn
+  for(let n=-1;n<4;n++){
+    const xm = x0 + (Math.PI/2 + tSnd + 2*Math.PI*n)/k;
+    if(xm<x0||xm>x1) continue;
+    line(ctx,xm,10,xm,g2+amp+6,css("--ana-line"),1.5,[4,3]);
+  }
+  txt(ctx,"dashed line: compression (ΔP max), where s = 0",x1,h-8,mut,"right",11);
+}
+function calcSnd(){
+  const v=num("sndV"), rho=num("sndRho"), f=num("sndF"), s=num("sndS")*1e-6;
+  const w=2*Math.PI*f, k=w/v, P=v*rho*w*s;
+  steps($("sndOut"),[
+    'ω = 2πf = 2π('+nf(f)+') = '+nf(w,4)+' rad/s',
+    'k = ω/v = '+nf(k)+' rad/m, &nbsp; λ = v/f = '+nf(v/f)+' m',
+    'ΔP_m = vρω s_m = ('+nf(v)+')('+nf(rho)+')('+nf(w,4)+')('+sci(s,2)+') = <span class="ans">'+nf(P)+' Pa</span>'
+  ]);
+}
+["sndV","sndRho","sndF","sndS"].forEach(i=>$(i).addEventListener("input",calcSnd));
+$("sndPlay").textContent = sndRun?"Pause":"Play";
+$("sndPlay").addEventListener("click",()=>{ sndRun=!sndRun; $("sndPlay").textContent=sndRun?"Pause":"Play"; });
+watch(cvSnd);
+
+/* ---------------- §5 STRING ---------------- */
+const cvStr=$("cvStr");
+let strPos = 0, strV = 100;
+function calcStr(){
+  const T=num("strT"), m=num("strM")/1000, L=num("strL");
+  const out=$("strOut");
+  if(!(T>0&&m>0&&L>0)){ steps(out,['<span class="err">Enter positive values for τ, m and L.</span>']); strV=0; return; }
+  const mu=m/L; strV=Math.sqrt(T/mu);
+  steps(out,[
+    'μ = m/L = '+nf(m)+' kg / '+nf(L)+' m = '+nf(mu)+' kg/m',
+    'v = √(τ/μ) = √('+nf(T)+' / '+nf(mu)+') = √'+nf(T/mu)+' = <span class="ans">'+nf(strV)+' m/s</span>'
+  ]);
+}
+function drawStr(){
+  const {ctx,w,h} = prep(cvStr);
+  const mut=css("--muted"), vc=css("--volt");
+  const mid=h/2+18, x0=10, x1=w-10;
+  const span = x1-x0+160;
+  const p = x0-80 + ((strPos%span)+span)%span;
+  plotFn(ctx,x0,x1,x=>mid-48*Math.exp(-Math.pow((x-p)/26,2)),vc,3);
+  arrow(ctx,p+40,mid-58,p+80,mid-58,css("--curr"),2);
+  txt(ctx,"v = "+nf(strV)+" m/s",12,14,mut,"left",12);
+}
+["strT","strM","strL"].forEach(i=>$(i).addEventListener("input",calcStr));
+watch(cvStr);
+
+/* ---------------- §6 WAVE EQUATION ---------------- */
+const cvWE=$("cvWE");
+function drawWE(){
+  const {ctx,w,h} = prep(cvWE);
+  const mut=css("--muted"), gr=css("--grid"), ink=css("--ink"), vc=css("--volt"), cc=css("--curr"), good=css("--good"), bad=css("--bad");
+  const xa=+$("weX").value, T=+$("weT").value, dx=0.08, A=0.05, mu=0.010;
+  $("weXO").textContent = "x = "+xa.toFixed(2)+" m"; $("weTO").textContent = T+" N";
+  const x0=20, x1=w-20, mid=h/2, ampPx=80;
+  const X = x=>x0+(x1-x0)*x, Y = x=>mid-ampPx*Math.sin(2*Math.PI*x);
+  line(ctx,x0,mid,x1,mid,gr,1);
+  plotFn(ctx,x0,x1,px=>Y((px-x0)/(x1-x0)),mut,2);
+  // segment
+  ctx.beginPath(); ctx.strokeStyle=vc; ctx.lineWidth=6;
+  for(let i=0;i<=20;i++){ const x=xa+dx*i/20; if(i===0) ctx.moveTo(X(x),Y(x)); else ctx.lineTo(X(x),Y(x)); }
+  ctx.stroke();
+  // slopes (real) and drawn slopes (px)
+  const s1 = A*2*Math.PI*Math.cos(2*Math.PI*xa), s2 = A*2*Math.PI*Math.cos(2*Math.PI*(xa+dx));
+  const d1 = -ampPx*2*Math.PI*Math.cos(2*Math.PI*xa)/(x1-x0), d2 = -ampPx*2*Math.PI*Math.cos(2*Math.PI*(xa+dx))/(x1-x0);
+  const L=46;
+  const n1=Math.hypot(1,d1), n2=Math.hypot(1,d2);
+  arrow(ctx,X(xa),Y(xa),X(xa)-L/n1,Y(xa)-L*d1/n1,cc,2.5);
+  arrow(ctx,X(xa+dx),Y(xa+dx),X(xa+dx)+L/n2,Y(xa+dx)+L*d2/n2,cc,2.5);
+  txt(ctx,"τ₁",X(xa)-L/n1-6,Y(xa)-L*d1/n1+12,cc,"right",12);
+  txt(ctx,"τ₂",X(xa+dx)+L/n2+6,Y(xa+dx)+L*d2/n2-10,cc,"left",12);
+  const ty = T*(s2-s1);
+  const maxDiff = A*2*Math.PI*2*Math.sin(Math.PI*dx);
+  const len = 70*(s2-s1)/maxDiff;
+  const xm=X(xa+dx/2), ym=Y(xa+dx/2);
+  if(Math.abs(len)>3) arrow(ctx,xm,ym,xm,ym-len,ty>0?good:bad,3);
+  txt(ctx,"net τ_y",xm+8,ym-len/2,ty>0?good:bad,"left",12);
+  const a = ty/(mu*dx);
+  $("weRead").innerHTML =
+    "slope at x: ∂y/∂x = "+nf(s1)+" &nbsp;·&nbsp; slope at x + Δx: "+nf(s2)+
+    "<br><b>τ_y = τ[(∂y/∂x)_(x+Δx) − (∂y/∂x)_x] = "+T+"("+nf(s2-s1)+") = "+nf(ty)+" N</b>"+
+    "<br>With μ = 0.010 kg/m the segment's mass is μΔx = 0.8 g, so a_y = "+nf(a)+" m/s² ("+(Math.abs(ty)<0.02?"almost no net force: the segment is nearly straight":ty>0?"accelerates up":"accelerates down")+")";
+}
+["weX","weT"].forEach(i=>$(i).addEventListener("input",drawWE));
+
+/* ---------------- §7 FLUID ---------------- */
+const FL = {hg:[2.85e10,13600], water:[2.2e9,1000], air:[1.42e5,1.29], airlec:[1.485e10,1.29]};
+function calcFl(){
+  const B=num("flB"), rho=num("flRho"), V0=num("flV0"), P=num("flP");
+  const out=$("flOut");
+  if(!(B>0&&rho>0)){ steps(out,['<span class="err">B and ρ must be positive.</span>']); return; }
+  const v=Math.sqrt(B/rho), dV=-V0*P/B;
+  const rows=[
+    'v = √(B/ρ) = √('+sci(B)+' / '+nf(rho)+') = √('+sci(B/rho)+') = <span class="ans">'+nf(v)+' m/s</span>',
+    'ΔV = −V₀ΔP/B = −('+nf(V0)+' L)('+sci(P,2)+')/('+sci(B)+') = <span class="ans">'+nf(dV)+' L</span> ('+nf(100*dV/V0)+' %)'
+  ];
+  if(v>20000) rows.push('<span class="err">Over 20 000 m/s: no real fluid does this. Real air at 0 °C carries sound at about 331 m/s.</span>');
+  if(Math.abs(dV/V0)>0.5) rows.push('<span class="err">Volume change this big is outside the small-change formula.</span>');
+  steps(out, rows);
+}
+document.querySelectorAll("[data-fl]").forEach(b=>b.addEventListener("click",()=>{ const p=FL[b.dataset.fl]; $("flB").value=p[0]; $("flRho").value=p[1]; if(b.dataset.fl.indexOf("air")===0) $("flP").value=1000; else $("flP").value=1e7; calcFl(); }));
+["flB","flRho","flV0","flP"].forEach(i=>$(i).addEventListener("input",calcFl));
+
+/* ---------------- §8 PROOF CHECK ---------------- */
+function calcPr(){
+  const B=num("prB"), rho=num("prRho"), f=num("prF"), s=num("prS")*1e-6;
+  if(!(B>0&&rho>0&&f>0)){ steps($("prOut"),['<span class="err">B, ρ and f must be positive.</span>']); return; }
+  const v=Math.sqrt(B/rho), w=2*Math.PI*f, k=w/v;
+  steps($("prOut"),[
+    'v = √(B/ρ) = '+nf(v)+' m/s, &nbsp; ω = 2πf = '+nf(w,4)+' rad/s, &nbsp; k = ω/v = '+nf(k)+' rad/m',
+    'route 1: ΔP_m = B k s_m = ('+sci(B)+')('+nf(k)+')('+sci(s,2)+') = <span class="ans">'+nf(B*k*s)+' Pa</span>',
+    'route 2: ΔP_m = vρω s_m = ('+nf(v)+')('+nf(rho)+')('+nf(w,4)+')('+sci(s,2)+') = <span class="ans">'+nf(v*rho*w*s)+' Pa</span>'
+  ]);
+}
+["prB","prRho","prF","prS"].forEach(i=>$(i).addEventListener("input",calcPr));
+
+/* ---------------- §9 IDEAL GAS ---------------- */
+const GAS = {mars:["1.3",-100,44], air:["1.40",20,29], he:["1.67",27,4]};
+const cvGas=$("cvGas");
+let gasState = null;
+function calcGas(){
+  const g=parseFloat($("gasG").value), Tc=num("gasT"), Mg=num("gasM");
+  const T=Tc+273, M=Mg/1000, out=$("gasOut");
+  if(!(T>0)){ steps(out,['<span class="err">T = '+nf(T)+' K. Absolute temperature must be above 0 K.</span>']); gasState=null; drawGas(); return; }
+  if(!(M>0)){ steps(out,['<span class="err">Molar mass must be positive.</span>']); gasState=null; drawGas(); return; }
+  const v=Math.sqrt(g*8.31*T/M);
+  gasState={g,M,T,v};
+  steps(out,[
+    'T = 273 + ('+nf(Tc)+') = <span class="ans">'+nf(T)+' K</span>, &nbsp; M = '+nf(Mg)+' g/mol = '+nf(M)+' kg/mol',
+    'v = √(γRT/M) = √[('+g+')(8.31)('+nf(T)+')/'+nf(M)+'] = √'+nf(g*8.31*T/M,5)+' = <span class="ans">'+nf(v)+' m/s</span>',
+    '<span class="c">to double v (v ∝ √T):</span> T′ = 4 × '+nf(T)+' K = <span class="ans">'+nf(4*T)+' K</span> ('+nf(4*T-273)+' °C)'
+  ]);
+  drawGas();
+}
+function drawGas(){
+  const {ctx,w,h} = prep(cvGas);
+  const mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), cc=css("--curr");
+  const x0=52, x1=w-14, y0=h-28, y1=12;
+  if(!gasState){ txt(ctx,"Enter a valid T and M to see the curve",w/2,h/2,mut,"center",12); return; }
+  const {g,M,T,v} = gasState;
+  const Tmax = Math.max(800, 4*T*1.1);
+  const vmaxRaw = Math.sqrt(g*8.31*Tmax/M);
+  const step = [50,100,200,250,500,1000,2000,5000].find(s=>vmaxRaw/s<=6) || 10000;
+  const vmax = Math.ceil(vmaxRaw/step)*step;
+  const tstep = Tmax>2000?500:Tmax>1000?250:200;
+  const X=t=>x0+(x1-x0)*t/Tmax, Y=vv=>y0-(y0-y1)*vv/vmax;
+  for(let vv=0; vv<=vmax+1e-9; vv+=step){ line(ctx,x0,Y(vv),x1,Y(vv),gr,1); txt(ctx,String(vv),x0-6,Y(vv),mut,"right",11); }
+  for(let t=0;t<=Tmax+1e-9;t+=tstep){ txt(ctx,String(t),X(t),y0+12,mut,"center",11); }
+  txt(ctx,"T (K)",x1,y0+12,mut,"right",11);
+  txt(ctx,"v (m/s)",x0+4,y1+4,mut,"left",11);
+  plotFn(ctx,x0,x1,px=>{ const t=(px-x0)/(x1-x0)*Tmax; return Y(Math.sqrt(g*8.31*t/M)); },vc,2.5);
+  const pts=[[T,v,"now"],[4*T,2*v,"2v at 4T"]];
+  pts.forEach(([t,vv,lab],i)=>{
+    if(t>Tmax) return;
+    line(ctx,X(t),y0,X(t),Y(vv),cc,1,[3,3]);
+    ctx.beginPath(); ctx.fillStyle=i?cc:vc; ctx.arc(X(t),Y(vv),5,0,7); ctx.fill();
+    txt(ctx,lab+": "+nf(vv)+" m/s",X(t)+(i?-8:8),Y(vv)-12,i?cc:vc,i?"right":"left",11);
+  });
+}
+document.querySelectorAll("[data-gas]").forEach(b=>b.addEventListener("click",()=>{ const p=GAS[b.dataset.gas]; $("gasG").value=p[0]; $("gasT").value=p[1]; $("gasM").value=p[2]; calcGas(); }));
+["gasG","gasT","gasM"].forEach(i=>$(i).addEventListener("input",calcGas));
+
+/* ---------------- §10 SOLID ---------------- */
+const SOL = {al:[7e10,2700], steel:[2.0e11,7850], lead:[1.6e10,11340]};
+const cvSol=$("cvSol");
+let solV = 0;
+function calcSol(){
+  const Y=num("solY"), rho=num("solRho");
+  if(!(Y>0&&rho>0)){ steps($("solOut"),['<span class="err">Y and ρ must be positive.</span>']); solV=0; drawSol(); return; }
+  solV=Math.sqrt(Y/rho);
+  steps($("solOut"),['v = √(Y/ρ) = √('+sci(Y)+' / '+nf(rho)+') = √('+sci(Y/rho)+') = <span class="ans">'+nf(solV)+' m/s</span>']);
+  drawSol();
+}
+function drawSol(){
+  const {ctx,w,h} = prep(cvSol);
+  const mut=css("--muted"), gr=css("--grid"), ink=css("--ink"), vc=css("--volt"), cc=css("--curr");
+  const data=[
+    ["Mars CO₂, 173 K", Math.sqrt(1.3*8.31*173/0.044)],
+    ["Air, 20 °C", Math.sqrt(1.40*8.31*293/0.029)],
+    ["Mercury", Math.sqrt(2.85e10/13600)],
+    ["Water", Math.sqrt(2.2e9/1000)],
+    ["Aluminium", Math.sqrt(7e10/2700)],
+    ["Steel", Math.sqrt(2.0e11/7850)],
+    ["Your material", solV]
+  ];
+  const lw = Math.min(130, w*0.32), x0=lw+8, x1=w-70;
+  const vmax = Math.max(6000, solV*1.05);
+  const bh = (h-10)/data.length;
+  data.forEach(([n,v],i)=>{
+    const y = 5+i*bh, last=i===data.length-1;
+    txt(ctx,n,lw,y+bh/2,last?cc:ink,"right",11);
+    ctx.fillStyle = last?cc:vc;
+    const bw = Math.max(1,(x1-x0)*v/vmax);
+    ctx.fillRect(x0,y+bh*0.2,bw,bh*0.6);
+    txt(ctx,nf(v)+" m/s",x0+bw+6,y+bh/2,mut,"left",11);
+  });
+}
+document.querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{ const p=SOL[b.dataset.sol]; $("solY").value=p[0]; $("solRho").value=p[1]; calcSol(); }));
+["solY","solRho"].forEach(i=>$(i).addEventListener("input",calcSol));
+
+/* ---------------- LOOP AND INIT ---------------- */
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(0.05,(now-last)/1000); last = now;
+  if(s1run){ tS1 += dt*Math.PI; if(visible.has("cvS1")) drawS1(); if(visible.has("cvS2")) drawS2(); }
+  if(sndRun){ tSnd += dt*Math.PI; if(visible.has("cvSnd")) drawSnd(); }
+  if(!reduce){ strPos += dt*Math.min(strV*2,1500); if(visible.has("cvStr")) drawStr(); }
+  requestAnimationFrame(loop);
+}
+function drawAll(){ drawS1(); drawS2(); drawSnd(); drawStr(); drawWE(); drawGas(); drawSol(); }
+calcE1(); calcSnd(); calcStr(); calcFl(); calcPr(); calcGas(); calcSol();
+drawAll();
+let rT; window.addEventListener("resize",()=>{ clearTimeout(rT); rT=setTimeout(drawAll,80); });
+if(window.matchMedia){ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",drawAll); }
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>

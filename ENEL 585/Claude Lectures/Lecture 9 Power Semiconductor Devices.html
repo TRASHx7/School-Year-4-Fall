@@ -1,0 +1,1489 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Power Semiconductor Devices Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky contents rail + one reading column; same system as the Lecture 7 guide */
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+.tally{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:16px}
+.tally .big{font-family:var(--mono); font-size:20px; font-weight:600; display:block; line-height:1.2}
+.tally .sub{font-size:12px; color:var(--muted)}
+.tally .bar{height:6px; border-radius:99px; background:var(--surface-2); margin-top:8px; overflow:hidden}
+.tally .bar i{display:block; height:100%; width:0; background:var(--good); transition:width .3s}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+a{color:var(--accent)}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.c, th.c{text-align:center}
+tr.best td{background:var(--good-bg)}
+tr.dim td{opacity:.45}
+.tagpill{display:inline-block; font-family:var(--display); font-size:11px; font-weight:700; letter-spacing:.04em; padding:1px 7px; border-radius:99px; margin-left:6px; vertical-align:1px; white-space:nowrap}
+.tagpill.first{background:var(--accent-soft); color:var(--accent)}
+.tagpill.ok{background:var(--good-bg); color:var(--good)}
+.tagpill.warn{background:var(--ana-bg); color:var(--ana-ink)}
+.tagpill.big{background:var(--bad-bg); color:var(--bad)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+ol.stepsl{margin:0 0 14px; padding-left:24px}
+ol.stepsl li{margin-bottom:8px}
+ol.stepsl li::marker{font-family:var(--mono); font-size:14px; color:var(--accent)}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .dnote{font-family:var(--display); font-size:12.5px; color:var(--muted); margin:-4px 0 10px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:150px; accent-color:var(--accent)}
+.controls input[type=checkbox]{width:17px; height:17px; accent-color:var(--accent)}
+.controls output{font-family:var(--mono); font-size:13px; min-width:52px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.btn[aria-pressed="true"]{background:var(--accent); color:var(--on-accent); border-color:var(--accent)}
+.btnrow{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.btnrow .lab{font-family:var(--display); font-size:13px; color:var(--muted); margin-right:4px}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+
+/* device symbols and v-i planes */
+.pair{display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; justify-content:center}
+.pair svg{flex:1 1 220px; max-width:300px; height:auto; display:block}
+svg .w{stroke:var(--ink); stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round}
+svg .w.th{stroke-width:3.4}
+svg .k{fill:var(--ink); stroke:none}
+svg .gw{stroke:var(--muted); stroke-width:1.8; fill:none}
+svg .gk{fill:var(--muted); stroke:none}
+svg .term{fill:var(--surface); stroke:var(--ink); stroke-width:1.8}
+svg .ref{fill:var(--volt); font-family:var(--mono); font-size:13px; font-weight:600}
+svg .refl{stroke:var(--volt); stroke-width:2; fill:none}
+svg .refk{fill:var(--volt)}
+svg .tn{fill:var(--muted); font-family:var(--display); font-size:11.5px; font-weight:500}
+svg .ax{stroke:var(--ink); stroke-width:1.6; fill:none}
+svg .axk{fill:var(--ink)}
+svg .axl{fill:var(--ink); font-family:var(--mono); font-size:11.5px; font-weight:600}
+svg .ql{fill:var(--muted); font-family:var(--display); font-size:15px; font-weight:500}
+svg .shade{fill:url(#hatch)}
+svg .hatch-bg{fill:var(--accent-soft)}
+svg .hatch-ln{stroke:var(--accent); stroke-width:1; opacity:.55}
+svg .qbox{fill:transparent; stroke:none}
+svg .hit{stroke:var(--good); stroke-width:6; stroke-linecap:round}
+svg .miss{stroke:var(--bad); stroke-width:6; stroke-linecap:round}
+svg .dot{fill:var(--curr); stroke:var(--surface); stroke-width:2}
+svg .seg1{stroke:var(--curr); stroke-width:6; stroke-linecap:round; opacity:.85}
+svg .ttl{fill:var(--ink); font-family:var(--display); font-size:13px; font-weight:700}
+.devname{font-family:var(--display); font-weight:700; text-align:center; font-size:14px; margin-top:4px}
+.facts{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:12px}
+@media (max-width:560px){ .facts{grid-template-columns:minmax(0,1fr)} }
+.fact{background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:var(--display); font-size:13px; line-height:1.35}
+.fact b{display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:3px}
+
+/* circuit */
+#cir{width:100%; max-width:600px; display:block; margin:0 auto; height:auto}
+#cir .w.hot{stroke:var(--curr); stroke-width:3.6}
+#cir .val{fill:var(--ink); font-family:var(--mono); font-size:12.5px; font-weight:600}
+#cir .lbl{fill:var(--ink); font-family:var(--mono); font-size:13px; font-weight:600}
+#cir .src{fill:var(--surface); stroke:var(--ink); stroke-width:2.2}
+#cir .pw{stroke:var(--fund); stroke-width:2.4; fill:none}
+#cir .pwk{fill:var(--fund)}
+#cir .pwl{fill:var(--fund); font-family:var(--display); font-size:14px; font-weight:800}
+.cirwrap{overflow-x:auto}
+#cir, .cir-static{min-width:470px}
+#finder table{min-width:620px}
+.cir-static{width:100%; max-width:560px; display:block; margin:6px auto 4px; height:auto}
+.cir-static .pw{stroke:var(--fund); stroke-width:2.4; fill:none}
+.cir-static .pwk{fill:var(--fund)}
+.cir-static .pwl{fill:var(--fund); font-family:var(--display); font-size:14px; font-weight:800}
+.cir-static .lbl{fill:var(--ink); font-family:var(--mono); font-size:13px; font-weight:600}
+.cir-static .src{fill:var(--surface); stroke:var(--ink); stroke-width:2.2}
+.sugg{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:6px}
+@media (max-width:560px){ .sugg{grid-template-columns:minmax(0,1fr)} }
+.sugg > div{background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:14.5px; line-height:1.5; min-width:0}
+.sugg h5{font-family:var(--display); font-size:13px; margin:0 0 4px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} .tally .bar i{transition:none} }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+      <rect class="hatch-bg" width="8" height="8"/>
+      <line class="hatch-ln" x1="0" y1="0" x2="0" y2="8"/>
+    </pattern>
+  </defs>
+</svg>
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="tally" aria-live="polite">
+    <span class="big" id="tallyBig">0 / 0</span>
+    <span class="sub" id="tallySub">Quiz score so far. Answer any question to start.</span>
+    <div class="bar"><i id="tallyBar"></i></div>
+  </div>
+  <h2>Part 1 · Describing a switch</h2>
+  <ol>
+    <li><a href="#s1"><span>1 Three questions</span> <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2"><span>2 Operating-region plot</span> <span class="chip" data-chip="q2"></span></a></li>
+  </ol>
+  <h2>Part 2 · The device family</h2>
+  <ol>
+    <li><a href="#s3"><span>3 Diodes</span> <span class="chip" data-chip="q3"></span></a></li>
+    <li><a href="#s4"><span>4 MOSFETs</span> <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5"><span>5 IGBTs</span> <span class="chip" data-chip="q5"></span></a></li>
+    <li><a href="#s6"><span>6 Thyristors</span> <span class="chip" data-chip="q6"></span></a></li>
+    <li><a href="#s7"><span>7 Bidirectional switches</span> <span class="chip" data-chip="q7"></span></a></li>
+  </ol>
+  <h2>Part 3 · Picking a device</h2>
+  <ol>
+    <li><a href="#s8"><span>8 All regions, and rotating 180°</span> <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9"><span>9 Choosing a switch type</span> <span class="chip" data-chip="q9"></span></a></li>
+  </ol>
+  <h2>Part 4 · Worked example</h2>
+  <ol>
+    <li><a href="#s10"><span>10 Two switches, two states</span> <span class="chip" data-chip="q10"></span></a></li>
+    <li><a href="#s11"><span>11 Case 1: V<sub>g</sub> to V<sub>o</sub></span> <span class="chip" data-chip="q11"></span></a></li>
+    <li><a href="#s12"><span>12 Case 2: V<sub>o</sub> to V<sub>g</sub></span> <span class="chip" data-chip="q12"></span></a></li>
+    <li><a href="#s13"><span>13 Case 3: either way</span> <span class="chip" data-chip="q13"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final"><span>Final exam</span> <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet"><span>Formula sheet</span></a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">ENEL 585 · Lecture 9 · Study guide</div>
+  <h1>Power semiconductor devices: which switch goes where</h1>
+  <p class="lede">Every converter so far used ideal switches. Real ones are diodes, MOSFETs, IGBTs, thyristors and bidirectional switches, and each can only do part of the job. This lecture gives you one picture, the <b>operating-region plot</b>, that shows what each device can do, and a recipe that reads off what each switch in a circuit must do. Match the two and you've picked your device.</p>
+  <div class="chain" aria-label="How the lecture fits together">
+    <div class="blk"><b>Three questions</b><span>control? current? voltage?</span><span class="secs">§1</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>v-i plane</b><span>shaded quadrants</span><span class="secs">§2</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Device family</b><span>what each can do</span><span class="secs">§3 to §8</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>What the circuit needs</b><span>sign of i on, sign of v off</span><span class="secs">§9</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Worked example</b><span>buck, boost, both</span><span class="secs">§10 to §13</span></div>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · Describing a switch</h2>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>Three questions for every device</h3>
+<p>The main families of power semiconductor switch are <b>diodes, MOSFETs, IGBTs, thyristors and bidirectional switches</b> (there are others). Before worrying about ratings, losses, switching speed or cost, the lecture asks three questions of each one:</p>
+<ol class="stepsl">
+<li><b>Control.</b> Can we decide <i>when it turns on</i>, and separately, <i>when it turns off</i>?</li>
+<li><b>Current.</b> Which current direction can it conduct when it's on?</li>
+<li><b>Voltage.</b> Which voltage polarity can it block when it's off?</li>
+</ol>
+<p>Questions 2 and 3 are about <b>sign</b> (direction and polarity), not size. A 1200 V MOSFET and a 20 V MOSFET give the same answers. The size is a separate rating you check later.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Device</th><th>Turn on?</th><th>Turn off?</th><th>Conducts</th><th>Blocks</th></tr></thead>
+<tbody>
+<tr><td>Diode</td><td>circuit decides</td><td>circuit decides</td><td>i<sub>sw</sub> &gt; 0</td><td>v<sub>sw</sub> &lt; 0</td></tr>
+<tr><td>MOSFET</td><td>gate</td><td>gate</td><td>both directions</td><td>v<sub>sw</sub> &gt; 0</td></tr>
+<tr><td>IGBT</td><td>gate</td><td>gate</td><td>i<sub>sw</sub> &gt; 0</td><td>v<sub>sw</sub> &gt; 0</td></tr>
+<tr><td>IGBT + anti-parallel diode</td><td>gate (IGBT part)</td><td>gate (IGBT part)</td><td>both directions</td><td>v<sub>sw</sub> &gt; 0</td></tr>
+<tr><td>Thyristor</td><td>gate pulse, only if v<sub>sw</sub> &gt; 0</td><td><b>no</b>: circuit must take i to 0</td><td>i<sub>sw</sub> &gt; 0</td><td>both polarities</td></tr>
+<tr><td>Bidirectional switch</td><td>gate (one per direction)</td><td>gate (one per direction)</td><td>both directions</td><td>both polarities</td></tr>
+</tbody></table></div>
+<p>This table is the whole lecture in compressed form. The next section turns the last two columns into a picture.</p>
+
+<div class="callout analogy"><span class="tag">Analogy · valves in a water system</span>
+<p>Think of each switch as a valve. Question 1 asks whether it has a handle, and whether the handle can both open <i>and</i> close it. Question 2 asks which way water can flow through it when open. Question 3 asks which side it can hold back pressure from when shut. A check valve (the diode) has no handle at all; it opens and shuts because of the water pressure around it.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>"Controllable" has two halves.</b> The thyristor can be turned <i>on</i> from its gate but not <i>off</i>. Always answer turn-on and turn-off separately.</li>
+<li><b>Blocking is about the polarity you apply, not the one the device "likes".</b> A diode conducts positive current but blocks <i>negative</i> voltage. Mixing these up is the most common error in this lecture.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: the three questions"></div>
+</section>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>Reading an operating-region plot</h3>
+<p>Draw the switch with fixed references: <b>i<sub>sw</sub> flows into the + terminal of v<sub>sw</sub></b> (both at the top). Then plot v<sub>sw</sub> across and i<sub>sw</sub> up. An ideal switch only ever sits on the axes:</p>
+<ul class="plain">
+<li><b>Off:</b> i<sub>sw</sub> = 0, so it sits on the <b>v<sub>sw</sub> axis</b> and blocks whatever v<sub>sw</sub> the circuit applies.</li>
+<li><b>On:</b> v<sub>sw</sub> ≈ 0, so it sits on the <b>i<sub>sw</sub> axis</b> and conducts whatever i<sub>sw</sub> the circuit pushes.</li>
+</ul>
+<p>A <b>shaded quadrant</b> means the switch can block voltage of that quadrant's polarity <i>and</i> conduct current in that quadrant's direction. In other words, it can use both half-axes that border the quadrant.</p>
+<div class="eq">
+  <span class="row">I: (+v, +i) &nbsp;·&nbsp; II: (−v, +i) &nbsp;·&nbsp; III: (−v, −i) &nbsp;·&nbsp; IV: (+v, −i)</span>
+  <span class="row">shaded quadrants = {polarities it blocks} × {directions it conducts} <span class="note">counted anticlockwise from top right</span></span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: test a device on the v-i plane</div>
+  <div class="dnote">Pick a device, then test each half-axis. Green means the device can do it; red means it can't.</div>
+  <div class="xp" data-xp="diode" data-rot="0" data-rotctl="0"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a job description on a map</span>
+<p>The plane is a map of every job a switch could be asked to do. The four half-axes are the four possible jobs: conduct up, conduct down, hold back +, hold back −. A device's shaded quadrants are the jobs on its CV. You hire it only if its CV covers every job the circuit will give it.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The references never move.</b> i<sub>sw</sub> is defined as flowing <i>into</i> the + terminal. If real current flows <i>out</i> of that terminal, i<sub>sw</sub> is negative. Don't redraw the arrow to follow the current.</li>
+<li><b>The switch never sits inside a quadrant.</b> A point inside would mean current and voltage at the same time, which is a lot of power burned in the switch. The shading is shorthand for "both edges of this quadrant are allowed".</li>
+<li><b>Quadrant IV is +v, −i</b> (bottom right), not −v. Sketch the axes every time rather than trusting memory.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: reading the plot"></div>
+</section>
+
+<h2 class="part">Part 2 · The device family</h2>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>Diodes</h3>
+<p>A diode is <b>uncontrollable</b>: there's no gate. Whether it's on or off depends entirely on the circuit around it. With the anode at the top (the + terminal):</p>
+<ul class="plain">
+<li>If the circuit pushes current forward (anode to cathode), it turns on and conducts <b>i<sub>sw</sub> &gt; 0</b>.</li>
+<li>If the circuit tries to make the cathode higher than the anode, it turns off and blocks <b>v<sub>sw</sub> &lt; 0</b>.</li>
+</ul>
+<div class="eq">
+  <span class="row">Diode, anode at +: conducts i<sub>sw</sub> &gt; 0, blocks v<sub>sw</sub> &lt; 0 &nbsp;⇒&nbsp; <b>quadrant II</b></span>
+</div>
+<div class="demo">
+  <div class="dtitle">The diode's plot</div>
+  <div class="xp" data-xp="diode" data-rot="0" data-rotctl="0" data-lock="1"></div>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · a check valve</span>
+<p>A plumbing check valve has a flap that swings open when water pushes forward and slams shut when water tries to flow back. Nobody operates it. It "decides" from the pressure around it, exactly like a diode.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Quadrant II, not I.</b> Positive current, but <i>negative</i> blocking voltage. A diode can't block positive v<sub>sw</sub>: positive voltage across it just turns it on.</li>
+<li><b>You can't turn a diode off.</b> It turns off by itself when the circuit tries to reverse its current. If you need a switch to stop conducting while current still flows forward, a diode can't do it.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: diodes"></div>
+</section>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>MOSFETs</h3>
+<p>A MOSFET is <b>controllable</b>: the gate turns it on and off. With the drain at the top (+ terminal):</p>
+<ul class="plain">
+<li>When on, its channel conducts current in <b>either direction</b>.</li>
+<li>When off, it blocks <b>positive v<sub>sw</sub> only</b>. It has a built-in <b>body diode</b> (drawn in grey, cathode at the drain), and that diode switches on as soon as v<sub>sw</sub> goes negative.</li>
+</ul>
+<div class="eq">
+  <span class="row">MOSFET, drain at +: conducts ± i<sub>sw</sub>, blocks v<sub>sw</sub> &gt; 0 &nbsp;⇒&nbsp; <b>quadrants I and IV</b></span>
+</div>
+<div class="demo">
+  <div class="dtitle">The MOSFET's plot</div>
+  <div class="xp" data-xp="mosfet" data-rot="0" data-rotctl="0" data-lock="1"></div>
+</div>
+<h4>In the real world: silicon carbide (SiC) MOSFETs</h4>
+<div class="tbl"><table>
+<thead><tr><th>Part</th><th>Rating</th><th>Package</th></tr></thead>
+<tbody>
+<tr><td>CAB760M12HM3</td><td>1200 V, 760 A</td><td>half-bridge module (two switches, one leg)</td></tr>
+<tr><td>C3M0021120K</td><td>1200 V</td><td>discrete, TO-247-4</td></tr>
+</tbody></table></div>
+<p style="font-size:14px; color:var(--muted)">Source: wolfspeed.com, as cited in the lecture.</p>
+<div class="callout analogy"><span class="tag">Analogy · a tap with a back-flow bypass</span>
+<p>A MOSFET is a tap with a handle, plus a small check valve plumbed around it pointing backwards. Open the tap and water flows either way. Close it and it holds back forward pressure, but any backward pressure just flows round through the bypass valve. So it can only ever hold back one side.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Gated off does not mean blocking.</b> If the circuit drives v<sub>sw</sub> negative, the body diode conducts no matter what the gate says.</li>
+<li><b>Two ways to carry negative current.</b> When on, negative current flows through the channel. When off, it can still flow through the body diode. Either way the MOSFET cannot stop negative current.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: MOSFETs"></div>
+</section>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>IGBTs, with and without an anti-parallel diode</h3>
+<p>An IGBT is <b>controllable</b> from its gate. With the collector at the top (+ terminal), it conducts <b>positive current only</b> and blocks <b>positive voltage only</b>: a single quadrant.</p>
+<p>Adding a diode <b>in anti-parallel</b> (across it, cathode to the collector) adds a path for negative current. The combination conducts in both directions: positive through the IGBT, negative through the diode. It still blocks positive voltage only, because the diode is reverse-biased when v<sub>sw</sub> &gt; 0.</p>
+<div class="eq">
+  <span class="row">IGBT, collector at +: conducts i<sub>sw</sub> &gt; 0, blocks v<sub>sw</sub> &gt; 0 &nbsp;⇒&nbsp; <b>quadrant I</b></span>
+  <span class="row">IGBT + anti-parallel diode: conducts ± i<sub>sw</sub>, blocks v<sub>sw</sub> &gt; 0 &nbsp;⇒&nbsp; <b>quadrants I and IV</b> <span class="note">same as a MOSFET</span></span>
+</div>
+<div class="demo">
+  <div class="dtitle">Compare: IGBT alone, then with its diode</div>
+  <div class="btnrow" style="justify-content:center; margin-bottom:6px">
+    <button class="btn" type="button" data-xpset="igbtX" data-dev="igbt" aria-pressed="true">IGBT</button>
+    <button class="btn" type="button" data-xpset="igbtX" data-dev="igbtd" aria-pressed="false">IGBT + anti-parallel diode</button>
+  </div>
+  <div class="xp" id="igbtX" data-xp="igbt" data-rot="0" data-rotctl="0" data-lock="1"></div>
+</div>
+<h4>In the real world</h4>
+<p>6500 V IGBT modules rated 250 A to 1000 A (source: dynexsemi.com, as cited in the lecture).</p>
+<div class="callout analogy"><span class="tag">Analogy · a one-way tap, then a bypass</span>
+<p>A bare IGBT is a tap that only passes water forwards and only holds back forward pressure. Plumb a check valve around it, pointing backwards, and you've rebuilt the MOSFET's arrangement from two separate parts.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Diode direction.</b> The anti-parallel diode's cathode goes to the collector. The other way round, it would conduct whenever v<sub>sw</sub> &gt; 0 and the IGBT could never block anything.</li>
+<li><b>The negative current isn't controlled.</b> It flows through the diode, which has no gate. You can stop positive current (turn the IGBT off) but not negative current.</li>
+<li><b>Why can't a plain IGBT block negative v<sub>sw</sub>?</b> Not because it conducts: an IGBT has no body diode. Its reverse blocking rating is just tiny (often a few tens of volts, or not specified), so a real negative voltage would break it down. That's why it's treated as blocking positive voltage only, and why most IGBTs come packaged with the anti-parallel diode, which then carries any reverse current.</li>
+<li><b>Same plot as a MOSFET, different device.</b> On the v-i plane "MOSFET" and "IGBT + diode" look identical; the lecture groups them for that reason.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: IGBTs"></div>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Thyristors</h3>
+<p>A thyristor is <b>half-controllable</b>:</p>
+<ul class="plain">
+<li><b>Turn-on is controllable:</b> send a gate pulse while v<sub>sw</sub> &gt; 0 and it turns on. A pulse is enough; it then stays on by itself (it latches).</li>
+<li><b>Turn-off is not controllable:</b> the external circuit has to bring its current to zero. Only then does it turn off.</li>
+</ul>
+<p>With the anode at the top, it conducts <b>positive current</b> and blocks <b>both polarities</b>: before the gate pulse it holds off positive voltage, and it always holds off negative voltage.</p>
+<div class="eq">
+  <span class="row">Thyristor, anode at +: conducts i<sub>sw</sub> &gt; 0, blocks ± v<sub>sw</sub> &nbsp;⇒&nbsp; <b>quadrants I and II</b></span>
+</div>
+<div class="demo">
+  <div class="dtitle">The thyristor's plot</div>
+  <div class="xp" data-xp="thy" data-rot="0" data-rotctl="0" data-lock="1"></div>
+</div>
+<h4>In the real world</h4>
+<p>8500 V phase-control thyristors in a press-pack disc (source: dynexsemi.com, as cited in the lecture).</p>
+<div class="callout analogy"><span class="tag">Analogy · a toilet flush</span>
+<p>Press the lever (the gate pulse) and the flush starts. Letting go of the lever does nothing: it keeps flushing until the tank is empty (the circuit takes the current to zero). You can start it whenever you like, but you can't stop it early.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The gate pulse only works with v<sub>sw</sub> &gt; 0.</b> Pulse it while it's blocking negative voltage and nothing happens.</li>
+<li><b>Removing the gate signal doesn't turn it off.</b> Once on, it stays on until its current reaches zero. That makes it a poor fit for DC-DC converters, where the switch current never falls to zero on its own.</li>
+<li><b>Quadrant II means reverse blocking,</b> which a diode also does. The thyristor adds quadrant I: it can also hold off positive voltage until you fire it.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: thyristors"></div>
+</section>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Bidirectional switches</h3>
+<p>A bidirectional switch is <b>controllable in both directions</b>, with <b>one gate per direction</b>. It blocks both polarities and conducts both directions: <b>all four quadrants</b>.</p>
+<ul class="plain">
+<li>Both gates on: conducts either way.</li>
+<li>Both gates off: blocks either polarity.</li>
+<li>One gate on, the other off: it behaves as a <b>diode</b>, conducting one way and blocking the other.</li>
+</ul>
+<p>It replaces what used to take <b>two back-to-back switches</b> with a single device.</p>
+<div class="eq">
+  <span class="row">Bidirectional switch: conducts ± i<sub>sw</sub>, blocks ± v<sub>sw</sub> &nbsp;⇒&nbsp; <b>quadrants I, II, III and IV</b></span>
+</div>
+<div class="demo">
+  <div class="dtitle">The bidirectional switch's plot</div>
+  <div class="xp" data-xp="bidir" data-rot="0" data-rotctl="0" data-lock="1"></div>
+</div>
+<h4>In the real world</h4>
+<p>IGLT65R055B2: a 650 V gallium nitride (GaN) bidirectional switch in a TOLT package (source: infineon.com, as cited in the lecture).</p>
+<div class="callout analogy"><span class="tag">Analogy · a door with a lock on each side</span>
+<p>Picture a door with one bolt for each direction of traffic. Draw both bolts and nothing passes. Release both and traffic passes both ways. Release one and it's a one-way door, which is the diode behaviour.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>"Back-to-back" means in series, facing opposite ways.</b> Two MOSFETs in <i>series</i>, one flipped, give four quadrants: each one blocks one polarity. Two MOSFETs in <i>parallel</i> facing opposite ways block nothing, because one of the body diodes always conducts.</li>
+<li><b>Why bother?</b> Any switch across an AC voltage sees both polarities. A plain MOSFET there would conduct through its body diode every negative half cycle.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: bidirectional switches"></div>
+</section>
+
+<h2 class="part">Part 3 · Picking a device</h2>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>All the regions at once, and rotating a device by 180°</h3>
+<p>Here is every device side by side, as drawn (reference terminal at the +):</p>
+<div class="tbl"><table>
+<thead><tr><th>Device</th><th>Terminal at +</th><th class="c">As drawn</th><th>Rotated 180°</th><th class="c">Rotated</th></tr></thead>
+<tbody>
+<tr><td>Diode</td><td>anode</td><td class="c"><b>II</b></td><td>cathode at +</td><td class="c"><b>IV</b></td></tr>
+<tr><td>IGBT</td><td>collector</td><td class="c"><b>I</b></td><td>emitter at +</td><td class="c"><b>III</b></td></tr>
+<tr><td>MOSFET / IGBT + diode</td><td>drain / collector</td><td class="c"><b>I, IV</b></td><td>source / emitter at +</td><td class="c"><b>II, III</b></td></tr>
+<tr><td>Thyristor</td><td>anode</td><td class="c"><b>I, II</b></td><td>cathode at +</td><td class="c"><b>III, IV</b></td></tr>
+<tr><td>Bidirectional switch</td><td>either</td><td class="c"><b>all four</b></td><td>either</td><td class="c"><b>all four</b></td></tr>
+</tbody></table></div>
+<p><b>Rotating a device by 180°</b> (connecting it the other way round) while keeping the same references flips the sign of both v<sub>sw</sub> and i<sub>sw</sub> as the device sees them. Every shaded quadrant jumps to the opposite one:</p>
+<div class="eq">
+  <span class="row">(<i>v</i>, <i>i</i>) → (−<i>v</i>, −<i>i</i>) &nbsp;⇒&nbsp; I ↔ III, &nbsp; II ↔ IV</span>
+</div>
+<p>So the plot tells you two things: <b>which device</b>, and <b>which way round to connect it</b>.</p>
+<div class="demo">
+  <div class="dtitle">Try it: rotate any device</div>
+  <div class="dnote">The i<sub>sw</sub> arrow and the ± signs stay put. Only the device turns.</div>
+  <div class="xp" data-xp="igbt" data-rot="0" data-rotctl="1"></div>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · turning a check valve around</span>
+<p>Take a check valve out of the pipe and put it back in facing the other way. The valve hasn't changed, but now it passes the flow it used to stop and stops the flow it used to pass. Both of its jobs flip at once, which is why both signs flip and the quadrant moves diagonally.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Rotation is diagonal, not a mirror.</b> Quadrant I goes to III, not to II or IV. Both the current direction and the blocking polarity flip.</li>
+<li><b>The bidirectional switch doesn't change</b> because it already covers all four quadrants.</li>
+<li><b>When a question says "which way round", answer with a terminal name</b>: "cathode at the switch node", "drain toward V<sub>g</sub>".</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: regions and rotation"></div>
+</section>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Choosing a switch type</h3>
+<p>Now flip the question around: given a circuit, which device does each switch need? The recipe from the lecture:</p>
+<ol class="stepsl">
+<li><b>Label</b> v<sub>sw</sub> and i<sub>sw</sub> on each switch the same way as on the device plots: + and the i<sub>sw</sub> arrow both at the top terminal.</li>
+<li><b>Switch on:</b> find the sign of i<sub>sw</sub> it must conduct.</li>
+<li><b>Switch off:</b> find the sign of v<sub>sw</sub> it must block.</li>
+<li>Together these <b>fix the quadrant(s)</b> it must operate in.</li>
+<li><b>Pick a device whose shaded quadrants cover them all</b>, as drawn or rotated by 180°. The plot tells you which terminal goes at the top.</li>
+</ol>
+<div class="demo">
+  <div class="dtitle">Device finder</div>
+  <div class="dnote">Loaded with the lecture's Case 1, switch S<sub>2</sub>: on, it carries i<sub>2</sub> = −i<sub>L</sub> &lt; 0; off, it blocks +V<sub>g</sub>. The finder should return a diode with its cathode at the + terminal.</div>
+  <div id="finder"></div>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · a shopping list against a menu</span>
+<p>Steps 1 to 4 write the shopping list: the quadrants the circuit demands. Each device's plot is its menu. Buy the plainest device whose menu has everything on your list. A bidirectional switch has everything, but you don't order the whole menu when you only want one dish.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Required quadrants multiply out.</b> If a switch must conduct both directions and block positive voltage, it needs I <i>and</i> IV.</li>
+<li><b>Quadrants aren't the whole story.</b> Question 1 (control) still matters. A thyristor covers quadrant I, but it can only be used where the circuit brings its current to zero. A diode works only where the circuit itself turns it on and off at the right moments.</li>
+<li><b>Try both orientations.</b> A diode "doesn't fit" quadrant IV as drawn, but fits perfectly when rotated.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: choosing a switch"></div>
+</section>
+
+<h2 class="part">Part 4 · Worked example: two switches between V<sub>g</sub> and V<sub>o</sub></h2>
+
+<!-- 10 -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>The setup and the two switch states</h3>
+<p>Two ideal switches S<sub>1</sub> and S<sub>2</sub> and an inductor L sit between a source V<sub>g</sub> and a <b>battery</b> V<sub>o</sub>. Because V<sub>o</sub> is a battery, it can absorb or supply power, so the power</p>
+<div class="eq">
+  <span class="row"><i>P</i> = <i>V<sub>o</sub> I<sub>L</sub></i> <span class="note">can flow either way, depending on the sign of I<sub>L</sub></span></span>
+  <span class="row">small ripple: <i>i<sub>L</sub></i> ≈ <i>I<sub>L</sub></i>, so <i>i<sub>L</sub></i> keeps the sign of <i>I<sub>L</sub></i></span>
+</div>
+<p>The lecture looks at three cases: <b>I<sub>L</sub> &gt; 0</b> (P from V<sub>g</sub> to V<sub>o</sub>), <b>I<sub>L</sub> &lt; 0</b> (P from V<sub>o</sub> to V<sub>g</sub>), and <b>I<sub>L</sub> of either sign</b>, set by the operating point (P both ways).</p>
+<p>The references: i<sub>1</sub> flows left to right into S<sub>1</sub>, with + of v<sub>1</sub> on the V<sub>g</sub> side. i<sub>2</sub> flows down into S<sub>2</sub>, with + of v<sub>2</sub> at the switch node. Exactly one switch is on at a time.</p>
+<div class="tbl"><table>
+<thead><tr><th>State</th><th>The switch that's on carries</th><th>The switch that's off blocks</th></tr></thead>
+<tbody>
+<tr><td>S<sub>1</sub> on, S<sub>2</sub> off</td><td>i<sub>1</sub> = i<sub>L</sub></td><td>v<sub>2</sub> = +V<sub>g</sub> (switch node at V<sub>g</sub>)</td></tr>
+<tr><td>S<sub>2</sub> on, S<sub>1</sub> off</td><td>i<sub>2</sub> = −i<sub>L</sub></td><td>v<sub>1</sub> = +V<sub>g</sub> (switch node at 0)</td></tr>
+</tbody></table></div>
+<p><b>Key result:</b> in every case, both switches block +V<sub>g</sub>. Only the current signs change, and they follow i<sub>L</sub>.</p>
+
+<div class="demo" id="cdemo">
+  <div class="dtitle">Try it: the two-switch circuit, live</div>
+  <div class="dnote">The lecture's example is symbolic. Illustrative numbers: V<sub>g</sub> = 48 V, and V<sub>o</sub> = D·V<sub>g</sub> from the buck of Lecture 2. Drag the time slider or press play to step through the two states.</div>
+  <div class="btnrow" style="margin-bottom:8px">
+    <span class="lab">Load:</span>
+    <button class="btn" type="button" data-case="1" aria-pressed="true">Case 1: I<sub>L</sub> &gt; 0</button>
+    <button class="btn" type="button" data-case="2" aria-pressed="false">Case 2: I<sub>L</sub> &lt; 0</button>
+    <button class="btn" type="button" data-case="3" aria-pressed="false">Case 3: either sign</button>
+  </div>
+  <div class="cirwrap"><svg id="cir" viewBox="0 0 560 285" role="img" aria-labelledby="cirT">
+    <title id="cirT">Two switches S1 and S2 and an inductor between Vg and a battery Vo</title>
+    <g id="cirWires"></g>
+    
+  </svg></div>
+  <canvas id="cvW" height="250" aria-label="Waveforms of inductor current, switch currents and switch voltages over two switching periods"></canvas>
+  <div class="legend"><span><i style="background:var(--muted)"></i>i<sub>L</sub></span><span><i style="background:var(--volt)"></i>i<sub>1</sub>, v<sub>1</sub> (S<sub>1</sub>)</span><span><i style="background:var(--curr)"></i>i<sub>2</sub>, v<sub>2</sub> (S<sub>2</sub>)</span><span><i style="background:var(--grid); height:8px"></i>S<sub>1</sub> on</span></div>
+  <div class="controls">
+    <label for="cT"><span>time t/T<sub>s</sub></span> <input id="cT" type="range" min="0" max="1.995" step="0.005" value="0.25"><output id="cTOut">0.25</output></label>
+    <button class="btn" type="button" id="cPlay" aria-pressed="false">Play</button>
+    <label for="cIL"><span>I<sub>L</sub></span> <input id="cIL" type="range" min="-10" max="10" step="0.5" value="5"><output id="cILOut">5.0 A</output></label>
+    <label for="cDI"><span>Δi<sub>L</sub></span> <input id="cDI" type="range" min="0" max="12" step="0.5" value="2"><output id="cDIOut">2.0 A</output></label>
+    <label for="cD">D <input id="cD" type="range" min="0.1" max="0.9" step="0.05" value="0.5"><output id="cDOut">0.50</output></label>
+    <label for="cBoth"><input id="cBoth" type="checkbox"> <span>I<sub>L</sub> can take either sign (Case 3)</span></label>
+  </div>
+  <div class="readout" id="cRead"></div>
+  <h4 style="margin-top:14px">What each switch must do, and what fits</h4>
+  <div class="pair" id="cPlanes"></div>
+  <div class="sugg" id="cSugg"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · two doors into one corridor</span>
+<p>The inductor current is a crowd walking along a corridor that won't stop. It has to get in through one of two doors, S<sub>1</sub> (from the V<sub>g</sub> side) or S<sub>2</sub> (from ground). Exactly one door is open at a time. The closed door always has the same pressure difference across it (V<sub>g</sub>). Which way the crowd walks through the open door depends on which way the corridor is flowing.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>i<sub>2</sub> = −i<sub>L</sub>, not +i<sub>L</sub>.</b> i<sub>2</sub> is defined flowing <i>down</i> into S<sub>2</sub>. With i<sub>L</sub> &gt; 0 the current actually flows <i>up</i> through S<sub>2</sub> into the inductor, so i<sub>2</sub> is negative.</li>
+<li><b>Both switches block +V<sub>g</sub>, never V<sub>o</sub>.</b> When S<sub>1</sub> is on, the switch node sits at V<sub>g</sub>, so v<sub>2</sub> = V<sub>g</sub>. When S<sub>2</sub> is on, the node sits at 0, so v<sub>1</sub> = V<sub>g</sub> − 0.</li>
+<li><b>"Small ripple" is doing real work.</b> It's what lets us say i<sub>L</sub> never changes sign. Drag Δi<sub>L</sub> above 2|I<sub>L</sub>| in the demo and watch both switches suddenly need an extra quadrant (more in §13).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: the two switch states"></div>
+</section>
+
+<!-- 11 -->
+<section class="sec" id="s11">
+<h3><span class="num">11</span>Case 1: power from V<sub>g</sub> to V<sub>o</sub> (I<sub>L</sub> &gt; 0)</h3>
+<details class="work" open><summary>Worked example: Case 1, step by step</summary><div class="body">
+<ol class="stepsl">
+<li><b>S<sub>1</sub>, on:</b> i<sub>1</sub> = i<sub>L</sub> &gt; 0. <b>Off:</b> v<sub>1</sub> = +V<sub>g</sub>.</li>
+<li><b>S<sub>2</sub>, on:</b> i<sub>2</sub> = −i<sub>L</sub> &lt; 0. <b>Off:</b> v<sub>2</sub> = +V<sub>g</sub>.</li>
+<li>S<sub>1</sub> needs (+v, +i): <b>quadrant I</b>. That's a <b>MOSFET or an IGBT</b> as drawn, <b>drain (collector) toward V<sub>g</sub></b>.</li>
+<li>S<sub>2</sub> needs (+v, −i): <b>quadrant IV</b>. That's a <b>diode</b> rotated 180°, <b>cathode at the switch node</b>.</li>
+<li>Result: this is <b>the buck converter of Lecture 2</b>.</li>
+</ol>
+</div></details>
+<div class="pair" data-planes="1|4"></div>
+<div class="cirwrap"><svg class="cir-static" data-s1="mosfet" data-s1rot="0" data-s2="diode" data-s2rot="1" data-p="right" viewBox="0 0 560 285" role="img" aria-label="Case 1 circuit: S1 is an n-MOSFET with its drain toward Vg; S2 is a diode with its cathode at the switch node; power flows from Vg to Vo."></svg></div>
+<p style="text-align:center"><button class="btn" type="button" data-goto-case="1">Run Case 1 in the live demo (§10)</button></p>
+<div class="callout analogy"><span class="tag">Analogy · a self-opening relief path</span>
+<p>When the MOSFET S<sub>1</sub> shuts, the inductor's current has to keep going, and the only way in is up through S<sub>2</sub>. That push opens the diode by itself, like a relief valve that opens when pressure builds. When S<sub>1</sub> opens again, V<sub>g</sub> appears across the diode backwards and it slams shut. Nobody needs to drive S<sub>2</sub>.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Why a diode is allowed for S<sub>2</sub>:</b> the circuit turns it on and off at exactly the right moments, forced by S<sub>1</sub>. That's the "uncontrollable" answer to question 1 working in your favour.</li>
+<li><b>Diode direction:</b> cathode at the switch node. Put it the other way and, when S<sub>1</sub> turns on, the diode sees +V<sub>g</sub> forwards and shorts the source through S<sub>1</sub>.</li>
+<li><b>An IGBT alone is fine for S<sub>1</sub> here,</b> because i<sub>1</sub> is never negative. It only needs a diode in Case 3.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q11" data-title="Check: Case 1"></div>
+</section>
+
+<!-- 12 -->
+<section class="sec" id="s12">
+<h3><span class="num">12</span>Case 2: power from V<sub>o</sub> to V<sub>g</sub> (I<sub>L</sub> &lt; 0)</h3>
+<details class="work" open><summary>Worked example: Case 2, step by step</summary><div class="body">
+<ol class="stepsl">
+<li><b>S<sub>1</sub>, on:</b> i<sub>1</sub> = i<sub>L</sub> &lt; 0. <b>Off:</b> v<sub>1</sub> = +V<sub>g</sub>.</li>
+<li><b>S<sub>2</sub>, on:</b> i<sub>2</sub> = −i<sub>L</sub> &gt; 0. <b>Off:</b> v<sub>2</sub> = +V<sub>g</sub>.</li>
+<li>S<sub>1</sub> needs (+v, −i): <b>quadrant IV</b>. That's a <b>diode turned over</b>, <b>cathode toward V<sub>g</sub></b>.</li>
+<li>S<sub>2</sub> needs (+v, +i): <b>quadrant I</b>. That's a <b>MOSFET or IGBT</b>, <b>drain at the switch node</b>.</li>
+<li>Result: read right to left, this is <b>a boost from V<sub>o</sub> to V<sub>g</sub></b>.</li>
+</ol>
+</div></details>
+<div class="pair" data-planes="4|1"></div>
+<div class="cirwrap"><svg class="cir-static" data-s1="diode" data-s1rot="1" data-s2="mosfet" data-s2rot="0" data-p="left" viewBox="0 0 560 285" role="img" aria-label="Case 2 circuit: S1 is a diode with its cathode toward Vg; S2 is an n-MOSFET with its drain at the switch node; power flows from Vo to Vg."></svg></div>
+<p style="text-align:center"><button class="btn" type="button" data-goto-case="2">Run Case 2 in the live demo (§10)</button></p>
+<div class="callout analogy"><span class="tag">Analogy · the same pipe, flowing backwards</span>
+<p>Reverse the flow in a pipe and every check valve has to be turned around, and the pump moves to the other end. Here the controlled switch moves from S<sub>1</sub> to S<sub>2</sub>, and the diode moves from S<sub>2</sub> to S<sub>1</sub>, facing the other way.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Why it's a boost:</b> seen from V<sub>o</sub>, the inductor is at the input, the controlled switch S<sub>2</sub> goes to ground, and a diode feeds the output V<sub>g</sub>. That's the boost layout from Lecture 3, and V<sub>g</sub> &gt; V<sub>o</sub> as a boost needs.</li>
+<li><b>The voltages didn't change.</b> Both switches still block +V<sub>g</sub>. Only the current signs flipped, which is exactly why the quadrants moved from I to IV and back.</li>
+<li><b>"Turned over" means rotated 180°.</b> The diode is quadrant II as drawn and IV rotated, with cathode at the + of v<sub>1</sub>, which is the V<sub>g</sub> side.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q12" data-title="Check: Case 2"></div>
+</section>
+
+<!-- 13 -->
+<section class="sec" id="s13">
+<h3><span class="num">13</span>Case 3: power either way (I<sub>L</sub> of either sign)</h3>
+<details class="work" open><summary>Worked example: Case 3, step by step</summary><div class="body">
+<ol class="stepsl">
+<li><b>S<sub>1</sub>, on:</b> i<sub>1</sub> = i<sub>L</sub>, <b>either sign</b>. <b>Off:</b> v<sub>1</sub> = +V<sub>g</sub>.</li>
+<li><b>S<sub>2</sub>, on:</b> i<sub>2</sub> = −i<sub>L</sub>, <b>either sign</b>. <b>Off:</b> v<sub>2</sub> = +V<sub>g</sub>.</li>
+<li>Both need (+v, +i) and (+v, −i): <b>quadrants I and IV</b>.</li>
+<li>That's a <b>MOSFET</b>, or an <b>IGBT with an anti-parallel diode</b>, for each switch: S<sub>1</sub> drain toward V<sub>g</sub>, S<sub>2</sub> drain at the switch node.</li>
+<li>Result: <b>one circuit</b> that works as a buck from V<sub>g</sub> to V<sub>o</sub> and as a boost back.</li>
+</ol>
+</div></details>
+<div class="pair" data-planes="1,4|1,4"></div>
+<div class="cirwrap"><svg class="cir-static" data-s1="mosfet" data-s1rot="0" data-s2="mosfet" data-s2rot="0" data-p="both" viewBox="0 0 560 285" role="img" aria-label="Case 3 circuit: S1 and S2 are both n-MOSFETs, S1's drain toward Vg and S2's drain at the switch node; power can flow either way."></svg></div>
+<p style="text-align:center"><button class="btn" type="button" data-goto-case="3">Run Case 3 in the live demo (§10)</button></p>
+<div class="callout analogy"><span class="tag">Analogy · an electric car's drive</span>
+<p>Pressing the accelerator sends power from the battery to the motor; braking sends it back to charge the battery. It's the same hardware both times; only the current direction changes. Case 3 is that idea on a small scale: two switches that can each carry current both ways.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The Case 1 hardware can't run backwards.</b> With I<sub>L</sub> &lt; 0, S<sub>2</sub> would need i<sub>2</sub> &gt; 0, but its diode (cathode at the node) only conducts i<sub>2</sub> &lt; 0.</li>
+<li><b>Big ripple has the same effect as Case 3.</b> If Δi<sub>L</sub> &gt; 2|I<sub>L</sub>|, then i<sub>L</sub> = I<sub>L</sub> ± Δi<sub>L</sub>/2 crosses zero every period. With ideal switches, both then need quadrants I and IV even though I<sub>L</sub> &gt; 0. With a diode as S<sub>2</sub>, the diode stops i<sub>L</sub> at zero instead: that's DCM from Lecture 3. Try I<sub>L</sub> = 1 A, Δi<sub>L</sub> = 4 A in the demo.</li>
+<li><b>Two IGBTs alone won't do.</b> Each covers only quadrant I. Each needs its anti-parallel diode to reach quadrant IV.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q13" data-title="Check: Case 3"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across the whole lecture. Sketch the v-i plane and the circuit references on paper as you go. Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Three questions</h5><div>1. Turn on? Turn off? (separately)<br>2. Which i<sub>sw</sub> direction when on?<br>3. Which v<sub>sw</sub> polarity when off?</div></div>
+  <div class="card"><h5>Reading the plot</h5><div>i<sub>sw</sub> flows into the + of v<sub>sw</sub><br>Off: i<sub>sw</sub> = 0, on the v axis<br>On: v<sub>sw</sub> ≈ 0, on the i axis</div></div>
+  <div class="card"><h5>Quadrants</h5><div>I (+v, +i) · II (−v, +i)<br>III (−v, −i) · IV (+v, −i)<br>shaded = blocks that v and conducts that i</div></div>
+  <div class="card"><h5>Device regions (as drawn)</h5><div>Diode (anode at +): II<br>IGBT (collector at +): I<br>MOSFET, IGBT + diode: I, IV<br>Thyristor (anode at +): I, II<br>Bidirectional switch: I to IV</div></div>
+  <div class="card"><h5>Control</h5><div>Diode: circuit decides both<br>MOSFET, IGBT: gate on and off<br>Thyristor: gate pulse on (v<sub>sw</sub> &gt; 0); off only when i → 0<br>Bidirectional: one gate per direction</div></div>
+  <div class="card"><h5>Rotate 180°</h5><div>(v, i) → (−v, −i)<br>I ↔ III, II ↔ IV<br>diode → IV, IGBT → III, MOSFET → II, III, thyristor → III, IV</div></div>
+  <div class="card"><h5>Choosing a switch</h5><div>on: sign of i<sub>sw</sub> · off: sign of v<sub>sw</sub><br>quadrants = the combinations<br>pick a device covering all, drawn or rotated</div></div>
+  <div class="card"><h5>Two-switch example</h5><div>S<sub>1</sub> on: i<sub>1</sub> = i<sub>L</sub>, v<sub>2</sub> = +V<sub>g</sub><br>S<sub>2</sub> on: i<sub>2</sub> = −i<sub>L</sub>, v<sub>1</sub> = +V<sub>g</sub><br>P = V<sub>o</sub>I<sub>L</sub>; small ripple: i<sub>L</sub> ≈ I<sub>L</sub></div></div>
+  <div class="card"><h5>The three cases</h5><div>I<sub>L</sub> &gt; 0: S<sub>1</sub> I (MOSFET/IGBT, drain → V<sub>g</sub>), S<sub>2</sub> IV (diode, cathode at node): buck<br>I<sub>L</sub> &lt; 0: S<sub>1</sub> IV (diode, cathode → V<sub>g</sub>), S<sub>2</sub> I (drain at node): boost from V<sub>o</sub><br>Either: both I, IV (MOSFETs or IGBT + diode)</div></div>
+</div>
+</section>
+
+<footer>Built from the ENEL 585 Lecture 9 notes, Power Semiconductor Devices (Dr. Philippe Gray, September 29, 2026). Device examples as cited in the lecture: Wolfspeed CAB760M12HM3 and C3M0021120K, Dynex 6500 V IGBT modules and 8500 V thyristors, Infineon IGLT65R055B2. Your quiz answers are remembered in this browser only.</footer>
+</main>
+</div>
+<script>
+(function(){
+"use strict";
+/* ---------------- QUIZ DATA ---------------- */
+const QUIZ = {
+q1:[
+ {q:"In the buck converter, S₁ must stop conducting while the inductor current is still flowing forward through it. Which of the three questions does this requirement test?",
+  o:["Which voltage polarity it can block","Which current direction it can conduct","Whether its turn-off can be controlled","None of them; every switch turns off when told to"],a:2,
+  e:"The current doesn't fall to zero by itself, so the device must be able to stop it on command. That's the turn-off half of question 1. A thyristor, for example, can't do this."},
+ {q:"Why does the lecture ask which voltage polarity a device can block, instead of only its voltage rating?",
+  o:["A device facing the wrong polarity conducts when it should be off, however high its rating","Polarity sets the switching speed","The rating already covers both polarities","Polarity only matters in AC circuits"],a:0,
+  e:"A MOSFET rated 1200 V still can't block −5 V: its body diode conducts. Polarity decides whether it can block at all; the rating decides how much."},
+ {q:"When on, a switch always carries positive i_sw. When off, the voltage across it is sometimes positive and sometimes negative. What does it need?",
+  o:["Conduct both directions, block positive only","Conduct positive only, block positive only","Conduct both directions, block both polarities","Conduct positive only, block both polarities"],a:3,
+  e:"Question 2 (current): positive only. Question 3 (voltage): both polarities. On the plane that's quadrants I and II, which is the thyristor's region."},
+ {q:"A thyristor is called half-controllable. Which half is missing?",
+  o:["Turn-on: the circuit has to start it","Turn-off: the circuit must bring its current to zero","Blocking positive voltage","Conducting positive current"],a:1,
+  e:"A gate pulse turns it on (while v_sw > 0), but nothing at the gate turns it off. The external circuit has to take its current to zero."}
+],
+q2:[
+ {q:"A switch is off and holding off 300 V, with the + at its top terminal. Where is its operating point?",
+  o:["Inside quadrant I","On the +i_sw axis","On the +v_sw axis, at i_sw = 0","At the origin"],a:2,
+  e:"Off means i_sw = 0, so the point sits on the v_sw axis. v_sw = +300 V puts it on the positive half."},
+ {q:"A switch is on and 10 A flows up through it, out of its top (+) terminal. Where is its operating point?",
+  o:["On the +i_sw axis (i_sw = +10 A)","On the −v_sw axis","In quadrant III","On the −i_sw axis (i_sw = −10 A)"],a:3,
+  e:"i_sw is defined flowing INTO the top terminal. Real current flowing out of it makes i_sw = −10 A. On means v_sw ≈ 0, so the point is on the negative i_sw axis."},
+ {q:"A device's plot has only quadrant IV shaded. What can it do?",
+  o:["Block positive v_sw and conduct negative i_sw","Operate with v_sw > 0 and i_sw < 0 at the same time","Block negative v_sw and conduct positive i_sw","Block negative v_sw and conduct negative i_sw"],a:0,
+  e:"Quadrant IV is (+v, −i). Shaded means the device can use both edges of that quadrant: the +v half-axis when off and the −i half-axis when on. It never sits inside the quadrant (option B)."},
+ {q:"Why does an ideal switch never sit inside a quadrant?",
+  o:["The plot isn't drawn to scale","It would have to be on and off at once","It would carry current and hold voltage together, burning a lot of power in the switch","Quadrants only describe diodes"],a:2,
+  e:"Inside a quadrant both v_sw and i_sw are nonzero, so p = v_sw·i_sw is large. An ideal switch is either off (i = 0) or on (v ≈ 0), so it lives on the axes and dissipates nothing."}
+],
+q3:[
+ {q:"A diode has its anode at the top (+). The circuit applies v_sw = −48 V. What does the diode do?",
+  o:["Conducts, with i_sw > 0","Conducts negative current","Blocks: it's off, sitting on the −v_sw axis","Breaks down"],a:2,
+  e:"Negative v_sw means the cathode is higher than the anode: reverse bias. The diode is off and blocks the 48 V. That's the −v_sw edge of quadrant II."},
+ {q:"Why is the diode's region quadrant II and not quadrant I?",
+  o:["A diode can't block positive v_sw: a positive voltage across it just turns it on","Diodes are always drawn upside down","Diodes conduct negative current","Quadrant I is reserved for controllable devices"],a:0,
+  e:"Positive v_sw (anode above cathode) forward-biases the diode. So it can only block the negative polarity: (−v, +i) is quadrant II."},
+ {q:"What turns a diode off?",
+  o:["A negative gate pulse","Removing the gate signal","A timer inside the package","The circuit trying to reverse its current"],a:3,
+  e:"A diode has no gate. It stops conducting when the circuit tries to push current backwards through it; from then on it blocks the reverse voltage."},
+ {q:"You need a switch that carries positive current and stops at a moment you choose, while the current is still positive. Can a diode do it?",
+  o:["Yes, if it's rated high enough","No: a diode only turns off when the circuit reverses its current","Yes, if you rotate it 180°","No: diodes can't carry positive current"],a:1,
+  e:"Stopping a forward current on command needs controllable turn-off. A diode can't be commanded; it only turns off when its current tries to reverse."}
+],
+q4:[
+ {q:"A MOSFET (drain at +) is gated off, and the circuit forces i_sw = −3 A. What happens?",
+  o:["The MOSFET blocks and i_sw = 0","The gate turns back on by itself","The current flows through the body diode and v_sw is about 0","It behaves like an open circuit"],a:2,
+  e:"Negative current forward-biases the body diode (cathode at the drain). The MOSFET can't stop it; v_sw sits near 0 (slightly negative)."},
+ {q:"Why can a MOSFET block positive v_sw but not negative v_sw?",
+  o:["Its gate only works with positive voltage","Its channel only conducts one way","Its voltage rating is quoted as positive","Its body diode (cathode at the drain) turns on whenever v_sw goes negative"],a:3,
+  e:"The body diode is always there, in parallel. Negative v_sw forward-biases it, so the MOSFET can only ever block the positive polarity: quadrants I and IV."},
+ {q:"The CAB760M12HM3 is a half-bridge module: one leg, two switches. How many do you need for the H-bridge from the inverter lectures?",
+  o:["1","2","4","8"],a:1,
+  e:"An H-bridge has two legs (S₁ with S₃, S₂ with S₄). One half-bridge module is one leg, so you need two."},
+ {q:"A MOSFET carries i_sw = −20 A while gated on. You turn the gate off. What happens to the current?",
+  o:["It keeps flowing, now through the body diode","It stops, and the MOSFET blocks","It reverses to +20 A","It flows through the gate"],a:0,
+  e:"Gate off closes the channel, but negative current simply moves to the body diode. A MOSFET can stop positive current, never negative current."}
+],
+q5:[
+ {q:"An IGBT (collector at +) must now also carry i_sw = −2 A. What do you add?",
+  o:["A diode in series with it","A diode across it, anode to the collector","A diode across it, cathode to the collector","Nothing: IGBTs conduct both ways"],a:2,
+  e:"An anti-parallel diode, cathode to the collector, gives negative current a path. The IGBT alone only covers quadrant I."},
+ {q:"Why must the anti-parallel diode have its cathode (not its anode) at the collector?",
+  o:["Otherwise the diode conducts whenever v_sw > 0, and the switch could never block","It makes the IGBT switch faster","Cathodes must always face the + terminal","It halves the conduction loss"],a:0,
+  e:"With the anode at the collector, positive v_sw would forward-bias the diode and short the switch. Cathode at the collector keeps the diode reverse-biased while the IGBT blocks."},
+ {q:"IGBT with anti-parallel diode: which quadrants, and which device has the same plot?",
+  o:["I only; a diode","I and IV; a MOSFET","I and II; a thyristor","All four; a bidirectional switch"],a:1,
+  e:"It conducts both ways (IGBT forward, diode backward) and blocks positive v_sw only: I and IV, the MOSFET's region."},
+ {q:"IGBT + anti-parallel diode, gate off, carrying i_sw = −2 A. Can the gate stop this current?",
+  o:["Yes, the IGBT blocks it","Only if v_sw is negative","Yes, by pulsing the gate","No: it flows through the diode, which has no gate"],a:3,
+  e:"Negative current goes through the diode, and nothing controls a diode. The gate only controls the positive current in the IGBT."}
+],
+q6:[
+ {q:"A thyristor (anode at +) has v_sw = +200 V and gets a gate pulse. Then the gate signal is removed. What happens?",
+  o:["It turns on, then off when the gate signal goes","It turns on and stays on until the circuit takes its current to zero","Nothing: it needs a continuous gate signal","It blocks −200 V"],a:1,
+  e:"A pulse is enough: the thyristor latches on. Removing the gate signal does nothing. It turns off only when the external circuit brings its current to zero."},
+ {q:"Same thyristor, but v_sw = −200 V when the gate pulse arrives. What happens?",
+  o:["It turns on and conducts negative current","It turns on and conducts positive current","Nothing: it stays off and blocks −200 V","It breaks down"],a:2,
+  e:"Turn-on needs v_sw > 0. With negative v_sw it's reverse-biased: it stays on the −v_sw axis (quadrant II's edge) and blocks."},
+ {q:"A thyristor covers quadrant I. Why can't it be S₁ in the buck converter?",
+  o:["It can't conduct positive current","It can't block +V_g","It's too slow to turn on","S₁ must turn off while i_L > 0 is still flowing, and a thyristor can't be turned off from its gate"],a:3,
+  e:"The quadrant check passes, but question 1 fails. In the buck, i_L never reaches zero by itself, so a thyristor S₁ would turn on once and never turn off."},
+ {q:"A thyristor is conducting 100 A. How do you turn it off?",
+  o:["Make the external circuit take its current to zero","Remove the gate signal","Apply a negative gate pulse","Raise v_sw above its rating"],a:0,
+  e:"Turn-off is not controllable. The circuit has to bring the current to zero, for example when an AC source reverses."}
+],
+q7:[
+ {q:"Which quadrants does a bidirectional switch cover, and why?",
+  o:["I and IV: it conducts both ways","All four: it blocks both polarities and conducts both directions","I and III: one gate per quadrant","II and IV: it has two diodes"],a:1,
+  e:"Blocks ± v_sw and conducts ± i_sw. Every combination is allowed, so all four quadrants are shaded."},
+ {q:"A bidirectional switch has one gate on and the other off. How does it behave?",
+  o:["Like a short circuit","Like an open circuit","Like a diode: it conducts one way and blocks the other","Like a thyristor that latches"],a:2,
+  e:"The lecture's point: one gate on, the other off, and it acts as a diode."},
+ {q:"How do you build a four-quadrant switch from ordinary MOSFETs?",
+  o:["Two in parallel, facing the same way","Two in parallel, facing opposite ways","One MOSFET with a higher voltage rating","Two in series, facing opposite ways (back-to-back)"],a:3,
+  e:"In series, each blocks one polarity, so together they block both. In parallel facing opposite ways, one body diode always conducts and nothing is blocked. The bidirectional switch replaces the back-to-back pair with one device."},
+ {q:"A switch connects straight across an AC voltage and must stay off for a whole cycle. Why not a single MOSFET?",
+  o:["Its body diode conducts during every negative half cycle","MOSFETs can't turn off","MOSFETs can't conduct positive current","AC damages the gate"],a:0,
+  e:"The AC voltage goes negative every half cycle. A MOSFET only blocks positive v_sw, so its body diode conducts. You need both polarities blocked."}
+],
+q8:[
+ {q:"An IGBT is connected with its EMITTER at the + terminal. Which quadrant?",
+  o:["I","II","III","IV"],a:2,
+  e:"That's the IGBT rotated 180°. (v, i) → (−v, −i), so quadrant I moves to III: it now conducts negative i_sw and blocks negative v_sw."},
+ {q:"A thyristor is rotated 180°. Which quadrants?",
+  o:["I and II","III and IV","II and IV","I and III"],a:1,
+  e:"I → III and II → IV. The rotated thyristor conducts negative i_sw and blocks both polarities."},
+ {q:"You need quadrant IV and you have a diode. How do you connect it?",
+  o:["Cathode at the + terminal","Anode at the + terminal","With a gate driver","A diode can't cover quadrant IV"],a:0,
+  e:"As drawn (anode at +) the diode is quadrant II. Rotated 180° it's IV: cathode at +."},
+ {q:"Why does rotation move quadrant I to III rather than to II?",
+  o:["Rotation only flips current","Rotation only flips voltage","The plot is mirrored left to right","Turning the device around flips BOTH v_sw and i_sw as the device sees them"],a:3,
+  e:"Swapping the terminals reverses both the device's voltage and its current, relative to the fixed references. Flipping both signs is a diagonal move: I ↔ III, II ↔ IV."},
+ {q:"Which device's plot is unchanged by rotating it 180°?",
+  o:["Diode","MOSFET","Bidirectional switch","Thyristor"],a:2,
+  e:"It already covers all four quadrants, so moving each to its opposite gives the same set."}
+],
+q9:[
+ {q:"On, a switch must conduct positive i_sw. Off, it must block positive v_sw. Which is the exact fit?",
+  o:["Diode, anode at +","IGBT, collector at +","Diode, cathode at +","Thyristor, cathode at +"],a:1,
+  e:"Needs (+v, +i): quadrant I only. The IGBT as drawn is exactly quadrant I. (A MOSFET also works; it just covers IV as well.)"},
+ {q:"Each switch in the H-bridge (inverter lectures) carries load current that reverses every cycle, and blocks +v_d when off. Which devices fit?",
+  o:["Diodes","Thyristors","MOSFETs, or IGBTs with anti-parallel diodes","Plain IGBTs"],a:2,
+  e:"Current both ways, voltage positive only: quadrants I and IV. That's exactly a MOSFET or an IGBT + anti-parallel diode."},
+ {q:"A switch must block both polarities but only ever conducts positive current, and an AC source brings its current to zero every half cycle. Exact fit?",
+  o:["MOSFET, drain at +","Diode, cathode at +","IGBT, emitter at +","Thyristor, anode at +"],a:3,
+  e:"Needs I and II. The thyristor covers exactly that, and the AC source provides the current zero it needs to turn off."},
+ {q:"On, a switch carries negative i_sw. Off, it blocks positive v_sw. You'd like to avoid a gate driver. What fits?",
+  o:["Diode, cathode at +","Diode, anode at +","IGBT, collector at +","Nothing without a gate"],a:0,
+  e:"(+v, −i) is quadrant IV: a diode rotated, cathode at +. It works as long as the circuit turns it on and off at the right moments, as S₂ in the buck does."}
+],
+q10:[
+ {q:"S₁ is on and S₂ is off. What is v₂?",
+  o:["0","+V_g","+V_o","−V_g"],a:1,
+  e:"With S₁ on, the switch node is connected to V_g. v₂ is the node voltage minus ground: +V_g."},
+ {q:"S₂ is on and i_L = 4 A. What is i₂?",
+  o:["+4 A","0","−4 A","Depends on V_g"],a:2,
+  e:"i₂ is defined flowing down into S₂. The inductor current flows up through S₂ into L, so i₂ = −i_L = −4 A."},
+ {q:"V_o = 24 V and I_L = −5 A. What is P, and which way does it flow?",
+  o:["120 W, from V_g to V_o","120 W, from V_o to V_g","−24 W, from V_o to V_g","0 W"],a:1,
+  e:"P = V_o I_L = 24 × (−5) = −120 W. Negative P means 120 W flows from V_o back to V_g."},
+ {q:"Why is V_o a battery in this example rather than a resistor?",
+  o:["A battery can supply power as well as absorb it, so P = V_o I_L can have either sign","Batteries have zero ripple","A resistor would short the inductor","Resistors can't be connected to a buck"],a:0,
+  e:"A resistor only absorbs power, which would force I_L > 0 (Case 1 only). A battery can also push power back, which is what makes Cases 2 and 3 possible."},
+ {q:"Why does the lecture say i_L keeps the sign of I_L?",
+  o:["The inductor forbids negative current","The switches only conduct one way","With small ripple, i_L ≈ I_L, so it never swings through zero","V_o is positive"],a:2,
+  e:"The small-ripple approximation: the ripple is small compared with |I_L|, so i_L stays on the same side of zero as its average. Big ripple breaks this (see §13)."}
+],
+q11:[
+ {q:"In Case 1 (I_L > 0), which quadrant must S₂ cover?",
+  o:["I","II","III","IV"],a:3,
+  e:"On: i₂ = −i_L < 0. Off: v₂ = +V_g. (+v, −i) is quadrant IV."},
+ {q:"Why can S₂ be a plain diode with no gate in Case 1?",
+  o:["S₂ carries no current","When S₁ turns off, i_L forces S₂ on; when S₁ turns on, +V_g reverse-biases it: the circuit does the switching","Diodes are always faster","The inductor drives the diode's gate"],a:1,
+  e:"i_L must keep flowing when S₁ opens, and the only path is up through S₂, which forward-biases the diode. When S₁ closes, V_g appears across S₂ and turns it off."},
+ {q:"S₁ is a MOSFET. Which terminal goes toward V_g?",
+  o:["The drain","The source","The gate","Either one"],a:0,
+  e:"S₁ needs quadrant I, which is the MOSFET as drawn: drain at the + terminal of v₁, which is the V_g side."},
+ {q:"V_g = 48 V and V_o = 24 V. What voltage must each switch block?",
+  o:["24 V","48 V","72 V","S₁ 48 V, S₂ 24 V"],a:1,
+  e:"Both switches block +V_g in every case: v₁ = V_g − 0 when S₂ is on, v₂ = V_g when S₁ is on. V_o doesn't appear."},
+ {q:"Someone fits S₂'s diode backwards (anode at the switch node). What happens when S₁ turns on?",
+  o:["Nothing changes","The output doubles","V_g forward-biases the diode through S₁: a short across the source","The diode blocks V_g"],a:2,
+  e:"With S₁ on, the node sits at V_g. A diode with its anode at the node is then forward-biased straight to ground: V_g is shorted."}
+],
+q12:[
+ {q:"In Case 2 (I_L < 0), what does S₁ carry when it's on?",
+  o:["i₁ = i_L > 0","i₁ = i_L < 0, so S₁ needs quadrant IV","Nothing","i₁ = −i_L"],a:1,
+  e:"The reference still says i₁ = i_L. With i_L negative, S₁ conducts negative current. Off, it still blocks +V_g: (+v, −i) is quadrant IV."},
+ {q:"What should S₁ be in Case 2?",
+  o:["A MOSFET, drain toward V_g","A diode, anode toward V_g","An IGBT, collector toward V_g","A diode, cathode toward V_g"],a:3,
+  e:"Quadrant IV is the diode rotated 180°: cathode at the + terminal of v₁, which is the V_g side."},
+ {q:"Read from right to left, what converter is Case 2?",
+  o:["A boost from V_o to V_g","A buck from V_o to V_g","A flyback","An inverter"],a:0,
+  e:"From V_o: the inductor is at the input, the controlled switch S₂ goes to ground, and a diode feeds V_g. That's the boost layout, stepping up from V_o to V_g."},
+ {q:"V_o = 24 V, I_L = −5 A, ideal switches. How much power arrives at V_g?",
+  o:["24 W","60 W","120 W","240 W"],a:2,
+  e:"P = V_o I_L = −120 W, so 120 W leaves V_o. The switches and inductor are ideal (lossless), so all 120 W arrives at V_g."}
+],
+q13:[
+ {q:"Why can't the Case 1 hardware (MOSFET S₁, diode S₂) run with I_L < 0?",
+  o:["The MOSFET can't carry negative current","S₂'s diode (cathode at the node) can't conduct i₂ > 0","The battery can't supply power","V_g would reverse"],a:1,
+  e:"With I_L < 0, S₂ must carry i₂ = −i_L > 0 (quadrant I). The rotated diode only covers IV. S₁ is fine: a MOSFET already covers I and IV."},
+ {q:"In Case 3, which quadrants must each switch cover?",
+  o:["S₁ I, S₂ IV","I and II","I and IV, both switches","All four"],a:2,
+  e:"Both switches block +V_g, and each conducts ± i_L. That's (+v, ±i): quadrants I and IV for both."},
+ {q:"Could Case 3 use two plain IGBTs?",
+  o:["No: each needs quadrant IV too, so each needs an anti-parallel diode","Yes, IGBTs conduct both ways","Yes, if one is rotated","No: IGBTs can't block +V_g"],a:0,
+  e:"A plain IGBT is quadrant I only. Add an anti-parallel diode to each and they cover I and IV, like MOSFETs."},
+ {q:"Ideal switches, I_L = 1 A, peak-to-peak ripple Δi_L = 4 A. Which quadrants does S₂ need?",
+  o:["IV only, since I_L > 0","I only","None","I and IV"],a:3,
+  e:"i_L swings from 1 − 2 = −1 A to 1 + 2 = 3 A, so it crosses zero. i₂ = −i_L takes both signs: quadrants I and IV even though I_L > 0."},
+ {q:"Same numbers (I_L = 1 A, Δi_L = 4 A), but S₂ is a diode. What happens?",
+  o:["The diode conducts −1 A","The diode stops i_L at zero for part of each period: DCM (Lecture 3)","The MOSFET S₁ fails","Nothing: the ripple shrinks"],a:1,
+  e:"The diode can't carry the reversed current, so once i_L falls to zero it stays there until S₁ turns on again. That third interval is discontinuous conduction mode."}
+],
+qf:[
+ {q:"A switch is on and 20 A flows up through it, out of its + terminal. Where is its operating point?",
+  o:["i_sw = +20 A, on the +i axis","i_sw = −20 A, on the −i axis","In quadrant II","On the +v axis"],a:1,
+  e:"i_sw is defined into the + terminal, so current coming out is negative. On means v_sw ≈ 0: the point is on the −i_sw axis. Review §2."},
+ {q:"A diode is connected with its cathode at the + terminal. Which quadrant?",
+  o:["I","II","III","IV"],a:3,
+  e:"Anode at + is quadrant II. Cathode at + is the diode rotated 180°: II → IV. Review §3 and §8."},
+ {q:"A MOSFET (drain at +) is gated off and the circuit drives v_sw negative. What happens?",
+  o:["It blocks the negative voltage","The gate turns on","Its body diode conducts: it can't block negative v_sw","It latches like a thyristor"],a:2,
+  e:"Negative v_sw forward-biases the body diode, cathode at the drain. MOSFETs block positive v_sw only. Review §4."},
+ {q:"An IGBT with an anti-parallel diode is rotated 180° (emitter at +). Which quadrants?",
+  o:["II and III","I and IV","I only","III and IV"],a:0,
+  e:"As drawn it's I and IV. Rotating sends I → III and IV → II. Review §5 and §8."},
+ {q:"A thyristor (anode at +) has v_sw = +100 V and no gate pulse. What is its state?",
+  o:["On, conducting positive current","On, conducting negative current","Broken down","Off, blocking +100 V on the +v_sw axis"],a:3,
+  e:"Without a gate pulse it stays off, and a thyristor blocks both polarities, so it holds off +100 V. Review §6."},
+ {q:"A switch must conduct both directions and block both polarities, with full control. What do you use?",
+  o:["A MOSFET","A thyristor","A bidirectional switch (or two back-to-back switches)","A diode"],a:2,
+  e:"All four quadrants, controllable both ways: the bidirectional switch. Before it existed you'd use two switches back-to-back in series. Review §7."},
+ {q:"A switch must cover quadrant III only. Which device and orientation?",
+  o:["IGBT, emitter at +","IGBT, collector at +","Diode, cathode at +","Thyristor, anode at +"],a:0,
+  e:"(−v, −i) is the IGBT rotated 180° (I → III): emitter at the + terminal. The diode with cathode at + is IV, not III. Review §8 and §9."},
+ {q:"Boost converter (Lecture 3): the output switch sits between the switch node and V_o, with + of v and the i arrow at the node side. With i_L > 0: on, i = i_L; off, the node is held at 0, so v = −V_o. Which device?",
+  o:["Diode, cathode at the switch node","IGBT, collector at the switch node","Diode, anode at the switch node","Thyristor, cathode at the switch node"],a:2,
+  e:"On: i > 0. Off: v < 0. That's (−v, +i): quadrant II, the diode as drawn, anode at the + terminal (the switch node). It's the familiar boost diode. Review §9."},
+ {q:"In the two-switch circuit, S₁ is on and i_L = −3 A. What are i₁ and v₂?",
+  o:["i₁ = +3 A, v₂ = 0","i₁ = −3 A, v₂ = +V_g","i₁ = −3 A, v₂ = 0","i₁ = 0, v₂ = +V_g"],a:1,
+  e:"With S₁ on, i₁ = i_L = −3 A, and the switch node is at V_g, so S₂ blocks v₂ = +V_g. Review §10."},
+ {q:"In Case 1, someone uses a thyristor as S₁ (anode toward V_g). What goes wrong?",
+  o:["It can't conduct i₁ > 0","It can't block +V_g","Nothing: it covers quadrant I","Once fired, it can't be turned off, because i_L never falls to zero by itself"],a:3,
+  e:"The quadrants are fine (I is covered), but S₁ must turn off while i_L > 0 flows. A thyristor only turns off when the circuit takes its current to zero. Review §6 and §11."},
+ {q:"In Case 2, S₂ is a MOSFET. Which terminal goes at the switch node?",
+  o:["Drain","Source","Gate","Either"],a:0,
+  e:"S₂ needs quadrant I (on: i₂ = −i_L > 0; off: v₂ = +V_g). The MOSFET as drawn: drain at the + of v₂, which is the switch node. Review §12."},
+ {q:"Case 1 hardware (MOSFET S₁, diode S₂), I_L = 2 A, Δi_L = 6 A peak-to-peak. What happens?",
+  o:["Nothing: I_L > 0, so it's fine","i_L would dip to −1 A, but the diode stops it at zero: the converter enters DCM","The diode carries −1 A","S₁ must block −V_g"],a:1,
+  e:"i_L = 2 ± 3 A would run from −1 A to 5 A. The diode can't carry the reversed current, so i_L sits at zero for part of the period (DCM). With two MOSFETs, i_L would go negative instead. Review §13."}
+]
+};
+
+/* ---------------- QUIZ ENGINE (answers remembered per browser) ---------------- */
+const LET = "ABCD";
+const STORE_KEY = "enel585-l9-quiz-v1";
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; } catch(e){ saved = {}; }
+function persist(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch(e){} }
+const rich = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/([A-Za-zΔ])_([A-Za-z0-9]+)/g, "$1<sub>$2</sub>");
+const stats = {};
+function tally(){
+  let c=0, a=0, t=0;
+  Object.keys(QUIZ).forEach(k=>{ t += QUIZ[k].length; if(stats[k]){ c += stats[k].c; a += stats[k].a; } });
+  document.getElementById("tallyBig").textContent = c+" / "+a+" correct";
+  document.getElementById("tallySub").textContent = a===0 ? "Answer any question to start. "+t+" questions in all." : a+" of "+t+" answered across all quizzes.";
+  document.getElementById("tallyBar").style.width = (t? (100*c/t):0)+"%";
+}
+function chip(id, correct, answered, total){
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+"/"+total;
+  c.classList.toggle("done", answered===total);
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  saved[id] = saved[id] || {};
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    stats[id] = {c:correct, a:answered};
+    chip(id, correct, answered, qs.length); tally();
+  }
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    qq.innerHTML = '<span class="qn">Q'+(qi+1)+'</span>'+rich(item.q);
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    function choose(oi, remember){
+      btns.forEach(x=>x.disabled=true);
+      const ok = oi===item.a;
+      btns[item.a].classList.add("right");
+      if(!ok) btns[oi].classList.add("wrong");
+      answered++; if(ok) correct++;
+      ex.innerHTML = (ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[item.a]+'.</b> ') + rich(item.e);
+      ex.hidden = false;
+      if(remember){ saved[id][qi] = oi; persist(); }
+    }
+    const btns = item.o.map((t, oi)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      b.innerHTML = '<span class="L">'+LET[oi]+'</span><span>'+rich(t)+'</span>';
+      b.addEventListener("click", ()=>{ choose(oi, true); upd(); });
+      opts.appendChild(b); return b;
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+    const prev = saved[id][qi];
+    if(typeof prev==="number" && prev>=0 && prev<item.o.length) choose(prev, false);
+  });
+  reset.addEventListener("click", ()=>{ saved[id] = {}; persist(); buildQuiz(box); });
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+tally();
+
+/* ---------------- DEVICES ---------------- */
+const ROT = {1:3, 2:4, 3:1, 4:2};
+const RN = ["","I","II","III","IV"];
+const DEV = {
+  diode:{name:"Diode", Q:[2], top:"anode", bot:"cathode",
+    on:"No: the circuit decides", off:"No: the circuit decides"},
+  mosfet:{name:"MOSFET", Q:[1,4], top:"drain", bot:"source",
+    on:"Yes, from the gate", off:"Yes, from the gate"},
+  igbt:{name:"IGBT", Q:[1], top:"collector", bot:"emitter",
+    on:"Yes, from the gate", off:"Yes, from the gate"},
+  igbtd:{name:"IGBT + anti-parallel diode", Q:[1,4], top:"collector", bot:"emitter",
+    on:"Yes (IGBT part); diode: circuit", off:"Yes (IGBT part); diode: circuit"},
+  thy:{name:"Thyristor", Q:[1,2], top:"anode", bot:"cathode",
+    on:"Yes: gate pulse while v_sw > 0", off:"No: the circuit must take its current to zero"},
+  bidir:{name:"Bidirectional switch", Q:[1,2,3,4], top:null, bot:null,
+    on:"Yes, one gate per direction", off:"Yes, one gate per direction"}
+};
+const DEVORDER = ["diode","mosfet","igbt","igbtd","thy","bidir"];
+const quads = (k, rot) => { const q = DEV[k].Q.map(n=> rot? ROT[n]:n); return q.sort(); };
+const qname = arr => { if(arr.length===4) return "all four"; const r = arr.map(n=>RN[n]); return r.length<3 ? r.join(" and ") : r.slice(0,-1).join(", ")+" and "+r[r.length-1]; };
+
+const DIODE_G = (cls, kcls)=>'<path class="'+cls+'" d="M0,-40H26V-11M26,11V40H0M15,-11H37"/><path class="'+kcls+'" d="M15,11H37L26,-11Z"/><circle class="k" cx="0" cy="-40" r="2.6"/><circle class="k" cx="0" cy="40" r="2.6"/>';
+const SYM = {
+  open:'<path class="w" d="M0,-60V-22M0,22V60M0,-22L17,15"/><circle class="k" cx="0" cy="-22" r="3.5"/><circle class="k" cx="0" cy="22" r="3.5"/>',
+  closed:'<path class="w" d="M0,-60V-22M0,22V60M0,-22V22"/><circle class="k" cx="0" cy="-22" r="3.5"/><circle class="k" cx="0" cy="22" r="3.5"/>',
+  diode:'<path class="w" d="M0,-60V-14M0,14V60M-14,14H14"/><path class="k" d="M-14,-14H14L0,14Z"/>',
+  thy:'<path class="w" d="M0,-60V-14M0,14V60M-14,14H14M-7,14L-24,32H-42"/><path class="k" d="M-14,-14H14L0,14Z"/>',
+  igbt:'<path class="w" d="M-44,0H-20M-20,-20V20"/><path class="w th" d="M-12,-24V24"/><path class="w" d="M-12,-11L0,-23V-60M-12,11L0,23V60"/><path class="k" d="M-1,22L-8.4,19.6L-3.4,14.6Z"/>',
+  mosfet:'<path class="w" d="M-44,0H-20M-20,-22V22"/><path class="w th" d="M-12,-27V-13M-12,-7V7M-12,13V27"/><path class="w" d="M-12,-20H0V-60M-12,20H0V60M-11,0H0V20"/><path class="k" d="M-12,0L-4,-4.5V4.5Z"/>'+DIODE_G("gw","gk"),
+  bidir:'<path class="w" d="M0,-60V-30H-12M-12,30H0V60M-44,-18H-20M-44,18H-20M-20,-30V-6M-20,6V30"/><path class="w th" d="M-12,-36V36"/>'
+};
+SYM.igbtd = SYM.igbt + DIODE_G("w","k");
+
+const sub = (a,b)=> a+'<tspan baseline-shift="sub" font-size="9">'+b+'</tspan>';
+
+/* v-i plane. opts: {req:[..], lab:'sw', title, test:{axis:'+i'|'-i'|'+v'|'-v', ok}, seg:{i0,i1,v, cur:{v,i}}, iScale, vScale} */
+function planeSVG(opts){
+  const cx=125, cy=100, L=76, B=60, lab = opts.lab||"sw";
+  let s = '<svg viewBox="0 0 250 200" role="img" aria-label="'+(opts.aria||"v-i plane")+'">';
+  const R = {1:[cx,cy-B], 2:[cx-B,cy-B], 3:[cx-B,cy], 4:[cx,cy]};
+  (opts.req||[]).forEach(n=>{ s += '<rect class="shade" x="'+R[n][0]+'" y="'+R[n][1]+'" width="'+B+'" height="'+B+'"/>'; });
+  [[1,30,-30],[2,-30,-30],[3,-30,30],[4,30,30]].forEach(([n,dx,dy])=>{ s+='<text class="ql" x="'+(cx+dx)+'" y="'+(cy+dy+5)+'" text-anchor="middle">'+RN[n]+'</text>'; });
+  s += '<path class="ax" d="M'+(cx-L)+','+cy+'H'+(cx+L-2)+'M'+cx+','+(cy+L)+'V'+(cy-L+2)+'"/>';
+  s += '<path class="axk" d="M'+(cx+L+4)+','+cy+'l-9,-4.5v9Z"/><path class="axk" d="M'+cx+','+(cy-L-4)+'l-4.5,9h9Z"/>';
+  s += '<text class="axl" x="'+(cx+L+8)+'" y="'+(cy+4)+'">+'+sub('v',lab)+'</text>';
+  s += '<text class="axl" x="'+(cx-L-6)+'" y="'+(cy+4)+'" text-anchor="end">−'+sub('v',lab)+'</text>';
+  s += '<text class="axl" x="'+cx+'" y="'+(cy-L-10)+'" text-anchor="middle">+'+sub('i',lab)+'</text>';
+  s += '<text class="axl" x="'+cx+'" y="'+(cy+L+16)+'" text-anchor="middle">−'+sub('i',lab)+'</text>';
+  if(opts.title) s += '<text class="ttl" x="8" y="18">'+opts.title+'</text>';
+  if(opts.test){
+    const t = opts.test, e = {"+i":[cx,cy-L+10],"-i":[cx,cy+L-10],"+v":[cx+L-10,cy],"-v":[cx-L+10,cy]}[t.axis];
+    s += '<line class="'+(t.ok?"hit":"miss")+'" x1="'+cx+'" y1="'+cy+'" x2="'+e[0]+'" y2="'+e[1]+'"/>';
+  }
+  if(opts.seg){
+    const g = opts.seg, iS = L*0.9/(opts.iScale||12), vS = L*0.9/(opts.vScale||60);
+    const clampI = i => Math.max(-L+6, Math.min(L-6, i*iS));
+    if(g.i1 - g.i0 > 1e-9) s += '<line class="seg1" x1="'+cx+'" y1="'+(cy-clampI(g.i0))+'" x2="'+cx+'" y2="'+(cy-clampI(g.i1))+'"/>';
+    else if(Math.abs(g.i0)>1e-9) s += '<circle class="dot" cx="'+cx+'" cy="'+(cy-clampI(g.i0))+'" r="4"/>';
+    s += '<line class="seg1" x1="'+(cx+g.v*vS)+'" y1="'+cy+'" x2="'+(cx+g.v*vS+0.01)+'" y2="'+cy+'"/>';
+    if(g.cur) s += '<circle class="dot" cx="'+(cx+g.cur.v*vS)+'" cy="'+(cy-clampI(g.cur.i))+'" r="6"/>';
+  }
+  return s + '</svg>';
+}
+
+/* ---------------- EXPLORER ---------------- */
+const TESTS = [
+  {axis:"+i", label:"On, i_sw > 0", need:q=>q.includes(1)||q.includes(2), yes:"It can conduct positive current: the +i_sw half-axis is an edge of a shaded quadrant.", no:"It can't conduct positive current: neither quadrant I nor II is shaded."},
+  {axis:"-i", label:"On, i_sw < 0", need:q=>q.includes(3)||q.includes(4), yes:"It can conduct negative current (current flowing out of the + terminal).", no:"It can't conduct negative current: neither quadrant III nor IV is shaded."},
+  {axis:"+v", label:"Off, v_sw > 0", need:q=>q.includes(1)||q.includes(4), yes:"It can block positive voltage.", no:"It can't block positive voltage: neither quadrant I nor IV is shaded, so a positive v_sw would make it conduct."},
+  {axis:"-v", label:"Off, v_sw < 0", need:q=>q.includes(2)||q.includes(3), yes:"It can block negative voltage.", no:"It can't block negative voltage: neither quadrant II nor III is shaded, so a negative v_sw would make it conduct."}
+];
+function signsText(q){
+  const ip = q.includes(1)||q.includes(2), in_ = q.includes(3)||q.includes(4);
+  const vp = q.includes(1)||q.includes(4), vn = q.includes(2)||q.includes(3);
+  const c = ip&&in_ ? "both directions" : ip ? "i<sub>sw</sub> &gt; 0 only" : "i<sub>sw</sub> &lt; 0 only";
+  const b = vp&&vn ? "both polarities" : vp ? "v<sub>sw</sub> &gt; 0 only" : "v<sub>sw</sub> &lt; 0 only";
+  return [c,b];
+}
+function deviceSVG(k, rot){
+  const d = DEV[k];
+  let s = '<svg viewBox="0 0 210 180" role="img" aria-label="'+d.name+(rot?' rotated 180 degrees':'')+'">';
+  s += '<g transform="translate(100,90)'+(rot?' rotate(180)':'')+'">'+SYM[k]+'</g>';
+  s += '<circle class="term" cx="100" cy="30" r="4.5"/><circle class="term" cx="100" cy="150" r="4.5"/>';
+  s += '<path class="refl" d="M100,2V18"/><path class="refk" d="M94.5,15L100,25L105.5,15Z"/>';
+  s += '<text class="ref" x="110" y="15">'+sub('i','sw')+'</text>';
+  s += '<text class="ref" x="186" y="58" text-anchor="middle">+</text><text class="ref" x="186" y="95" text-anchor="middle">'+sub('v','sw')+'</text><text class="ref" x="186" y="132" text-anchor="middle">−</text>';
+  if(d.top){
+    s += '<text class="tn" x="90" y="34" text-anchor="end">'+(rot? d.bot : d.top)+'</text>';
+    s += '<text class="tn" x="90" y="154" text-anchor="end">'+(rot? d.top : d.bot)+'</text>';
+  }
+  return s+'</svg>';
+}
+function makeExplorer(el){
+  const st = {dev: el.dataset.xp, rot: el.dataset.rot==="1", test:null};
+  const lock = el.dataset.lock==="1", rotctl = el.dataset.rotctl==="1";
+  el.innerHTML = "";
+  let chips = null, rotBtn = null;
+  if(!lock){
+    chips = document.createElement("div"); chips.className="btnrow"; chips.style.justifyContent="center"; chips.style.marginBottom="6px";
+    DEVORDER.forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.className="btn"; b.textContent=DEV[k].name; b.dataset.k=k;
+      b.addEventListener("click",()=>{ st.dev=k; st.test=null; draw(); }); chips.appendChild(b); });
+    el.appendChild(chips);
+  }
+  const pair = document.createElement("div"); pair.className="pair"; el.appendChild(pair);
+  const name = document.createElement("div"); name.className="devname"; el.appendChild(name);
+  const ctl = document.createElement("div"); ctl.className="btnrow"; ctl.style.justifyContent="center"; ctl.style.marginTop="10px";
+  if(rotctl){
+    rotBtn = document.createElement("button"); rotBtn.type="button"; rotBtn.className="btn"; rotBtn.textContent="Rotate 180°";
+    rotBtn.addEventListener("click",()=>{ st.rot=!st.rot; st.test=null; draw(); });
+    ctl.appendChild(rotBtn);
+  }
+  const tb = TESTS.map(t=>{ const b=document.createElement("button"); b.type="button"; b.className="btn"; b.innerHTML=rich(t.label);
+    b.addEventListener("click",()=>{ st.test = st.test===t ? null : t; draw(); }); ctl.appendChild(b); return b; });
+  el.appendChild(ctl);
+  const read = document.createElement("div"); read.className="readout"; read.setAttribute("aria-live","polite"); el.appendChild(read);
+  const facts = document.createElement("div"); facts.className="facts"; el.appendChild(facts);
+  function draw(){
+    const q = quads(st.dev, st.rot), d = DEV[st.dev];
+    if(chips) chips.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.k===st.dev?"true":"false"));
+    if(rotBtn) rotBtn.setAttribute("aria-pressed", st.rot?"true":"false");
+    tb.forEach((b,i)=>b.setAttribute("aria-pressed", TESTS[i]===st.test?"true":"false"));
+    const test = st.test ? {axis:st.test.axis, ok:st.test.need(q)} : null;
+    pair.innerHTML = deviceSVG(st.dev, st.rot) + planeSVG({req:q, test, aria:d.name+" operating region: quadrant "+qname(q)});
+    const orient = d.top ? (st.rot? d.bot : d.top)+" at +" : "symmetric";
+    name.textContent = d.name+(d.top? " ("+orient+")" : "")+": "+(q.length===4? "all four quadrants" : "quadrant"+(q.length>1?"s ":" ")+qname(q));
+    if(st.test){
+      const ok = st.test.need(q);
+      let msg = ok? st.test.yes : st.test.no;
+      if(!ok && st.dev==="igbt" && (st.test.axis==="+v" || st.test.axis==="-v"))
+        msg = "It isn't rated to block this polarity (emitter above collector). It doesn't conduct here the way a MOSFET's body diode would: a plain IGBT's reverse rating is tiny (often a few tens of volts, or not rated at all), so a real reverse voltage would break it down. In practice an anti-parallel diode sits across it and conducts instead. Either way, it can't be counted on to block, so the lecture shades quadrant "+(st.rot?"III":"I")+" only.";
+      read.innerHTML = '<span class="verdict '+(ok?"ok":"no")+'">'+(ok?"Can do":"Can't do")+'</span>'+rich(msg);
+    } else read.innerHTML = "Press a test button to check one half-axis.";
+    const [c,b] = signsText(q);
+    facts.innerHTML = '<div class="fact"><b>Turn on / off</b>'+rich(d.on)+(d.on===d.off?"":" / "+rich(d.off))+'</div><div class="fact"><b>Conducts</b>'+c+'</div><div class="fact"><b>Blocks</b>'+b+'</div>';
+  }
+  el._set = (k)=>{ st.dev=k; st.test=null; draw(); };
+  draw();
+}
+document.querySelectorAll(".xp").forEach(makeExplorer);
+document.querySelectorAll("[data-xpset]").forEach(b=>b.addEventListener("click",()=>{
+  const target = document.getElementById(b.dataset.xpset); target._set(b.dataset.dev);
+  document.querySelectorAll('[data-xpset="'+b.dataset.xpset+'"]').forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+}));
+
+/* ---------------- FIT LOGIC ---------------- */
+function fits(req, ctx){
+  // returns list of {k, ok, rot, extra, conn}
+  const plus = ctx || "at the + terminal";
+  return DEVORDER.map(k=>{
+    const d = DEV[k];
+    const opts = [false,true].map(r=>({r, q:quads(k,r)})).filter(o=>req.every(n=>o.q.includes(n)));
+    if(!opts.length) return {k, ok:false};
+    opts.sort((a,b)=>a.q.length-b.q.length);
+    const o = opts[0];
+    const conn = d.top ? (o.r? d.bot : d.top)+" "+plus : "either way round";
+    return {k, ok:true, rot:o.r, extra:o.q.filter(n=>!req.includes(n)), conn};
+  });
+}
+
+/* ---------------- FINDER ---------------- */
+(function(){
+  const box = document.getElementById("finder");
+  const st = {ip:false, in_:true, vp:true, vn:false};
+  const PRE = [
+    {lab:"Case 1 · S₁", s:{ip:true,in_:false,vp:true,vn:false}},
+    {lab:"Case 1 · S₂", s:{ip:false,in_:true,vp:true,vn:false}},
+    {lab:"Case 2 · S₁", s:{ip:false,in_:true,vp:true,vn:false}},
+    {lab:"Case 2 · S₂", s:{ip:true,in_:false,vp:true,vn:false}},
+    {lab:"Case 3 · either switch", s:{ip:true,in_:true,vp:true,vn:false}}
+  ];
+  let active = 1;
+  box.innerHTML =
+    '<div class="btnrow" id="fPre"><span class="lab">Load:</span></div>'+
+    '<div class="btnrow" style="margin-top:10px"><span class="lab">When on, it must conduct:</span><button class="btn" type="button" data-f="ip">i<sub>sw</sub> &gt; 0</button><button class="btn" type="button" data-f="in_">i<sub>sw</sub> &lt; 0</button></div>'+
+    '<div class="btnrow" style="margin-top:8px"><span class="lab">When off, it must block:</span><button class="btn" type="button" data-f="vp">v<sub>sw</sub> &gt; 0</button><button class="btn" type="button" data-f="vn">v<sub>sw</sub> &lt; 0</button></div>'+
+    '<div class="pair" id="fPlane" style="margin-top:8px"></div><div class="readout" id="fRead" aria-live="polite"></div>'+
+    '<div class="tbl" style="margin-top:10px"><table><thead><tr><th>Device</th><th>Fits?</th><th>Connect with</th><th>Notes</th></tr></thead><tbody id="fBody"></tbody></table></div>';
+  const pre = box.querySelector("#fPre");
+  const preBtns = PRE.map((p,i)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn"; b.textContent=p.lab;
+    b.addEventListener("click",()=>{ Object.assign(st,p.s); active=i; draw(); }); pre.appendChild(b); return b; });
+  box.querySelectorAll("[data-f]").forEach(b=>b.addEventListener("click",()=>{ st[b.dataset.f]=!st[b.dataset.f]; active=-1; draw(); }));
+  function draw(){
+    box.querySelectorAll("[data-f]").forEach(b=>b.setAttribute("aria-pressed", st[b.dataset.f]?"true":"false"));
+    const match = i => Object.keys(PRE[i].s).every(k=>PRE[i].s[k]===st[k]);
+    preBtns.forEach((b,i)=>b.setAttribute("aria-pressed", match(i) && (i===active || active===-1) ? "true":"false"));
+    const req = [];
+    if(st.ip && st.vp) req.push(1); if(st.ip && st.vn) req.push(2); if(st.in_ && st.vn) req.push(3); if(st.in_ && st.vp) req.push(4);
+    req.sort();
+    box.querySelector("#fPlane").innerHTML = planeSVG({req, aria:"Required quadrants"});
+    const read = box.querySelector("#fRead"), body = box.querySelector("#fBody");
+    if(!req.length){ read.innerHTML = "Pick at least one current direction <b>and</b> one blocking polarity."; body.innerHTML=""; return; }
+    read.innerHTML = "Required: <b>quadrant"+(req.length>1?"s ":" ")+qname(req)+"</b>. Shaded devices must cover all of it, as drawn or rotated 180°.";
+    const res = fits(req).sort((a,b)=> (b.ok-a.ok) || ((a.extra||[]).length-(b.extra||[]).length));
+    body.innerHTML = res.map(r=>{
+      const d = DEV[r.k];
+      if(!r.ok) return '<tr class="dim"><td>'+d.name+'</td><td>No</td><td>n/a</td><td>Its region is '+qname(DEV[r.k].Q)+' (or '+qname(quads(r.k,true))+' rotated).</td></tr>';
+      const exact = r.extra.length===0;
+      let note = exact ? "Covers exactly what's needed." : "Works; also covers "+qname(r.extra)+", which you don't need.";
+      if(r.k==="thy") note += " Can't be turned off from the gate: only usable if the circuit takes its current to zero.";
+      if(r.k==="diode") note += " No gate: the circuit must turn it on and off at the right moments.";
+      if(r.k==="igbtd") note += " Negative current goes through the diode (uncontrolled).";
+      return '<tr class="'+(exact?"best":"")+'"><td><b>'+d.name+'</b></td><td>'+(exact?'<span class="tagpill ok">Exact fit</span>':'<span class="tagpill first">Fits</span>')+'</td><td>'+(d.top?(r.rot?"rotated: ":"as drawn: "):"")+r.conn+'</td><td>'+note+'</td></tr>';
+    }).join("");
+  }
+  draw();
+})();
+
+/* ---------------- CIRCUIT DRAWING (shared by the live demo and the case figures) ---------------- */
+const Y0 = 66, Y1 = 236, YC = (Y0+Y1)/2;
+const WIRES = [
+  ["gL",  "M60,"+Y0+"V"+(YC-22)+"M60,"+(YC+22)+"V"+Y1],
+  ["top1","M60,"+Y0+"H120"],
+  ["top2","M240,"+Y0+"H300"],
+  ["n2L", "M300,"+Y0+"H350"],
+  ["coil","M350,"+Y0+"a12.5,12.5 0 0 1 25,0a12.5,12.5 0 0 1 25,0a12.5,12.5 0 0 1 25,0a12.5,12.5 0 0 1 25,0"],
+  ["toVo","M450,"+Y0+"H500"],
+  ["vo",  "M500,"+Y0+"V"+(YC-22)+"M500,"+(YC+22)+"V"+Y1],
+  ["botR","M500,"+Y1+"H300"],
+  ["botL","M300,"+Y1+"H60"],
+  ["s2w", "M300,"+Y0+"V"+(YC-60)+"M300,"+(YC+60)+"V"+Y1]
+];
+const HOT = {s1:["gL","top1","top2","n2L","coil","toVo","vo","botR","botL","S1"], s2:["s2w","n2L","coil","toVo","vo","botR","S2"]};
+function circuitMarkup(cfg){
+  let s = '<title>'+(cfg.title||"Two-switch circuit")+'</title>';
+  WIRES.forEach(([id,d])=>{ s += '<path class="w" data-seg="'+id+'" d="'+d+'"/>'; });
+  s += '<g data-seg="S1" transform="translate(180,'+Y0+') rotate('+(cfg.s1rot?90:-90)+')">'+SYM[cfg.s1]+'</g>';
+  s += '<g data-seg="S2" transform="translate(300,'+YC+')'+(cfg.s2rot?' rotate(180)':'')+'">'+SYM[cfg.s2]+'</g>';
+  s += '<circle class="k" cx="300" cy="'+Y0+'" r="3.5"/><circle class="k" cx="300" cy="'+Y1+'" r="3.5"/>';
+  [60,500].forEach(x=>{ s += '<circle class="src" cx="'+x+'" cy="'+YC+'" r="22"/><text class="lbl" x="'+x+'" y="'+(YC-5)+'" text-anchor="middle">+</text><text class="lbl" x="'+x+'" y="'+(YC+14)+'" text-anchor="middle">−</text>'; });
+  s += '<text class="lbl" x="32" y="'+(YC+5)+'" text-anchor="end">'+sub('V','g')+'</text>';
+  s += '<text class="lbl" x="528" y="'+(YC+5)+'">'+sub('V','o')+'</text>';
+  s += '<text class="lbl" x="400" y="'+(Y0-22)+'" text-anchor="middle">L</text>';
+  // references
+  s += '<text class="ref" x="126" y="18" text-anchor="middle">+</text><text class="ref" x="180" y="18" text-anchor="middle">'+sub('v','1')+'</text><text class="ref" x="234" y="18" text-anchor="middle">−</text>';
+  s += '<path class="refl" d="M74,'+(Y0-10)+'H98"/><path class="refk" d="M96,'+(Y0-14.5)+'L105,'+(Y0-10)+'L96,'+(Y0-5.5)+'Z"/><text class="ref" x="88" y="'+(Y0-18)+'" text-anchor="middle">'+sub('i','1')+'</text>';
+  s += '<path class="refl" d="M300,'+(Y0+4)+'V'+(Y0+15)+'"/><path class="refk" d="M295.5,'+(Y0+13)+'L300,'+(Y0+22)+'L304.5,'+(Y0+13)+'Z"/><text class="ref" x="290" y="'+(Y0+20)+'" text-anchor="end">'+sub('i','2')+'</text>';
+  s += '<text class="ref" x="352" y="'+(YC-38)+'" text-anchor="middle">+</text><text class="ref" x="352" y="'+(YC+5)+'" text-anchor="middle">'+sub('v','2')+'</text><text class="ref" x="352" y="'+(YC+46)+'" text-anchor="middle">−</text>';
+  s += '<path class="refl" d="M458,'+(Y0-10)+'H480"/><path class="refk" d="M478,'+(Y0-14.5)+'L487,'+(Y0-10)+'L478,'+(Y0-5.5)+'Z"/><text class="ref" x="472" y="'+(Y0-18)+'" text-anchor="middle">'+sub('i','L')+'</text>';
+  s += '<g id="'+(cfg.live?'cirP':'')+'">'+powerArrow(cfg.p)+'</g>';
+  if(cfg.live){
+    s += '<text class="val" id="cvI1" x="180" y="'+(YC-6)+'" text-anchor="middle"></text><text class="val" id="cvV1" x="180" y="'+(YC+14)+'" text-anchor="middle"></text>';
+    s += '<text class="val" id="cvI2" x="385" y="'+(YC-6)+'"></text><text class="val" id="cvV2" x="385" y="'+(YC+14)+'"></text>';
+    s += '<text class="val" id="cvIL" x="400" y="'+(Y0+30)+'" text-anchor="middle"></text>';
+  }
+  return s;
+}
+function powerArrow(p){
+  if(!p) return "";
+  const y = 268;
+  let s = '<path class="pw" d="M'+(p==="left"||p==="both"?238:230)+','+y+'H'+(p==="right"||p==="both"?322:330)+'"/>';
+  if(p==="right"||p==="both") s += '<path class="pwk" d="M320,'+(y-5)+'L331,'+y+'L320,'+(y+5)+'Z"/>';
+  if(p==="left"||p==="both") s += '<path class="pwk" d="M240,'+(y-5)+'L229,'+y+'L240,'+(y+5)+'Z"/>';
+  return s + '<text class="pwl" x="342" y="'+(y+5)+'">P</text>';
+}
+document.querySelectorAll("svg.cir-static").forEach(svg=>{
+  svg.innerHTML = circuitMarkup({s1:svg.dataset.s1, s1rot:svg.dataset.s1rot==="1", s2:svg.dataset.s2, s2rot:svg.dataset.s2rot==="1", p:svg.dataset.p, title:svg.getAttribute("aria-label")});
+});
+document.querySelectorAll("[data-planes]").forEach(el=>{
+  const [a,b] = el.dataset.planes.split("|").map(x=>x.split(",").map(Number).sort());
+  el.innerHTML = planeSVG({req:a, lab:"1", title:"S₁ needs "+qname(a), aria:"S1 needs quadrant "+qname(a)}) + planeSVG({req:b, lab:"2", title:"S₂ needs "+qname(b), aria:"S2 needs quadrant "+qname(b)});
+});
+
+/* ---------------- CANVAS HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function prep(cv){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function txt(ctx,s,x,y,col,align,size){ ctx.fillStyle=col; ctx.font=(size||11)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+const f1 = x => (Math.abs(x)<0.05?0:x).toFixed(1).replace("-","−");
+const sgn = x => (x>0.05?"+":"")+f1(x);
+
+/* ---------------- LIVE TWO-SWITCH DEMO ---------------- */
+(function(){
+  const VG = 48;
+  const svg = document.getElementById("cir");
+  const $ = id => document.getElementById(id);
+  const inT=$("cT"), inIL=$("cIL"), inDI=$("cDI"), inD=$("cD"), inBoth=$("cBoth"), play=$("cPlay"), cv=$("cvW");
+  const CASES = {1:{IL:5,DI:2,both:false}, 2:{IL:-5,DI:2,both:false}, 3:{IL:5,DI:2,both:true}};
+  let playing=false, raf=0;
+  function params(){ return {t:+inT.value, IL:+inIL.value, DI:+inDI.value, D:+inD.value, both:inBoth.checked}; }
+  function iL(p, tt){ const ph = tt - Math.floor(tt);
+    return ph < p.D ? p.IL - p.DI/2 + p.DI*ph/p.D : p.IL + p.DI/2 - p.DI*(ph-p.D)/(1-p.D); }
+  function ranges(p){
+    // range of iL while conducting, over all operating points considered
+    let lo = p.IL - p.DI/2, hi = p.IL + p.DI/2;
+    if(p.both){ const m = Math.abs(p.IL); lo = Math.min(lo, -m - p.DI/2); hi = Math.max(hi, m + p.DI/2); }
+    return {lo, hi};
+  }
+  function reqFrom(i0, i1){ const r=[]; if(i1>1e-9) r.push(1); if(i0<-1e-9) r.push(4); return r.sort(); }
+  const CTX1 = "toward V_g", CTX2 = "at the switch node";
+  function suggest(req, ctx, who){
+    if(!req.length) return '<h5>'+who+'</h5>No current flows, so this switch never has to conduct. Anything that blocks +V<sub>g</sub> will do.';
+    const r = fits(req, ctx).filter(x=>x.ok && ["diode","mosfet","igbt","igbtd"].includes(x.k));
+    const ex = r.filter(x=>!x.extra.length), al = r.filter(x=>x.extra.length);
+    const fmt = x => '<b>'+DEV[x.k].name+'</b>, '+rich(x.conn);
+    let s = '<h5>'+who+': quadrant'+(req.length>1?"s ":" ")+qname(req)+'</h5>';
+    s += 'Exact fit: '+ex.map(fmt).join("; or ")+'.';
+    if(al.length) s += '<br><span style="color:var(--muted)">Also works: '+al.map(x=>DEV[x.k].name+' ('+rich(x.conn)+')').join("; ")+'.</span>';
+    return s;
+  }
+  function drawWave(p){
+    const {ctx,w,h} = prep(cv);
+    const muted=css("--muted"), grid=css("--grid"), volt=css("--volt"), curr=css("--curr"), ink=css("--ink"), bg=css("--surface-2");
+    const x0=52, x1=w-8, pw=(x1-x0);
+    const tx = t => x0 + pw*t/2;
+    const pA = {top:10, bot:128}, pB = {top:150, bot:h-14};
+    const {lo,hi} = {lo:p.IL-p.DI/2, hi:p.IL+p.DI/2};
+    const im = Math.max(Math.abs(lo), Math.abs(hi), 1)*1.15;
+    const yi = i => (pA.top+pA.bot)/2 - i/im*(pA.bot-pA.top)/2;
+    const yv = v => pB.bot - v/(VG*1.18)*(pB.bot-pB.top);
+    // S1-on shading
+    ctx.fillStyle = grid;
+    [0,1].forEach(k=>{ ctx.fillRect(tx(k), pA.top, tx(k+p.D)-tx(k), pA.bot-pA.top); ctx.fillRect(tx(k), pB.top, tx(k+p.D)-tx(k), pB.bot-pB.top); });
+    // axes
+    ctx.strokeStyle = muted; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x0, yi(0)); ctx.lineTo(x1, yi(0)); ctx.moveTo(x0, yv(0)); ctx.lineTo(x1, yv(0)); ctx.stroke();
+    txt(ctx,"0 A",x0-6,yi(0),muted,"right"); txt(ctx,"0 V",x0-6,yv(0),muted,"right");
+    if(Math.abs(hi)>0.3) txt(ctx,f1(hi)+" A",x0-6,yi(hi),muted,"right");
+    if(Math.abs(hi-lo)>0.6 && Math.abs(lo)>0.3) txt(ctx,f1(lo)+" A",x0-6,yi(lo),muted,"right");
+    txt(ctx,"48 V",x0-6,yv(VG),muted,"right");
+    const N = 600;
+    function trace(fn, yf, col, wid, dash){
+      ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid;
+      for(let n=0;n<=N;n++){ const t = 2*n/N - (n===N?1e-6:0); const x=tx(t), y=yf(fn(t)); if(n===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    const on1 = t => (t-Math.floor(t)) < p.D;
+    trace(t=>iL(p,t), yi, muted, 1.5, [5,4]);
+    trace(t=> on1(t)? iL(p,t):0, yi, volt, 2.2);
+    trace(t=> on1(t)? 0:-iL(p,t), yi, curr, 2.2);
+    trace(t=> on1(t)? 0:VG, yv, volt, 2.2);
+    trace(t=> on1(t)? VG:0, yv, curr, 2.2, [6,3]);
+    txt(ctx,"i1",x1-2,pA.top+6,volt,"right",12); txt(ctx,"i2",x1-24,pA.top+6,curr,"right",12);
+    txt(ctx,"v1",x1-2,pB.top+6,volt,"right",12); txt(ctx,"v2",x1-24,pB.top+6,curr,"right",12);
+    // cursor
+    ctx.strokeStyle = ink; ctx.lineWidth = 1.2; ctx.setLineDash([2,3]);
+    ctx.beginPath(); ctx.moveTo(tx(p.t), pA.top); ctx.lineTo(tx(p.t), pB.bot); ctx.stroke(); ctx.setLineDash([]);
+    txt(ctx,"one period Ts",tx(0.5),h-5,muted,"center",10.5); txt(ctx,"next period",tx(1.5),h-5,muted,"center",10.5);
+  }
+  function update(){
+    const p = params();
+    $("cTOut").textContent = p.t.toFixed(2); $("cILOut").textContent = f1(p.IL)+" A"; $("cDIOut").textContent = f1(p.DI)+" A"; $("cDOut").textContent = p.D.toFixed(2);
+    document.querySelectorAll("[data-case]").forEach(b=>{ const c = CASES[b.dataset.case];
+      b.setAttribute("aria-pressed", (c.IL===p.IL && c.DI===p.DI && c.both===p.both) ? "true":"false"); });
+    const s1on = (p.t - Math.floor(p.t)) < p.D, il = iL(p, p.t);
+    const i1 = s1on? il:0, v1 = s1on? 0:VG, i2 = s1on? 0:-il, v2 = s1on? VG:0;
+    svg.innerHTML = circuitMarkup({s1: s1on?"closed":"open", s2: s1on?"open":"closed", p: p.IL>0.05?"right": p.IL<-0.05?"left":null, live:true, title:"Two switches S1 and S2 and an inductor between Vg and a battery Vo; "+(s1on?"S1":"S2")+" is on"});
+    if(p.both) $("cirP").innerHTML = powerArrow("both");
+    const hot = Math.abs(il)>0.05 ? HOT[s1on?"s1":"s2"] : [];
+    svg.querySelectorAll("[data-seg]").forEach(g=>{ const on = hot.includes(g.dataset.seg);
+      (g.tagName==="g"? g.querySelectorAll(".w") : [g]).forEach(el=>el.classList.toggle("hot", on)); });
+    $("cvI1").textContent = "i₁ = "+sgn(i1)+" A"; $("cvV1").textContent = "v₁ = "+f1(v1)+" V";
+    $("cvI2").textContent = "i₂ = "+sgn(i2)+" A"; $("cvV2").textContent = "v₂ = "+f1(v2)+" V";
+    $("cvIL").innerHTML = sub("i","L")+" = "+sgn(il)+" A";
+    drawWave(p);
+    const Vo = p.D*VG, P = Vo*p.IL, lo = p.IL-p.DI/2, hi = p.IL+p.DI/2;
+    const dir = Math.abs(P)<0.05 ? "no net power" : P>0 ? "from V<sub>g</sub> to V<sub>o</sub>" : "from V<sub>o</sub> to V<sub>g</sub>";
+    let crosses = lo < -1e-9 && hi > 1e-9;
+    let line2 = p.both ? "Case 3: the operating point can move, so I<sub>L</sub> may be anywhere from "+f1(-Math.abs(p.IL))+" A to +"+f1(Math.abs(p.IL))+" A. The planes below include both signs."
+      : crosses ? "i<sub>L</sub> swings from "+f1(lo)+" A to "+sgn(hi)+" A, so it <b>crosses zero</b> every period (Δi<sub>L</sub> &gt; 2|I<sub>L</sub>|). The small-ripple assumption fails: both switches now need quadrants I and IV."
+      : "i<sub>L</sub> stays between "+sgn(lo)+" A and "+sgn(hi)+" A: it keeps the sign of I<sub>L</sub>, as the small-ripple assumption says.";
+    $("cRead").innerHTML = '<b>Now:</b> '+(s1on?"S<sub>1</sub> on, S<sub>2</sub> off":"S<sub>2</sub> on, S<sub>1</sub> off")+' · i<sub>L</sub> = '+sgn(il)+' A<br>'+
+      '<b>V<sub>o</sub></b> = D·V<sub>g</sub> = '+p.D.toFixed(2)+' × 48 = '+f1(Vo)+' V · <b>P</b> = V<sub>o</sub>I<sub>L</sub> = '+f1(Vo)+' × '+f1(p.IL)+' = '+sgn(P)+' W, '+dir+'<br>'+line2;
+    const R = ranges(p);
+    const r1 = reqFrom(R.lo, R.hi), r2 = reqFrom(-R.hi, -R.lo);
+    $("cPlanes").innerHTML =
+      planeSVG({req:r1, lab:"1", title:"S₁", seg:{i0:R.lo, i1:R.hi, v:VG, cur:{v:v1, i:i1}}, iScale:12, vScale:60, aria:"S1 operating points and required quadrants"}) +
+      planeSVG({req:r2, lab:"2", title:"S₂", seg:{i0:-R.hi, i1:-R.lo, v:VG, cur:{v:v2, i:i2}}, iScale:12, vScale:60, aria:"S2 operating points and required quadrants"});
+    $("cSugg").innerHTML = '<div>'+suggest(r1, CTX1, "S₁")+'</div><div>'+suggest(r2, CTX2, "S₂")+'</div>';
+  }
+  function setCase(n){ const c = CASES[n]; inIL.value=c.IL; inDI.value=c.DI; inBoth.checked=c.both; inT.value = 0.25; update(); }
+  document.querySelectorAll("[data-case]").forEach(b=>b.addEventListener("click",()=>setCase(b.dataset.case)));
+  document.querySelectorAll("[data-goto-case]").forEach(b=>b.addEventListener("click",()=>{ setCase(b.dataset.gotoCase); document.getElementById("cdemo").scrollIntoView({block:"start"}); }));
+  [inT,inIL,inDI,inD].forEach(el=>el.addEventListener("input",update));
+  inBoth.addEventListener("change",update);
+  function step(){ if(!playing) return; let t = +inT.value + 0.006; if(t>=2) t -= 2; inT.value = t.toFixed(3); update(); raf = requestAnimationFrame(step); }
+  play.addEventListener("click",()=>{ playing=!playing; play.setAttribute("aria-pressed", playing?"true":"false"); play.textContent = playing?"Pause":"Play"; if(playing) raf=requestAnimationFrame(step); else cancelAnimationFrame(raf); });
+  update();
+  let rt=0; window.addEventListener("resize",()=>{ clearTimeout(rt); rt=setTimeout(update,120); });
+  if(window.matchMedia){ const mq = window.matchMedia("(prefers-color-scheme: dark)"); mq.addEventListener && mq.addEventListener("change", update); }
+  new MutationObserver(update).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+})();
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,1359 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Standing Waves and Interference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num, th.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+td.nil{color:var(--muted); text-align:right}
+.hlcol{background:var(--hl)}
+tr.dim td{opacity:.38}
+.tagpill{display:inline-block; font-family:var(--display); font-size:11px; font-weight:700; letter-spacing:.04em; padding:1px 7px; border-radius:99px; margin-left:6px; vertical-align:1px}
+.tagpill.first{background:var(--accent-soft); color:var(--accent)}
+.tagpill.big{background:var(--bad-bg); color:var(--bad)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls label[hidden]{display:none}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{color:var(--muted)}
+
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+/* ---- Lecture 6 additions ---- */
+.frac{font-size:.92em}
+.eq .frac{font-size:1em}
+.opt .frac, .qq .frac, .expl .frac, .steps .frac, .readout .frac, .tbl .frac, .sheet .frac{font-size:.9em}
+.steps .frac > span:first-child{border-bottom-color:var(--muted)}
+.steps div{line-height:2.3}
+.big{font-size:1.25em; line-height:1}
+nav.toc .total{display:flex; justify-content:space-between; align-items:baseline; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-bottom:14px; font-size:13px}
+nav.toc .total b{font-family:var(--mono); font-size:13px}
+nav.toc .total b.done{color:var(--good)}
+.pnote{font-family:var(--display); font-size:12px; color:var(--muted); background:var(--surface-2); border-radius:99px; padding:2px 9px; display:inline-block; margin:0 0 8px}
+.rtbar{display:flex; height:26px; border-radius:6px; overflow:hidden; border:1px solid var(--line); margin-top:10px; font-family:var(--mono); font-size:12px}
+.rtbar div{display:flex; align-items:center; justify-content:center; color:var(--on-accent); white-space:nowrap; overflow:hidden; transition:width .2s}
+.rtbar .rr{background:var(--curr)} .rtbar .tt{background:var(--accent)}
+.kv{display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; margin-top:10px}
+.kv div{background:var(--bg); border:1px solid var(--line); border-radius:7px; padding:7px 10px; font-family:var(--display); font-size:12px; color:var(--muted)}
+.kv b{display:block; font-family:var(--mono); font-size:15px; color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums}
+.cases{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin:8px 0 18px}
+.cases .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:15px}
+.cases .card b{font-family:var(--display); display:block; font-size:14px; margin-bottom:2px}
+.cases canvas{width:100%; display:block; margin:6px 0}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} .rtbar div{transition:none} }
+</style>
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="total"><span>Quiz score</span><b id="totalScore">0 of 0</b></div>
+  <h2>Part 1 · Energy at a boundary</h2>
+  <ol>
+    <li><a href="#s1">1 Where the power goes <span class="chip" data-chip="q1"></span></a></li>
+  </ol>
+  <h2>Part 2 · Standing waves on a string</h2>
+  <ol>
+    <li><a href="#s2">2 Two waves, one standing wave <span class="chip" data-chip="q2"></span></a></li>
+    <li><a href="#s3">3 Harmonics on a string <span class="chip" data-chip="q3"></span></a></li>
+  </ol>
+  <h2>Part 3 · Standing sound waves</h2>
+  <ol>
+    <li><a href="#s4">4 Displacement vs pressure <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 Both ends closed <span class="chip" data-chip="q5"></span></a></li>
+    <li><a href="#s6">6 One end closed <span class="chip" data-chip="q6"></span></a></li>
+    <li><a href="#s7">7 Both ends open <span class="chip" data-chip="q7"></span></a></li>
+  </ol>
+  <h2>Part 4 · Interference of sound</h2>
+  <ol>
+    <li><a href="#s8">8 Adding two sound waves <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Path length difference <span class="chip" data-chip="q9"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">PHYS 365 · Lecture 6 · Study guide</div>
+  <h1>Standing waves and interference</h1>
+  <p class="lede">Every topic in this lecture is the same move: <b>add two waves together and see what survives</b>. At a boundary, the incident power splits into a reflected and a transmitted part. On a string or in a pipe, two waves running opposite ways add into a standing wave, and the ends decide which wavelengths fit. Two sound waves running the same way add into a louder or quieter wave depending on how far out of step they are.</p>
+  <div class="chain" aria-label="Lecture roadmap">
+    <div class="blk"><b>Boundary</b><span>R + T = 1</span><span class="secs">§1</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>String</b><span>opposite waves add</span><span class="secs">§2, §3</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Pipes</b><span>the ends pick the modes</span><span class="secs">§4 to §7</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Interference</b><span>same-direction waves add</span><span class="secs">§8, §9</span></div>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · Energy at a boundary</h2>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>Where the power goes at a boundary</h3>
+<p>When a wave hits the boundary between two media (say, a light string tied to a heavy one), part of it bounces back and part of it goes through. Energy can't appear or disappear at the join, so the power that arrives must equal the power that leaves:</p>
+<div class="eq">
+  <span class="row"><i>P<sub>f</sub></i> = <i>P<sub>i</sub></i> &nbsp;⟹&nbsp; <i>P<sub>r</sub></i> + <i>P<sub>t</sub></i> = <i>P<sub>i</sub></i> <span class="note">reflected + transmitted = incident</span></span>
+  <span class="row"><b><span class="frac"><span><i>P<sub>r</sub></i></span><span><i>P<sub>i</sub></i></span></span> + <span class="frac"><span><i>P<sub>t</sub></i></span><span><i>P<sub>i</sub></i></span></span> = 1</b></span>
+</div>
+<p>Each medium has an <b>impedance</b> <i>Z</i> (how hard it is to shake). The amplitude coefficients <i>r</i> and <i>t</i> tell you how big the reflected and transmitted waves are compared to the incident one. The power fractions are called <b>R</b> (reflectance) and <b>T</b> (transmittance):</p>
+<div class="eq">
+  <span class="row"><i>r</i> = <span class="frac"><span><i>Z</i><sub>2</sub> − <i>Z</i><sub>1</sub></span><span><i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub></span></span>, &nbsp;&nbsp; <i>t</i> = <span class="frac"><span>2<i>Z</i><sub>1</sub></span><span><i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub></span></span> <span class="note">amplitude ratios (lecture's notation)</span></span>
+  <span class="row"><i>R</i> = <span class="frac"><span><i>P<sub>r</sub></i></span><span><i>P<sub>i</sub></i></span></span> = <i>r</i><sup>2</sup>, &nbsp;&nbsp; <i>T</i> = <span class="frac"><span><i>P<sub>t</sub></i></span><span><i>P<sub>i</sub></i></span></span> = <span class="frac"><span><i>Z</i><sub>2</sub></span><span><i>Z</i><sub>1</sub></span></span><i>t</i><sup>2</sup> = <span class="frac"><span>4<i>Z</i><sub>1</sub><i>Z</i><sub>2</sub></span><span>(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>)<sup>2</sup></span></span></span>
+  <span class="row"><b><i>T</i> + <i>R</i> = 1</b> &nbsp;&nbsp; but &nbsp;&nbsp; <i>r</i> + <i>t</i> ≠ 1 in general</span>
+</div>
+<p>Why does <i>T</i> carry the extra factor <span class="frac"><span><i>Z</i><sub>2</sub></span><span><i>Z</i><sub>1</sub></span></span>? Because a wave's power depends on its amplitude squared <b>and</b> on the impedance of the medium it is travelling in. The reflected wave stays in medium 1, so no correction. The transmitted wave lives in medium 2, so its power gets rescaled by <span class="frac"><span><i>Z</i><sub>2</sub></span><span><i>Z</i><sub>1</sub></span></span>.</p>
+
+<details class="work"><summary>Lecture derivation: proving T + R = 1 (pages 1 and 2)</summary><div class="body">
+<div class="steps">
+<div><span class="c">1. Conservation of energy:</span> P<sub>r</sub> + P<sub>t</sub> = P<sub>i</sub> &nbsp;⟹&nbsp; <span class="frac"><span>P<sub>r</sub></span><span>P<sub>i</sub></span></span> + <span class="frac"><span>P<sub>t</sub></span><span>P<sub>i</sub></span></span> = 1</div>
+<div><span class="c">2. Write in terms of r and t:</span> <span class="frac"><span>P<sub>r</sub></span><span>P<sub>i</sub></span></span> + <span class="frac"><span>P<sub>t</sub></span><span>P<sub>i</sub></span></span> = r<sup>2</sup> + <span class="frac"><span>Z<sub>2</sub></span><span>Z<sub>1</sub></span></span>t<sup>2</sup></div>
+<div><span class="c">3. Substitute r and t:</span> = (<span class="frac"><span>Z<sub>2</sub> − Z<sub>1</sub></span><span>Z<sub>1</sub> + Z<sub>2</sub></span></span>)<sup>2</sup> + <span class="frac"><span>Z<sub>2</sub></span><span>Z<sub>1</sub></span></span>(<span class="frac"><span>2Z<sub>1</sub></span><span>Z<sub>1</sub> + Z<sub>2</sub></span></span>)<sup>2</sup></div>
+<div><span class="c">4. Square, cancel one Z<sub>1</sub>:</span> = <span class="frac"><span>(Z<sub>2</sub> − Z<sub>1</sub>)<sup>2</sup></span><span>(Z<sub>1</sub> + Z<sub>2</sub>)<sup>2</sup></span></span> + <span class="frac"><span>4Z<sub>1</sub>Z<sub>2</sub></span><span>(Z<sub>1</sub> + Z<sub>2</sub>)<sup>2</sup></span></span></div>
+<div><span class="c">5. Expand the top:</span> = <span class="frac"><span>Z<sub>1</sub><sup>2</sup> + Z<sub>2</sub><sup>2</sup> − 2Z<sub>1</sub>Z<sub>2</sub> + 4Z<sub>1</sub>Z<sub>2</sub></span><span>(Z<sub>1</sub> + Z<sub>2</sub>)<sup>2</sup></span></span> = <span class="frac"><span>Z<sub>1</sub><sup>2</sup> + Z<sub>2</sub><sup>2</sup> + 2Z<sub>1</sub>Z<sub>2</sub></span><span>(Z<sub>1</sub> + Z<sub>2</sub>)<sup>2</sup></span></span></div>
+<div><span class="c">6. The top is (Z<sub>1</sub> + Z<sub>2</sub>)<sup>2</sup>:</span> = 1 &nbsp;⟹&nbsp; <b>T + R = 1</b> ✓</div>
+</div>
+</div></details>
+
+<details class="work"><summary>Practice example (my numbers, not from the lecture): Z<sub>1</sub> = 1.0, Z<sub>2</sub> = 4.0</summary><div class="body">
+<div class="steps">
+<div><span class="c">r =</span> <span class="frac"><span>4.0 − 1.0</span><span>1.0 + 4.0</span></span> = <span class="frac"><span>3</span><span>5</span></span> = 0.60 &nbsp;&nbsp; <span class="c">t =</span> <span class="frac"><span>2(1.0)</span><span>5.0</span></span> = 0.40</div>
+<div><span class="c">R =</span> r<sup>2</sup> = 0.36 &nbsp;&nbsp; <span class="c">T =</span> <span class="frac"><span>4.0</span><span>1.0</span></span>(0.40)<sup>2</sup> = 4 × 0.16 = 0.64</div>
+<div><span class="c">check:</span> R + T = 0.36 + 0.64 = 1.00 ✓ &nbsp; (36% of the power bounces back, 64% goes through)</div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: impedance mismatch calculator</div>
+  <span class="pnote">Loads with the practice example above. The lecture has no numeric example for this.</span>
+  <div class="controls">
+    <label for="z1">Z<sub>1</sub> <input type="number" id="z1" value="1.0" min="0.01" step="0.1"></label>
+    <label for="z2">Z<sub>2</sub> <input type="number" id="z2" value="4.0" min="0.01" step="0.1"></label>
+    <label for="z2r">sweep Z<sub>2</sub> <input type="range" id="z2r" min="-2" max="2" step="0.01" value="0.602"></label>
+  </div>
+  <div class="kv" id="rtKV"></div>
+  <div class="rtbar" aria-hidden="true"><div class="rr" id="barR"></div><div class="tt" id="barT"></div></div>
+  <div class="legend"><span><i style="background:var(--curr)"></i>reflected power R</span><span><i style="background:var(--accent)"></i>transmitted power T</span></div>
+  <div class="steps" id="rtSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a ball hitting another ball</span>
+<p>Roll a ball into a second ball of the same mass and it stops dead while the other one takes all the energy (Z<sub>1</sub> = Z<sub>2</sub>: R = 0, T = 1). Roll it into a bowling ball and it mostly bounces back (Z<sub>2</sub> ≫ Z<sub>1</sub>: R → 1). Roll a bowling ball into a ping-pong ball and the little ball flies off fast (big amplitude), yet it carries only a slice of the energy. Matching is what lets energy cross.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Powers add to 1, amplitudes don't.</b> On an exam, "fraction of energy transmitted" means <i>T</i>, not <i>t</i>. Always square, and for <i>T</i> also multiply by <span class="frac"><span><i>Z</i><sub>2</sub></span><span><i>Z</i><sub>1</sub></span></span>.</li>
+<li><b>t can be bigger than 1.</b> Going from high to low impedance (Z<sub>1</sub> = 3, Z<sub>2</sub> = 1) gives t = 1.5. That's fine: the factor <span class="frac"><span><i>Z</i><sub>2</sub></span><span><i>Z</i><sub>1</sub></span></span> = <span class="frac"><span>1</span><span>3</span></span> brings T down to 0.75, so energy is still conserved.</li>
+<li><b>Sign of r.</b> If you add the lecture's r and t exactly as written, you get <span class="frac"><span>Z<sub>2</sub> − Z<sub>1</sub> + 2Z<sub>1</sub></span><span>Z<sub>1</sub> + Z<sub>2</sub></span></span> = 1, which seems to contradict the note "r + t ≠ 1". The usual displacement convention on a string is r = <span class="frac"><span>Z<sub>1</sub> − Z<sub>2</sub></span><span>Z<sub>1</sub> + Z<sub>2</sub></span></span>, which gives 1 + r = t and r + t ≠ 1. The sign of r only tells you whether the reflection flips upside down. It never affects energy, since R = r<sup>2</sup>. Check which sign your instructor wants on exams.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: power at a boundary"></div>
+</section>
+
+<h2 class="part">Part 2 · Standing waves on a string</h2>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>Two travelling waves make one standing wave</h3>
+<p>Send two identical waves along a string in opposite directions. They pass through each other and <b>interfere</b>. Wave 1 moves right, wave 2 moves left:</p>
+<div class="eq">
+  <span class="row"><i>y</i><sub>1</sub> = <i>y<sub>m</sub></i> sin(<i>kx</i> − <i>ωt</i>) &nbsp;&nbsp; <i>y</i><sub>2</sub> = <i>y<sub>m</sub></i> sin(<i>kx</i> + <i>ωt</i>) &nbsp;&nbsp; <i>y<sub>R</sub></i> = <i>y</i><sub>1</sub> + <i>y</i><sub>2</sub></span>
+  <span class="row">sin <i>α</i> + sin <i>β</i> = 2 sin(<span class="frac"><span><i>α</i> + <i>β</i></span><span>2</span></span>) cos(<span class="frac"><span><i>α</i> − <i>β</i></span><span>2</span></span>)</span>
+  <span class="row"><b><i>y<sub>R</sub></i> = [2<i>y<sub>m</sub></i> sin(<i>kx</i>)] cos(<i>ωt</i>)</b></span>
+</div>
+<p>Read the result in two pieces. <b>2<i>y<sub>m</sub></i> sin(<i>kx</i>)</b> depends only on position: it's the standing wave's amplitude at each point, so at any frozen moment the string is a sine curve. <b>cos(<i>ωt</i>)</b> depends only on time: the whole shape just scales up and down in place. Nothing moves along the string.</p>
+<ul class="plain">
+<li><b>Nodes</b> (never move): sin(<i>kx</i>) = 0, so <i>x</i> = 0, <span class="frac"><span>λ</span><span>2</span></span>, λ, <span class="frac"><span>3λ</span><span>2</span></span>, …</li>
+<li><b>Antinodes</b> (biggest swing, amplitude 2<i>y<sub>m</sub></i>): sin(<i>kx</i>) = ±1, so <i>x</i> = <span class="frac"><span>λ</span><span>4</span></span>, <span class="frac"><span>3λ</span><span>4</span></span>, <span class="frac"><span>5λ</span><span>4</span></span>, …</li>
+</ul>
+
+<details class="work"><summary>Lecture derivation: adding y<sub>1</sub> and y<sub>2</sub> (pages 3 and 4)</summary><div class="body">
+<div class="steps">
+<div><span class="c">1. Let</span> α = kx − ωt, &nbsp; β = kx + ωt</div>
+<div><span class="c">2. Half sum:</span> <span class="frac"><span>α + β</span><span>2</span></span> = <span class="frac"><span>2kx</span><span>2</span></span> = kx</div>
+<div><span class="c">3. Half difference:</span> <span class="frac"><span>α − β</span><span>2</span></span> = <span class="frac"><span>−2ωt</span><span>2</span></span> = −ωt</div>
+<div><span class="c">4. Apply the identity:</span> y<sub>R</sub> = y<sub>m</sub>(sin α + sin β) = 2y<sub>m</sub> sin(kx) cos(−ωt)</div>
+<div><span class="c">5. Cosine is even, cos(−ωt) = cos(ωt):</span> <b>y<sub>R</sub> = 2y<sub>m</sub> sin(kx) cos(ωt)</b></div>
+<div><span class="c">6. Not of the form sin(kx − ωt)</span> ⟹ not a travelling wave ✓</div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: watch two travelling waves build a standing wave</div>
+  <canvas id="swCv" height="230" aria-label="Two travelling waves and their sum"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>y<sub>1</sub> (moving right)</span><span><i style="background:var(--curr)"></i>y<sub>2</sub> (moving left)</span><span><i style="background:var(--fund)"></i>y<sub>R</sub> = y<sub>1</sub> + y<sub>2</sub></span></div>
+  <div class="controls">
+    <button class="btn" type="button" id="swPlay">Pause</button>
+    <label for="swShow"><input type="checkbox" id="swShow" checked> show y<sub>1</sub> and y<sub>2</sub></label>
+    <label for="swSpd">speed <input type="range" id="swSpd" min="0.1" max="1.5" step="0.05" value="0.5"></label>
+  </div>
+  <div class="readout" id="swRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a skipping rope</span>
+<p>Two kids swinging a skipping rope make one big hump that goes up and down. The hump doesn't travel toward either kid; it just breathes in place. The ends (the kids' hands) barely move: those are nodes. The middle swings the most: that's the antinode.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Typo in the boxed identity (page 3).</b> The notes write cos(<span class="frac"><span>α + β</span><span>2</span></span>). It should be cos(<span class="frac"><span>α − β</span><span>2</span></span>). With the typo you'd get cos(kx), and the time dependence would vanish entirely.</li>
+<li><b>The amplitude is 2y<sub>m</sub>|sin(kx)|, not 2y<sub>m</sub>.</b> 2y<sub>m</sub> is only the amplitude at the antinodes. At a point where sin(kx) = 0.5, each bit of string swings only y<sub>m</sub>.</li>
+<li><b>Node spacing is <span class="frac"><span>λ</span><span>2</span></span>, not λ.</b> Adjacent nodes are <span class="frac"><span>π</span><span>k</span></span> apart. A node and its neighbouring antinode are <span class="frac"><span>λ</span><span>4</span></span> apart.</li>
+<li><b>"Not a travelling wave" test.</b> Look for x and t locked together as (kx ± ωt). In a standing wave they sit in separate factors.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: building a standing wave"></div>
+</section>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>Harmonics on a stretched string</h3>
+<p>A string clamped at both ends must have a <b>node at each end</b>. So only standing waves that fit a whole number of half-wavelengths into the length L are allowed. Each allowed pattern is a <b>harmonic</b> (or normal mode).</p>
+<div class="tbl"><table>
+<thead><tr><th>Harmonic</th><th>Fit</th><th>Nodes N</th><th>Antinodes A</th></tr></thead>
+<tbody>
+<tr><td>1st (fundamental)</td><td>L = <span class="frac"><span>λ</span><span>2</span></span></td><td class="num">2</td><td class="num">1</td></tr>
+<tr><td>2nd</td><td>L = λ</td><td class="num">3</td><td class="num">2</td></tr>
+<tr><td>3rd</td><td>L = <span class="frac"><span>3λ</span><span>2</span></span></td><td class="num">4</td><td class="num">3</td></tr>
+<tr><td>nth</td><td>L = <span class="frac"><span>nλ</span><span>2</span></span></td><td class="num">n + 1</td><td class="num">n</td></tr>
+</tbody></table></div>
+<p>Solve L = <span class="frac"><span>nλ</span><span>2</span></span> for λ, then use f = <span class="frac"><span>v</span><span>λ</span></span>:</p>
+<div class="eq">
+  <span class="row"><i>λ</i> = <span class="frac"><span>2<i>L</i></span><span><i>n</i></span></span>, &nbsp; <i>n</i> = 1, 2, 3, … <span class="note">allowed wavelengths</span></span>
+  <span class="row"><i>f</i> = <span class="frac"><span><i>v</i></span><span><i>λ</i></span></span> = <i>n</i><span class="frac"><span><i>v</i></span><span>2<i>L</i></span></span> <span class="note">resonant frequencies</span></span>
+  <span class="row"><b><i>f</i><sub>1</sub> = <span class="frac"><span><i>v</i></span><span>2<i>L</i></span></span></b> <span class="note">fundamental mode, n = 1</span></span>
+</div>
+<p>Every harmonic is a whole-number multiple of the fundamental: <i>f<sub>n</sub></i> = <i>n f</i><sub>1</sub>. So the gap between neighbouring resonances is always <i>f</i><sub>1</sub>.</p>
+
+<details class="work"><summary>Practice example (my numbers): L = 0.80 m, v = 240 m/s</summary><div class="body">
+<div class="steps">
+<div><span class="c">fundamental:</span> f<sub>1</sub> = <span class="frac"><span>v</span><span>2L</span></span> = <span class="frac"><span>240</span><span>2(0.80)</span></span> = <span class="frac"><span>240</span><span>1.6</span></span> = 150 Hz</div>
+<div><span class="c">3rd harmonic wavelength:</span> λ<sub>3</sub> = <span class="frac"><span>2L</span><span>3</span></span> = <span class="frac"><span>1.6</span><span>3</span></span> = 0.533 m</div>
+<div><span class="c">3rd harmonic frequency:</span> f<sub>3</sub> = 3 × 150 = 450 Hz &nbsp; <span class="c">(check: <span class="frac"><span>v</span><span>λ<sub>3</sub></span></span> = <span class="frac"><span>240</span><span>0.533</span></span> = 450 Hz ✓)</span></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: string harmonic explorer</div>
+  <span class="pnote">Loads with the practice example (L = 0.80 m, v = 240 m/s).</span>
+  <canvas id="strCv" height="200" aria-label="Standing wave on a string"></canvas>
+  <div class="controls">
+    <label for="strN">n <input type="range" id="strN" min="1" max="8" step="1" value="1"><output id="strNo">1</output></label>
+    <label for="strL">L (m) <input type="number" id="strL" value="0.80" min="0.01" step="0.05"></label>
+    <label for="strV">v (m/s) <input type="number" id="strV" value="240" min="1" step="10"></label>
+  </div>
+  <div class="kv" id="strKV"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · fitting tiles in a hallway</span>
+<p>You're tiling a hallway of length L, and you may only use half-wavelength tiles that are all the same size. One big tile, two medium tiles, three smaller tiles: each is a harmonic. A size that leaves a gap at the end isn't allowed, because the ends must be nodes.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Wavelength shrinks, frequency grows.</b> Higher n means shorter λ = <span class="frac"><span>2L</span><span>n</span></span> but higher f = <span class="frac"><span>nv</span><span>2L</span></span>. The wave speed v is the same for every harmonic, because it's set by the string, not by n.</li>
+<li><b>Count nodes carefully.</b> The two clamped ends are nodes too. The nth harmonic has n + 1 nodes and n antinodes.</li>
+<li><b>Two neighbouring resonances give you f<sub>1</sub>.</b> If a string resonates at 300 Hz and next at 375 Hz, f<sub>1</sub> = 75 Hz (and 300 Hz is n = 4).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: string harmonics"></div>
+</section>
+
+<h2 class="part">Part 3 · Standing sound waves in pipes</h2>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Sound in a pipe: displacement vs pressure</h3>
+<p>Sound in a pipe is also a standing wave, but the air molecules move <b>along</b> the pipe (longitudinal oscillation), not up and down. The lecture sorts pipes into three cases:</p>
+<div class="cases">
+  <div class="card"><b>Case 1 · Both ends closed</b>§5</div>
+  <div class="card"><b>Case 2 · One end open</b>§6</div>
+  <div class="card"><b>Case 3 · Both ends open</b>§7</div>
+</div>
+<p>The curves in pipe diagrams are <b>not</b> pictures of the air going up and down. They are graphs of how far molecules move (displacement) or how much the pressure changes, plotted against position x. And each standing sound wave can be described two ways:</p>
+<ul class="plain">
+<li><b>Displacement:</b> how far each molecule swings back and forth. A closed end is a wall, so molecules there can't move: <b>displacement node</b>. An open end lets air slosh freely: <b>displacement antinode</b>.</li>
+<li><b>Pressure:</b> how much the air is squeezed or stretched. At a wall, molecules pile up against it or get pulled away from it, so the pressure swings the most: <b>pressure antinode</b>. At an open end the air is held at room pressure: <b>pressure node</b>.</li>
+</ul>
+<div class="eq">
+  <span class="row"><b>pressure node ⟺ displacement antinode</b></span>
+  <span class="row"><b>displacement node ⟺ pressure antinode</b></span>
+</div>
+<p>For a pipe closed at both ends (1st harmonic): displacement is zero at both ends and maximum in the middle. Pressure is maximum at both ends and zero in the middle.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: air molecules in a pipe</div>
+  <span class="pnote">Dots are air molecules. Switch the curve between displacement and pressure and watch the nodes swap places.</span>
+  <canvas id="pipe0" height="230" aria-label="Air molecules oscillating in a pipe"></canvas>
+  <div class="controls" id="pipe0c"></div>
+  <div class="kv" id="pipe0kv"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a crowd in a hallway</span>
+<p>People pushed against a wall can't move forward (displacement node), but they get squashed together the most (pressure antinode). People in the open middle of the crowd can step back and forth a lot (displacement antinode), and they never get squashed (pressure node). Wherever people move most, they're crowded least, and the reverse.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Always ask "node of what?"</b> The same point is a displacement node and a pressure antinode. If a question says "node" without saying which, it usually means displacement, as in the lecture's displacement profiles.</li>
+<li><b>Closed end:</b> displacement node, pressure antinode. <b>Open end:</b> displacement antinode, pressure node. Memorise this one line and you can draw every pipe.</li>
+<li><b>Molecules don't flow through the pipe.</b> Each one only wiggles about its own resting spot. The standing wave pattern sets how big each wiggle is.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: displacement vs pressure"></div>
+</section>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>Case 1 · Pipe closed at both ends</h3>
+<p>Both ends are displacement nodes, exactly like a string clamped at both ends. So the same fitting rule applies: a whole number of half-wavelengths.</p>
+<div class="eq">
+  <span class="row">1st: <i>λ</i><sub>1</sub> = 2<i>L</i> &nbsp;&nbsp; 2nd: <i>λ</i><sub>2</sub> = <i>L</i> &nbsp;&nbsp; 3rd: <i>λ</i><sub>3</sub> = <span class="frac"><span>2<i>L</i></span><span>3</span></span></span>
+  <span class="row"><b><i>λ<sub>n</sub></i> = <span class="frac"><span>2<i>L</i></span><span><i>n</i></span></span>, &nbsp; <i>f<sub>n</sub></i> = <span class="frac"><span><i>nv</i></span><span>2<i>L</i></span></span></b>, &nbsp; <i>n</i> = 1, 2, 3, …</span>
+  <span class="row"><i>f</i><sub>1</sub> = <span class="frac"><span><i>v</i></span><span>2<i>L</i></span></span> <span class="note">fundamental</span></span>
+</div>
+
+<details class="work"><summary>Practice example (my numbers): L = 0.50 m, v = 343 m/s</summary><div class="body">
+<div class="steps">
+<div><span class="c">fundamental:</span> f<sub>1</sub> = <span class="frac"><span>v</span><span>2L</span></span> = <span class="frac"><span>343</span><span>2(0.50)</span></span> = 343 Hz</div>
+<div><span class="c">2nd harmonic:</span> λ<sub>2</sub> = L = 0.50 m, &nbsp; f<sub>2</sub> = <span class="frac"><span>2(343)</span><span>2(0.50)</span></span> = 686 Hz</div>
+<div><span class="c">3rd harmonic:</span> λ<sub>3</sub> = <span class="frac"><span>2(0.50)</span><span>3</span></span> = 0.333 m, &nbsp; f<sub>3</sub> = 1029 Hz</div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: closed-closed pipe</div>
+  <span class="pnote">Loads with the practice example (L = 0.50 m, v = 343 m/s).</span>
+  <canvas id="pipe1" height="200" aria-label="Pipe closed at both ends"></canvas>
+  <div class="controls" id="pipe1c"></div>
+  <div class="kv" id="pipe1kv"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a guitar string made of air</span>
+<p>Walls at both ends do for air what clamps do for a string: they pin the motion to zero. So the closed-closed pipe has the same harmonic ladder as a guitar string: f<sub>1</sub>, 2f<sub>1</sub>, 3f<sub>1</sub>, and so on.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Same formulas as the string, different physics.</b> On the string, v depends on tension. In the pipe, v is the speed of sound in air.</li>
+<li><b>Count from the diagram.</b> The 3rd harmonic has 4 displacement nodes (2 at the walls, 2 inside) and 3 antinodes.</li>
+<li><b>Solving backwards.</b> Given f<sub>1</sub>, the length is L = <span class="frac"><span>v</span><span>2f<sub>1</sub></span></span>. Don't forget the 2.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: closed at both ends"></div>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Case 2 · Pipe closed at one end</h3>
+<p>Now the ends disagree. The closed end must be a displacement <b>node</b>, the open end must be a displacement <b>antinode</b>. The distance from a node to the nearest antinode is a quarter-wavelength, so the pipe must hold an <b>odd</b> number of quarter-wavelengths.</p>
+<div class="tbl"><table>
+<thead><tr><th>Lecture label</th><th>Fit</th><th>Wavelength</th><th>Frequency</th></tr></thead>
+<tbody>
+<tr><td>1st harmonic</td><td>L = <span class="frac"><span>λ</span><span>4</span></span></td><td>λ<sub>1</sub> = 4L</td><td>f<sub>1</sub> = <span class="frac"><span>v</span><span>4L</span></span></td></tr>
+<tr><td>"2nd harmonic"</td><td>L = <span class="frac"><span>3λ</span><span>4</span></span></td><td>λ<sub>3</sub> = <span class="frac"><span>4L</span><span>3</span></span></td><td>3f<sub>1</sub></td></tr>
+<tr><td>"3rd harmonic"</td><td>L = <span class="frac"><span>5λ</span><span>4</span></span></td><td>λ<sub>5</sub> = <span class="frac"><span>4L</span><span>5</span></span></td><td>5f<sub>1</sub></td></tr>
+</tbody></table></div>
+<div class="eq">
+  <span class="row"><b><i>λ<sub>n</sub></i> = <span class="frac"><span>4<i>L</i></span><span><i>n</i></span></span>, &nbsp; <i>f<sub>n</sub></i> = <span class="frac"><span><i>nv</i></span><span>4<i>L</i></span></span></b>, &nbsp; <i>n</i> = 1, 3, 5, … <span class="note">odd n only</span></span>
+  <span class="row"><i>f</i><sub>1</sub> = <span class="frac"><span><i>v</i></span><span>4<i>L</i></span></span> <span class="note">fundamental, half that of an open-open pipe of the same length</span></span>
+</div>
+<p>Pressure follows the swap rule from §4: at the closed end the pressure is maximum, at the open end it's zero.</p>
+
+<details class="work"><summary>Practice example (my numbers): L = 0.50 m, v = 343 m/s</summary><div class="body">
+<div class="steps">
+<div><span class="c">fundamental:</span> λ<sub>1</sub> = 4L = 2.0 m, &nbsp; f<sub>1</sub> = <span class="frac"><span>v</span><span>4L</span></span> = <span class="frac"><span>343</span><span>4(0.50)</span></span> = 171.5 Hz</div>
+<div><span class="c">next mode (n = 3):</span> λ<sub>3</sub> = <span class="frac"><span>4(0.50)</span><span>3</span></span> = 0.667 m, &nbsp; f<sub>3</sub> = 3 × 171.5 = 514.5 Hz</div>
+<div><span class="c">after that (n = 5):</span> λ<sub>5</sub> = <span class="frac"><span>2.0</span><span>5</span></span> = 0.40 m, &nbsp; f<sub>5</sub> = 5 × 171.5 = 857.5 Hz</div>
+<div><span class="c">note:</span> 2f<sub>1</sub> = 343 Hz is <b>not</b> a resonance of this pipe</div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: pipe closed at one end</div>
+  <span class="pnote">Loads with the practice example (L = 0.50 m, v = 343 m/s). The slider steps through the allowed modes.</span>
+  <canvas id="pipe2" height="200" aria-label="Pipe closed at one end"></canvas>
+  <div class="controls" id="pipe2c"></div>
+  <div class="kv" id="pipe2kv"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · blowing across a bottle</span>
+<p>A bottle is a pipe closed at the bottom. Its note is low for its size because the pipe only holds a quarter of a wavelength in its fundamental. Pour in water (shorter L) and the note rises.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Only odd n.</b> Page 12 writes "n = 1, 2, 3, …" under the formula, but its own diagrams use λ<sub>1</sub>, λ<sub>3</sub>, λ<sub>5</sub>. Even n would put a node (or antinode) at both ends, which this pipe can't have. Use n = 1, 3, 5, … in the formula.</li>
+<li><b>Two naming systems.</b> The lecture calls the mode with λ<sub>3</sub> = <span class="frac"><span>4L</span><span>3</span></span> the "2nd harmonic" (the 2nd allowed mode). Many textbooks call it the 3rd harmonic, because its frequency is 3f<sub>1</sub>. Either way, the frequency is 3f<sub>1</sub>. Read questions carefully and work from the wavelength or the n in the subscript.</li>
+<li><b>Spotting the pipe from data.</b> Resonances at 150, 250, 350 Hz are odd multiples of 50 Hz: a closed-one-end pipe with f<sub>1</sub> = 50 Hz. The gap (100 Hz) is 2f<sub>1</sub>, not f<sub>1</sub>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: closed at one end"></div>
+</section>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Case 3 · Pipe open at both ends</h3>
+<p>Both ends are displacement <b>antinodes</b> (and pressure nodes). Antinode to antinode is a half-wavelength, so we're back to whole numbers of half-wavelengths, the same ladder as the closed-closed pipe and the string.</p>
+<div class="eq">
+  <span class="row">1st: <i>λ</i> = 2<i>L</i> &nbsp;&nbsp; 2nd: <i>λ</i> = <i>L</i> &nbsp;&nbsp; 3rd: <i>λ</i> = <span class="frac"><span>2</span><span>3</span></span><i>L</i></span>
+  <span class="row"><b><i>λ</i> = <span class="frac"><span>2<i>L</i></span><span><i>n</i></span></span>, &nbsp; <i>f<sub>n</sub></i> = <span class="frac"><span><i>nv</i></span><span>2<i>L</i></span></span></b>, &nbsp; <i>n</i> = 1, 2, 3, …</span>
+  <span class="row"><i>f</i><sub>1</sub> = <span class="frac"><span><i>v</i></span><span>2<i>L</i></span></span> <span class="note">fundamental</span></span>
+</div>
+<p>In the 1st harmonic, displacement is maximum at both ends and zero in the middle. Pressure is zero at both ends and maximum in the middle. It's the closed-closed picture with displacement and pressure swapped.</p>
+
+<details class="work"><summary>Practice example (my numbers): L = 0.50 m, v = 343 m/s</summary><div class="body">
+<div class="steps">
+<div><span class="c">fundamental:</span> f<sub>1</sub> = <span class="frac"><span>343</span><span>2(0.50)</span></span> = 343 Hz</div>
+<div><span class="c">2nd harmonic:</span> λ = L = 0.50 m, &nbsp; f<sub>2</sub> = 686 Hz &nbsp; <span class="c">(2 displacement nodes inside)</span></div>
+<div><span class="c">3rd harmonic:</span> λ = <span class="frac"><span>2</span><span>3</span></span>(0.50) = 0.333 m, &nbsp; f<sub>3</sub> = 3 × 343 = 1029 Hz</div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: open-open pipe</div>
+  <span class="pnote">Loads with the practice example (L = 0.50 m, v = 343 m/s).</span>
+  <canvas id="pipe3" height="200" aria-label="Pipe open at both ends"></canvas>
+  <div class="controls" id="pipe3c"></div>
+  <div class="kv" id="pipe3kv"></div>
+</div>
+
+<div class="tbl"><table>
+<thead><tr><th>Pipe</th><th>Ends (displacement)</th><th>λ<sub>n</sub></th><th>f<sub>n</sub></th><th>Allowed n</th></tr></thead>
+<tbody>
+<tr><td>Closed both</td><td>N … N</td><td><span class="frac"><span>2L</span><span>n</span></span></td><td><span class="frac"><span>nv</span><span>2L</span></span></td><td>1, 2, 3, …</td></tr>
+<tr><td>Closed one</td><td>N … A</td><td><span class="frac"><span>4L</span><span>n</span></span></td><td><span class="frac"><span>nv</span><span>4L</span></span></td><td>1, 3, 5, …</td></tr>
+<tr><td>Open both</td><td>A … A</td><td><span class="frac"><span>2L</span><span>n</span></span></td><td><span class="frac"><span>nv</span><span>2L</span></span></td><td>1, 2, 3, …</td></tr>
+</tbody></table></div>
+
+<div class="callout analogy"><span class="tag">Analogy · a flute</span>
+<p>A flute is open at both ends (the mouth hole and the far end). Both ends breathe freely, so they're displacement antinodes. Overblowing jumps you up to 2f<sub>1</sub>, an octave higher. A closed-one-end pipe can't do that; its next note is 3f<sub>1</sub>.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Open-open and closed-closed share the same frequencies</b> for the same L and v. What differs is where the nodes sit: open-open has antinodes at the ends, closed-closed has nodes there.</li>
+<li><b>Nodes inside, not at the ends.</b> In the open-open nth harmonic there are n displacement nodes, all inside the pipe, and n + 1 antinodes (including both ends).</li>
+<li><b>Quick sanity check:</b> the closed-one-end fundamental <span class="frac"><span>v</span><span>4L</span></span> is half the open-open fundamental <span class="frac"><span>v</span><span>2L</span></span> for the same pipe length.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: open at both ends"></div>
+</section>
+
+<h2 class="part">Part 4 · Interference of sound waves</h2>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>Adding two sound waves travelling the same way</h3>
+<p>Two sources S<sub>1</sub> and S<sub>2</sub> send sound waves with the same amplitude along the x-axis toward a point P. They're identical except for a phase constant:</p>
+<div class="eq">
+  <span class="row"><i>s</i><sub>1</sub> = <i>s<sub>m</sub></i> cos(<i>kx</i> − <i>ωt</i> + <i>φ</i><sub>1</sub>) &nbsp;&nbsp; <i>s</i><sub>2</sub> = <i>s<sub>m</sub></i> cos(<i>kx</i> − <i>ωt</i> + <i>φ</i><sub>2</sub>)</span>
+  <span class="row"><b><i>s<sub>R</sub></i> = [2<i>s<sub>m</sub></i> cos(<span class="frac"><span>Δ<i>φ</i></span><span>2</span></span>)] cos(<i>kx</i> − <i>ωt</i> + <span class="frac"><span><i>φ</i><sub>1</sub> + <i>φ</i><sub>2</sub></span><span>2</span></span>)</b></span>
+  <span class="row">Δ<i>φ</i> = <i>φ</i><sub>1</sub> − <i>φ</i><sub>2</sub> <span class="note">phase difference</span></span>
+</div>
+<p>The bracket <b>2<i>s<sub>m</sub></i> cos(<span class="frac"><span>Δφ</span><span>2</span></span>)</b> is the amplitude of the resultant at P. Unlike the standing wave, the second factor still has (kx − ωt): the result is a <b>travelling</b> wave, just louder or quieter than each source alone.</p>
+<div class="tbl"><table>
+<thead><tr><th>Condition</th><th>Δφ</th><th>Amplitude</th><th>Name</th></tr></thead>
+<tbody>
+<tr><td><span class="frac"><span>Δφ</span><span>2</span></span> = mπ</td><td>2mπ (0, 2π, 4π, …)</td><td>2s<sub>m</sub> (max)</td><td>constructive</td></tr>
+<tr><td><span class="frac"><span>Δφ</span><span>2</span></span> = (m + <span class="frac"><span>1</span><span>2</span></span>)π</td><td>(2m + 1)π (π, 3π, 5π, …)</td><td>0</td><td>destructive</td></tr>
+</tbody></table></div>
+<p>with m = 0, 1, 2, … Anything in between gives an amplitude between 0 and 2s<sub>m</sub>.</p>
+
+<details class="work"><summary>Lecture derivation: the resultant sound wave (page 2)</summary><div class="body">
+<div class="steps">
+<div><span class="c">1. Identity:</span> cos A + cos B = 2 cos(<span class="frac"><span>A + B</span><span>2</span></span>) cos(<span class="frac"><span>A − B</span><span>2</span></span>)</div>
+<div><span class="c">2. Let</span> A = kx − ωt + φ<sub>1</sub>, &nbsp; B = kx − ωt + φ<sub>2</sub></div>
+<div><span class="c">3. Half sum:</span> <span class="frac"><span>A + B</span><span>2</span></span> = kx − ωt + <span class="frac"><span>φ<sub>1</sub> + φ<sub>2</sub></span><span>2</span></span></div>
+<div><span class="c">4. Half difference:</span> <span class="frac"><span>A − B</span><span>2</span></span> = <span class="frac"><span>φ<sub>1</sub> − φ<sub>2</sub></span><span>2</span></span> = <span class="frac"><span>Δφ</span><span>2</span></span></div>
+<div><span class="c">5. So</span> s<sub>R</sub> = s<sub>1</sub> + s<sub>2</sub> = <b>[2s<sub>m</sub> cos(<span class="frac"><span>Δφ</span><span>2</span></span>)] cos(kx − ωt + <span class="frac"><span>φ<sub>1</sub> + φ<sub>2</sub></span><span>2</span></span>)</b></div>
+<div><span class="c">6. Max when</span> |cos(<span class="frac"><span>Δφ</span><span>2</span></span>)| = 1 ⟹ Δφ = 2mπ; <span class="c">zero when</span> cos(<span class="frac"><span>Δφ</span><span>2</span></span>) = 0 ⟹ Δφ = (2m + 1)π</div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: phase difference dial</div>
+  <canvas id="intCv" height="220" aria-label="Two waves with a phase difference and their sum"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>s<sub>1</sub></span><span><i style="background:var(--curr)"></i>s<sub>2</sub></span><span><i style="background:var(--fund)"></i>s<sub>R</sub> = s<sub>1</sub> + s<sub>2</sub></span></div>
+  <div class="controls">
+    <label for="dphi">Δφ <input type="range" id="dphi" min="0" max="48" step="1" value="6"><output id="dphiO"></output></label>
+    <label for="smI">s<sub>m</sub> (μm) <input type="number" id="smI" value="4.0" min="0" step="0.5"></label>
+    <button class="btn" type="button" id="intPlay">Pause</button>
+  </div>
+  <div class="readout" id="intRead" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · pushing a swing</span>
+<p>Two people push a swing with equal force. Push together (in phase) and the swing goes twice as high. One pushes while the other pulls (half a cycle out of phase) and the swing goes nowhere. Anything in between gives something in between.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Halve first.</b> The amplitude uses cos(<span class="frac"><span>Δφ</span><span>2</span></span>), not cos(Δφ). For Δφ = <span class="frac"><span>2π</span><span>3</span></span> the amplitude is 2s<sub>m</sub> cos(<span class="frac"><span>π</span><span>3</span></span>) = s<sub>m</sub>, not 2s<sub>m</sub> cos(<span class="frac"><span>2π</span><span>3</span></span>).</li>
+<li><b>Destructive needs an odd multiple of π.</b> Δφ = 2π, 4π are constructive. Δφ = π, 3π, 5π are destructive.</li>
+<li><b>Standing vs travelling.</b> §2 added waves going opposite ways (standing wave). Here both go the same way, so the sum still travels.</li>
+<li><b>Amplitude is a size.</b> If cos(<span class="frac"><span>Δφ</span><span>2</span></span>) comes out negative, the size is the absolute value. The sign just shifts the phase.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: adding sound waves"></div>
+</section>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Path length difference (alternative analysis)</h3>
+<p>Where does Δφ come from in practice? If both sources emit in step, the phase difference at P comes only from the <b>extra distance</b> one wave travels. Wave 1 travels L<sub>1</sub>, wave 2 travels L<sub>2</sub>, and every extra wavelength of path adds 2π of phase:</p>
+<div class="eq">
+  <span class="row">Δ<i>L</i> = <i>L</i><sub>1</sub> − <i>L</i><sub>2</sub></span>
+  <span class="row"><b>[phase difference] = <span class="frac"><span>2π</span><span><i>λ</i></span></span> [path length difference]</b> &nbsp; i.e. &nbsp; Δ<i>φ</i> = <span class="frac"><span>Δ<i>L</i></span><span><i>λ</i></span></span> 2π</span>
+  <span class="row">constructive: Δ<i>L</i> = <i>mλ</i> &nbsp;&nbsp; destructive: Δ<i>L</i> = (<i>m</i> + <span class="frac"><span>1</span><span>2</span></span>)<i>λ</i>, &nbsp; <i>m</i> = 0, 1, 2, …</span>
+</div>
+<p>So the whole question reduces to one number: <b><span class="frac"><span>ΔL</span><span>λ</span></span></b>. A whole number means loud at P. A whole number plus a half means silence at P.</p>
+
+<details class="work"><summary>Lecture derivation: path difference to phase difference (pages 3 and 4)</summary><div class="body">
+<div class="steps">
+<div><span class="c">1. Constructive (page 3):</span> S<sub>2</sub> sits one wavelength ahead of S<sub>1</sub>, so ΔL = λ. Crests line up at P. In general ΔL = mλ</div>
+<div><span class="c">2. Destructive (page 4):</span> ΔL = <span class="frac"><span>λ</span><span>2</span></span> puts a crest of one wave on a trough of the other. In general ΔL = (m + <span class="frac"><span>1</span><span>2</span></span>)λ</div>
+<div><span class="c">3. Convert to phase:</span> one λ of path is 2π of phase ⟹ Δφ = <span class="frac"><span>ΔL</span><span>λ</span></span>2π</div>
+<div><span class="c">4. Check with constructive:</span> ΔL = mλ ⟹ Δφ = <span class="frac"><span>mλ</span><span>λ</span></span>2π = m2π ✓ (matches §8)</div>
+<div><span class="c">5. Check with destructive:</span> ΔL = (m + <span class="frac"><span>1</span><span>2</span></span>)λ ⟹ Δφ = (2m + 1)π ✓</div>
+</div>
+</div></details>
+
+<details class="work"><summary>Practice example (my numbers): v = 340 m/s, f = 850 Hz, ΔL = 1.0 m</summary><div class="body">
+<div class="steps">
+<div><span class="c">wavelength:</span> λ = <span class="frac"><span>v</span><span>f</span></span> = <span class="frac"><span>340</span><span>850</span></span> = 0.40 m</div>
+<div><span class="c">ratio:</span> <span class="frac"><span>ΔL</span><span>λ</span></span> = <span class="frac"><span>1.0</span><span>0.40</span></span> = 2.5 = 2 + <span class="frac"><span>1</span><span>2</span></span> ⟹ <b>destructive</b> (m = 2)</div>
+<div><span class="c">phase:</span> Δφ = 2.5 × 2π = 5π &nbsp; <span class="c">(odd multiple of π ✓)</span></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: two speakers on a line</div>
+  <span class="pnote">Loads with the lecture's page 3 picture: S<sub>2</sub> exactly one wavelength ahead of S<sub>1</sub> (ΔL = λ). Values are mine.</span>
+  <canvas id="pathCv" height="220" aria-label="Waves from two sources reaching point P"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>wave from S<sub>1</sub></span><span><i style="background:var(--curr)"></i>wave from S<sub>2</sub></span></div>
+  <div class="controls">
+    <label for="pV">v (m/s) <input type="number" id="pV" value="343" min="1" step="1"></label>
+    <label for="pF">f (Hz) <input type="number" id="pF" value="343" min="1" step="1"></label>
+    <label for="pL1">L<sub>1</sub> (m) <input type="number" id="pL1" value="3.0" min="0" step="0.05"></label>
+    <label for="pL2">L<sub>2</sub> (m) <input type="number" id="pL2" value="2.0" min="0" step="0.05"></label>
+    <label for="pL2r">slide S<sub>2</sub> <input type="range" id="pL2r" min="0" max="3" step="0.01" value="2.0"></label>
+  </div>
+  <div class="kv" id="pathKV"></div>
+  <div class="steps" id="pathSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · two runners on a track</span>
+<p>Two runners with identical strides start from different spots and finish at the same line. If the head start is a whole number of strides, they land in step at the finish. If it's a whole number plus half a stride, one is mid-air while the other lands: perfectly out of step.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Get λ first.</b> Questions often give v and f. Compute λ = <span class="frac"><span>v</span><span>f</span></span> before comparing ΔL with λ.</li>
+<li><b>Smallest destructive path difference is <span class="frac"><span>λ</span><span>2</span></span></b> (m = 0), not λ. Smallest constructive one is 0.</li>
+<li><b>Moving one speaker.</b> Going from loud to the first silence takes an extra <span class="frac"><span>λ</span><span>2</span></span> of path. Loud to the next loud takes a full λ.</li>
+<li><b>This assumes the sources start in phase.</b> If they don't, add their own phase difference on top of <span class="frac"><span>2π</span><span>λ</span></span>ΔL.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: path length difference"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across the whole lecture, mostly calculations. Grab paper and a calculator. Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Energy at a boundary</h5><div>P<sub>r</sub> + P<sub>t</sub> = P<sub>i</sub><br>r = <span class="frac"><span>Z<sub>2</sub> − Z<sub>1</sub></span><span>Z<sub>1</sub> + Z<sub>2</sub></span></span>, &nbsp; t = <span class="frac"><span>2Z<sub>1</sub></span><span>Z<sub>1</sub> + Z<sub>2</sub></span></span><br>R = r<sup>2</sup>, &nbsp; T = <span class="frac"><span>Z<sub>2</sub></span><span>Z<sub>1</sub></span></span>t<sup>2</sup> = <span class="frac"><span>4Z<sub>1</sub>Z<sub>2</sub></span><span>(Z<sub>1</sub> + Z<sub>2</sub>)<sup>2</sup></span></span><br>T + R = 1, &nbsp; r + t ≠ 1</div></div>
+  <div class="card"><h5>Standing wave (string)</h5><div>y<sub>1</sub> = y<sub>m</sub> sin(kx − ωt), y<sub>2</sub> = y<sub>m</sub> sin(kx + ωt)<br>y<sub>R</sub> = 2y<sub>m</sub> sin(kx) cos(ωt)<br>sin α + sin β = 2 sin(<span class="frac"><span>α + β</span><span>2</span></span>) cos(<span class="frac"><span>α − β</span><span>2</span></span>)<br>nodes <span class="frac"><span>λ</span><span>2</span></span> apart</div></div>
+  <div class="card"><h5>String, both ends fixed</h5><div>λ = <span class="frac"><span>2L</span><span>n</span></span>, &nbsp; n = 1, 2, 3, …<br>f = <span class="frac"><span>v</span><span>λ</span></span> = n<span class="frac"><span>v</span><span>2L</span></span><br>f<sub>1</sub> = <span class="frac"><span>v</span><span>2L</span></span><br>n + 1 nodes, n antinodes</div></div>
+  <div class="card"><h5>Pipe rules</h5><div>closed end: displacement N, pressure A<br>open end: displacement A, pressure N<br>pressure node ⟺ displacement antinode</div></div>
+  <div class="card"><h5>Pipe closed both or open both</h5><div>λ<sub>n</sub> = <span class="frac"><span>2L</span><span>n</span></span>, &nbsp; f<sub>n</sub> = <span class="frac"><span>nv</span><span>2L</span></span><br>n = 1, 2, 3, …<br>f<sub>1</sub> = <span class="frac"><span>v</span><span>2L</span></span></div></div>
+  <div class="card"><h5>Pipe closed one end</h5><div>λ<sub>n</sub> = <span class="frac"><span>4L</span><span>n</span></span>, &nbsp; f<sub>n</sub> = <span class="frac"><span>nv</span><span>4L</span></span><br>n = 1, 3, 5, … (odd only)<br>f<sub>1</sub> = <span class="frac"><span>v</span><span>4L</span></span></div></div>
+  <div class="card"><h5>Interference (same direction)</h5><div>s<sub>R</sub> = [2s<sub>m</sub> cos(<span class="frac"><span>Δφ</span><span>2</span></span>)] cos(kx − ωt + <span class="frac"><span>φ<sub>1</sub> + φ<sub>2</sub></span><span>2</span></span>)<br>constructive: Δφ = 2mπ<br>destructive: Δφ = (2m + 1)π</div></div>
+  <div class="card"><h5>Path length difference</h5><div>Δφ = <span class="frac"><span>2π</span><span>λ</span></span>ΔL<br>constructive: ΔL = mλ<br>destructive: ΔL = (m + <span class="frac"><span>1</span><span>2</span></span>)λ<br>λ = <span class="frac"><span>v</span><span>f</span></span></div></div>
+</div>
+</section>
+
+<footer>Built from the PHYS 365 Lecture 6 notes (Lecture 6a: conservation of energy, standing waves on a string, standing sound waves; Lecture 6b: pipe harmonics and interference of sound waves). Practice examples and quiz numbers are my own, since the lecture works its examples symbolically.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+const QUIZ = {
+q1:[
+ {q:`A wave on a string goes from Z<sub>1</sub> = 1.0 into Z<sub>2</sub> = 4.0. What fraction of the incident power is transmitted?`,
+  o:[`0.64`,`0.40`,`0.16`,`0.36`],a:0,
+  e:`t = <span class="frac"><span>2Z<sub>1</sub></span><span>Z<sub>1</sub> + Z<sub>2</sub></span></span> = <span class="frac"><span>2.0</span><span>5.0</span></span> = 0.40, so T = <span class="frac"><span>Z<sub>2</sub></span><span>Z<sub>1</sub></span></span>t<sup>2</sup> = 4 × 0.16 = 0.64. Check: R = r<sup>2</sup> = (0.60)<sup>2</sup> = 0.36, and 0.36 + 0.64 = 1. The 0.40 trap is t itself, and 0.16 is t<sup>2</sup> without the impedance factor.`},
+ {q:`Incident power is 2.0 W. Z<sub>1</sub> = 2.0 and Z<sub>2</sub> = 8.0. How much power is transmitted?`,
+  o:[`0.72 W`,`0.80 W`,`1.28 W`,`1.20 W`],a:2,
+  e:`r = <span class="frac"><span>8.0 − 2.0</span><span>2.0 + 8.0</span></span> = 0.60, R = 0.36, so P<sub>r</sub> = 0.36 × 2.0 = 0.72 W. Energy conservation: P<sub>t</sub> = P<sub>i</sub> − P<sub>r</sub> = 2.0 − 0.72 = 1.28 W. (Directly: T = <span class="frac"><span>4(2.0)(8.0)</span><span>(10.0)<sup>2</sup></span></span> = 0.64, and 0.64 × 2.0 = 1.28 W.)`},
+ {q:`Why does T = <span class="frac"><span>Z<sub>2</sub></span><span>Z<sub>1</sub></span></span>t<sup>2</sup> carry an impedance factor while R = r<sup>2</sup> does not?`,
+  o:[`The transmitted wave travels in medium 2, and a wave's power depends on the impedance of its medium as well as its amplitude squared`,`The factor corrects for the reflected wave flipping sign`,`Because t is always less than 1`,`It's needed so that r + t = 1`],a:0,
+  e:`Power ∝ Z × (amplitude)<sup>2</sup>. The reflected wave is still in medium 1 (same Z as the incident wave), so the Z's cancel. The transmitted wave is in medium 2, so the ratio keeps <span class="frac"><span>Z<sub>2</sub></span><span>Z<sub>1</sub></span></span>.`},
+ {q:`The two media have equal impedance, Z<sub>1</sub> = Z<sub>2</sub>. What happens at the boundary?`,
+  o:[`All of the power reflects`,`Half reflects and half transmits`,`Nothing reflects: r = 0 and T = 1`,`The transmitted amplitude is zero`],a:2,
+  e:`r = <span class="frac"><span>Z − Z</span><span>2Z</span></span> = 0 and t = <span class="frac"><span>2Z</span><span>2Z</span></span> = 1, so T = 1 × 1<sup>2</sup> = 1. With matched impedances the wave doesn't "see" a boundary at all.`},
+ {q:`A wave goes from Z<sub>1</sub> = 3.0 into Z<sub>2</sub> = 1.0, giving t = 1.5. Is energy conserved?`,
+  o:[`No: t > 1 means more power leaves than arrives`,`Yes: T = <span class="frac"><span>1</span><span>3</span></span>(1.5)<sup>2</sup> = 0.75 and R = (−0.5)<sup>2</sup> = 0.25, which add to 1`,`Yes, because r + t = 1`,`Only if Z<sub>2</sub> > Z<sub>1</sub>`],a:1,
+  e:`r = <span class="frac"><span>1.0 − 3.0</span><span>4.0</span></span> = −0.5, so R = 0.25. T = <span class="frac"><span>Z<sub>2</sub></span><span>Z<sub>1</sub></span></span>t<sup>2</sup> = <span class="frac"><span>1</span><span>3</span></span> × 2.25 = 0.75. A bigger amplitude in a "lighter" medium can still carry less power.`}
+],
+q2:[
+ {q:`Two waves with y<sub>m</sub> = 3.0 mm form a standing wave. What is the amplitude of motion at a point where sin(kx) = 0.5?`,
+  o:[`1.5 mm`,`3.0 mm`,`6.0 mm`,`0`],a:1,
+  e:`The local amplitude is |2y<sub>m</sub> sin(kx)| = 2 × 3.0 × 0.5 = 3.0 mm. 6.0 mm is the amplitude only at an antinode, where sin(kx) = ±1.`},
+ {q:`A standing wave has k = 5π rad/m. How far apart are neighbouring nodes?`,
+  o:[`0.10 m`,`0.20 m`,`0.40 m`,`5π m`],a:1,
+  e:`Nodes sit where sin(kx) = 0, i.e. kx = 0, π, 2π, … so they're <span class="frac"><span>π</span><span>k</span></span> = <span class="frac"><span>π</span><span>5π</span></span> = 0.20 m apart. Same answer from λ = <span class="frac"><span>2π</span><span>k</span></span> = 0.40 m and spacing <span class="frac"><span>λ</span><span>2</span></span>.`},
+ {q:`In the derivation, the half-difference is <span class="frac"><span>α − β</span><span>2</span></span> = −ωt. Why does the final answer contain cos(ωt)?`,
+  o:[`Cosine is even: cos(−ωt) = cos(ωt)`,`The minus sign is dropped because time is positive`,`Because sin(−θ) = sin θ`,`α and β are chosen to make it positive`],a:0,
+  e:`cos(−θ) = cos θ for every θ, so the sign disappears. (Sine is odd, sin(−θ) = −sin θ, so the same trick would not work for a sine.)`},
+ {q:`Why is y<sub>R</sub> = 2y<sub>m</sub> sin(kx) cos(ωt) not a travelling wave?`,
+  o:[`Its amplitude is 2y<sub>m</sub>`,`x and t sit in separate factors, so there is no (kx − ωt) combination and the shape never moves along the string`,`The two waves cancel everywhere`,`Because ω = 0`],a:1,
+  e:`A travelling wave has the form f(kx − ωt), so a crest moves as t grows. Here the spatial shape sin(kx) is fixed and cos(ωt) only scales it up and down.`},
+ {q:`If you used the boxed identity on page 3 exactly as written, with cos(<span class="frac"><span>α + β</span><span>2</span></span>), what would y<sub>R</sub> come out as?`,
+  o:[`2y<sub>m</sub> sin(kx) cos(ωt)`,`2y<sub>m</sub> sin(kx) cos(kx), with no time dependence at all`,`2y<sub>m</sub> sin(ωt)`,`0`],a:1,
+  e:`<span class="frac"><span>α + β</span><span>2</span></span> = kx, so both factors become functions of kx and the string would never move. That's the clue that the correct identity has cos(<span class="frac"><span>α − β</span><span>2</span></span>) = cos(−ωt) = cos(ωt).`}
+],
+q3:[
+ {q:`A string has L = 0.80 m and wave speed v = 240 m/s. What is its fundamental frequency?`,
+  o:[`300 Hz`,`150 Hz`,`75 Hz`,`192 Hz`],a:1,
+  e:`f<sub>1</sub> = <span class="frac"><span>v</span><span>2L</span></span> = <span class="frac"><span>240</span><span>1.6</span></span> = 150 Hz. 300 Hz forgets the 2 (that's <span class="frac"><span>v</span><span>L</span></span>), and 75 Hz uses 4L, which is the closed-one-end pipe formula.`},
+ {q:`Same string (L = 0.80 m). What is the wavelength of the 3rd harmonic?`,
+  o:[`2.4 m`,`0.80 m`,`0.533 m`,`0.267 m`],a:2,
+  e:`λ<sub>3</sub> = <span class="frac"><span>2L</span><span>3</span></span> = <span class="frac"><span>1.6</span><span>3</span></span> = 0.533 m. Three half-wavelengths fit in 0.80 m: 3 × 0.267 m = 0.80 m ✓.`},
+ {q:`How many nodes and antinodes does the 4th harmonic have (counting the clamped ends)?`,
+  o:[`4 nodes, 4 antinodes`,`5 nodes, 4 antinodes`,`4 nodes, 5 antinodes`,`3 nodes, 4 antinodes`],a:1,
+  e:`The nth harmonic has n loops (antinodes) and n + 1 nodes, because both clamped ends are nodes. n = 4: 5 nodes, 4 antinodes.`},
+ {q:`A string resonates at 300 Hz and its next resonance is 375 Hz. What is the fundamental?`,
+  o:[`75 Hz`,`37.5 Hz`,`150 Hz`,`300 Hz`],a:0,
+  e:`f<sub>n</sub> = nf<sub>1</sub>, so neighbouring resonances differ by f<sub>1</sub> = 375 − 300 = 75 Hz. Check: 300 = 4 × 75 (n = 4) and 375 = 5 × 75 (n = 5).`},
+ {q:`Why can't a string of length L vibrate in a standing wave with λ = 3L?`,
+  o:[`The frequency would be below hearing range`,`L must equal <span class="frac"><span>nλ</span><span>2</span></span> with whole n, and λ = 3L would need n = <span class="frac"><span>2</span><span>3</span></span>`,`Wavelengths longer than L never exist on any string`,`The wave speed would change`],a:1,
+  e:`Both ends must be nodes, so L = <span class="frac"><span>nλ</span><span>2</span></span>. Putting in λ = 3L gives L = <span class="frac"><span>3nL</span><span>2</span></span>, so n = <span class="frac"><span>2</span><span>3</span></span>, not a whole number. The longest allowed wavelength is 2L.`}
+],
+q4:[
+ {q:`Why is the closed end of a pipe a displacement node?`,
+  o:[`The pressure there is zero`,`The wall stops the air molecules from moving along the pipe`,`Sound can't reach the wall`,`The molecules move fastest there`],a:1,
+  e:`Molecules touching a rigid wall can't move into it or away from it, so their displacement is zero.`},
+ {q:`In a pipe closed at both ends (1st harmonic), what is at the middle of the pipe?`,
+  o:[`A displacement node and a pressure node`,`A displacement antinode and a pressure node`,`A displacement node and a pressure antinode`,`A displacement antinode and a pressure antinode`],a:1,
+  e:`Displacement: zero at the walls, maximum in the middle. Pressure is the reverse: maximum at the walls, zero in the middle. A displacement antinode is always a pressure node.`},
+ {q:`Why is the pressure variation largest at a closed end?`,
+  o:[`Molecules pile up against the wall or get pulled away from it, so the air there is squeezed and stretched the most`,`Molecules move the most there`,`The wall itself vibrates`,`It's a displacement antinode`],a:0,
+  e:`The air next to the wall can't move, but the air beside it can. So the air at the wall gets compressed when neighbours push in and rarefied when they pull away: the biggest pressure swing.`},
+ {q:`What is at an open end of a pipe?`,
+  o:[`Displacement node, pressure antinode`,`Displacement antinode, pressure node`,`Both nodes`,`Both antinodes`],a:1,
+  e:`An open end connects to the room, which holds the air there at atmospheric pressure: a pressure node. By the swap rule, it's a displacement antinode, so air sloshes in and out the most there.`}
+],
+q5:[
+ {q:`A pipe closed at both ends has L = 0.50 m. With v = 343 m/s, what is the 2nd harmonic frequency?`,
+  o:[`343 Hz`,`686 Hz`,`1372 Hz`,`171.5 Hz`],a:1,
+  e:`f<sub>n</sub> = <span class="frac"><span>nv</span><span>2L</span></span> = <span class="frac"><span>2(343)</span><span>2(0.50)</span></span> = 686 Hz. Here λ<sub>2</sub> = L = 0.50 m and <span class="frac"><span>v</span><span>λ<sub>2</sub></span></span> = <span class="frac"><span>343</span><span>0.50</span></span> = 686 Hz ✓.`},
+ {q:`A pipe closed at both ends has a fundamental of 220 Hz. With v = 343 m/s, how long is it?`,
+  o:[`0.390 m`,`0.780 m`,`1.56 m`,`0.641 m`],a:1,
+  e:`f<sub>1</sub> = <span class="frac"><span>v</span><span>2L</span></span>, so L = <span class="frac"><span>v</span><span>2f<sub>1</sub></span></span> = <span class="frac"><span>343</span><span>440</span></span> = 0.780 m. 0.390 m comes from <span class="frac"><span>v</span><span>4f<sub>1</sub></span></span> (wrong pipe), and 1.56 m from forgetting the 2.`},
+ {q:`How many displacement nodes does the 3rd harmonic of a closed-closed pipe have, counting both walls?`,
+  o:[`2`,`3`,`4`,`5`],a:2,
+  e:`Three loops need four nodes: one at each wall plus two inside, as in the lecture's page 10 diagram. Same count as a string: n + 1.`},
+ {q:`Why does a closed-closed pipe share the string's frequency formula?`,
+  o:[`Both have displacement nodes at both ends, so both must fit a whole number of half-wavelengths`,`Both carry transverse waves`,`Both have the same wave speed`,`The pressure is zero at both ends of each`],a:0,
+  e:`The formula comes from the boundary conditions, not the type of wave. Node at each end ⟹ L = <span class="frac"><span>nλ</span><span>2</span></span> ⟹ f<sub>n</sub> = <span class="frac"><span>nv</span><span>2L</span></span>.`}
+],
+q6:[
+ {q:`A pipe closed at one end has L = 0.50 m. With v = 343 m/s, what is its fundamental?`,
+  o:[`343 Hz`,`171.5 Hz`,`686 Hz`,`85.8 Hz`],a:1,
+  e:`f<sub>1</sub> = <span class="frac"><span>v</span><span>4L</span></span> = <span class="frac"><span>343</span><span>4(0.50)</span></span> = 171.5 Hz. The fundamental is a quarter-wavelength: λ<sub>1</sub> = 4L = 2.0 m.`},
+ {q:`Same pipe (closed at one end, L = 0.50 m). What is the next resonance above the fundamental?`,
+  o:[`343 Hz`,`514.5 Hz`,`686 Hz`,`857.5 Hz`],a:1,
+  e:`Only odd n are allowed, so the next one is n = 3: f<sub>3</sub> = 3 × 171.5 = 514.5 Hz. 343 Hz (= 2f<sub>1</sub>) can't happen in this pipe.`},
+ {q:`Why does a pipe closed at one end only have odd multiples of f<sub>1</sub>?`,
+  o:[`The closed end must be a displacement node and the open end an antinode. Node to antinode is <span class="frac"><span>λ</span><span>4</span></span>, so L must be an odd number of quarter-wavelengths`,`Even harmonics are absorbed by the closed end`,`Sound travels at a different speed in each half`,`The open end radiates the even harmonics away`],a:0,
+  e:`L = <span class="frac"><span>λ</span><span>4</span></span>, <span class="frac"><span>3λ</span><span>4</span></span>, <span class="frac"><span>5λ</span><span>4</span></span>, … gives λ<sub>n</sub> = <span class="frac"><span>4L</span><span>n</span></span> with n = 1, 3, 5. An even n would need the same type of point at both ends.`},
+ {q:`A pipe resonates at 150 Hz, 250 Hz and 350 Hz (consecutive). Which pipe is it?`,
+  o:[`Open at both ends, f<sub>1</sub> = 100 Hz`,`Closed at one end, f<sub>1</sub> = 50 Hz`,`Closed at both ends, f<sub>1</sub> = 150 Hz`,`Closed at one end, f<sub>1</sub> = 100 Hz`],a:1,
+  e:`150 : 250 : 350 = 3 : 5 : 7, odd multiples of 50 Hz. An open-open or closed-closed pipe with f<sub>1</sub> = 100 Hz would resonate at 100, 200, 300, 400 Hz, never 150 Hz. The 100 Hz gap is 2f<sub>1</sub>.`},
+ {q:`For the closed-one-end pipe with L = 0.50 m, what is the wavelength of the lecture's "3rd harmonic"?`,
+  o:[`0.40 m`,`0.333 m`,`0.667 m`,`2.5 m`],a:0,
+  e:`The lecture's "3rd harmonic" is λ<sub>5</sub> = <span class="frac"><span>4L</span><span>5</span></span> = <span class="frac"><span>2.0</span><span>5</span></span> = 0.40 m (n = 5, the 3rd allowed mode). 0.333 m is the closed-closed 3rd harmonic <span class="frac"><span>2L</span><span>3</span></span>, and 0.667 m is λ<sub>3</sub>.`}
+],
+q7:[
+ {q:`A pipe open at both ends has L = 0.50 m. With v = 343 m/s, what is the 3rd harmonic?`,
+  o:[`343 Hz`,`514.5 Hz`,`1029 Hz`,`2058 Hz`],a:2,
+  e:`f<sub>3</sub> = <span class="frac"><span>3v</span><span>2L</span></span> = <span class="frac"><span>3(343)</span><span>1.0</span></span> = 1029 Hz, with λ = <span class="frac"><span>2L</span><span>3</span></span> = 0.333 m.`},
+ {q:`A flute (open at both ends) is 0.60 m long. With v = 343 m/s, what is its lowest note?`,
+  o:[`143 Hz`,`286 Hz`,`572 Hz`,`206 Hz`],a:1,
+  e:`f<sub>1</sub> = <span class="frac"><span>v</span><span>2L</span></span> = <span class="frac"><span>343</span><span>1.2</span></span> = 286 Hz. 143 Hz would be the closed-one-end answer <span class="frac"><span>v</span><span>4L</span></span>.`},
+ {q:`How many displacement nodes are in the 2nd harmonic of an open-open pipe?`,
+  o:[`1`,`2`,`3`,`4`],a:1,
+  e:`Both ends are antinodes. One full wavelength fits (λ = L), with antinodes at both ends and the middle, and two nodes in between, as on page 14.`},
+ {q:`An open-open pipe and a closed-closed pipe have the same length. Which is true?`,
+  o:[`They have the same resonant frequencies, but displacement nodes and antinodes swap places`,`The open-open pipe has half the frequencies`,`The closed-closed pipe has only odd harmonics`,`Their node patterns are identical`],a:0,
+  e:`Both obey λ<sub>n</sub> = <span class="frac"><span>2L</span><span>n</span></span>, n = 1, 2, 3, … so frequencies match. Closed ends are displacement nodes; open ends are displacement antinodes, so the patterns are shifted.`},
+ {q:`An open-open pipe has f<sub>1</sub> = 343 Hz (v = 343 m/s). You cap one end. What is the new fundamental?`,
+  o:[`686 Hz`,`343 Hz`,`171.5 Hz`,`514.5 Hz`],a:2,
+  e:`Open-open: L = <span class="frac"><span>v</span><span>2f<sub>1</sub></span></span> = 0.50 m. Capped: f<sub>1</sub> = <span class="frac"><span>v</span><span>4L</span></span> = <span class="frac"><span>343</span><span>2.0</span></span> = 171.5 Hz. Closing one end halves the fundamental.`}
+],
+q8:[
+ {q:`Two sound waves have s<sub>m</sub> = 4.0 μm and Δφ = <span class="frac"><span>2π</span><span>3</span></span>. What is the resultant amplitude?`,
+  o:[`8.0 μm`,`6.93 μm`,`4.0 μm`,`2.0 μm`],a:2,
+  e:`2s<sub>m</sub> cos(<span class="frac"><span>Δφ</span><span>2</span></span>) = 2(4.0) cos(<span class="frac"><span>π</span><span>3</span></span>) = 8.0 × 0.5 = 4.0 μm. Remember to halve Δφ before taking the cosine.`},
+ {q:`Two equal-amplitude waves meet with Δφ = 3π. What happens?`,
+  o:[`Constructive, amplitude 2s<sub>m</sub>`,`Destructive, amplitude 0`,`Amplitude s<sub>m</sub>`,`It depends on x`],a:1,
+  e:`3π = (2m + 1)π with m = 1, an odd multiple of π. cos(<span class="frac"><span>3π</span><span>2</span></span>) = 0, so the amplitude is zero.`},
+ {q:`Same waves, now Δφ = 4π. What is the amplitude?`,
+  o:[`0`,`s<sub>m</sub>`,`2s<sub>m</sub>`,`4s<sub>m</sub>`],a:2,
+  e:`4π = 2mπ with m = 2. |cos(2π)| = 1, so the amplitude is 2s<sub>m</sub> (fully constructive). Even multiples of π are always constructive.`},
+ {q:`s<sub>m</sub> = 4.0 μm and Δφ = <span class="frac"><span>π</span><span>2</span></span>. What is the resultant amplitude?`,
+  o:[`8.0 μm`,`5.66 μm`,`4.0 μm`,`0`],a:1,
+  e:`2(4.0) cos(<span class="frac"><span>π</span><span>4</span></span>) = 8.0 × 0.707 = 5.66 μm, partway between 0 and 8.0 μm.`},
+ {q:`Why is s<sub>R</sub> here a travelling wave, while y<sub>R</sub> in §2 was a standing wave?`,
+  o:[`Both sound waves move in the same direction, so (kx − ωt) survives in the sum`,`Sound waves are longitudinal`,`The amplitudes are different`,`It uses cosine instead of sine`],a:0,
+  e:`Adding waves going the same way keeps the (kx − ωt) form; only the amplitude and phase change. Opposite directions (kx − ωt and kx + ωt) split into sin(kx)cos(ωt), a standing wave.`}
+],
+q9:[
+ {q:`Two in-phase speakers emit 343 Hz sound (v = 343 m/s). The path difference to P is 2.5 m. What does P hear?`,
+  o:[`Constructive interference`,`Destructive interference (m = 2)`,`Destructive interference (m = 3)`,`Neither`],a:1,
+  e:`λ = <span class="frac"><span>v</span><span>f</span></span> = 1.00 m, so <span class="frac"><span>ΔL</span><span>λ</span></span> = 2.5 = 2 + <span class="frac"><span>1</span><span>2</span></span>. That's (m + <span class="frac"><span>1</span><span>2</span></span>)λ with m = 2: destructive.`},
+ {q:`λ = 0.50 m and ΔL = 0.20 m. What is the phase difference at P?`,
+  o:[`0.4π rad`,`0.8π rad (2.51 rad)`,`2.5π rad`,`0.2π rad`],a:1,
+  e:`Δφ = <span class="frac"><span>2π</span><span>λ</span></span>ΔL = <span class="frac"><span>2π</span><span>0.50</span></span>(0.20) = 0.8π rad ≈ 2.51 rad.`},
+ {q:`Same setup (Δφ = 0.8π). What is the resultant amplitude, as a multiple of s<sub>m</sub>?`,
+  o:[`0.618 s<sub>m</sub>`,`1.62 s<sub>m</sub>`,`1.90 s<sub>m</sub>`,`0`],a:0,
+  e:`2s<sub>m</sub> cos(<span class="frac"><span>0.8π</span><span>2</span></span>) = 2s<sub>m</sub> cos(0.4π) = 2 × 0.309 s<sub>m</sub> = 0.618 s<sub>m</sub>. 1.62 s<sub>m</sub> comes from halving twice.`},
+ {q:`With v = 340 m/s and f = 500 Hz, what is the smallest non-zero path difference giving silence?`,
+  o:[`0.17 m`,`0.34 m`,`0.68 m`,`1.47 m`],a:1,
+  e:`λ = <span class="frac"><span>340</span><span>500</span></span> = 0.68 m. The first destructive case is m = 0: ΔL = <span class="frac"><span>λ</span><span>2</span></span> = 0.34 m.`},
+ {q:`P is at a loud spot. You slide one speaker back slowly. How much extra path until it first goes quiet, and until it's loud again?`,
+  o:[`<span class="frac"><span>λ</span><span>4</span></span>, then <span class="frac"><span>λ</span><span>2</span></span>`,`<span class="frac"><span>λ</span><span>2</span></span>, then λ`,`λ, then 2λ`,`<span class="frac"><span>λ</span><span>2</span></span>, then <span class="frac"><span>3λ</span><span>2</span></span>`],a:1,
+  e:`From ΔL = mλ, adding <span class="frac"><span>λ</span><span>2</span></span> gives (m + <span class="frac"><span>1</span><span>2</span></span>)λ: quiet. Adding a full λ gives (m + 1)λ: loud again.`}
+],
+qf:[
+ {q:`Z<sub>1</sub> = 1.0, Z<sub>2</sub> = 9.0. What fraction of the incident power is transmitted?`,
+  o:[`0.20`,`0.36`,`0.64`,`0.04`],a:1,
+  e:`t = <span class="frac"><span>2(1.0)</span><span>10.0</span></span> = 0.20, T = <span class="frac"><span>9.0</span><span>1.0</span></span>(0.20)<sup>2</sup> = 9 × 0.04 = 0.36. Check: r = 0.80, R = 0.64, total 1. Review §1.`},
+ {q:`A wave meets a boundary with Z<sub>2</sub> ≫ Z<sub>1</sub> (a very stiff wall). What happens to the power?`,
+  o:[`Almost all of it is transmitted`,`Almost all of it is reflected`,`It splits evenly`,`t approaches 2, so the transmitted power doubles`],a:1,
+  e:`T = <span class="frac"><span>4Z<sub>1</sub>Z<sub>2</sub></span><span>(Z<sub>1</sub> + Z<sub>2</sub>)<sup>2</sup></span></span> ≈ <span class="frac"><span>4Z<sub>1</sub></span><span>Z<sub>2</sub></span></span> → 0, and r → 1, so R → 1. Big mismatch means big reflection. Review §1.`},
+ {q:`A standing wave has y<sub>m</sub> = 2.5 mm and k = 4π rad/m. What is the amplitude of motion at x = 0.0625 m?`,
+  o:[`5.0 mm`,`3.54 mm`,`2.5 mm`,`1.77 mm`],a:1,
+  e:`kx = 4π × 0.0625 = <span class="frac"><span>π</span><span>4</span></span>. Amplitude = 2y<sub>m</sub>|sin(kx)| = 5.0 × 0.707 = 3.54 mm. Review §2.`},
+ {q:`A guitar string is 1.2 m long and its fundamental is 110 Hz. What is the wave speed on it?`,
+  o:[`132 m/s`,`264 m/s`,`528 m/s`,`91.7 m/s`],a:1,
+  e:`f<sub>1</sub> = <span class="frac"><span>v</span><span>2L</span></span>, so v = 2Lf<sub>1</sub> = 2(1.2)(110) = 264 m/s. Review §3.`},
+ {q:`Same string (L = 1.2 m). What is the wavelength of its 3rd harmonic?`,
+  o:[`0.40 m`,`0.80 m`,`2.4 m`,`3.6 m`],a:1,
+  e:`λ<sub>3</sub> = <span class="frac"><span>2L</span><span>3</span></span> = <span class="frac"><span>2.4</span><span>3</span></span> = 0.80 m. Review §3.`},
+ {q:`A point in a pipe is a displacement node. What is the pressure doing there?`,
+  o:[`It's a pressure node`,`It's a pressure antinode`,`The pressure is zero at all times`,`You can't tell`],a:1,
+  e:`Displacement node ⟺ pressure antinode, always. Review §4.`},
+ {q:`A pipe closed at one end has L = 0.25 m (v = 340 m/s). What is the frequency of the lecture's "3rd harmonic" (λ<sub>5</sub> = <span class="frac"><span>4L</span><span>5</span></span>)?`,
+  o:[`1020 Hz`,`1700 Hz`,`2040 Hz`,`1360 Hz`],a:1,
+  e:`f<sub>1</sub> = <span class="frac"><span>v</span><span>4L</span></span> = <span class="frac"><span>340</span><span>1.0</span></span> = 340 Hz. The lecture's 3rd harmonic is n = 5: f<sub>5</sub> = 5 × 340 = 1700 Hz. 1020 Hz (= 3f<sub>1</sub>) is the lecture's 2nd harmonic. Review §6.`},
+ {q:`A pipe open at both ends is 0.90 m long (v = 343 m/s). What is its 2nd harmonic?`,
+  o:[`191 Hz`,`381 Hz`,`762 Hz`,`286 Hz`],a:1,
+  e:`f<sub>2</sub> = <span class="frac"><span>2v</span><span>2L</span></span> = <span class="frac"><span>343</span><span>0.90</span></span> = 381 Hz, with λ = L = 0.90 m. Review §7.`},
+ {q:`A pipe has consecutive resonances at 200, 300 and 400 Hz. Which type of pipe CANNOT produce this?`,
+  o:[`Open at both ends`,`Closed at both ends`,`Closed at one end`,`Any of them can`],a:2,
+  e:`These are 2, 3, 4 × 100 Hz: consecutive whole multiples, so f<sub>1</sub> = 100 Hz in an open-open or closed-closed pipe. A closed-one-end pipe only gives odd multiples, so consecutive resonances would be in ratio 3 : 5 : 7, not 2 : 3 : 4. Review §5 to §7.`},
+ {q:`Two sound waves with s<sub>m</sub> = 3.0 μm meet with Δφ = <span class="frac"><span>π</span><span>3</span></span>. What is the resultant amplitude?`,
+  o:[`3.0 μm`,`5.20 μm`,`6.0 μm`,`1.5 μm`],a:1,
+  e:`2(3.0) cos(<span class="frac"><span>π</span><span>6</span></span>) = 6.0 × 0.866 = 5.20 μm. Review §8.`},
+ {q:`v = 340 m/s, f = 850 Hz, and the path difference is 1.4 m. What are Δφ and the type of interference?`,
+  o:[`3.5π, partial`,`7π, destructive`,`7π, constructive`,`1.4π, partial`],a:1,
+  e:`λ = <span class="frac"><span>340</span><span>850</span></span> = 0.40 m, so <span class="frac"><span>ΔL</span><span>λ</span></span> = 3.5 and Δφ = 3.5 × 2π = 7π, an odd multiple of π: destructive (m = 3). Review §9.`},
+ {q:`Two in-phase speakers have a path difference of 0.50 m to you (v = 343 m/s). What is the lowest frequency that gives silence?`,
+  o:[`171.5 Hz`,`343 Hz`,`686 Hz`,`1029 Hz`],a:1,
+  e:`Lowest destructive: ΔL = <span class="frac"><span>λ</span><span>2</span></span>, so λ = 1.0 m and f = <span class="frac"><span>v</span><span>λ</span></span> = 343 Hz. The next is ΔL = <span class="frac"><span>3λ</span><span>2</span></span>: λ = 0.333 m, f = 1029 Hz. 686 Hz gives ΔL = λ (loud). Review §9.`}
+]
+};
+
+/* ---------------- QUIZ ENGINE ---------------- */
+const LET = "ABCD";
+const STORE = "phys365-l6-answers";
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(STORE) || "{}") || {}; } catch(e){ saved = {}; }
+function persist(){ try { localStorage.setItem(STORE, JSON.stringify(saved)); } catch(e){} }
+const tally = {};
+function totals(){
+  let c = 0, n = 0, ans = 0;
+  Object.keys(QUIZ).forEach(id=>{ n += QUIZ[id].length; if(tally[id]){ c += tally[id].c; ans += tally[id].a; } });
+  const el = document.getElementById("totalScore");
+  el.textContent = c+" of "+n+(ans<n && ans>0 ? " ("+ans+" done)" : ans===0 ? "" : "");
+  el.classList.toggle("done", ans===n);
+}
+function chip(id, correct, answered, total){
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  tally[id] = {c:correct, a:answered};
+  totals();
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+" of "+total;
+  c.classList.toggle("done", answered===total);
+}
+function seeded(str){ let h = 2166136261; for(const ch of str){ h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return ()=>{ h ^= h<<13; h ^= h>>>17; h ^= h<<5; return ((h>>>0)%10000)/10000; }; }
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  saved[id] = saved[id] || {};
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" of "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+  }
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    qq.innerHTML = '<span class="qn">Q'+(qi+1)+'</span>'+item.q;
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    // stable shuffle so the right answer isn't always in the same slot
+    const rnd = seeded(id+":"+qi);
+    const order = item.o.map((_,i)=>i);
+    for(let i=order.length-1;i>0;i--){ const j = Math.floor(rnd()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+    const btns = [];
+    order.forEach((oi, pos)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      b.innerHTML = '<span class="L">'+LET[pos]+'</span><span>'+item.o[oi]+'</span>';
+      b.dataset.oi = oi;
+      b.addEventListener("click", ()=>choose(oi, true));
+      opts.appendChild(b); btns.push(b);
+    });
+    function choose(oi, store){
+      if(btns[0].disabled) return;
+      btns.forEach(x=>x.disabled=true);
+      const ok = oi===item.a;
+      const rightBtn = btns.find(x=>+x.dataset.oi===item.a);
+      rightBtn.classList.add("right");
+      if(!ok) btns.find(x=>+x.dataset.oi===oi).classList.add("wrong");
+      answered++; if(ok) correct++;
+      const rightLetter = LET[btns.indexOf(rightBtn)];
+      ex.innerHTML = (ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+rightLetter+'.</b> ') + item.e;
+      ex.hidden = false;
+      if(store){ saved[id][qi] = oi; persist(); }
+      upd();
+    }
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+    if(saved[id][qi] !== undefined) choose(+saved[id][qi], false);
+  });
+  reset.addEventListener("click", ()=>{ saved[id] = {}; persist(); buildQuiz(box); });
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const F = (a,b) => '<span class="frac"><span>'+a+'</span><span>'+b+'</span></span>';
+const fmt = (x,d)=> (Math.abs(x)<1e-9?0:x).toFixed(d);
+const sig = (x)=>{ if(!isFinite(x)) return "n/a"; if(Math.abs(x)<1e-12) return "0"; return String(parseFloat(x.toPrecision(4))); };
+const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function prep(cv){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size,weight){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function curve(ctx, x0, x1, fx, col, wid, dash){
+  ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1.5;
+  const N = Math.max(60, Math.round(x1-x0));
+  for(let i=0;i<=N;i++){ const X = x0+(x1-x0)*i/N; const Y = fx(X); if(i===0) ctx.moveTo(X,Y); else ctx.lineTo(X,Y); }
+  ctx.stroke(); ctx.setLineDash([]);
+}
+function dot(ctx,x,y,r,col){ ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fillStyle=col; ctx.fill(); }
+function piStr(p,q){ // p*pi/q as html
+  const g = (a,b)=> b ? g(b, a%b) : a;
+  if(p===0) return "0";
+  const d = g(p,q); p/=d; q/=d;
+  const num = (p===1?"":p)+"π";
+  return q===1 ? num : F(num, q);
+}
+function numIn(id, fallback){ const v = parseFloat(document.getElementById(id).value); return isFinite(v) ? v : fallback; }
+
+/* animation registry: each demo draws only while on screen */
+const anims = [];
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, (now-last)/1000); last = now;
+  anims.forEach(a=>{ if(a.visible){ if(a.playing) a.t += dt*(a.speed? a.speed():1); a.draw(); } });
+  requestAnimationFrame(loop);
+}
+function register(a){
+  a.t = a.t||0; a.visible = true; anims.push(a);
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(es=>es.forEach(e=>{ a.visible = e.isIntersecting; if(a.visible) a.draw(); }),{rootMargin:"100px"}).observe(a.el);
+  }
+  return a;
+}
+function playBtn(btn, a){
+  const set = ()=>{ btn.textContent = a.playing ? "Pause" : "Play"; btn.setAttribute("aria-pressed", a.playing? "false":"true"); };
+  btn.addEventListener("click", ()=>{ a.playing = !a.playing; set(); a.draw(); });
+  set();
+}
+
+/* ---------------- §1 R/T CALCULATOR ---------------- */
+(function(){
+  const z1 = document.getElementById("z1"), z2 = document.getElementById("z2"), sl = document.getElementById("z2r");
+  const kv = document.getElementById("rtKV"), steps = document.getElementById("rtSteps");
+  const bR = document.getElementById("barR"), bT = document.getElementById("barT");
+  function calc(){
+    const Z1 = Math.max(1e-6, numIn("z1",1)), Z2 = Math.max(1e-6, numIn("z2",4));
+    const r = (Z2-Z1)/(Z1+Z2), t = 2*Z1/(Z1+Z2), R = r*r, T = Z2/Z1*t*t;
+    kv.innerHTML = '<div>r<b>'+fmt(r,3)+'</b></div><div>t<b>'+fmt(t,3)+'</b></div><div>R = r²<b>'+fmt(R,3)+'</b></div><div>T<b>'+fmt(T,3)+'</b></div><div>R + T<b>'+fmt(R+T,3)+'</b></div>';
+    bR.style.width = (R*100)+"%"; bT.style.width = (T*100)+"%";
+    bR.textContent = R>0.12 ? "R "+Math.round(R*100)+"%" : ""; bT.textContent = T>0.12 ? "T "+Math.round(T*100)+"%" : "";
+    const s1 = sig(Z1), s2 = sig(Z2);
+    steps.innerHTML =
+      '<div><span class="c">r =</span> '+F(s2+' − '+s1, s1+' + '+s2)+' = '+fmt(r,3)+' &nbsp;&nbsp; <span class="c">t =</span> '+F('2('+s1+')', s1+' + '+s2)+' = '+fmt(t,3)+'</div>'+
+      '<div><span class="c">R =</span> r<sup>2</sup> = '+fmt(R,3)+' &nbsp;&nbsp; <span class="c">T =</span> '+F(s2,s1)+'('+fmt(t,3)+')<sup>2</sup> = '+fmt(T,3)+'</div>'+
+      '<div><span class="c">check:</span> R + T = '+fmt(R,3)+' + '+fmt(T,3)+' = '+fmt(R+T,3)+' ✓</div>';
+  }
+  z1.addEventListener("input", ()=>{ calc(); });
+  z2.addEventListener("input", ()=>{ const Z1=numIn("z1",1), Z2=numIn("z2",4); if(Z2>0&&Z1>0) sl.value = Math.log10(Z2/Z1).toFixed(3); calc(); });
+  sl.addEventListener("input", ()=>{ const Z1 = numIn("z1",1); z2.value = sig(Z1*Math.pow(10, +sl.value)); calc(); });
+  calc();
+})();
+
+/* ---------------- §2 STANDING WAVE BUILDER ---------------- */
+(function(){
+  const cv = document.getElementById("swCv"), show = document.getElementById("swShow"), spd = document.getElementById("swSpd"), rd = document.getElementById("swRead");
+  const a = register({el:cv, playing:!reduceMotion, t:0.35, speed:()=>+spd.value, draw});
+  function draw(){
+    const {ctx,w,h} = prep(cv);
+    const pad = 28, x0 = pad, x1 = w-12, mid = h/2, A = (h/2-26)/2;
+    const lam = (x1-x0)/2, k = 2*Math.PI/lam, wt = 2*Math.PI*a.t*0.5;
+    const ink = css("--ink"), mut = css("--muted"), grid = css("--grid");
+    line(ctx,x0,mid,x1,mid,grid,1);
+    // envelope
+    curve(ctx,x0,x1,X=>mid-2*A*Math.sin(k*(X-x0)),grid,1,[4,4]);
+    curve(ctx,x0,x1,X=>mid+2*A*Math.sin(k*(X-x0)),grid,1,[4,4]);
+    if(show.checked){
+      curve(ctx,x0,x1,X=>mid-A*Math.sin(k*(X-x0)-wt),css("--volt"),1.5);
+      curve(ctx,x0,x1,X=>mid-A*Math.sin(k*(X-x0)+wt),css("--curr"),1.5);
+    }
+    curve(ctx,x0,x1,X=>mid-2*A*Math.sin(k*(X-x0))*Math.cos(wt),css("--fund"),3);
+    for(let j=0;j<=4;j++){ const X = x0+j*lam/2; dot(ctx,X,mid,4,ink); txt(ctx,"N",X,mid+14,mut,"center",11,"600"); }
+    for(let j=0;j<4;j++){ const X = x0+(j+0.5)*lam/2; txt(ctx,"A",X,12,mut,"center",11,"600"); }
+    txt(ctx,"x",x1,mid-10,mut,"right",11);
+    const c = Math.cos(wt);
+    rd.innerHTML = 'ωt = <b>'+fmt(((wt%(2*Math.PI))+2*Math.PI)%(2*Math.PI),2)+' rad</b> &nbsp; cos(ωt) = <b>'+fmt(c,2)+'</b> &nbsp; Nodes (dots) never move. Antinodes swing between ±2y<sub>m</sub>.';
+  }
+  playBtn(document.getElementById("swPlay"), a);
+  show.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------------- §3 STRING HARMONICS ---------------- */
+(function(){
+  const cv = document.getElementById("strCv"), nI = document.getElementById("strN"), nO = document.getElementById("strNo"), kv = document.getElementById("strKV");
+  const a = register({el:cv, playing:!reduceMotion, t:0.2, draw});
+  function ord(n){ return n+(n%100>=11&&n%100<=13?"th":({1:"st",2:"nd",3:"rd"}[n%10]||"th")); }
+  function draw(){
+    const {ctx,w,h} = prep(cv);
+    const n = +nI.value, x0 = 30, x1 = w-30, mid = h/2+4, A = h/2-30;
+    const ink = css("--ink"), mut = css("--muted"), grid = css("--grid"), line2 = css("--line");
+    // clamps
+    [x0,x1].forEach(X=>{ ctx.fillStyle = css("--surface-2"); ctx.fillRect(X-(X===x0?14:0), mid-A-10, 14, 2*A+20); ctx.strokeStyle=line2; ctx.strokeRect(X-(X===x0?14:0), mid-A-10, 14, 2*A+20); });
+    const s = X=>Math.sin(n*Math.PI*(X-x0)/(x1-x0));
+    line(ctx,x0,mid,x1,mid,grid,1);
+    curve(ctx,x0,x1,X=>mid-A*s(X),mut,1,[4,4]);
+    curve(ctx,x0,x1,X=>mid+A*s(X),mut,1,[4,4]);
+    curve(ctx,x0,x1,X=>mid-A*s(X)*Math.cos(2*Math.PI*a.t*0.8),css("--accent"),3);
+    for(let j=0;j<=n;j++){ const X = x0+j*(x1-x0)/n; dot(ctx,X,mid,4,ink); txt(ctx,"N",X+(j===0?8:j===n?-8:0),mid+14,mut,"center",11,"600"); }
+    for(let j=0;j<n;j++){ const X = x0+(j+0.5)*(x1-x0)/n; txt(ctx,"A",X,12,mut,"center",11,"600"); }
+    txt(ctx,"L",(x0+x1)/2,h-8,mut,"center",11);
+  }
+  function calc(){
+    const n = +nI.value, L = Math.max(1e-6,numIn("strL",0.8)), v = Math.max(1e-6,numIn("strV",240));
+    nO.textContent = n;
+    const lam = 2*L/n, f = n*v/(2*L), f1 = v/(2*L);
+    kv.innerHTML = '<div>harmonic<b>'+ord(n)+'</b></div><div>λ = '+F('2L','n')+'<b>'+sig(lam)+' m</b></div><div>f = n'+F('v','2L')+'<b>'+sig(f)+' Hz</b></div><div>f<sub>1</sub> = '+F('v','2L')+'<b>'+sig(f1)+' Hz</b></div><div>nodes, antinodes<b>'+(n+1)+' N, '+n+' A</b></div>';
+    draw();
+  }
+  [nI, document.getElementById("strL"), document.getElementById("strV")].forEach(el=>el.addEventListener("input", calc));
+  calc();
+})();
+
+/* ---------------- §4 to §7 PIPE EXPLORER ---------------- */
+function makePipe(cfg){
+  const cv = document.getElementById(cfg.cv), ctrl = document.getElementById(cfg.cv+"c"), kv = document.getElementById(cfg.cv+"kv");
+  const st = {type:cfg.type, m:1, view:"disp"};
+  const typeName = {cc:"closed both", co:"closed one end", oo:"open both"};
+  let html = "";
+  if(cfg.typeToggle) html += '<div class="seg" role="group" aria-label="Pipe type"><button type="button" data-type="cc" aria-pressed="true">Closed both</button><button type="button" data-type="co" aria-pressed="false">Closed one end</button><button type="button" data-type="oo" aria-pressed="false">Open both</button></div>';
+  html += '<label for="'+cfg.cv+'m">mode <input type="range" id="'+cfg.cv+'m" min="1" max="'+(cfg.maxM||5)+'" step="1" value="1"><output id="'+cfg.cv+'mo">n = 1</output></label>';
+  html += '<div class="seg" role="group" aria-label="Curve shown"><button type="button" data-view="disp" aria-pressed="true">Displacement</button><button type="button" data-view="pres" aria-pressed="false">Pressure</button></div>';
+  if(cfg.numeric){
+    html += '<label for="'+cfg.cv+'L">L (m) <input type="number" id="'+cfg.cv+'L" value="'+cfg.L+'" min="0.01" step="0.05"></label>';
+    html += '<label for="'+cfg.cv+'v">v (m/s) <input type="number" id="'+cfg.cv+'v" value="'+cfg.v+'" min="1" step="1"></label>';
+  }
+  html += '<button class="btn" type="button" id="'+cfg.cv+'p">Pause</button>';
+  ctrl.innerHTML = html;
+  const mI = document.getElementById(cfg.cv+"m"), mO = document.getElementById(cfg.cv+"mo");
+  const nOf = ()=> st.type==="co" ? 2*st.m-1 : st.m;
+  // displacement shape s(u), u = x/L in [0,1]; closed end at u = 0 for 'co'
+  function shape(u, which){
+    const n = nOf();
+    const a = st.type==="co" ? n*Math.PI/2 : n*Math.PI;
+    const dispSin = st.type!=="oo";            // cc and co: sin; oo: cos
+    const useSin = which==="disp" ? dispSin : !dispSin;
+    return useSin ? Math.sin(a*u) : Math.cos(a*u);
+  }
+  function marks(which){ // returns {N:[u], A:[u]}
+    const n = nOf(), a = st.type==="co" ? n*Math.PI/2 : n*Math.PI;
+    const dispSin = st.type!=="oo", useSin = which==="disp" ? dispSin : !dispSin;
+    const N = [], A = [];
+    for(let j=0;j<=4*n+2;j++){
+      const z = (useSin ? j : j+0.5)*Math.PI/a, an = (useSin ? j+0.5 : j)*Math.PI/a;
+      if(z<=1+1e-9) N.push(Math.min(1,z));
+      if(an<=1+1e-9) A.push(Math.min(1,an));
+    }
+    return {N,A};
+  }
+  const a = register({el:cv, playing:!reduceMotion, t:0.1, draw});
+  function draw(){
+    const {ctx,w,h} = prep(cv);
+    const ink = css("--ink"), mut = css("--muted"), grid = css("--grid"), lineC = css("--line"), wallC = css("--surface-2");
+    const x0 = 34, x1 = w-34, top = 8, molH = Math.round(h*0.42), gTop = top+molH+10, gBot = h-14, gMid = (gTop+gBot)/2, gA = (gBot-gTop)/2-10;
+    const leftClosed = st.type!=="oo", rightClosed = st.type==="cc";
+    // pipe body
+    line(ctx,x0,top,x1,top,mut,2); line(ctx,x0,top+molH,x1,top+molH,mut,2);
+    function wall(X, side){ ctx.fillStyle = wallC; const ww = 10, xx = side<0 ? X-ww : X; ctx.fillRect(xx, top, ww, molH); ctx.strokeStyle = mut; ctx.lineWidth=1; ctx.strokeRect(xx, top, ww, molH);
+      ctx.save(); ctx.beginPath(); ctx.rect(xx,top,ww,molH); ctx.clip(); ctx.strokeStyle = mut; for(let y=top-ww;y<top+molH;y+=6){ ctx.beginPath(); ctx.moveTo(xx,y+ww); ctx.lineTo(xx+ww,y); ctx.stroke(); } ctx.restore(); }
+    if(leftClosed) wall(x0,-1); else txt(ctx,"open",x0-4,top+molH/2,mut,"right",10);
+    if(rightClosed) wall(x1,1); else txt(ctx,"open",x1+4,top+molH/2,mut,"left",10);
+    // molecules
+    const cols = Math.max(14, Math.min(30, Math.round((x1-x0)/24))), rows = 5, sp = (x1-x0)/cols;
+    const ph = Math.cos(2*Math.PI*a.t*0.7);
+    for(let r=0;r<rows;r++){
+      const y = top + molH*(r+0.5)/rows;
+      for(let c=0;c<cols;c++){
+        const u = (c+0.5)/cols;
+        const X = x0 + u*(x1-x0) + 0.42*sp*shape(u,"disp")*ph;
+        dot(ctx,X,y,2.6,ink);
+      }
+    }
+    // profile graph
+    const col = st.view==="disp" ? css("--accent") : css("--curr");
+    line(ctx,x0,gMid,x1,gMid,grid,1,[4,4]);
+    curve(ctx,x0,x1,X=>gMid-gA*shape((X-x0)/(x1-x0),st.view),col,2);
+    curve(ctx,x0,x1,X=>gMid+gA*shape((X-x0)/(x1-x0),st.view),col,2);
+    const mk = marks(st.view);
+    mk.N.forEach(u=>{ const X = x0+u*(x1-x0); dot(ctx,X,gMid,3.5,ink); txt(ctx,"N",X+(u<0.02?9:u>0.98?-9:0),gMid+(u<0.02||u>0.98? -12:12),mut,"center",11,"600"); });
+    mk.A.forEach(u=>{ const X = x0+u*(x1-x0); txt(ctx,"A",X+(u<0.02?9:u>0.98?-9:0),gTop+2,mut,"center",11,"600"); });
+    txt(ctx, st.view==="disp" ? "displacement profile" : "pressure profile", x0, gBot+6, mut, "left", 10);
+  }
+  function lamHTML(n){
+    if(st.type==="co") return n===1 ? "4L" : F("4L", n);
+    if(n===1) return "2L"; if(n===2) return "L"; return F("2L", n);
+  }
+  function ord(k){ return k+(k%100>=11&&k%100<=13?"th":({1:"st",2:"nd",3:"rd"}[k%10]||"th")); }
+  function calc(){
+    st.m = +mI.value; mO.textContent = "n = "+nOf();
+    const n = nOf();
+    let out = '<div>pipe<b>'+typeName[st.type]+'</b></div><div>lecture label<b>'+ord(st.m)+' harmonic</b></div><div>n<b>'+n+(st.type==="co"?" (odd)":"")+'</b></div><div>λ<sub>'+n+'</sub><b>'+lamHTML(n)+'</b></div>';
+    if(cfg.numeric){
+      const L = Math.max(1e-6,numIn(cfg.cv+"L",cfg.L)), v = Math.max(1e-6,numIn(cfg.cv+"v",cfg.v));
+      const den = st.type==="co" ? 4 : 2, lam = den*L/n, f = n*v/(den*L), f1 = v/(den*L);
+      out += '<div>λ<sub>'+n+'</sub> value<b>'+sig(lam)+' m</b></div><div>f<sub>'+n+'</sub> = '+F('n v', den+'L')+'<b>'+sig(f)+' Hz</b></div><div>f<sub>1</sub><b>'+sig(f1)+' Hz</b></div>';
+    }
+    const dm = marks("disp");
+    out += '<div>displacement nodes, antinodes<b>'+dm.N.length+' N, '+dm.A.length+' A</b></div>';
+    kv.innerHTML = out;
+    draw();
+  }
+  ctrl.querySelectorAll("[data-type]").forEach(b=>b.addEventListener("click",()=>{ st.type = b.dataset.type; ctrl.querySelectorAll("[data-type]").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false")); calc(); }));
+  ctrl.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{ st.view = b.dataset.view; ctrl.querySelectorAll("[data-view]").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false")); draw(); }));
+  mI.addEventListener("input", calc);
+  if(cfg.numeric){ [cfg.cv+"L", cfg.cv+"v"].forEach(id=>document.getElementById(id).addEventListener("input", calc)); }
+  playBtn(document.getElementById(cfg.cv+"p"), a);
+  calc();
+}
+makePipe({cv:"pipe0", type:"cc", typeToggle:true, numeric:false, maxM:4});
+makePipe({cv:"pipe1", type:"cc", numeric:true, L:"0.50", v:"343"});
+makePipe({cv:"pipe2", type:"co", numeric:true, L:"0.50", v:"343"});
+makePipe({cv:"pipe3", type:"oo", numeric:true, L:"0.50", v:"343"});
+
+/* ---------------- §8 INTERFERENCE DIAL ---------------- */
+(function(){
+  const cv = document.getElementById("intCv"), dI = document.getElementById("dphi"), dO = document.getElementById("dphiO"), rd = document.getElementById("intRead");
+  const a = register({el:cv, playing:!reduceMotion, t:0, draw});
+  function draw(){
+    const {ctx,w,h} = prep(cv);
+    const dphi = +dI.value*Math.PI/12, x0 = 12, x1 = w-12, mid = h/2, A = (h/2-14)/2;
+    const lam = (x1-x0)/2, k = 2*Math.PI/lam, wt = 2*Math.PI*a.t*0.4;
+    const p1 = dphi/2, p2 = -dphi/2;
+    line(ctx,x0,mid,x1,mid,css("--grid"),1);
+    const amp = Math.abs(Math.cos(dphi/2));
+    line(ctx,x0,mid-2*A*amp,x1,mid-2*A*amp,css("--grid"),1,[4,4]);
+    line(ctx,x0,mid+2*A*amp,x1,mid+2*A*amp,css("--grid"),1,[4,4]);
+    curve(ctx,x0,x1,X=>mid-A*Math.cos(k*(X-x0)-wt+p1),css("--volt"),1.5);
+    curve(ctx,x0,x1,X=>mid-A*Math.cos(k*(X-x0)-wt+p2),css("--curr"),1.5);
+    curve(ctx,x0,x1,X=>mid-A*(Math.cos(k*(X-x0)-wt+p1)+Math.cos(k*(X-x0)-wt+p2)),css("--fund"),3);
+  }
+  function calc(){
+    const p = +dI.value, dphi = p*Math.PI/12, sm = Math.max(0,numIn("smI",4));
+    dO.innerHTML = piStr(p,12);
+    const c = Math.cos(dphi/2), amp = 2*sm*Math.abs(c);
+    let v;
+    if(p%24===0) v = '<span class="verdict ok">Constructive · Δφ = 2mπ, m = '+(p/24)+'</span>';
+    else if(p%24===12) v = '<span class="verdict no">Destructive · Δφ = (2m + 1)π, m = '+((p-12)/24)+'</span>';
+    else v = '<span class="verdict mid">Partial</span>';
+    rd.innerHTML = v+'amplitude = 2s<sub>m</sub>|cos('+F('Δφ','2')+')| = 2('+sig(sm)+')|cos('+piStr(p,24)+')| = 2('+sig(sm)+')('+fmt(Math.abs(c),3)+') = <b>'+fmt(amp,2)+' μm</b>';
+    draw();
+  }
+  dI.addEventListener("input", calc); document.getElementById("smI").addEventListener("input", calc);
+  playBtn(document.getElementById("intPlay"), a);
+  calc();
+})();
+
+/* ---------------- §9 PATH DIFFERENCE ---------------- */
+(function(){
+  const cv = document.getElementById("pathCv"), kv = document.getElementById("pathKV"), steps = document.getElementById("pathSteps");
+  const L2r = document.getElementById("pL2r"), L2i = document.getElementById("pL2"), L1i = document.getElementById("pL1");
+  const a = register({el:cv, playing:!reduceMotion, t:0, draw});
+  let S = {};
+  function draw(){
+    const {ctx,w,h} = prep(cv);
+    const {lam, L1, L2} = S; if(!lam) return;
+    const dL = L1-L2, xS2 = dL, xmin = Math.min(0, xS2), xmax = L1;
+    const X0 = 30, X1 = w-30, sc = (X1-X0)/Math.max(1e-6,(xmax-xmin)), px = x=>X0+(x-xmin)*sc;
+    const mid = h/2-6, A = (h/2-34)*0.9, k = 2*Math.PI/lam, wt = 2*Math.PI*a.t*0.4;
+    const ink = css("--ink"), mut = css("--muted");
+    line(ctx,X0-10,mid,X1+14,mid,mut,1.2);
+    txt(ctx,"x",X1+20,mid,mut,"left",11);
+    const cyc = (xmax-xmin)/lam;
+    if(cyc>60){ txt(ctx,"wavelength too small to draw at this scale",(X0+X1)/2,24,mut,"center",11); }
+    else {
+      curve(ctx,px(0),px(L1),X=>{ const x = xmin+(X-X0)/sc; return mid-A*Math.cos(k*(x-0)-wt); },css("--volt"),2);
+      curve(ctx,px(xS2),px(L1),X=>{ const x = xmin+(X-X0)/sc; return mid-A*Math.cos(k*(x-xS2)-wt); },css("--curr"),2);
+    }
+    dot(ctx,px(0),mid,5,css("--volt")); txt(ctx,"S₁",px(0),mid+16,ink,"center",12,"600");
+    dot(ctx,px(xS2),mid,5,css("--curr")); txt(ctx,"S₂",px(xS2),mid+(Math.abs(xS2)*sc<20?30:16),ink,"center",12,"600");
+    dot(ctx,px(L1),mid,5,ink); txt(ctx,"P",px(L1),mid+16,ink,"center",12,"600");
+    // brackets
+    const yb1 = h-26, yb2 = h-10;
+    line(ctx,px(0),yb1,px(L1),yb1,mut,1); txt(ctx,"L₁",(px(0)+px(L1))/2,yb1-8,mut,"center",11);
+    line(ctx,px(xS2),yb2,px(L1),yb2,mut,1); txt(ctx,"L₂",(px(xS2)+px(L1))/2,yb2-8,mut,"center",11);
+  }
+  function calc(){
+    const v = Math.max(1e-6,numIn("pV",343)), f = Math.max(1e-6,numIn("pF",343)), L1 = Math.max(0,numIn("pL1",3)), L2 = Math.max(0,numIn("pL2",2));
+    L2r.max = Math.max(L1*1.2, L2).toFixed(2);
+    const lam = v/f, dL = L1-L2, q = dL/lam, dphi = 2*Math.PI*q, fac = 2*Math.abs(Math.cos(dphi/2));
+    S = {lam, L1, L2};
+    const aq = Math.abs(q), rq = Math.round(aq), d = Math.abs(aq-rq);
+    let verdict;
+    if(d<0.005) verdict = '<span class="verdict ok">Constructive · ΔL = mλ, m = '+rq+'</span>';
+    else if(Math.abs(d-0.5)<0.005) verdict = '<span class="verdict no">Destructive · ΔL = (m + '+F(1,2)+')λ, m = '+Math.floor(aq)+'</span>';
+    else verdict = '<span class="verdict mid">Partial</span>';
+    kv.innerHTML = '<div>λ = '+F('v','f')+'<b>'+sig(lam)+' m</b></div><div>ΔL = L<sub>1</sub> − L<sub>2</sub><b>'+sig(dL)+' m</b></div><div>'+F('ΔL','λ')+'<b>'+fmt(q,3)+'</b></div><div>Δφ<b>'+fmt(2*q,3)+'π rad</b></div><div>amplitude at P<b>'+fmt(fac,3)+' s<sub>m</sub></b></div>';
+    steps.innerHTML =
+      '<div><span class="c">wavelength:</span> λ = '+F(sig(v),sig(f))+' = '+sig(lam)+' m</div>'+
+      '<div><span class="c">path difference:</span> ΔL = '+sig(L1)+' − '+sig(L2)+' = '+sig(dL)+' m &nbsp; ⟹ &nbsp; '+F('ΔL','λ')+' = '+F(sig(dL),sig(lam))+' = '+fmt(q,3)+'</div>'+
+      '<div><span class="c">phase:</span> Δφ = '+F('2π','λ')+'ΔL = '+fmt(2*q,3)+'π rad = '+fmt(dphi,3)+' rad</div>'+
+      '<div><span class="c">amplitude:</span> 2s<sub>m</sub>|cos('+F('Δφ','2')+')| = '+fmt(fac,3)+' s<sub>m</sub> &nbsp; '+verdict+'</div>';
+    draw();
+  }
+  ["pV","pF","pL1"].forEach(id=>document.getElementById(id).addEventListener("input", calc));
+  L2i.addEventListener("input", ()=>{ L2r.value = L2i.value; calc(); });
+  L2r.addEventListener("input", ()=>{ L2i.value = (+L2r.value).toFixed(2); calc(); });
+  calc();
+})();
+
+/* redraw on resize and theme change */
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz = setTimeout(()=>anims.forEach(a=>a.draw()), 120); });
+if(window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=>anims.forEach(a=>a.draw()));
+new MutationObserver(()=>anims.forEach(a=>a.draw())).observe(document.documentElement,{attributes:true, attributeFilter:["data-theme"]});
+requestAnimationFrame(loop);
+
+})();
+</script>
+
+</body></html>

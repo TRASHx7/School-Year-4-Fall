@@ -1,0 +1,1564 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Beats, Doppler and Fringes Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky contents sidebar with live quiz scores, single reading column with demos inline (same system as the earlier guides). */
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF;
+  --inc:#1D5FC2; --ref:#23804D; --trn:#8A3FB8; --warm:#C24E12; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --scr-dark:#12161B; --scr-lite:#FFF4D6;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+    --inc:#78AAFF; --ref:#5CC48A; --trn:#C79BEB; --warm:#F0935A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+  --inc:#78AAFF; --ref:#5CC48A; --trn:#C79BEB; --warm:#F0935A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+.tally{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px 14px; display:grid; gap:6px}
+.tally .row{display:flex; justify-content:space-between; gap:8px; font-size:13px}
+.tally .row b{font-family:var(--mono); font-weight:600; font-size:13px}
+.tally .bar{height:6px; border-radius:99px; background:var(--surface-2); overflow:hidden}
+.tally .bar i{display:block; height:100%; width:0; background:var(--good)}
+.tally .btn{justify-self:start; margin-top:4px; font-size:12px; padding:4px 10px}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap; padding:3px 0}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+.frac .frac{font-size:.92em}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:8px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:middle}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 10px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+.dstep{display:grid; grid-template-columns:28px minmax(0,1fr); gap:4px 10px; align-items:start; margin-bottom:12px}
+.dstep .n{font-family:var(--mono); font-size:12px; color:var(--accent); padding-top:6px}
+.dstep .m{overflow-x:auto; line-height:2}
+.dstep .m .why{display:block; font-size:15px; color:var(--muted); line-height:1.5}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .dnote{font-family:var(--display); font-size:12.5px; color:var(--muted); margin:-4px 0 8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:96px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls label[hidden]{display:none}
+.controls output{font-family:var(--mono); font-size:13px; min-width:52px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.8}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden; flex-wrap:wrap}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--body); font-size:16px; line-height:2.1; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:8px}
+.steps .ans{font-weight:600; color:var(--accent)}
+.presets{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; align-items:center}
+.presets span{font-family:var(--display); font-size:12.5px; color:var(--muted)}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px; line-height:1.9}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:center; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.6; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted)}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2); line-height:1.9}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.expl .rev{display:block; font-family:var(--display); font-size:13px; font-weight:700; color:var(--accent); margin-top:4px}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px; min-width:0}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:2.1; overflow-x:auto}
+.sheet .card div span.l{display:block; white-space:nowrap}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+a{color:var(--accent)}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="tally" aria-live="polite">
+    <div class="row"><span>Section quizzes</span><b id="tSec">0 / 0</b></div>
+    <div class="bar"><i id="tSecBar"></i></div>
+    <div class="row"><span>Final exam</span><b id="tFin">not started</b></div>
+    <button type="button" class="btn" id="clearAll">Clear all answers</button>
+  </div>
+  <h2>Part 1 · Reflection and resonance</h2>
+  <ol>
+    <li><a href="#s1">1 Waves at a boundary <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 Standing wave ratio <span class="chip" data-chip="q2"></span></a></li>
+    <li><a href="#s3">3 Resonance in a pipe <span class="chip" data-chip="q3"></span></a></li>
+  </ol>
+  <h2>Part 2 · Beats</h2>
+  <ol>
+    <li><a href="#s4">4 Adding two frequencies <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 Beat frequency <span class="chip" data-chip="q5"></span></a></li>
+  </ol>
+  <h2>Part 3 · Doppler effect</h2>
+  <ol>
+    <li><a href="#s6">6 Moving detector <span class="chip" data-chip="q6"></span></a></li>
+    <li><a href="#s7">7 General equation <span class="chip" data-chip="q7"></span></a></li>
+  </ol>
+  <h2>Part 4 · Coherence and interference</h2>
+  <ol>
+    <li><a href="#s8">8 Coherent waves <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Young's double slit <span class="chip" data-chip="q9"></span></a></li>
+    <li><a href="#s10">10 Fringe positions <span class="chip" data-chip="q10"></span></a></li>
+    <li><a href="#s11">11 Fringe intensity <span class="chip" data-chip="q11"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">PHYS 365 · Lecture 7 · Study guide</div>
+  <h1>When waves meet: standing waves, beats, Doppler shifts and Young's fringes</h1>
+  <p class="lede">Every topic in this lecture is the same move: put two waves in the same place and add them. What changes is <b>what is different</b> between the two waves. Opposite directions give standing waves. Slightly different frequencies give beats. A fixed phase difference gives bright and dark fringes. The Doppler effect explains how motion changes the frequency you receive in the first place.</p>
+  <div class="chain" aria-label="Lecture road map">
+    <div class="blk"><b>Opposite directions</b><span>incident + reflected</span><span class="secs">§1 to §3</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Different frequencies</b><span>f<sub>1</sub> ≠ f<sub>2</sub> gives beats</span><span class="secs">§4, §5</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Motion</b><span>shifts the frequency heard</span><span class="secs">§6, §7</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Fixed phase difference</b><span>coherent light, fringes</span><span class="secs">§8 to §11</span></div>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · Reflection and resonance</h2>
+
+<!-- 1 BOUNDARY -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>A wave hits a boundary</h3>
+<p>Send a <b>continuous</b> traveling wave toward a boundary (the end of a string, a change of medium, the end of a pipe). Part of it continues through as the <b>transmitted</b> wave. Part of it bounces back as the <b>reflected</b> wave.</p>
+<p>Because the incident wave keeps arriving, the reflected wave has to travel back <b>through</b> it. On the incident side there are now two waves in the same place, going in opposite directions, and they add together. That adding is <b>interference</b>, and it's the whole reason the rest of this lecture exists.</p>
+<div class="eq">
+  <span class="row">incident side: <i>y</i> = <i>y</i><sub>incident</sub> + <i>y</i><sub>reflected</sub> <span class="note">two waves, interfering</span></span>
+  <span class="row">far side: <i>y</i> = <i>y</i><sub>transmitted</sub> <span class="note">one wave, no interference</span></span>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a rope tied to a wall</span>
+<p>Tie a rope to a wall and keep shaking your end. Each wiggle runs to the wall and bounces back toward you, right through the wiggles you're still sending. Some spots on the rope end up shaking hard, others barely move. That stationary pattern of "shakes a lot" and "barely moves" is what the reflected wave creates.</p>
+</div>
+
+<div class="demo" id="swDemo">
+  <div class="dtitle">Try it: change how much of the wave reflects</div>
+  <div class="dnote">Boundary on the right. Incident amplitude y<sub>m,i</sub> = 1. The dashed outline is the envelope: the biggest swing each point ever reaches.</div>
+  <canvas id="cvSW" height="230" aria-label="Incident, reflected and total wave on the incident side of a boundary, with the envelope"></canvas>
+  <div class="legend"><span><i style="background:var(--inc)"></i>incident</span><span><i style="background:var(--ref)"></i>reflected</span><span><i style="background:var(--ink)"></i>total (what you see)</span><span><i style="background:var(--warm)"></i>envelope</span></div>
+  <div class="controls">
+    <label for="swR">reflection r <input id="swR" type="range" min="0" max="1" step="0.01" value="0.5"><output id="swROut">0.50</output></label>
+    <label><input id="swParts" type="checkbox" checked> show the two parts</label>
+    <button class="btn" type="button" id="swPlay">Pause</button>
+  </div>
+  <div class="readout" id="swRead"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The lecture's sketch is one frozen moment</b> ("single frame/instance"). In reality all three waves move. What you can measure is the <b>envelope</b>: the biggest swing at each point over time. That's what §2 is built on.</li>
+<li><b>Interference only happens on the incident side.</b> The transmitted wave is alone on its side, so it is an ordinary traveling wave.</li>
+<li><b>If nothing reflects (r = 0)</b>, the envelope is flat: every point swings the same amount. Slide r to 0 above and the dashed lines go straight.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: waves at a boundary"></div>
+</section>
+
+<!-- 2 SWR -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>Standing wave ratio (SWR)</h3>
+<p>Where the incident and reflected waves arrive in step, their amplitudes add: the swing is <b>y<sub>m,i</sub> + y<sub>m,r</sub></b> (maximum amplitude). Where they arrive opposite, they subtract: <b>y<sub>m,i</sub> − y<sub>m,r</sub></b> (minimum amplitude). The SWR is simply the ratio of the two:</p>
+<div class="eq">
+  <span class="row">SWR = <span class="frac"><span><i>y</i><sub>m,i</sub> + <i>y</i><sub>m,r</sub></span><span><i>y</i><sub>m,i</sub> − <i>y</i><sub>m,r</sub></span></span> <span class="note">max amplitude over min amplitude</span></span>
+  <span class="row">SWR = <span class="frac"><span>1 + <i>r</i></span><span>1 − <i>r</i></span></span>, &nbsp; <i>r</i> = <span class="frac"><span><i>y</i><sub>m,r</sub></span><span><i>y</i><sub>m,i</sub></span></span> <span class="note">amplitude reflection coefficient</span></span>
+  <span class="row">SWR = <span class="frac"><span>1 + √<i>R</i></span><span>1 − √<i>R</i></span></span>, &nbsp; <i>R</i> = <i>r</i><sup>2</sup> <span class="note">power reflection coefficient</span></span>
+</div>
+<p><b>Limits.</b> Total reflection: as r → 1, SWR → ∞ (the minimum amplitude is zero, so there are true nodes). No reflection: as r → 0, SWR → 1 (max equals min, no pattern at all). So <b>1 ≤ SWR &lt; ∞</b>, and a smaller SWR means less reflection.</p>
+
+<details class="work" open><summary>Worked derivation: from amplitudes to r and R (lecture pages 2 to 4)</summary><div class="body">
+<div class="dstep"><span class="n">1</span><div class="m">SWR = <span class="frac"><span><i>y</i><sub>m,i</sub> + <i>y</i><sub>m,r</sub></span><span><i>y</i><sub>m,i</sub> − <i>y</i><sub>m,r</sub></span></span><span class="why">Start from the definition: max amplitude over min amplitude.</span></div></div>
+<div class="dstep"><span class="n">2</span><div class="m">SWR = <span class="frac"><span>1 + <span class="frac"><span><i>y</i><sub>m,r</sub></span><span><i>y</i><sub>m,i</sub></span></span></span><span>1 − <span class="frac"><span><i>y</i><sub>m,r</sub></span><span><i>y</i><sub>m,i</sub></span></span></span></span><span class="why">Divide the top and the bottom by y<sub>m,i</sub>. The value doesn't change.</span></div></div>
+<div class="dstep"><span class="n">3</span><div class="m">SWR = <span class="frac"><span>1 + <i>r</i></span><span>1 − <i>r</i></span></span><span class="why">Name the ratio of reflected to incident amplitude r.</span></div></div>
+<div class="dstep"><span class="n">4</span><div class="m"><i>R</i> = <i>r</i><sup>2</sup> &nbsp;→&nbsp; <i>r</i> = √<i>R</i> &nbsp;→&nbsp; SWR = <span class="frac"><span>1 + √<i>R</i></span><span>1 − √<i>R</i></span></span><span class="why">Power goes as amplitude squared, so the power coefficient R is r squared. Substitute r = √R.</span></div></div>
+<div class="dstep"><span class="n">5</span><div class="m">r → 1: SWR → ∞ &nbsp;·&nbsp; r → 0: SWR → 1<span class="why">The two limits from page 3.</span></div></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy · loud and quiet spots in an echoey room</span>
+<p>Play a steady tone toward a wall and walk around. If the wall absorbs everything (no echo), it sounds equally loud everywhere: ratio 1. If the wall is a perfect mirror, some spots go completely silent: the ratio of loudest to quietest is infinite. The SWR is that loudest-to-quietest ratio, so it tells you how strong the echo is without measuring the echo directly.</p>
+</div>
+
+<div class="demo" id="swrCalc">
+  <div class="dtitle">Calculator: SWR from whatever you're given</div>
+  <div class="dnote">Loads with y<sub>m,i</sub> = 5 mm and y<sub>m,r</sub> = 2 mm (example values; the lecture has no numerical example here). Use the presets to reproduce the lecture's two limits.</div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="What you know">
+      <button type="button" data-swm="amp" aria-pressed="true">Amplitudes</button>
+      <button type="button" data-swm="r" aria-pressed="false">r</button>
+      <button type="button" data-swm="R" aria-pressed="false">R</button>
+      <button type="button" data-swm="swr" aria-pressed="false">Measured SWR</button>
+    </div>
+  </div>
+  <div class="controls">
+    <label for="swYi" data-for="amp">y<sub>m,i</sub> <input id="swYi" type="number" value="5" min="0" step="0.1"></label>
+    <label for="swYr" data-for="amp">y<sub>m,r</sub> <input id="swYr" type="number" value="2" min="0" step="0.1"></label>
+    <label for="swr" data-for="r" hidden>r <input id="swr" type="number" value="0.5" min="0" max="1" step="0.01"></label>
+    <label for="swRR" data-for="R" hidden>R <input id="swRR" type="number" value="0.36" min="0" max="1" step="0.01"></label>
+    <label for="swS" data-for="swr" hidden>SWR <input id="swS" type="number" value="3" min="1" step="0.1"></label>
+  </div>
+  <div class="presets"><span>Lecture limits:</span><button type="button" class="btn" id="swP0">r → 0</button><button type="button" class="btn" id="swP1">r → 1</button></div>
+  <div class="steps" id="swSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>r or R?</b> r compares <b>amplitudes</b>; R compares <b>powers</b>. If a problem says "25% of the power reflects", that's R = 0.25, so r = 0.5, not 0.25. Using R where r belongs is the most common mistake here.</li>
+<li><b>Going backwards</b> (you measure SWR, they ask for r): rearrange SWR = <span class="frac"><span>1 + <i>r</i></span><span>1 − <i>r</i></span></span> to get <i>r</i> = <span class="frac"><span>SWR − 1</span><span>SWR + 1</span></span>.</li>
+<li><b>SWR has no units</b> and can never be below 1. If you get 0.6, you've flipped the fraction.</li>
+<li>The lecture's picture draws max and min as full top-to-bottom heights. Using peak-to-peak or peak values gives the same ratio, because the factor of 2 cancels.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: standing wave ratio"></div>
+</section>
+
+<!-- 3 RESONANCE -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>Resonance in an open pipe</h3>
+<p>A speaker plays a sound at frequency f into a pipe of length L that is open at both ends. The sound reflects off the open ends and travels back and forth. At most frequencies the reflections arrive out of step and mostly cancel. At special frequencies, the <b>normal mode frequencies</b> of the pipe, every reflection lines up with the next push and the amplitude grows to a maximum. That's resonance.</p>
+<div class="eq">
+  <span class="row"><i>f</i><sub>n</sub> = <span class="frac"><span><i>n v</i></span><span>2<i>L</i></span></span> = <i>n f</i><sub>1</sub>, &nbsp; n = 1, 2, 3, … <span class="note">open pipe harmonics</span></span>
+  <span class="row"><i>f</i><sub>1</sub> = <span class="frac"><span><i>v</i></span><span>2<i>L</i></span></span> <span class="note">fundamental; v is the speed of sound</span></span>
+</div>
+<p><b>Where the formula comes from.</b> An open end is a place where the air moves freely (a displacement antinode). With an antinode at each end, the pipe must hold a whole number of half wavelengths: <i>L</i> = <span class="frac"><span><i>n λ</i></span><span>2</span></span>, so <i>λ</i> = <span class="frac"><span>2<i>L</i></span><span><i>n</i></span></span> and <i>f</i> = <span class="frac"><span><i>v</i></span><span><i>λ</i></span></span> = <span class="frac"><span><i>n v</i></span><span>2<i>L</i></span></span>.</p>
+
+<div class="callout analogy"><span class="tag">Analogy · pushing a swing</span>
+<p>Push a swing at random moments and it hardly moves; some pushes fight the motion. Push once per swing, in rhythm, and every push adds to the last. The pipe is the swing, the speaker is your hand, and f<sub>1</sub>, 2f<sub>1</sub>, 3f<sub>1</sub>… are the rhythms that work.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: sweep the speaker frequency</div>
+  <div class="dnote">Loads with L = 0.50 m and v = 343 m/s (example values), with the speaker on f<sub>1</sub>. The top plot is the amplitude y<sub>m</sub> versus f, like the lecture's sketch on page 5.</div>
+  <canvas id="cvRes" height="300" aria-label="Pipe response curve versus speaker frequency, and the standing wave inside the pipe"></canvas>
+  <div class="controls">
+    <label for="resF">speaker f <input id="resF" type="range" min="40" max="2000" step="1" value="343"><output id="resFOut">343 Hz</output></label>
+    <label for="resL">L (m) <input id="resL" type="number" value="0.50" min="0.1" max="3" step="0.01"></label>
+    <label for="resV">v (m/s) <input id="resV" type="number" value="343" min="1" step="1"></label>
+  </div>
+  <div class="presets"><span>Jump to:</span><button class="btn" type="button" data-resn="1">f<sub>1</sub></button><button class="btn" type="button" data-resn="2">f<sub>2</sub></button><button class="btn" type="button" data-resn="3">f<sub>3</sub></button><button class="btn" type="button" data-resn="1.5">between f<sub>1</sub> and f<sub>2</sub></button></div>
+  <div class="readout" id="resRead" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Notation clash.</b> The lecture writes f<sub>n</sub> = nf, where that f means the <b>fundamental</b> f<sub>1</sub>, not the speaker's frequency. Write f<sub>1</sub> in your own work to avoid mixing them up.</li>
+<li><b>Open at both ends means every n works</b> (1, 2, 3, …). On an exam, check the setup: a pipe closed at one end is a different case (only odd harmonics), and this formula doesn't apply to it.</li>
+<li><b>Length up, frequency down.</b> f<sub>1</sub> is proportional to <span class="frac"><span>1</span><span><i>L</i></span></span>. Doubling L halves every resonant frequency.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: resonance"></div>
+</section>
+
+<h2 class="part">Part 2 · Beats</h2>
+
+<!-- 4 SUPERPOSITION -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Adding two waves with different frequencies</h3>
+<p>Two sources play at slightly different frequencies f<sub>1</sub> and f<sub>2</sub>, with the <b>same amplitude</b>. At your ear they add. Sometimes they're in step (loud), sometimes opposite (quiet), and the sound rises and falls in intensity. Those swells are <b>beats</b>.</p>
+<p>The lecture looks at one fixed position, so each wave only depends on time:</p>
+<div class="eq">
+  <span class="row"><i>s</i><sub>1</sub> = <i>s</i><sub>m</sub> cos(<i>ω</i><sub>1</sub><i>t</i>), &nbsp; <i>s</i><sub>2</sub> = <i>s</i><sub>m</sub> cos(<i>ω</i><sub>2</sub><i>t</i>)</span>
+  <span class="row"><i>s</i><sub>R</sub> = [2<i>s</i><sub>m</sub> cos(<i>ω′t</i>)] cos(<i>ωt</i>)</span>
+  <span class="row"><i>ω′</i> = <span class="frac"><span>1</span><span>2</span></span>(<i>ω</i><sub>1</sub> − <i>ω</i><sub>2</sub>), &nbsp; <i>ω</i> = <span class="frac"><span>1</span><span>2</span></span>(<i>ω</i><sub>1</sub> + <i>ω</i><sub>2</sub>)</span>
+</div>
+<p>Read the result as a fast wave, cos(ωt), at the <b>average</b> frequency, whose amplitude 2s<sub>m</sub>cos(ω′t) slowly swells and shrinks. The lecture calls that slow part <b>s′<sub>R,m</sub>, the time-dependent amplitude</b>.</p>
+
+<details class="work" open><summary>Worked derivation: the resultant wave (lecture page 7)</summary><div class="body">
+<div class="dstep"><span class="n">1</span><div class="m"><i>s</i><sub>R</sub> = <i>s</i><sub>1</sub> + <i>s</i><sub>2</sub> = <i>s</i><sub>m</sub>[cos(<i>ω</i><sub>1</sub><i>t</i>) + cos(<i>ω</i><sub>2</sub><i>t</i>)]<span class="why">Superposition: add the two waves. Same amplitude, so s<sub>m</sub> factors out.</span></div></div>
+<div class="dstep"><span class="n">2</span><div class="m">cos <i>α</i> + cos <i>β</i> = 2 cos<span style="font-size:1.4em">(</span><span class="frac"><span><i>α</i> − <i>β</i></span><span>2</span></span><span style="font-size:1.4em">)</span> cos<span style="font-size:1.4em">(</span><span class="frac"><span><i>α</i> + <i>β</i></span><span>2</span></span><span style="font-size:1.4em">)</span><span class="why">The sum-to-product identity (boxed on page 7). Use α = ω<sub>1</sub>t and β = ω<sub>2</sub>t.</span></div></div>
+<div class="dstep"><span class="n">3</span><div class="m"><i>s</i><sub>R</sub> = 2<i>s</i><sub>m</sub> cos[<span class="frac"><span>1</span><span>2</span></span>(<i>ω</i><sub>1</sub> − <i>ω</i><sub>2</sub>)<i>t</i>] cos[<span class="frac"><span>1</span><span>2</span></span>(<i>ω</i><sub>1</sub> + <i>ω</i><sub>2</sub>)<i>t</i>]<span class="why">Substitute. The t factors out of each bracket.</span></div></div>
+<div class="dstep"><span class="n">4</span><div class="m"><i>s</i><sub>R</sub> = [2<i>s</i><sub>m</sub> cos(<i>ω′t</i>)] cos(<i>ωt</i>)<span class="why">Name the half-difference ω′ and the half-sum ω. The bracket is s′<sub>R,m</sub>, the time-dependent amplitude.</span></div></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy · two people walking side by side</span>
+<p>Two friends walk together, one taking slightly quicker steps. Their footsteps fall together, drift apart until they alternate, then drift back together. You hear "in step, out of step, in step" at a slow, steady rhythm. The steps themselves are the fast wave; the drifting in and out of step is the beat.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: two waves and their sum (slowed down so you can see it)</div>
+  <div class="dnote">Loads with f<sub>1</sub> = 22 Hz and f<sub>2</sub> = 18 Hz over a 1 s window, so you should count 4 beats.</div>
+  <canvas id="cvBeat" height="300" aria-label="Wave 1, wave 2, and their sum with its slowly varying envelope"></canvas>
+  <div class="legend"><span><i style="background:var(--inc)"></i>s<sub>1</sub></span><span><i style="background:var(--ref)"></i>s<sub>2</sub></span><span><i style="background:var(--ink)"></i>s<sub>R</sub> = s<sub>1</sub> + s<sub>2</sub></span><span><i style="background:var(--warm)"></i>±2s<sub>m</sub>cos(ω′t)</span></div>
+  <div class="controls">
+    <label for="bF1">f<sub>1</sub> <input id="bF1" type="range" min="5" max="40" step="0.5" value="22"><output id="bF1Out">22 Hz</output></label>
+    <label for="bF2">f<sub>2</sub> <input id="bF2" type="range" min="5" max="40" step="0.5" value="18"><output id="bF2Out">18 Hz</output></label>
+  </div>
+  <div class="readout" id="bRead" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Which cosine is the "amplitude"?</b> The slow one, cos(ω′t), because ω′ is much smaller than ω. It changes so slowly that over a few fast wiggles it looks like a size, not a wave.</li>
+<li><b>The identity's order doesn't matter.</b> cos is even, so cos(<span class="frac"><span><i>α</i> − <i>β</i></span><span>2</span></span>) = cos(<span class="frac"><span><i>β</i> − <i>α</i></span><span>2</span></span>). You can subtract either way.</li>
+<li><b>Equal amplitudes matter.</b> With equal amplitudes the sound drops to exactly zero between beats. With unequal amplitudes the beats still happen but never reach full silence.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: adding two frequencies"></div>
+</section>
+
+<!-- 5 BEAT FREQUENCY -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>Beat frequency and beat period</h3>
+<p>The tone you hear has the average frequency. The loudness swells at the beat frequency.</p>
+<div class="eq">
+  <span class="row"><i>f</i> = <span class="frac"><span><i>f</i><sub>1</sub> + <i>f</i><sub>2</sub></span><span>2</span></span> <span class="note">the pitch you hear</span></span>
+  <span class="row"><i>f′</i> = <span class="frac"><span><i>f</i><sub>1</sub> − <i>f</i><sub>2</sub></span><span>2</span></span>, &nbsp; <i>T′</i> = <span class="frac"><span>1</span><span><i>f′</i></span></span> <span class="note">frequency and period of cos(ω′t)</span></span>
+  <span class="row"><i>T</i><sub>beat</sub> = <span class="frac"><span><i>T′</i></span><span>2</span></span>, &nbsp; <i>f</i><sub>beat</sub> = 2<i>f′</i> = <i>f</i><sub>1</sub> − <i>f</i><sub>2</sub> <span class="note">number of beats ÷ time taken</span></span>
+</div>
+<p><b>Why the factor of 2?</b> The ear hears loudness, which depends on the size of the swing, not its sign. The envelope 2s<sub>m</sub>cos(ω′t) reaches its biggest size twice per cycle: once at +2s<sub>m</sub> and once at −2s<sub>m</sub>. So one full envelope period T′ contains <b>two</b> beats. The lecture's page 8 figure shows this: T′ spans two loud bulges, and the boxed "one beat" is a single bulge.</p>
+
+<details class="work" open><summary>Worked derivation: beat period and frequency (lecture pages 8 and 9)</summary><div class="body">
+<div class="dstep"><span class="n">1</span><div class="m"><i>s</i><sub>R,m</sub>(<i>t</i>) = 2<i>s</i><sub>m</sub> cos(<i>ω′t</i>)<span class="why">The time-dependent amplitude from §4.</span></div></div>
+<div class="dstep"><span class="n">2</span><div class="m"><i>ω′</i> = <span class="frac"><span><i>ω</i><sub>1</sub> − <i>ω</i><sub>2</sub></span><span>2</span></span> &nbsp;→&nbsp; <i>f′</i> = <span class="frac"><span><i>ω′</i></span><span>2π</span></span> = <span class="frac"><span><i>f</i><sub>1</sub> − <i>f</i><sub>2</sub></span><span>2</span></span><span class="why">Divide by 2π to turn angular frequency into ordinary frequency.</span></div></div>
+<div class="dstep"><span class="n">3</span><div class="m"><i>T</i><sub>beat</sub> = <span class="frac"><span><i>T′</i></span><span>2</span></span><span class="why">Two loudness peaks per envelope cycle.</span></div></div>
+<div class="dstep"><span class="n">4</span><div class="m"><i>f</i><sub>beat</sub> = <span class="frac"><span>1</span><span><i>T</i><sub>beat</sub></span></span> = 2<i>f′</i> = <i>f</i><sub>1</sub> − <i>f</i><sub>2</sub><span class="why">Half the period means double the frequency.</span></div></div>
+<div class="dstep"><span class="n">5</span><div class="m"><i>f</i> = <span class="frac"><span><i>ω</i></span><span>2π</span></span> = <span class="frac"><span><i>f</i><sub>1</sub> + <i>f</i><sub>2</sub></span><span>2</span></span><span class="why">The fast wave inside oscillates at the average frequency (page 8).</span></div></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy · two clocks ticking</span>
+<p>One clock ticks 442 times a minute, another 440. Every so often their ticks land together. How often? As often as the faster clock "gains a tick" on the slower one: 442 − 440 = 2 times a minute. The beat frequency is just the difference in rates.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Calculator: beats from two frequencies</div>
+  <div class="dnote">Loads with 442 Hz and 440 Hz (example values: a slightly sharp tuning fork against A440). Press play to hear 2 beats per second.</div>
+  <div class="controls">
+    <label for="bcF1">f<sub>1</sub> (Hz) <input id="bcF1" type="number" value="442" min="1" step="0.5"></label>
+    <label for="bcF2">f<sub>2</sub> (Hz) <input id="bcF2" type="number" value="440" min="1" step="0.5"></label>
+    <button class="btn" type="button" id="bcPlay">Play 4 s</button>
+  </div>
+  <div class="steps" id="bcSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>A slip in the notes.</b> Pages 8 and 9 write T′ = <span class="frac"><span><i>T</i><sub>1</sub> − <i>T</i><sub>2</sub></span><span>2</span></span>. Periods don't combine that way. The correct statement is in frequencies: <i>f′</i> = <span class="frac"><span><i>f</i><sub>1</sub> − <i>f</i><sub>2</sub></span><span>2</span></span>, so <i>T′</i> = <span class="frac"><span>2</span><span><i>f</i><sub>1</sub> − <i>f</i><sub>2</sub></span></span>. (Try 442 Hz and 440 Hz: the period formula gives about 5 microseconds, but you can clearly hear beats every 0.5 s.) The boxed results, T<sub>beat</sub> = <span class="frac"><span><i>T′</i></span><span>2</span></span> and f<sub>beat</sub> = f<sub>1</sub> − f<sub>2</sub>, are correct. Worth confirming with your instructor.</li>
+<li><b>Beat frequency is never negative.</b> Use f<sub>beat</sub> = |f<sub>1</sub> − f<sub>2</sub>|.</li>
+<li><b>Beats can't tell you which is higher.</b> 4 beats per second against 440 Hz means 436 Hz <i>or</i> 444 Hz. To decide, change one frequency slightly and see whether the beats speed up or slow down.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: beat frequency"></div>
+</section>
+
+<h2 class="part">Part 3 · Doppler effect</h2>
+
+<!-- 6 DOPPLER DETECTOR -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Doppler effect: a detector moving toward a source</h3>
+<p>The Doppler effect links <b>motion to a change in frequency</b>. The lecture builds it up with the simplest case: the source S sits still (v<sub>S</sub> = 0) and sends out wavefronts spaced one wavelength λ apart. The detector D runs toward it at speed v<sub>D</sub>. The wavefronts don't change, but the detector meets them more often, so it measures a higher frequency.</p>
+<div class="eq">
+  <span class="row"><i>f′</i> = <i>f</i> <span style="font-size:1.4em">[</span><span class="frac"><span><i>v</i> + <i>v</i><sub>D</sub></span><span><i>v</i></span></span><span style="font-size:1.4em">]</span> <span class="note">detector moving toward a stationary source</span></span>
+  <span class="row">v = wave speed · v<sub>S</sub> = source speed · v<sub>D</sub> = detector speed (all in m/s)</span>
+</div>
+
+<details class="work" open><summary>Worked derivation: counting wavefronts (lecture pages 10 to 12)</summary><div class="body">
+<div class="dstep"><span class="n">1</span><div class="m"><i>vt</i><span class="why">Distance the wavefront travels in time t.</span></div></div>
+<div class="dstep"><span class="n">2</span><div class="m"><i>v</i><sub>D</sub><i>t</i><span class="why">Distance the detector moves toward the source in time t.</span></div></div>
+<div class="dstep"><span class="n">3</span><div class="m"><i>vt</i> + <i>v</i><sub>D</sub><i>t</i><span class="why">Distance the wavefront travels <b>relative to the detector</b> in time t. They're closing in on each other, so the distances add.</span></div></div>
+<div class="dstep"><span class="n">4</span><div class="m"><span class="frac"><span><i>vt</i> + <i>v</i><sub>D</sub><i>t</i></span><span><i>λ</i></span></span><span class="why">Number of wavefronts the detector intercepts. Each one takes up a length λ.</span></div></div>
+<div class="dstep"><span class="n">5</span><div class="m"><i>f′</i> = <span class="frac"><span><span class="frac"><span><i>vt</i> + <i>v</i><sub>D</sub><i>t</i></span><span><i>λ</i></span></span></span><span><i>t</i></span></span> = <span class="frac"><span><i>v</i> + <i>v</i><sub>D</sub></span><span><i>λ</i></span></span><span class="why">Frequency is wavefronts per unit time, so divide by t. The t cancels.</span></div></div>
+<div class="dstep"><span class="n">6</span><div class="m"><i>λ</i> = <span class="frac"><span><i>v</i></span><span><i>f</i></span></span> &nbsp;∴&nbsp; <i>f′</i> = <i>f</i> <span style="font-size:1.4em">[</span><span class="frac"><span><i>v</i> + <i>v</i><sub>D</sub></span><span><i>v</i></span></span><span style="font-size:1.4em">]</span><span class="why">The stationary source sets λ. Substitute it in.</span></div></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy · walking into the rain</span>
+<p>Rain falls in a steady sheet blowing toward you. Stand still and a certain number of drops hit you each second. Walk into the rain and you hit more drops per second. The spacing between drops hasn't changed at all; you're just meeting them faster. That's exactly the moving-detector case.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Calculator: the wavefront count, step by step</div>
+  <div class="dnote">Loads with f = 500 Hz, v = 343 m/s, v<sub>D</sub> = 34.3 m/s toward the source and t = 1 s (example values). Change t and watch it cancel.</div>
+  <div class="controls">
+    <label for="dcF">f (Hz) <input id="dcF" type="number" value="500" min="1" step="1"></label>
+    <label for="dcV">v (m/s) <input id="dcV" type="number" value="343" min="1" step="1"></label>
+    <label for="dcVD">v<sub>D</sub> (m/s) <input id="dcVD" type="number" value="34.3" step="0.1"></label>
+    <label for="dcT">t (s) <input id="dcT" type="number" value="1" min="0.001" step="0.5"></label>
+  </div>
+  <div class="dnote" style="margin-top:8px">Positive v<sub>D</sub> means toward the source. Make it negative to move away.</div>
+  <div class="steps" id="dcSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>A moving detector doesn't change λ.</b> Only the source sets the wavelength. The detector changes how fast it meets the crests.</li>
+<li><b>Moving away flips the sign</b>: the detector now runs from the wavefronts, so the relative distance is vt − v<sub>D</sub>t and f′ = f <span class="frac"><span><i>v</i> − <i>v</i><sub>D</sub></span><span><i>v</i></span></span>.</li>
+<li><b>Speeds are measured relative to the air</b> (the medium), not relative to each other.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: moving detector"></div>
+</section>
+
+<!-- 7 GENERAL DOPPLER -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>The general Doppler equation</h3>
+<p>Here f is the frequency the detector would hear if <b>both detector and source were stationary</b> (the emitted frequency). Then, with either or both moving along the line joining them:</p>
+<div class="eq">
+  <span class="row"><i>f′</i> = <i>f</i> <span style="font-size:1.4em">[</span><span class="frac"><span><i>v</i> ± <i>v</i><sub>D</sub></span><span><i>v</i> ± <i>v</i><sub>S</sub></span></span><span style="font-size:1.4em">]</span></span>
+</div>
+<p><b>Sign convention:</b> choose each sign so that f′ goes <b>up for motion toward</b> and <b>down for motion away</b> (between source and detector). Detector toward: + on top. Source toward: − on the bottom (a smaller denominator makes f′ bigger).</p>
+<div class="tbl"><table>
+<thead><tr><th>Lecture page 14 case</th><th>Formula</th></tr></thead>
+<tbody>
+<tr><td>Source moves toward a still detector</td><td><i>f′</i> = <i>f</i> <span class="frac"><span><i>v</i></span><span><i>v</i> − <i>v</i><sub>S</sub></span></span></td></tr>
+<tr><td>Detector moves toward a still source</td><td><i>f′</i> = <i>f</i> <span class="frac"><span><i>v</i> + <i>v</i><sub>D</sub></span><span><i>v</i></span></span></td></tr>
+<tr><td>Both move toward each other</td><td><i>f′</i> = <i>f</i> <span class="frac"><span><i>v</i> + <i>v</i><sub>D</sub></span><span><i>v</i> − <i>v</i><sub>S</sub></span></span></td></tr>
+</tbody></table></div>
+
+<div class="callout analogy"><span class="tag">Analogy · a duck paddling across a pond</span>
+<p>A duck bobbing in place makes evenly spaced circular ripples. When it paddles forward, each new ripple starts a little further ahead, so the ripples bunch up in front of it (short wavelength, high frequency) and spread out behind (long wavelength, low frequency). A moving source squeezes the waves themselves. A moving detector, like the rain walker in §6, just meets unchanged waves faster.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: move the source and the detector</div>
+  <div class="dnote">Loads with f = 1000 Hz, v = 343 m/s and the source moving toward a still detector at 34.3 m/s (example values). Wavefronts are drawn slowed down; the presets match the three boxed cases on page 14.</div>
+  <canvas id="cvDop" height="240" aria-label="Wavefronts from a moving source reaching a detector"></canvas>
+  <div class="controls">
+    <label for="dpVS">v<sub>S</sub> <input id="dpVS" type="range" min="-250" max="250" step="0.1" value="34.3"><output id="dpVSOut"></output></label>
+    <label for="dpVD">v<sub>D</sub> <input id="dpVD" type="range" min="-250" max="250" step="0.1" value="0"><output id="dpVDOut"></output></label>
+    <label for="dpF">f (Hz) <input id="dpF" type="number" value="1000" min="1" step="1"></label>
+    <label for="dpV">v (m/s) <input id="dpV" type="number" value="343" min="260" step="1"></label>
+  </div>
+  <div class="presets"><span>Page 14 cases:</span>
+    <button class="btn" type="button" data-dp="34.3,0">Source toward</button>
+    <button class="btn" type="button" data-dp="0,34.3">Detector toward</button>
+    <button class="btn" type="button" data-dp="20,10">Both toward</button>
+    <button class="btn" type="button" data-dp="-34.3,0">Source away</button>
+    <button class="btn" type="button" id="dpPlay">Pause</button>
+  </div>
+  <div class="dnote" style="margin-top:8px">Positive means moving toward the other one; negative means moving away.</div>
+  <div class="steps" id="dpSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Don't memorize sign tables; use the rule.</b> Ask "does this motion bring them closer?" If yes, pick the sign that makes f′ bigger: + on top for the detector, − on the bottom for the source.</li>
+<li><b>Source motion and detector motion are not interchangeable.</b> At the same speed, a moving source gives a bigger shift than a moving detector (try both presets at 34.3 m/s: 1111 Hz versus 1100 Hz), because only source motion changes the wavelength.</li>
+<li><b>"Chasing" problems</b>: if the source follows a detector that's running away, the source moves toward (− on the bottom) and the detector moves away (− on top): f′ = f <span class="frac"><span><i>v</i> − <i>v</i><sub>D</sub></span><span><i>v</i> − <i>v</i><sub>S</sub></span></span>.</li>
+<li><b>The formula breaks as v<sub>S</sub> → v.</b> The denominator goes to zero: the source keeps up with its own wavefronts (a shock wave or sonic boom).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: general Doppler equation"></div>
+</section>
+
+<h2 class="part">Part 4 · Coherence and interference</h2>
+
+<!-- 8 COHERENCE -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>Coherent waves</h3>
+<p>Two waves are <b>coherent</b> if (a) they are <b>monochromatic</b> (one single frequency) and (b) there is a <b>constant phase relation</b> between them: in phase, out of phase, or something in between, but it doesn't change over time. Consider two coherent waves:</p>
+<div class="eq">
+  <span class="row"><i>y</i><sub>1</sub>(<i>x</i>,<i>t</i>) = <i>y</i><sub>m,1</sub> cos(<i>kx</i> − <i>ωt</i> + <i>φ</i><sub>1</sub>)</span>
+  <span class="row"><i>y</i><sub>2</sub>(<i>x</i>,<i>t</i>) = <i>y</i><sub>m,2</sub> cos(<i>kx</i> − <i>ωt</i> + <i>φ</i><sub>2</sub>)</span>
+  <span class="row">In phase: <i>φ</i><sub>1</sub> − <i>φ</i><sub>2</sub> = 2<i>n</i>π &nbsp;·&nbsp; Out of phase: <i>φ</i><sub>1</sub> − <i>φ</i><sub>2</sub> = (2<i>n</i> + 1)π</span>
+</div>
+
+<details class="work" open><summary>Worked derivation: the in-phase and out-of-phase conditions (lecture pages 16 and 17)</summary><div class="body">
+<div class="dstep"><span class="n">1</span><div class="m"><i>kx</i> − <i>ωt</i> + <i>φ</i><sub>1</sub> = <i>kx</i> − <i>ωt</i> + <i>φ</i><sub>2</sub><span class="why">Case I: in phase means the two phases are equal at every x and t.</span></div></div>
+<div class="dstep"><span class="n">2</span><div class="m"><i>φ</i><sub>1</sub> − <i>φ</i><sub>2</sub> = 0 + 2<i>n</i>π<span class="why">kx and ωt cancel. Phases that differ by a whole number of turns (2π each) are the same.</span></div></div>
+<div class="dstep"><span class="n">3</span><div class="m"><i>φ</i><sub>1</sub> − <i>φ</i><sub>2</sub> = 2<i>n</i>π<span class="why">Boxed result: crests line up with crests.</span></div></div>
+<div class="dstep"><span class="n">4</span><div class="m"><i>φ</i><sub>1</sub> − <i>φ</i><sub>2</sub> = (2<i>n</i> + 1)π<span class="why">Case II: out of phase means half a turn off (an odd multiple of π), so crests line up with troughs.</span></div></div>
+</div></details>
+
+<p><b>Why it matters for light (page 18).</b> To get an interference pattern on a screen, the light waves must be coherent: the phase difference must be <b>time-independent</b>. Laser light is coherent, so it makes a steady pattern. Ordinary light from a bulb is a jumble of waves whose phases change randomly and very fast, so no pattern forms.</p>
+
+<div class="callout analogy"><span class="tag">Analogy · a marching band versus a crowd</span>
+<p>A marching band steps in a fixed rhythm, so you can predict which feet land together: that's coherent. A crowd leaving a stadium also takes steps, but everyone's timing is random and keeps changing, so on average nothing lines up: that's incoherent. Interference needs the band, not the crowd.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: set the phase difference</div>
+  <div class="dnote">y<sub>m,1</sub> = 1. Loads in phase with unequal amplitudes, like the lecture's page 16 sketch.</div>
+  <canvas id="cvCoh" height="220" aria-label="Two waves and their sum for a chosen phase difference"></canvas>
+  <div class="legend"><span><i style="background:var(--inc)"></i>y<sub>1</sub></span><span><i style="background:var(--ref)"></i>y<sub>2</sub></span><span><i style="background:var(--ink)"></i>y<sub>1</sub> + y<sub>2</sub></span></div>
+  <div class="controls">
+    <label for="chP">φ<sub>1</sub> − φ<sub>2</sub> <input id="chP" type="range" min="0" max="4" step="0.05" value="0"><output id="chPOut">0π</output></label>
+    <label for="chA">y<sub>m,2</sub> <input id="chA" type="range" min="0" max="1.5" step="0.05" value="0.5"><output id="chAOut">0.50</output></label>
+    <label><input id="chInc" type="checkbox"> incoherent (random, changing phase)</label>
+  </div>
+  <div class="presets"><span>Cases:</span><button class="btn" type="button" data-ch="0">I · in phase (0)</button><button class="btn" type="button" data-ch="1">II · out of phase (π)</button><button class="btn" type="button" data-ch="2">2π</button><button class="btn" type="button" data-ch="3">3π</button></div>
+  <div class="readout" id="chRead" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>"Coherent" doesn't mean "in phase".</b> Out of phase by a fixed amount is still coherent. Coherence is about the phase difference staying <b>constant</b>.</li>
+<li><b>n can be any integer</b>, including negatives. 4π and −2π both mean in phase; 3π and −π both mean out of phase.</li>
+<li><b>Out of phase only gives complete cancellation if the amplitudes are equal.</b> With y<sub>m,1</sub> = 1 and y<sub>m,2</sub> = 0.5, the out-of-phase sum is 0.5, not 0.</li>
+<li><b>Why monochromatic?</b> Two different frequencies drift in and out of step (that's beats, §4). Their phase difference changes with time, so they can't be coherent.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: coherence"></div>
+</section>
+
+<!-- 9 YOUNG GEOMETRY -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Young's double-slit experiment</h3>
+<p>Coherent light hits a barrier with two narrow slits S<sub>1</sub> and S<sub>2</sub>, a distance d apart. Each slit acts as a new source, and the two waves overlap on a screen a distance D away. To reach a point P at angle θ, one wave travels a little further than the other. When D is much bigger than d, the two paths are nearly parallel and the extra distance is:</p>
+<div class="eq">
+  <span class="row">Δ<i>L</i> = <i>d</i> sin <i>θ</i> <span class="note">path length difference</span></span>
+  <span class="row">Bright (constructive, max): <i>d</i> sin <i>θ</i> = <i>mλ</i></span>
+  <span class="row">Dark (destructive, min): <i>d</i> sin <i>θ</i> = (<i>m</i> + <span class="frac"><span>1</span><span>2</span></span>)<i>λ</i></span>
+  <span class="row">m = 0, ±1, ±2, … <span class="note">m = 0 is the central bright fringe</span></span>
+</div>
+<p>The slits start the waves in phase, so the only thing that can put them out of step at P is the path difference. A whole number of wavelengths extra: they still arrive in step (bright). An extra half wavelength: they arrive opposite (dark).</p>
+
+<details class="work" open><summary>Worked geometry: why ΔL = d sin θ (lecture Young's page 1)</summary><div class="body">
+<div class="dstep"><span class="n">1</span><div class="m">Rays r<sub>1</sub> and r<sub>2</sub> to a far screen are nearly parallel.<span class="why">D is huge compared with d, so both rays leave the slits at the same angle θ.</span></div></div>
+<div class="dstep"><span class="n">2</span><div class="m">Drop a perpendicular from one slit onto the other ray.<span class="why">This marks where the two paths become equal in length from there on.</span></div></div>
+<div class="dstep"><span class="n">3</span><div class="m">The leftover piece (the blue segment) is the extra distance ΔL.<span class="why">It sits in a right triangle with hypotenuse d, and the angle at the slit is also θ.</span></div></div>
+<div class="dstep"><span class="n">4</span><div class="m">Δ<i>L</i> = <i>d</i> sin <i>θ</i><span class="why">Opposite side = hypotenuse × sin θ.</span></div></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy · two runners, one finish line</span>
+<p>Two runners leave at the same moment from start lines a bit apart and stride at exactly the same rate. Whether their footsteps land together at the finish depends only on how much further one ran. A whole number of strides extra: in step. Half a stride extra: perfectly out of step.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: pick a path difference and see which fringe you land on</div>
+  <div class="dnote">The screen labels match the lecture's page 3 drawing: m for bright fringes on the left, (m + ½) for dark fringes on the right.</div>
+  <canvas id="cvYL" height="360" aria-label="Interference pattern with bright fringes labelled by m and dark fringes by m plus a half"></canvas>
+  <div class="controls">
+    <label for="ylDL">Δ<i>L</i> in wavelengths <input id="ylDL" type="range" min="-3.5" max="3.5" step="0.05" value="1"><output id="ylDLOut">1.00λ</output></label>
+  </div>
+  <div class="presets"><span>Jump to:</span><button class="btn" type="button" data-yl="0">0</button><button class="btn" type="button" data-yl="0.5">½λ</button><button class="btn" type="button" data-yl="1.5">1½λ</button><button class="btn" type="button" data-yl="2">2λ</button><button class="btn" type="button" data-yl="-1.5">−1½λ</button></div>
+  <div class="readout" id="ylRead" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Dark fringe numbering.</b> The first dark fringe above the center has m = 0 (m + ½ = ½). The second has m = 1 (½ + 1 = <span class="frac"><span>3</span><span>2</span></span>). So "the 2nd dark fringe" uses m = 1, not m = 2. Below the center, −½ is m = −1 and −<span class="frac"><span>3</span><span>2</span></span> is m = −2.</li>
+<li><b>The center is always bright</b>, whatever λ, d or D: at θ = 0 both paths are equal, ΔL = 0.</li>
+<li><b>d sin θ can't exceed d</b>, so m can never be bigger than <span class="frac"><span><i>d</i></span><span><i>λ</i></span></span>. That caps how many fringes exist.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: double slit conditions"></div>
+</section>
+
+<!-- 10 FRINGE POSITIONS -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>Where the fringes land on the screen</h3>
+<p>Exams usually give distances on the screen, not angles. Let y<sub>m</sub> be the distance between the <b>central bright fringe</b> and the <b>m<sup>th</sup> bright fringe</b>. Geometry gives tan θ = <span class="frac"><span><i>y</i><sub>m</sub></span><span><i>D</i></span></span>, and for very small θ we can use tan θ ≈ sin θ:</p>
+<div class="eq">
+  <span class="row">Bright: <i>y</i><sub>m</sub> = <span class="frac"><span><i>m D λ</i></span><span><i>d</i></span></span> &nbsp;·&nbsp; Dark: <i>y</i><sub>m</sub> = (<i>m</i> + <span class="frac"><span>1</span><span>2</span></span>)<span class="frac"><span><i>D λ</i></span><span><i>d</i></span></span></span>
+  <span class="row">Δ<i>y</i> = <i>y</i><sub>m+1</sub> − <i>y</i><sub>m</sub> = <span class="frac"><span><i>D λ</i></span><span><i>d</i></span></span> <span class="note">spacing between neighbours (bright or dark)</span></span>
+</div>
+
+<details class="work" open><summary>Worked derivation: fringe position and spacing (Young's pages 4 to 6)</summary><div class="body">
+<div class="dstep"><span class="n">①</span><div class="m">tan <i>θ</i> = <span class="frac"><span><i>y</i><sub>m</sub></span><span><i>D</i></span></span><span class="why">Right triangle from the slits to the screen: opposite y<sub>m</sub>, adjacent D.</span></div></div>
+<div class="dstep"><span class="n">2</span><div class="m"><i>d</i> sin <i>θ</i> = <i>mλ</i>, &nbsp; sin <i>θ</i> ≈ tan <i>θ</i><span class="why">Bright-fringe condition, plus the small-angle approximation.</span></div></div>
+<div class="dstep"><span class="n">②</span><div class="m"><i>d</i> tan <i>θ</i> = <i>mλ</i> &nbsp;→&nbsp; tan <i>θ</i> = <span class="frac"><span><i>mλ</i></span><span><i>d</i></span></span><span class="why">Swap sin for tan and divide by d.</span></div></div>
+<div class="dstep"><span class="n">3</span><div class="m">① = ②: &nbsp;<span class="frac"><span><i>y</i><sub>m</sub></span><span><i>D</i></span></span> = <span class="frac"><span><i>mλ</i></span><span><i>d</i></span></span><span class="why">Both equal tan θ, so set them equal.</span></div></div>
+<div class="dstep"><span class="n">4</span><div class="m"><i>y</i><sub>m</sub> = <span class="frac"><span><i>mλD</i></span><span><i>d</i></span></span><span class="why">Multiply both sides by D. Boxed result.</span></div></div>
+<div class="dstep"><span class="n">5</span><div class="m"><i>y</i><sub>m+1</sub> − <i>y</i><sub>m</sub> = <span class="frac"><span>(<i>m</i> + 1)<i>Dλ</i></span><span><i>d</i></span></span> − <span class="frac"><span><i>mDλ</i></span><span><i>d</i></span></span> = <span class="frac"><span><i>Dλ</i></span><span><i>d</i></span></span><span class="why">Neighbouring bright fringes. The m terms cancel. Same answer for dark fringes.</span></div></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy · a slide projector</span>
+<p>The fringe pattern behaves like a picture from a projector. Move the screen further away (bigger D) and the picture gets bigger. Use a longer wavelength (bigger λ) and the pattern spreads. Move the slits further apart (bigger d) and the pattern squeezes together. That's all <span class="frac"><span><i>Dλ</i></span><span><i>d</i></span></span> says.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Calculator: fringe positions with the screen drawn to scale</div>
+  <div class="dnote">Loads with λ = 600 nm, d = 0.10 mm, D = 1.0 m, m = 1 (example values; the lecture derives the formulas without numbers). It also checks the small-angle shortcut against the exact answer.</div>
+  <div class="controls">
+    <label for="ycL">λ (nm) <input id="ycL" type="number" value="600" min="380" max="780" step="1"></label>
+    <label for="ycd">d (mm) <input id="ycd" type="number" value="0.10" min="0.001" step="0.01"></label>
+    <label for="ycD">D (m) <input id="ycD" type="number" value="1.0" min="0.01" step="0.1"></label>
+    <label for="ycm">m <input id="ycm" type="number" value="1" step="1"></label>
+  </div>
+  <canvas id="cvScr" height="120" aria-label="Screen pattern with fringe positions marked in millimetres"></canvas>
+  <div class="steps" id="ycSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>"Δy at m = 0" in the notes</b> doesn't restrict anything: the m cancels, so the spacing <span class="frac"><span><i>Dλ</i></span><span><i>d</i></span></span> is the same between every neighbouring pair, as long as the angles stay small.</li>
+<li><b>Units!</b> λ is usually in nm (×10<sup>−9</sup> m) and d in mm (×10<sup>−3</sup> m). Convert everything to metres before you divide. A factor-of-1000 error is the most common way to lose marks here.</li>
+<li><b>"Distance between the 3rd bright fringes on either side"</b> is 2y<sub>3</sub> = 6Δy, not 3Δy.</li>
+<li><b>Small angle check:</b> the shortcut is fine when y<sub>m</sub> is much smaller than D. If a problem has fringes at large angles, go back to d sin θ = mλ and tan θ = <span class="frac"><span><i>y</i><sub>m</sub></span><span><i>D</i></span></span> separately.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: fringe positions"></div>
+</section>
+
+<!-- 11 INTENSITY -->
+<section class="sec" id="s11">
+<h3><span class="num">11</span>How bright is each point? Intensity versus phase difference</h3>
+<p>Between the brightest and darkest points the brightness changes smoothly. The lecture gives the intensity in terms of the phase difference Δφ between the two waves arriving at a point:</p>
+<div class="eq">
+  <span class="row"><i>I</i> = 4<i>I</i><sub>0</sub> cos<sup>2</sup><span style="font-size:1.4em">(</span><span class="frac"><span>Δ<i>φ</i></span><span>2</span></span><span style="font-size:1.4em">)</span></span>
+  <span class="row">I<sub>0</sub> = intensity on the screen when one slit is covered (no interference)</span>
+  <span class="row">Linking to path difference: Δ<i>φ</i> = <span class="frac"><span>2π</span><span><i>λ</i></span></span>Δ<i>L</i> <span class="note">one wavelength of path = 2π of phase</span></span>
+</div>
+
+<details class="work" open><summary>Worked check: bright and dark fringes (Young's page 8)</summary><div class="body">
+<div class="dstep"><span class="n">1</span><div class="m">Bright: Δ<i>φ</i> = 2<i>m</i>π &nbsp;→&nbsp; <i>I</i> = 4<i>I</i><sub>0</sub> cos<sup>2</sup>(<i>m</i>π) = 4<i>I</i><sub>0</sub><span class="why">cos(mπ) is ±1, and squaring gives 1.</span></div></div>
+<div class="dstep"><span class="n">2</span><div class="m">Dark: Δ<i>φ</i> = (2<i>m</i> + 1)π &nbsp;→&nbsp; <i>I</i> = 4<i>I</i><sub>0</sub> cos<sup>2</sup>[(<i>m</i> + <span class="frac"><span>1</span><span>2</span></span>)π] = 0<span class="why">The cosine of an odd multiple of 90° is zero.</span></div></div>
+<div class="dstep"><span class="n">3</span><div class="m">One source: <i>I</i> = <i>I</i><sub>0</sub> everywhere<span class="why">The flat purple line on the lecture's graph. No second wave, no interference.</span></div></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy · sweeping sand into piles</span>
+<p>Spread sand evenly over a floor: that's one slit, I<sub>0</sub> everywhere. Add a second slit's worth (2I<sub>0</sub> total on average) and then sweep it into rows: piles twice as high as the average (4I<sub>0</sub>), bare floor in between (0). Interference doesn't create or destroy light. It moves it from the dark fringes into the bright ones.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: intensity at a chosen phase difference</div>
+  <div class="dnote">Loads at Δφ = 0, which should give the lecture's 4I<sub>0</sub>. Set I<sub>0</sub> to get numbers in real units.</div>
+  <canvas id="cvInt" height="250" aria-label="Intensity versus phase difference for two sources and for one source"></canvas>
+  <div class="legend"><span><i style="background:var(--inc)"></i>2 sources: 4I<sub>0</sub>cos²(½Δφ)</span><span><i style="background:var(--trn)"></i>one source: I<sub>0</sub></span><span><i style="background:var(--muted)"></i>average 2I<sub>0</sub></span></div>
+  <div class="controls">
+    <label for="inP">Δφ <input id="inP" type="range" min="-2" max="2" step="0.01" value="0"><output id="inPOut">0π</output></label>
+    <label for="inI0">I<sub>0</sub> (W/m²) <input id="inI0" type="number" value="1" min="0" step="0.1"></label>
+  </div>
+  <div class="presets"><span>Jump to:</span><button class="btn" type="button" data-in="0">0</button><button class="btn" type="button" data-in="0.5"><span class="frac"><span>π</span><span>2</span></span></button><button class="btn" type="button" data-in="0.6667"><span class="frac"><span>2π</span><span>3</span></span></button><button class="btn" type="button" data-in="1">π</button><button class="btn" type="button" data-in="2">2π</button></div>
+  <div class="steps" id="inSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Why 4I<sub>0</sub> and not 2I<sub>0</sub>?</b> Amplitudes add, and intensity goes as amplitude squared. Double the amplitude gives four times the intensity. The average over the pattern is still 2I<sub>0</sub>, so energy is conserved.</li>
+<li><b>Halve the angle.</b> The formula uses <span class="frac"><span>Δ<i>φ</i></span><span>2</span></span> inside the cosine. Forgetting the ½ is the classic slip: at Δφ = π you'd get 4I<sub>0</sub> instead of 0.</li>
+<li><b>Calculator mode.</b> Δφ is in radians. In degrees, Δφ = π becomes 180°, so the argument is 90°.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q11" data-title="Check: fringe intensity"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across the whole lecture, mostly calculations. Use v = 343 m/s for sound unless a question says otherwise. Grab paper and a calculator. Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Standing wave ratio</h5><div>
+    <span class="l">SWR = <span class="frac"><span><i>y</i><sub>m,i</sub> + <i>y</i><sub>m,r</sub></span><span><i>y</i><sub>m,i</sub> − <i>y</i><sub>m,r</sub></span></span> = <span class="frac"><span>1 + <i>r</i></span><span>1 − <i>r</i></span></span> = <span class="frac"><span>1 + √<i>R</i></span><span>1 − √<i>R</i></span></span></span>
+    <span class="l"><i>r</i> = <span class="frac"><span><i>y</i><sub>m,r</sub></span><span><i>y</i><sub>m,i</sub></span></span>, &nbsp;<i>R</i> = <i>r</i><sup>2</sup>, &nbsp;<i>r</i> = <span class="frac"><span>SWR − 1</span><span>SWR + 1</span></span></span>
+    <span class="l">r → 1: SWR → ∞ · r → 0: SWR → 1</span></div></div>
+  <div class="card"><h5>Open pipe resonance</h5><div>
+    <span class="l"><i>f</i><sub>n</sub> = <span class="frac"><span><i>nv</i></span><span>2<i>L</i></span></span> = <i>n f</i><sub>1</sub>, &nbsp;n = 1, 2, 3, …</span>
+    <span class="l"><i>f</i><sub>1</sub> = <span class="frac"><span><i>v</i></span><span>2<i>L</i></span></span></span></div></div>
+  <div class="card"><h5>Beats</h5><div>
+    <span class="l"><i>s</i><sub>R</sub> = [2<i>s</i><sub>m</sub> cos(<i>ω′t</i>)] cos(<i>ωt</i>)</span>
+    <span class="l"><i>ω′</i> = <span class="frac"><span><i>ω</i><sub>1</sub> − <i>ω</i><sub>2</sub></span><span>2</span></span>, &nbsp;<i>ω</i> = <span class="frac"><span><i>ω</i><sub>1</sub> + <i>ω</i><sub>2</sub></span><span>2</span></span></span>
+    <span class="l"><i>f</i> = <span class="frac"><span><i>f</i><sub>1</sub> + <i>f</i><sub>2</sub></span><span>2</span></span>, &nbsp;<i>f</i><sub>beat</sub> = |<i>f</i><sub>1</sub> − <i>f</i><sub>2</sub>|, &nbsp;<i>T</i><sub>beat</sub> = <span class="frac"><span><i>T′</i></span><span>2</span></span> = <span class="frac"><span>1</span><span><i>f</i><sub>beat</sub></span></span></span></div></div>
+  <div class="card"><h5>Sum-to-product</h5><div>
+    <span class="l">cos <i>α</i> + cos <i>β</i> = 2 cos(<span class="frac"><span><i>α</i> − <i>β</i></span><span>2</span></span>) cos(<span class="frac"><span><i>α</i> + <i>β</i></span><span>2</span></span>)</span></div></div>
+  <div class="card"><h5>Doppler effect</h5><div>
+    <span class="l"><i>f′</i> = <i>f</i> <span class="frac"><span><i>v</i> ± <i>v</i><sub>D</sub></span><span><i>v</i> ± <i>v</i><sub>S</sub></span></span></span>
+    <span class="l">toward: + on top (D), − on bottom (S)</span>
+    <span class="l">away: − on top (D), + on bottom (S)</span></div></div>
+  <div class="card"><h5>Coherence</h5><div>
+    <span class="l">In phase: <i>φ</i><sub>1</sub> − <i>φ</i><sub>2</sub> = 2<i>n</i>π</span>
+    <span class="l">Out of phase: <i>φ</i><sub>1</sub> − <i>φ</i><sub>2</sub> = (2<i>n</i> + 1)π</span>
+    <span class="l">Needs one frequency and a constant phase difference</span></div></div>
+  <div class="card"><h5>Young's conditions</h5><div>
+    <span class="l">Δ<i>L</i> = <i>d</i> sin <i>θ</i></span>
+    <span class="l">Bright: <i>d</i> sin <i>θ</i> = <i>mλ</i></span>
+    <span class="l">Dark: <i>d</i> sin <i>θ</i> = (<i>m</i> + <span class="frac"><span>1</span><span>2</span></span>)<i>λ</i></span></div></div>
+  <div class="card"><h5>Fringes on the screen</h5><div>
+    <span class="l"><i>y</i><sub>m</sub> = <span class="frac"><span><i>mDλ</i></span><span><i>d</i></span></span> (bright), &nbsp;(<i>m</i> + <span class="frac"><span>1</span><span>2</span></span>)<span class="frac"><span><i>Dλ</i></span><span><i>d</i></span></span> (dark)</span>
+    <span class="l">Δ<i>y</i> = <span class="frac"><span><i>Dλ</i></span><span><i>d</i></span></span>, &nbsp;tan <i>θ</i> = <span class="frac"><span><i>y</i><sub>m</sub></span><span><i>D</i></span></span></span></div></div>
+  <div class="card"><h5>Intensity</h5><div>
+    <span class="l"><i>I</i> = 4<i>I</i><sub>0</sub> cos<sup>2</sup>(<span class="frac"><span>Δ<i>φ</i></span><span>2</span></span>), &nbsp;Δ<i>φ</i> = <span class="frac"><span>2π</span><span><i>λ</i></span></span>Δ<i>L</i></span>
+    <span class="l">bright 4I<sub>0</sub> · dark 0 · average 2I<sub>0</sub></span></div></div>
+</div>
+</section>
+
+<footer>Built from the PHYS 365 Lecture 7 notes: standing wave ratio, wave resonance, beats, the Doppler effect and wave coherence (18 pages), plus Young's experiment (8 pages). Your quiz answers are saved in this browser only.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------------- HELPERS FOR MATH TEXT ---------------- */
+const F = (a,b)=>'<span class="frac"><span>'+a+'</span><span>'+b+'</span></span>';
+const HALF = F(1,2);
+const ymi = 'y<sub>m,i</sub>', ymr = 'y<sub>m,r</sub>';
+
+/* ---------------- QUIZ DATA ---------------- */
+const QUIZ = {
+q1:[
+ {q:"A continuous wave hits a boundary and part of it reflects. Which waves are present on the incident side?",
+  o:["Only the incident wave","The incident and reflected waves, overlapping","The incident and transmitted waves","Only the reflected wave"],a:1,
+  e:"The reflected wave travels back through the incoming wave, so both share the incident side and interfere. The transmitted wave is on the far side of the boundary, alone."},
+ {q:ymi+" = 5 mm and "+ymr+" = 2 mm. Over time, what is the largest swing (amplitude) at any point on the incident side?",
+  o:["7 mm","5 mm","3 mm","10 mm"],a:0,
+  e:"Where the two waves arrive in step, their amplitudes add: 5 + 2 = 7 mm."},
+ {q:"Same waves ("+ymi+" = 5 mm, "+ymr+" = 2 mm). What is the smallest swing anywhere on the incident side?",
+  o:["0 mm","3 mm","2 mm","2.5 mm"],a:1,
+  e:"Where they arrive opposite, they subtract: 5 − 2 = 3 mm. It isn't zero because the reflected wave is weaker than the incident one, so it can't fully cancel it."},
+ {q:"The boundary reflects nothing (r = 0). What does the envelope look like on the incident side?",
+  o:["Flat: every point swings by "+ymi,"Nodes every half wavelength","Zero everywhere","Twice as tall as "+ymi],a:0,
+  e:"With no reflected wave there's nothing to interfere with, so it's an ordinary traveling wave with the same amplitude everywhere. Slide r to 0 in the demo to see it."}
+],
+q2:[
+ {q:ymi+" = 5 mm and "+ymr+" = 2 mm. What is the SWR?",
+  o:["2.33","2.5","0.43","1.4"],a:0,
+  e:"SWR = "+F("5 + 2","5 − 2")+" = "+F(7,3)+" = 2.33. (2.5 is "+F(5,2)+", which divides the amplitudes instead of the max and min.)"},
+ {q:"The amplitude reflection coefficient is r = 0.5. What is the SWR?",
+  o:["3","1.5","2","0.33"],a:0,
+  e:"SWR = "+F("1 + 0.5","1 − 0.5")+" = "+F("1.5","0.5")+" = 3."},
+ {q:"36% of the incident power is reflected. What is the SWR?",
+  o:["4","2.13","1.56","1.36"],a:0,
+  e:"Power fraction means R = 0.36, so r = √0.36 = 0.6. SWR = "+F("1 + 0.6","1 − 0.6")+" = "+F("1.6","0.4")+" = 4. The trap answer 2.13 comes from using 0.36 as r."},
+ {q:"You measure SWR = 3. What fraction of the power is reflected?",
+  o:["25%","50%","75%","33%"],a:0,
+  e:"Rearrange: r = "+F("SWR − 1","SWR + 1")+" = "+F("3 − 1","3 + 1")+" = 0.5. Then R = r<sup>2</sup> = 0.25, so 25% of the power. (50% is r, the amplitude ratio.)"},
+ {q:"Why can the SWR never be less than 1?",
+  o:["The maximum amplitude "+ymi+" + "+ymr+" is always at least as big as the minimum "+ymi+" − "+ymr,"Because r is always greater than 1","Because power is always positive","It can be; SWR below 1 means the wave is amplified"],a:0,
+  e:"SWR is max over min, and the max can't be smaller than the min. It equals 1 only when "+ymr+" = 0 (no reflection)."}
+],
+q3:[
+ {q:"An open pipe has L = 0.50 m and v = 343 m/s. What is its fundamental frequency?",
+  o:["343 Hz","686 Hz","171.5 Hz","1.46 Hz"],a:0,
+  e:"f<sub>1</sub> = "+F("v","2L")+" = "+F("343","2(0.50)")+" = 343 Hz. (686 Hz forgets the 2; 171.5 Hz uses 4L, which is the closed-pipe formula.)"},
+ {q:"Same pipe (L = 0.50 m, v = 343 m/s). What is the third harmonic?",
+  o:["1029 Hz","686 Hz","1372 Hz","114 Hz"],a:0,
+  e:"f<sub>3</sub> = 3f<sub>1</sub> = 3 × 343 = 1029 Hz."},
+ {q:"The speaker plays 686 Hz into this same pipe. What happens?",
+  o:["Resonance: 686 Hz is f<sub>2</sub>","Resonance: 686 Hz is f<sub>1</sub>","No resonance: 686 Hz falls between harmonics","Resonance only happens in a closed pipe"],a:0,
+  e:F("686","343")+" = 2, a whole number, so 686 Hz is the second normal mode f<sub>2</sub> and the amplitude peaks. Try it with the f<sub>2</sub> button in the demo."},
+ {q:"How long should an open pipe be for its fundamental to be 440 Hz (v = 343 m/s)?",
+  o:["0.390 m","0.780 m","0.195 m","1.28 m"],a:0,
+  e:"Rearrange f<sub>1</sub> = "+F("v","2L")+": L = "+F("v","2f<sub>1</sub>")+" = "+F("343","2(440)")+" = 0.390 m."},
+ {q:"Why does the amplitude in the pipe peak at the normal mode frequencies?",
+  o:["Each reflection returns in step with the next push from the speaker, so the waves reinforce","The speaker gets louder at those frequencies","The speed of sound increases at those frequencies","The pipe absorbs less energy at high frequencies"],a:0,
+  e:"At f<sub>n</sub> the round trip lines up with the driving rhythm, like pushing a swing at the right moment. At other frequencies the returning waves partly cancel the new ones."}
+],
+q4:[
+ {q:"ω<sub>1</sub> = 1000 rad/s and ω<sub>2</sub> = 990 rad/s. What are ω′ and ω in s<sub>R</sub> = [2s<sub>m</sub>cos(ω′t)]cos(ωt)?",
+  o:["ω′ = 5 rad/s, ω = 995 rad/s","ω′ = 10 rad/s, ω = 1990 rad/s","ω′ = 5 rad/s, ω = 1990 rad/s","ω′ = 995 rad/s, ω = 5 rad/s"],a:0,
+  e:"ω′ = "+HALF+"(1000 − 990) = 5 rad/s and ω = "+HALF+"(1000 + 990) = 995 rad/s. Don't forget the ½ on both."},
+ {q:"Each wave has s<sub>m</sub> = 3 mm. What is the largest displacement the combined wave ever reaches?",
+  o:["6 mm","3 mm","9 mm","1.5 mm"],a:0,
+  e:"The time-dependent amplitude is 2s<sub>m</sub>cos(ω′t), whose biggest value is 2s<sub>m</sub> = 6 mm, when the two waves line up exactly."},
+ {q:"Why is 2s<sub>m</sub>cos(ω′t) treated as an amplitude rather than as a second wave?",
+  o:["ω′ is much smaller than ω, so it changes slowly over many fast oscillations","It doesn't depend on time","Cosine is always positive","Because it's multiplied by 2"],a:0,
+  e:"When f<sub>1</sub> and f<sub>2</sub> are close, ω′ is tiny compared with ω. Over a few fast wiggles cos(ω′t) barely changes, so it acts like a slowly varying size."},
+ {q:"Use the sum-to-product identity: cos(10t) + cos(6t) = ?",
+  o:["2 cos(2t) cos(8t)","2 cos(4t) cos(16t)","cos(16t)","2 cos(3t) cos(5t)"],a:0,
+  e:"Half the difference: "+F("10 − 6","2")+" = 2. Half the sum: "+F("10 + 6","2")+" = 8. So 2 cos(2t) cos(8t). (4 and 16 forget the halves.)"}
+],
+q5:[
+ {q:"A tuning fork at 442 Hz and another at 440 Hz sound together. How many beats per second?",
+  o:["2","1","441","882"],a:0,
+  e:"f<sub>beat</sub> = f<sub>1</sub> − f<sub>2</sub> = 442 − 440 = 2 Hz. (1 Hz is f′, the frequency of cos(ω′t); the beat frequency is twice that.)"},
+ {q:"Same two forks. What pitch do you hear swelling and fading?",
+  o:["441 Hz","2 Hz","442 Hz","1 Hz"],a:0,
+  e:"The fast wave cos(ωt) is at the average: f = "+F("442 + 440","2")+" = 441 Hz."},
+ {q:"Same two forks. How long between one loud moment and the next?",
+  o:["0.5 s","1 s","2 s","0.0023 s"],a:0,
+  e:"T<sub>beat</sub> = "+F("1","f<sub>beat</sub>")+" = "+F("1","2 Hz")+" = 0.5 s. (0.0023 s is the period of the 441 Hz tone itself.)"},
+ {q:"A guitar string and a 440 Hz fork give 4 beats per second. Tightening the string (which raises its frequency) slows the beats to 2 per second. What was the string's original frequency?",
+  o:["436 Hz","444 Hz","438 Hz","442 Hz"],a:0,
+  e:"4 beats means 436 Hz or 444 Hz. Raising the frequency moved it closer to 440 Hz (fewer beats), so it started below: 436 Hz. Had it been 444 Hz, tightening would have pushed the beats up."},
+ {q:"For 442 Hz and 440 Hz, cos(ω′t) has f′ = 1 Hz, so T′ = 1 s. Why is the beat period 0.5 s and not 1 s?",
+  o:["Loudness peaks at both +2s<sub>m</sub> and −2s<sub>m</sub>, so there are two beats per envelope cycle","The ear doubles every frequency","Because the tone you hear is the average frequency","Because T′ = "+F("T<sub>1</sub> − T<sub>2</sub>","2")],a:0,
+  e:"Your ear responds to the size of the swing, not its sign. The envelope reaches full size twice per cycle, so T<sub>beat</sub> = "+F("T′","2")+"."}
+],
+q6:[
+ {q:"A stationary source emits 500 Hz. A detector moves toward it at 34.3 m/s (v = 343 m/s). What frequency does the detector measure?",
+  o:["550 Hz","450 Hz","555.6 Hz","500 Hz"],a:0,
+  e:"f′ = f "+F("v + v<sub>D</sub>","v")+" = 500 × "+F("343 + 34.3","343")+" = 500 × 1.1 = 550 Hz. (555.6 Hz uses the moving-source formula by mistake.)"},
+ {q:"Same source, but the detector moves away at 34.3 m/s. What does it measure?",
+  o:["450 Hz","550 Hz","454.5 Hz","500 Hz"],a:0,
+  e:"Moving away, the detector meets wavefronts less often: f′ = 500 × "+F("343 − 34.3","343")+" = 500 × 0.9 = 450 Hz."},
+ {q:"The detector moves toward a stationary source. What happens to the wavelength of the sound in the air?",
+  o:["Nothing: the stationary source sets λ = "+F("v","f"),"It gets shorter","It gets longer","It depends on v<sub>D</sub>"],a:0,
+  e:"Only the source decides how far apart the crests are. The detector changes how quickly it meets them, which is why only the rate (frequency) changes."},
+ {q:"In the derivation, why do we add vt and v<sub>D</sub>t?",
+  o:["The wavefronts and the detector move toward each other, so their closing distance is the sum","Because the detector moves faster than the wave","Because the source also moves","To convert from distance to frequency"],a:0,
+  e:"In time t the wave covers vt toward the detector and the detector covers v<sub>D</sub>t toward the wave. Head-on, the distances add, giving "+F("vt + v<sub>D</sub>t","λ")+" wavefronts met."}
+],
+q7:[
+ {q:"A 1000 Hz source moves toward a still detector at 34.3 m/s (v = 343 m/s). What is f′?",
+  o:["1111 Hz","1100 Hz","909 Hz","1000 Hz"],a:0,
+  e:"Source toward: minus on the bottom. f′ = 1000 × "+F("343","343 − 34.3")+" = "+F("343 000","308.7")+" = 1111 Hz."},
+ {q:"The same source moves away from the detector at 34.3 m/s. What is f′?",
+  o:["909 Hz","900 Hz","1111 Hz","1100 Hz"],a:0,
+  e:"Source away: plus on the bottom. f′ = 1000 × "+F("343","343 + 34.3")+" = 909 Hz."},
+ {q:"A 500 Hz source moves toward a detector at 20 m/s while the detector moves toward the source at 10 m/s. What is f′?",
+  o:["546.4 Hz","515.5 Hz","486.2 Hz","458.7 Hz"],a:0,
+  e:"Both toward: + on top, − on the bottom. f′ = 500 × "+F("343 + 10","343 − 20")+" = 500 × "+F("353","323")+" = 546.4 Hz."},
+ {q:"An ambulance siren emits 700 Hz and drives past you at 25 m/s. By how much does the pitch you hear drop as it passes?",
+  o:["102.6 Hz","51.3 Hz","755.0 Hz","0 Hz"],a:0,
+  e:"Approaching: 700 × "+F("343","343 − 25")+" = 755.0 Hz. Receding: 700 × "+F("343","343 + 25")+" = 652.4 Hz. Drop = 755.0 − 652.4 = 102.6 Hz."},
+ {q:"At 34.3 m/s toward, a moving source gives 1111 Hz but a moving detector gives only 1100 Hz (f = 1000 Hz). Why are they different?",
+  o:["Only source motion squeezes the wavelength; detector motion only changes how fast the crests are met","It's just rounding","The detector's speed is measured relative to the source","Sound slows down near a moving detector"],a:0,
+  e:"The source's speed appears in the denominator because it changes λ itself. The two cases are different physics, so the formula isn't symmetric. Speeds are relative to the air."}
+],
+q8:[
+ {q:"Two coherent waves have φ<sub>1</sub> − φ<sub>2</sub> = 4π. How are they related?",
+  o:["In phase (2nπ with n = 2)","Out of phase","Neither in nor out of phase","Incoherent"],a:0,
+  e:"4π = 2nπ with n = 2: two full turns apart, which is the same as no difference. Crests line up with crests."},
+ {q:"Two coherent waves have φ<sub>1</sub> − φ<sub>2</sub> = 3π. How are they related?",
+  o:["Out of phase ((2n + 1)π with n = 1)","In phase","Neither","Incoherent"],a:0,
+  e:"3π = (2n + 1)π with n = 1: one and a half turns apart, so crests meet troughs."},
+ {q:"Coherent waves with amplitudes 3 mm and 5 mm meet exactly out of phase. What is the resultant amplitude?",
+  o:["2 mm","8 mm","0 mm","4 mm"],a:0,
+  e:"Out of phase, they subtract: 5 − 3 = 2 mm. Full cancellation only happens if the amplitudes are equal. (In phase they'd give 8 mm.)"},
+ {q:"Why don't two separate light bulbs of the same colour make an interference pattern?",
+  o:["Their phase difference changes randomly and very fast, so any pattern washes out","Their light is too dim","Light from bulbs can't overlap","They have different speeds"],a:0,
+  e:"Coherence needs a time-independent phase difference. Bulb light is a jumble of randomly phased waves, so bright and dark spots move around too fast to see. Tick \"incoherent\" in the demo."},
+ {q:"Why must coherent waves be monochromatic (one frequency)?",
+  o:["With different frequencies the phase difference changes with time, so it can't stay constant","Because only one frequency is visible","Because different frequencies travel at different speeds in air","They don't need to be"],a:0,
+  e:"Two frequencies drift in and out of step, exactly like beats in §4. A drifting phase difference breaks condition (b)."}
+],
+q9:[
+ {q:"λ = 600 nm. What is the path length difference at the m = 2 bright fringe?",
+  o:["1200 nm","600 nm","1500 nm","300 nm"],a:0,
+  e:"Bright: ΔL = d sin θ = mλ = 2 × 600 nm = 1200 nm. (1500 nm is "+F(5,2)+"λ, a dark fringe.)"},
+ {q:"λ = 600 nm and d = 0.10 mm. At what angle is the first (m = 1) bright fringe?",
+  o:["0.344°","0.006°","34.4°","0.172°"],a:0,
+  e:"sin θ = "+F("mλ","d")+" = "+F("600 × 10<sup>−9</sup> m","1.0 × 10<sup>−4</sup> m")+" = 0.006, so θ = sin<sup>−1</sup>(0.006) = 0.344°. (0.006 is sin θ, not the angle.)"},
+ {q:"At point P the path difference is ΔL = 1.5λ. What is at P?",
+  o:["The 2nd dark fringe (m = 1, since m + ½ = "+F(3,2)+")","A bright fringe with m = 1.5","The 1st dark fringe (m = 0)","The m = 1 bright fringe"],a:0,
+  e:"1.5λ is a half-wavelength off a whole number, so the waves arrive opposite: dark. m + ½ = "+F(3,2)+" gives m = 1, which is the second dark fringe from the center."},
+ {q:"Why is the center of the pattern always bright, whatever λ, d and D are?",
+  o:["Both paths are the same length there (ΔL = 0), so the waves arrive in phase","The center gets light from both slits and the edges don't","The slits are brightest at the center","It isn't always bright"],a:0,
+  e:"At θ = 0, d sin θ = 0 = 0 × λ, which is the m = 0 bright condition for any wavelength."}
+],
+q10:[
+ {q:"λ = 600 nm, d = 0.10 mm, D = 1.0 m. How far from the center is the m = 1 bright fringe?",
+  o:["6.0 mm","0.6 mm","60 mm","3.0 mm"],a:0,
+  e:"y<sub>1</sub> = "+F("mDλ","d")+" = "+F("(1)(1.0)(600 × 10<sup>−9</sup>)","1.0 × 10<sup>−4</sup>")+" = 6.0 × 10<sup>−3</sup> m = 6.0 mm."},
+ {q:"Same setup. How far from the center is the first dark fringe?",
+  o:["3.0 mm","6.0 mm","9.0 mm","1.5 mm"],a:0,
+  e:"First dark: m = 0, so y = (0 + ½)"+F("Dλ","d")+" = ½ × 6.0 mm = 3.0 mm. It sits halfway between the center and the first bright fringe."},
+ {q:"Fringes are 4.5 mm apart with d = 0.20 mm and D = 1.5 m. What is λ?",
+  o:["600 nm","300 nm","1350 nm","6.0 nm"],a:0,
+  e:"Rearrange Δy = "+F("Dλ","d")+": λ = "+F("Δy d","D")+" = "+F("(4.5 × 10<sup>−3</sup>)(0.20 × 10<sup>−3</sup>)","1.5")+" = 6.0 × 10<sup>−7</sup> m = 600 nm."},
+ {q:"λ = 600 nm, d = 0.10 mm, D = 1.0 m. What is the distance between the m = +2 and m = −2 bright fringes?",
+  o:["24 mm","12 mm","6 mm","48 mm"],a:0,
+  e:"Δy = 6.0 mm. From m = −2 to m = +2 is 4 spacings: 4 × 6.0 = 24 mm. (12 mm is only y<sub>2</sub>, one side.)"},
+ {q:"The screen is moved from D = 1.0 m to D = 2.0 m (everything else the same, Δy was 6.0 mm). What happens?",
+  o:["The spacing doubles to 12 mm, because Δy is proportional to D","It halves to 3 mm","It stays 6 mm because the angles don't change","It quadruples to 24 mm"],a:0,
+  e:"The angles stay the same, but the same angles land further apart on a more distant screen: Δy = "+F("Dλ","d")+" doubles."}
+],
+q11:[
+ {q:"One slit alone gives I<sub>0</sub> = 2.0 W/m². With both slits open, what is the intensity where Δφ = 0?",
+  o:["8.0 W/m²","4.0 W/m²","2.0 W/m²","16 W/m²"],a:0,
+  e:"I = 4I<sub>0</sub>cos<sup>2</sup>(0) = 4 × 2.0 × 1 = 8.0 W/m². (4.0 W/m² would be just adding the two intensities, which ignores interference.)"},
+ {q:"Same I<sub>0</sub> = 2.0 W/m². What is the intensity where Δφ = "+F("π","2")+"?",
+  o:["4.0 W/m²","8.0 W/m²","0 W/m²","5.7 W/m²"],a:0,
+  e:"I = 4 × 2.0 × cos<sup>2</sup>("+F("π","4")+") = 8.0 × 0.5 = 4.0 W/m². (0 W/m² comes from forgetting to halve the angle.)"},
+ {q:"Same I<sub>0</sub> = 2.0 W/m². What is the intensity where Δφ = "+F("2π","3")+"?",
+  o:["2.0 W/m²","6.0 W/m²","1.0 W/m²","4.0 W/m²"],a:0,
+  e:"Half the phase is "+F("π","3")+" = 60°, and cos 60° = 0.5. I = 8.0 × (0.5)<sup>2</sup> = 8.0 × 0.25 = 2.0 W/m², the same as one slit alone."},
+ {q:"At a point the path difference is ΔL = "+F("λ","4")+". What is I in terms of I<sub>0</sub>?",
+  o:["2I<sub>0</sub>","I<sub>0</sub>","4I<sub>0</sub>","0"],a:0,
+  e:"Δφ = "+F("2π","λ")+" × "+F("λ","4")+" = "+F("π","2")+". I = 4I<sub>0</sub>cos<sup>2</sup>("+F("π","4")+") = 4I<sub>0</sub> × ½ = 2I<sub>0</sub>."},
+ {q:"Why is a bright fringe 4I<sub>0</sub> and not 2I<sub>0</sub>?",
+  o:["Amplitudes add (×2) and intensity goes as amplitude squared (×4); dark fringes get 0, so the average stays 2I<sub>0</sub>","The slits focus the light","Each slit sends 2I<sub>0</sub>","Interference creates extra light"],a:0,
+  e:"Energy is conserved: interference just moves light from the dark fringes into the bright ones. The average over the pattern is 2I<sub>0</sub>, exactly what two slits give without interference."}
+],
+qf:[
+ {q:ymi+" = 8 mm and "+ymr+" = 2 mm. What is the SWR?",
+  o:["1.67","1.25","0.60","4"],a:0,r:"§2",
+  e:"SWR = "+F("8 + 2","8 − 2")+" = "+F(10,6)+" = 1.67. (4 is "+F(8,2)+", the ratio of amplitudes instead of max over min.)"},
+ {q:"You measure SWR = 9. What fraction of the incident power is reflected?",
+  o:["64%","80%","89%","11%"],a:0,r:"§2",
+  e:"r = "+F("SWR − 1","SWR + 1")+" = "+F(8,10)+" = 0.8. R = r<sup>2</sup> = 0.64, so 64%. (80% is r, the amplitude ratio.)"},
+ {q:"An open pipe has L = 0.85 m and v = 340 m/s. Which speaker frequency makes the air in it resonate?",
+  o:["600 Hz","300 Hz","500 Hz","700 Hz"],a:0,r:"§3",
+  e:"f<sub>1</sub> = "+F("340","2(0.85)")+" = 200 Hz, so resonances are at 200, 400, 600, 800 Hz… Only 600 Hz (n = 3) is on the list."},
+ {q:"s<sub>1</sub> = s<sub>m</sub>cos(2π·256t) and s<sub>2</sub> = s<sub>m</sub>cos(2π·260t). What do you hear?",
+  o:["A 258 Hz tone with 4 beats per second","A 258 Hz tone with 2 beats per second","A 4 Hz tone with 258 beats per second","A 516 Hz tone with 4 beats per second"],a:0,r:"§4 and §5",
+  e:"Tone: f = "+F("256 + 260","2")+" = 258 Hz. Beats: f<sub>beat</sub> = 260 − 256 = 4 Hz. (2 Hz is f′, half the beat frequency.)"},
+ {q:"Two flutes produce 3 beats in 2.0 s. One plays 523.0 Hz and the other is known to be flat (lower). What is the other flute's frequency?",
+  o:["521.5 Hz","520.0 Hz","524.5 Hz","521.0 Hz"],a:0,r:"§5",
+  e:"f<sub>beat</sub> = "+F("number of beats","time taken")+" = "+F("3","2.0 s")+" = 1.5 Hz. Flat means lower: 523.0 − 1.5 = 521.5 Hz. (520.0 Hz uses 3 Hz, forgetting to divide by the time.)"},
+ {q:"A detector moves at 15 m/s toward a stationary 800 Hz source. What does it measure?",
+  o:["835.0 Hz","836.6 Hz","765.0 Hz","815.0 Hz"],a:0,r:"§6",
+  e:"f′ = 800 × "+F("343 + 15","343")+" = 835.0 Hz. (836.6 Hz treats it as a moving source; 765.0 Hz uses the 'away' sign.)"},
+ {q:"A train horn at 400 Hz approaches a stationary listener at 40 m/s. What does the listener hear?",
+  o:["452.8 Hz","446.6 Hz","358.2 Hz","400 Hz"],a:0,r:"§7",
+  e:"Source toward: minus on the bottom. f′ = 400 × "+F("343","343 − 40")+" = "+F("137 200","303")+" = 452.8 Hz. (446.6 Hz treats the listener as the mover.)"},
+ {q:"A 600 Hz source chases a detector. The source moves at 30 m/s; the detector runs away at 20 m/s along the same line. What does the detector hear?",
+  o:["619.2 Hz","695.8 Hz","519.6 Hz","583.9 Hz"],a:0,r:"§7",
+  e:"Detector moving away from the source: − on top. Source moving toward the detector: − on the bottom. f′ = 600 × "+F("343 − 20","343 − 30")+" = 600 × "+F("323","313")+" = 619.2 Hz."},
+ {q:"Two coherent waves of equal amplitude meet with φ<sub>1</sub> − φ<sub>2</sub> = 5π. What happens there?",
+  o:["They cancel completely (out of phase, (2n + 1)π with n = 2)","They add to twice the amplitude","They add to half the amplitude","You can't tell without the frequency"],a:0,r:"§8 and §11",
+  e:"5π is an odd multiple of π, so crests meet troughs. With equal amplitudes the cancellation is complete: I = 4I<sub>0</sub>cos<sup>2</sup>("+F("5π","2")+") = 0."},
+ {q:"Young's experiment: λ = 500 nm, d = 0.25 mm, D = 2.0 m. How far from the center is the m = 3 bright fringe?",
+  o:["12 mm","4.0 mm","1.2 mm","6.0 mm"],a:0,r:"§10",
+  e:"Δy = "+F("Dλ","d")+" = "+F("(2.0)(500 × 10<sup>−9</sup>)","0.25 × 10<sup>−3</sup>")+" = 4.0 × 10<sup>−3</sup> m = 4.0 mm. y<sub>3</sub> = 3Δy = 12 mm."},
+ {q:"Same setup (Δy = 4.0 mm). How far from the center is the 2nd dark fringe?",
+  o:["6.0 mm","10.0 mm","8.0 mm","2.0 mm"],a:0,r:"§9 and §10",
+  e:"The 2nd dark fringe has m = 1 (m + ½ = "+F(3,2)+"). y = "+F(3,2)+" × 4.0 mm = 6.0 mm. (10.0 mm uses m = 2, which is the 3rd dark fringe.)"},
+ {q:"At a point on the screen the path difference is "+F("λ","3")+". What is the intensity in terms of I<sub>0</sub>?",
+  o:["I<sub>0</sub>","3I<sub>0</sub>","2I<sub>0</sub>","0"],a:0,r:"§11",
+  e:"Δφ = "+F("2π","λ")+" × "+F("λ","3")+" = "+F("2π","3")+". I = 4I<sub>0</sub>cos<sup>2</sup>("+F("π","3")+") = 4I<sub>0</sub> × 0.25 = I<sub>0</sub>."}
+]
+};
+
+/* ---------------- QUIZ ENGINE (answers saved in this browser) ---------------- */
+const LET = "ABCD", KEY = "phys365-l6-quiz-v1";
+let saved = {};
+try{ saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(e){ saved = {}; }
+function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(saved)); }catch(e){} }
+const results = {};
+function chip(id, correct, answered, total){
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+"/"+total;
+  c.classList.toggle("done", answered===total);
+}
+function tally(){
+  let c=0, t=0;
+  Object.keys(QUIZ).forEach(id=>{ if(id==="qf") return; t += QUIZ[id].length; if(results[id]) c += results[id].correct; });
+  document.getElementById("tSec").textContent = c+" / "+t+" correct";
+  document.getElementById("tSecBar").style.width = (100*c/t)+"%";
+  const f = results.qf, n = QUIZ.qf.length;
+  document.getElementById("tFin").textContent = (!f || f.answered===0) ? "not started" : f.correct+" / "+n+(f.answered<n ? " · "+(n-f.answered)+" left" : "");
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this one." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    results[id] = {answered, correct};
+    chip(id, correct, answered, qs.length);
+    tally();
+  }
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    qq.innerHTML = '<span class="qn">Q'+(qi+1)+'</span>'+item.q;
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    // shuffle display order deterministically so the answer isn't always A
+    const order = item.o.map((_,i)=>i);
+    let seed = (id.charCodeAt(1)||1)*31 + qi*17 + 7;
+    for(let i=order.length-1;i>0;i--){ seed = (seed*9301+49297)%233280; const j = Math.floor(seed/233280*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+    const btns = [];
+    order.forEach((oi, pos)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      b.innerHTML = '<span class="L">'+LET[pos]+'</span><span>'+item.o[oi]+'</span>';
+      b.dataset.oi = oi;
+      b.addEventListener("click", ()=>choose(oi, true));
+      opts.appendChild(b); btns.push(b);
+    });
+    function choose(oi, save){
+      if(btns[0].disabled) return;
+      btns.forEach(x=>x.disabled=true);
+      const ok = oi===item.a;
+      const rightBtn = btns.find(x=>+x.dataset.oi===item.a), pick = btns.find(x=>+x.dataset.oi===oi);
+      rightBtn.classList.add("right");
+      if(!ok) pick.classList.add("wrong");
+      answered++; if(ok) correct++;
+      ex.innerHTML = (ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+rightBtn.querySelector(".L").textContent+'.</b> ') + item.e + (item.r ? '<span class="rev">Review '+item.r+'</span>' : '');
+      ex.hidden = false;
+      if(save){ (saved[id] = saved[id] || {})[qi] = oi; persist(); }
+      upd();
+    }
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+    if(saved[id] && saved[id][qi] !== undefined) choose(+saved[id][qi], false);
+  });
+  reset.addEventListener("click", ()=>{ delete saved[id]; persist(); buildQuiz(box); });
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+const clearAll = document.getElementById("clearAll");
+let clearArm = 0;
+clearAll.addEventListener("click", ()=>{
+  if(!clearArm){ clearAll.textContent = "Click again to clear"; clearArm = setTimeout(()=>{ clearArm=0; clearAll.textContent="Clear all answers"; }, 3000); return; }
+  clearTimeout(clearArm); clearArm = 0; clearAll.textContent = "Clear all answers";
+  saved = {}; persist(); document.querySelectorAll(".quiz").forEach(buildQuiz);
+});
+
+/* ---------------- CANVAS HELPERS ---------------- */
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const RM = (()=>{ try{ return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; } })();
+function prep(cv, hOverride){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = hOverride || +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size,weight){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function curve(ctx, N, X, Y, col, wid, dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1.5; for(let i=0;i<=N;i++){ const x=X(i), y=Y(i); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke(); ctx.setLineDash([]); }
+function fracTxt(ctx, sign, num, den, x, y, col, size){ // stacked fraction drawn on canvas, left-aligned at x
+  size = size||12; ctx.font = size+"px 'JetBrains Mono', ui-monospace, monospace";
+  let cx = x;
+  if(sign){ txt(ctx, sign, cx, y, col, "left", size); cx += ctx.measureText(sign).width + 2; }
+  const wN = ctx.measureText(num).width, wD = ctx.measureText(den).width, ww = Math.max(wN,wD)+4;
+  txt(ctx, num, cx+ww/2, y-size*0.62, col, "center", size);
+  line(ctx, cx, y, cx+ww, y, col, 1);
+  txt(ctx, den, cx+ww/2, y+size*0.66, col, "center", size);
+}
+function setSeg(group, btn){ group.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", b===btn ? "true" : "false")); }
+const g = (x, p)=>{ if(!isFinite(x)) return "∞"; const v = Number(x.toPrecision(p||4)); if(Math.abs(v)>=1e7||(Math.abs(v)<1e-3&&v!==0)){ const [mn,ex]=v.toExponential(2).split("e"); return mn+" × 10<sup>"+String(+ex).replace("-","−")+"</sup>"; } return v<0 ? "−"+String(-v) : String(v); };
+const d = (x, n)=> (Math.abs(x)<1e-12?0:x).toFixed(n);
+const num = el => parseFloat(el.value);
+const subN = n => String(n).split("").map(ch=>String.fromCharCode(0x2080+(+ch))).join("");
+
+/* ---------------- §1 STANDING WAVE DEMO ---------------- */
+const cvSW = $("cvSW"), swR = $("swR"), swROut = $("swROut"), swParts = $("swParts"), swPlay = $("swPlay"), swRead = $("swRead");
+let swT = 0.35, swPlaying = !RM, swVis = true;
+function drawSW(){
+  const {ctx,w,h} = prep(cvSW);
+  const r = +swR.value, ink=css("--ink"), mut=css("--muted"), gr=css("--grid");
+  const x0 = 8, x1 = w-26, Lpx = x1-x0, mid = h/2, A = (h/2-18)/2;
+  const lam = Lpx/2.5, k = 2*Math.PI/lam, wt = 2*Math.PI*0.5*swT;
+  line(ctx,x0,mid,x1,mid,gr,1);
+  ctx.fillStyle = mut; ctx.fillRect(x1+4, 10, 8, h-20);
+  txt(ctx,"boundary",x1-4,14,mut,"right",11);
+  const N = 500, X = i=>x0+Lpx*i/N, xx = i=>Lpx*i/N;
+  const env = i=>A*Math.sqrt(Math.max(0,1+r*r-2*r*Math.cos(2*k*(Lpx-xx(i)))));
+  curve(ctx,N,X,i=>mid-env(i),css("--warm"),1.4,[5,4]);
+  curve(ctx,N,X,i=>mid+env(i),css("--warm"),1.4,[5,4]);
+  if(swParts.checked){
+    curve(ctx,N,X,i=>mid-A*Math.sin(k*xx(i)-wt),css("--inc"),1.4);
+    if(r>0) curve(ctx,N,X,i=>mid+r*A*Math.sin(k*(2*Lpx-xx(i))-wt),css("--ref"),1.4);
+  }
+  curve(ctx,N,X,i=>mid-(A*Math.sin(k*xx(i)-wt) - r*A*Math.sin(k*(2*Lpx-xx(i))-wt)),ink,2.4);
+  txt(ctx,"→ incident",x0+4,14,css("--inc"),"left",11);
+  txt(ctx,"← reflected",x0+4,h-12,css("--ref"),"left",11);
+  swROut.textContent = r.toFixed(2);
+  const sw = r>=1 ? "∞" : d((1+r)/(1-r),2);
+  swRead.innerHTML = "max amplitude = "+ymi+" + "+ymr+" = <b>"+d(1+r,2)+"</b> · min amplitude = "+ymi+" − "+ymr+" = <b>"+d(1-r,2)+"</b>"+(r>=1?" (true nodes)":"")+" · SWR = <b>"+sw+"</b>";
+}
+swR.addEventListener("input", drawSW);
+swParts.addEventListener("change", drawSW);
+swPlay.textContent = swPlaying ? "Pause" : "Play";
+swPlay.addEventListener("click", ()=>{ swPlaying=!swPlaying; swPlay.textContent = swPlaying ? "Pause" : "Play"; });
+
+/* ---------------- §2 SWR CALCULATOR ---------------- */
+let swMode = "amp";
+const swSeg = document.querySelector("#swrCalc .seg"), swSteps = $("swSteps");
+const swYi=$("swYi"), swYr=$("swYr"), swr=$("swr"), swRR=$("swRR"), swS=$("swS");
+function setSwMode(m){
+  swMode = m;
+  setSeg(swSeg, swSeg.querySelector('[data-swm="'+m+'"]'));
+  document.querySelectorAll("#swrCalc [data-for]").forEach(l=>l.hidden = l.dataset.for!==m);
+  calcSWR();
+}
+function calcSWR(){
+  const L = [], c = s=>'<span class="c">'+s+'</span>', A = s=>'<span class="ans">'+s+'</span>';
+  let r, yi, yr;
+  if(swMode==="amp"){
+    yi = num(swYi); yr = num(swYr);
+    if(!(yi>0) || !(yr>=0)){ swSteps.innerHTML = "Enter a positive "+ymi+" and a non-negative "+ymr+"."; return; }
+    if(yr>yi){ swSteps.innerHTML = "<div>"+ymr+" can't be bigger than "+ymi+": the reflection would carry more than came in (r &gt; 1).</div>"; return; }
+    r = yr/yi;
+    L.push("<div>max = "+ymi+" + "+ymr+" = "+g(yi)+" + "+g(yr)+" = "+g(yi+yr)+c("antinodes")+"</div>");
+    L.push("<div>min = "+ymi+" − "+ymr+" = "+g(yi)+" − "+g(yr)+" = "+g(yi-yr)+c("nodes")+"</div>");
+    L.push("<div>SWR = "+F(g(yi+yr),g(yi-yr))+" = "+A(r>=1?"∞":g((yi+yr)/(yi-yr)))+"</div>");
+    L.push("<div>r = "+F(ymr,ymi)+" = "+F(g(yr),g(yi))+" = "+g(r)+" &nbsp;·&nbsp; R = r<sup>2</sup> = "+g(r*r)+c(g(100*r*r,3)+"% of the power reflects")+"</div>");
+  } else if(swMode==="r"){
+    r = num(swr);
+    if(!(r>=0 && r<=1)){ swSteps.innerHTML = "r must be between 0 and 1."; return; }
+    L.push("<div>SWR = "+F("1 + r","1 − r")+" = "+F("1 + "+g(r),"1 − "+g(r))+" = "+A(r>=1?"∞":g((1+r)/(1-r)))+(r>=1?c("total reflection"):r===0?c("no reflection"):"")+"</div>");
+    L.push("<div>R = r<sup>2</sup> = "+g(r*r)+c(g(100*r*r,3)+"% of the power reflects")+"</div>");
+  } else if(swMode==="R"){
+    const R = num(swRR);
+    if(!(R>=0 && R<=1)){ swSteps.innerHTML = "R must be between 0 and 1."; return; }
+    r = Math.sqrt(R);
+    L.push("<div>r = √R = √"+g(R)+" = "+g(r)+c("amplitude ratio, not power")+"</div>");
+    L.push("<div>SWR = "+F("1 + √R","1 − √R")+" = "+F("1 + "+g(r),"1 − "+g(r))+" = "+A(r>=1?"∞":g((1+r)/(1-r)))+"</div>");
+  } else {
+    const S = num(swS);
+    if(!(S>=1)){ swSteps.innerHTML = "A measured SWR is always 1 or more."; return; }
+    r = (S-1)/(S+1);
+    L.push("<div>r = "+F("SWR − 1","SWR + 1")+" = "+F(g(S)+" − 1",g(S)+" + 1")+" = "+A(g(r))+c("rearranged from SWR = "+F("1 + r","1 − r"))+"</div>");
+    L.push("<div>R = r<sup>2</sup> = "+A(g(r*r))+c(g(100*r*r,3)+"% of the power reflects")+"</div>");
+  }
+  swSteps.innerHTML = L.join("");
+}
+swSeg.querySelectorAll("button").forEach(b=>b.addEventListener("click", ()=>setSwMode(b.dataset.swm)));
+[swYi,swYr,swr,swRR,swS].forEach(el=>el.addEventListener("input", calcSWR));
+$("swP0").addEventListener("click", ()=>{ swr.value = "0"; setSwMode("r"); });
+$("swP1").addEventListener("click", ()=>{ swr.value = "1"; setSwMode("r"); });
+
+/* ---------------- §3 RESONANCE ---------------- */
+const cvRes=$("cvRes"), resF=$("resF"), resFOut=$("resFOut"), resL=$("resL"), resV=$("resV"), resRead=$("resRead");
+let resFv = 343;
+const QF = 8;
+function resp(f, f1){ let best = 0; for(let n=1;n<=40;n++){ const fn=n*f1, u=f/fn; const a = 1/Math.sqrt((1-u*u)*(1-u*u)+(u/QF)*(u/QF)); if(a>best) best=a; if(fn>f*2&&n>2) break; } return Math.min(best,QF)/QF; }
+function drawRes(){
+  const {ctx,w,h} = prep(cvRes);
+  const L = num(resL), v = num(resV);
+  const ok = L>0 && v>0, f1 = ok ? v/(2*L) : 1, fmax = 2000, f = resFv;
+  const ink=css("--ink"), mut=css("--muted"), gr=css("--grid"), ic=css("--inc"), wc=css("--warm");
+  const px0=34, px1=w-10, top=18, bot=150;
+  const X = ff=>px0+(px1-px0)*ff/fmax;
+  line(ctx,px0,bot,px1,bot,mut,1); line(ctx,px0,top,px0,bot,mut,1);
+  txt(ctx,"y",px0-16,top+4,mut,"center",12); txt(ctx,"m",px0-10,top+16,mut,"center",9);
+  txt(ctx,"f",px1-4,bot-10,mut,"right",12);
+  for(let n=1; ok && n*f1<=fmax; n++){
+    const x = X(n*f1);
+    line(ctx,x,top,x,bot,gr,1,[3,4]);
+    if((px1-px0)*f1/fmax>22 || n<=3) txt(ctx,"f"+subN(n),x,bot+12,mut,"center",11);
+  }
+  if(ok) curve(ctx,600,i=>X(fmax*i/600),i=>bot-(bot-top-6)*resp(Math.max(1,fmax*i/600),f1),ic,2);
+  const a = ok ? resp(f,f1) : 0;
+  line(ctx,X(f),top,X(f),bot,wc,1.6);
+  ctx.fillStyle=wc; ctx.beginPath(); ctx.arc(X(f),bot-(bot-top-6)*a,5,0,2*Math.PI); ctx.fill();
+  // pipe
+  const py=228, ph=34, qx0=70, qx1=w-28;
+  ctx.fillStyle = css("--accent-soft"); ctx.fillRect(qx0,py-ph,qx1-qx0,2*ph);
+  ctx.fillStyle = ink; ctx.fillRect(qx0,py-ph-7,qx1-qx0,7); ctx.fillRect(qx0,py+ph,qx1-qx0,7);
+  // speaker
+  ctx.fillStyle = mut; ctx.fillRect(18,py-10,10,20);
+  ctx.beginPath(); ctx.moveTo(28,py-10); ctx.lineTo(44,py-22); ctx.lineTo(44,py+22); ctx.lineTo(28,py+10); ctx.closePath(); ctx.fill();
+  for(let j=0;j<3;j++){ ctx.beginPath(); ctx.strokeStyle=mut; ctx.lineWidth=1.4; ctx.arc(46,py,8+7*j,-0.6,0.6); ctx.stroke(); }
+  const n = Math.max(1, Math.round(f/f1)), amp = (ph-6)*a;
+  const PX = i=>qx0+(qx1-qx0)*i/300, env = i=>amp*Math.abs(Math.cos(n*Math.PI*i/300));
+  ctx.beginPath(); for(let i=0;i<=300;i++){ const y=py-env(i); i?ctx.lineTo(PX(i),y):ctx.moveTo(PX(i),y);} for(let i=300;i>=0;i--){ ctx.lineTo(PX(i),py+env(i)); } ctx.closePath();
+  ctx.globalAlpha = 0.35; ctx.fillStyle = ic; ctx.fill(); ctx.globalAlpha = 1;
+  curve(ctx,300,PX,i=>py-env(i),ic,1.5); curve(ctx,300,PX,i=>py+env(i),ic,1.5);
+  txt(ctx,"open",qx0,py+ph+20,mut,"center",11); txt(ctx,"open",qx1,py+ph+20,mut,"center",11);
+  txt(ctx,"← L = "+(ok?g(L,3):"?")+" m →",(qx0+qx1)/2,py+ph+20,mut,"center",11);
+  resFOut.textContent = Math.round(f)+" Hz";
+  if(!ok){ resRead.innerHTML = "Enter a positive L and v."; return; }
+  const ratio = f/f1, near = Math.round(ratio), on = near>=1 && Math.abs(ratio-near)<0.015;
+  resRead.innerHTML = "f<sub>1</sub> = "+F("v","2L")+" = "+F(g(v),"2("+g(L,3)+")")+" = <b>"+g(f1)+" Hz</b> · "+F("f","f<sub>1</sub>")+" = "+F(g(f,4),g(f1))+" = <b>"+d(ratio,2)+"</b> · "+
+    (on ? '<span class="verdict ok">Resonance: n = '+near+'</span>' : '<span class="verdict no">Off resonance: small amplitude</span>');
+}
+resF.addEventListener("input", ()=>{ resFv = +resF.value; drawRes(); });
+[resL,resV].forEach(el=>el.addEventListener("input", drawRes));
+document.querySelectorAll("[data-resn]").forEach(b=>b.addEventListener("click", ()=>{
+  const L=num(resL), v=num(resV); if(!(L>0&&v>0)) return;
+  resFv = Math.min(2000, Math.max(40, +b.dataset.resn * v/(2*L))); resF.value = resFv; drawRes();
+}));
+
+/* ---------------- §4 BEATS WAVEFORM ---------------- */
+const cvBeat=$("cvBeat"), bF1=$("bF1"), bF2=$("bF2"), bRead=$("bRead");
+function drawBeat(){
+  const {ctx,w,h} = prep(cvBeat, 330);
+  const f1=+bF1.value, f2=+bF2.value, ink=css("--ink"), mut=css("--muted"), gr=css("--grid");
+  const x0=40, x1=w-10, N=1400, X=i=>x0+(x1-x0)*i/N, t=i=>i/N, S=28;
+  const rows=[[42,"s₁",css("--inc"),i=>Math.cos(2*Math.PI*f1*t(i))],[112,"s₂",css("--ref"),i=>Math.cos(2*Math.PI*f2*t(i))]];
+  rows.forEach(([y,l,c,fn])=>{ line(ctx,x0,y,x1,y,gr,1); txt(ctx,l,x0-10,y,mut,"right",12); curve(ctx,N,X,i=>y-S*fn(i),c,1.3); });
+  const yR=236; line(ctx,x0,yR,x1,yR,gr,1); txt(ctx,"s",x0-16,yR,mut,"right",12); txt(ctx,"R",x0-15,yR+5,mut,"left",9);
+  const wp = Math.PI*(f1-f2);
+  curve(ctx,N,X,i=>yR-2*S*Math.cos(wp*t(i)),css("--warm"),1.4,[5,4]);
+  curve(ctx,N,X,i=>yR+2*S*Math.cos(wp*t(i)),css("--warm"),1.4,[5,4]);
+  curve(ctx,N,X,i=>yR-S*(Math.cos(2*Math.PI*f1*t(i))+Math.cos(2*Math.PI*f2*t(i))),ink,1.6);
+  txt(ctx,"0",x0,h-8,mut,"center",11); txt(ctx,"0.5 s",(x0+x1)/2,h-8,mut,"center",11); txt(ctx,"1 s",x1-6,h-8,mut,"center",11);
+  $("bF1Out").textContent = f1+" Hz"; $("bF2Out").textContent = f2+" Hz";
+  const fb = Math.abs(f1-f2);
+  bRead.innerHTML = "f′ = "+F("f<sub>1</sub> − f<sub>2</sub>","2")+" = <b>"+g(Math.abs(f1-f2)/2)+" Hz</b> · f = "+F("f<sub>1</sub> + f<sub>2</sub>","2")+" = <b>"+g((f1+f2)/2)+" Hz</b> · beats in this 1 s window: <b>"+g(fb)+"</b>"+(fb===0?" (equal frequencies: no beats, just a louder steady wave)":"");
+}
+[bF1,bF2].forEach(el=>el.addEventListener("input", drawBeat));
+
+/* ---------------- §5 BEAT CALCULATOR + AUDIO ---------------- */
+const bcF1=$("bcF1"), bcF2=$("bcF2"), bcSteps=$("bcSteps"), bcPlay=$("bcPlay");
+function calcBeat(){
+  const f1=num(bcF1), f2=num(bcF2);
+  if(!(f1>0&&f2>0)){ bcSteps.innerHTML = "Enter two positive frequencies."; return; }
+  const fb=Math.abs(f1-f2), fp=fb/2, c=s=>'<span class="c">'+s+'</span>', A=s=>'<span class="ans">'+s+'</span>';
+  const L=[];
+  L.push("<div>f = "+F("f<sub>1</sub> + f<sub>2</sub>","2")+" = "+F(g(f1)+" + "+g(f2),"2")+" = "+A(g((f1+f2)/2)+" Hz")+c("the pitch you hear")+"</div>");
+  L.push("<div>f′ = "+F("f<sub>1</sub> − f<sub>2</sub>","2")+" = "+F(g(f1)+" − "+g(f2),"2")+" = "+g(fp)+" Hz &nbsp;·&nbsp; T′ = "+F("1","f′")+" = "+(fp>0?g(1/fp)+" s":"∞")+c("envelope cos(ω′t)")+"</div>");
+  L.push("<div>T<sub>beat</sub> = "+F("T′","2")+" = "+A(fp>0?g(1/(2*fp))+" s":"∞")+"</div>");
+  L.push("<div>f<sub>beat</sub> = 2f′ = |f<sub>1</sub> − f<sub>2</sub>| = "+A(g(fb)+" Hz")+c(fb>20?"too fast to hear as beats; sounds rough instead":fb>0?g(fb)+" swells per second":"no beats")+"</div>");
+  bcSteps.innerHTML = L.join("");
+}
+[bcF1,bcF2].forEach(el=>el.addEventListener("input", calcBeat));
+let actx = null;
+bcPlay.addEventListener("click", ()=>{
+  try{
+    const f1=num(bcF1), f2=num(bcF2);
+    if(!(f1>=20&&f1<=20000&&f2>=20&&f2<=20000)){ bcPlay.textContent = "Use 20 Hz to 20 kHz"; setTimeout(()=>bcPlay.textContent="Play 4 s",1800); return; }
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const t0 = actx.currentTime + 0.05, master = actx.createGain();
+    master.gain.setValueAtTime(0,t0); master.gain.linearRampToValueAtTime(0.18,t0+0.15); master.gain.setValueAtTime(0.18,t0+3.7); master.gain.linearRampToValueAtTime(0,t0+4);
+    master.connect(actx.destination);
+    [f1,f2].forEach(f=>{ const o=actx.createOscillator(); o.type="sine"; o.frequency.value=f; o.connect(master); o.start(t0); o.stop(t0+4.05); });
+    bcPlay.disabled = true; setTimeout(()=>bcPlay.disabled=false, 4100);
+  }catch(e){ bcPlay.textContent = "Audio not available here"; }
+});
+
+/* ---------------- §6 WAVEFRONT COUNT ---------------- */
+const dcF=$("dcF"), dcV=$("dcV"), dcVD=$("dcVD"), dcT=$("dcT"), dcSteps=$("dcSteps");
+function calcDC(){
+  const f=num(dcF), v=num(dcV), vD=num(dcVD), t=num(dcT);
+  if(!(f>0&&v>0&&t>0&&isFinite(vD))){ dcSteps.innerHTML = "Enter positive f, v and t, and a value for v<sub>D</sub>."; return; }
+  const lam=v/f, dist=v*t+vD*t, nW=dist/lam, fp=nW/t, c=s=>'<span class="c">'+s+'</span>', A=s=>'<span class="ans">'+s+'</span>';
+  const L=[];
+  L.push("<div>λ = "+F("v","f")+" = "+F(g(v),g(f))+" = "+g(lam)+" m"+c("set by the still source")+"</div>");
+  L.push("<div>vt = "+g(v)+" × "+g(t)+" = "+g(v*t)+" m &nbsp;·&nbsp; v<sub>D</sub>t = "+g(vD)+" × "+g(t)+" = "+g(vD*t)+" m</div>");
+  if(dist<=0){ L.push("<div>vt + v<sub>D</sub>t ≤ 0: the detector is outrunning the sound and never meets a wavefront.</div>"); dcSteps.innerHTML=L.join(""); return; }
+  L.push("<div>wavefronts met = "+F("vt + v<sub>D</sub>t","λ")+" = "+F(g(v*t)+(vD<0?" − "+g(-vD*t):" + "+g(vD*t)),g(lam))+" = "+g(nW)+"</div>");
+  L.push("<div>f′ = "+F("wavefronts","t")+" = "+F(g(nW),g(t))+" = "+A(g(fp)+" Hz")+c("t cancels")+"</div>");
+  L.push("<div>check: f′ = f "+F("v "+(vD<0?"−":"+")+" v<sub>D</sub>","v")+" = "+g(f)+" × "+F(g(v)+(vD<0?" − ":" + ")+g(Math.abs(vD)),g(v))+" = "+g(f*(v+vD)/v)+" Hz</div>");
+  dcSteps.innerHTML = L.join("");
+}
+[dcF,dcV,dcVD,dcT].forEach(el=>el.addEventListener("input", calcDC));
+
+/* ---------------- §7 DOPPLER ANIMATION + CALCULATOR ---------------- */
+const cvDop=$("cvDop"), dpVS=$("dpVS"), dpVD=$("dpVD"), dpF=$("dpF"), dpV=$("dpV"), dpSteps=$("dpSteps"), dpPlay=$("dpPlay");
+let dpT = 3.2, dpPlaying = !RM, dpVis = true;
+const DP_LOOP = 5.5, DP_TE = 0.32;
+function drawDop(){
+  const {ctx,w,h} = prep(cvDop);
+  const v = num(dpV)||343, vS = +dpVS.value, vD = +dpVD.value, mut=css("--muted"), ic=css("--inc"), ink=css("--ink");
+  const c = Math.min(80, w/9), y = h/2, sx0 = w*0.16, dx0 = w*0.84;
+  const sp = c*vS/v, dp = -c*vD/v, t = dpT % DP_LOOP;
+  const sx = tt=>sx0+sp*tt, dx = dx0+dp*t;
+  line(ctx,0,y,w,y,css("--grid"),1);
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,w,h); ctx.clip();
+  for(let k=0; k*DP_TE<=t; k++){
+    const te=k*DP_TE, R=c*(t-te), cx=sx(te);
+    ctx.beginPath(); ctx.globalAlpha = Math.max(0.15, 1-R/(w*0.9)); ctx.strokeStyle=ic; ctx.lineWidth=1.6; ctx.arc(cx,y,R,0,2*Math.PI); ctx.stroke();
+  }
+  ctx.globalAlpha=1; ctx.restore();
+  ctx.fillStyle=ink; ctx.beginPath(); ctx.arc(sx(t),y,7,0,2*Math.PI); ctx.fill();
+  txt(ctx,"S",sx(t),y+20,ink,"center",12,"600");
+  ctx.fillStyle=css("--warm"); ctx.fillRect(dx-6,y-12,12,24);
+  txt(ctx,"D",dx,y+26,ink,"center",12,"600");
+  if(Math.abs(vS)>0.05){ const a=vS>0?1:-1; line(ctx,sx(t),y-20,sx(t)+a*26,y-20,ink,1.5); txt(ctx,a>0?"▶":"◀",sx(t)+a*28,y-20,ink,"center",10); }
+  if(Math.abs(vD)>0.05){ const a=vD>0?-1:1; line(ctx,dx,y-22,dx+a*26,y-22,ink,1.5); txt(ctx,a>0?"▶":"◀",dx+a*28,y-22,ink,"center",10); }
+  txt(ctx,"wavefronts slowed down for viewing",8,h-10,mut,"left",11);
+}
+function calcDop(){
+  const f=num(dpF), v=num(dpV), vS=+dpVS.value, vD=+dpVD.value;
+  const word = x=> Math.abs(x)<0.05 ? "still" : x>0 ? "toward" : "away";
+  $("dpVSOut").textContent = g(Math.abs(vS),3)+" m/s "+word(vS);
+  $("dpVDOut").textContent = g(Math.abs(vD),3)+" m/s "+word(vD);
+  if(!(f>0&&v>0)){ dpSteps.innerHTML="Enter a positive f and v."; return; }
+  if(vS>=v){ dpSteps.innerHTML="v<sub>S</sub> must be less than v: at v<sub>S</sub> = v the source keeps up with its own wavefronts and the formula blows up."; return; }
+  const sn = vD>=0?"+":"−", sd = vS>=0?"−":"+", top=v+vD, bottom=v-vS, fp=f*top/bottom;
+  const c=s=>'<span class="c">'+s+'</span>', A=s=>'<span class="ans">'+s+'</span>';
+  const L=[];
+  L.push("<div>Detector "+word(vD)+": "+sn+" on top. Source "+word(vS)+": "+sd+" on the bottom."+c("toward raises f′, away lowers it")+"</div>");
+  L.push("<div>f′ = f "+F("v "+sn+" v<sub>D</sub>","v "+sd+" v<sub>S</sub>")+" = "+g(f)+" × "+F(g(v)+" "+sn+" "+g(Math.abs(vD)),g(v)+" "+sd+" "+g(Math.abs(vS)))+" = "+A(g(fp,5)+" Hz")+c(fp>f+1e-9?"higher pitch":fp<f-1e-9?"lower pitch":"no shift")+"</div>");
+  L.push("<div>wavelength between them: λ′ = "+F("v "+sd+" v<sub>S</sub>","f")+" = "+g((v-vS)/f)+" m"+c("vs λ = "+g(v/f)+" m for a still source")+"</div>");
+  dpSteps.innerHTML = L.join("");
+}
+[dpVS,dpVD].forEach(el=>el.addEventListener("input", ()=>{ dpT = 0.6; calcDop(); drawDop(); }));
+[dpF,dpV].forEach(el=>el.addEventListener("input", ()=>{ calcDop(); drawDop(); }));
+document.querySelectorAll("[data-dp]").forEach(b=>b.addEventListener("click", ()=>{ const [s,dd]=b.dataset.dp.split(","); dpVS.value=s; dpVD.value=dd; dpT=0.6; calcDop(); drawDop(); }));
+dpPlay.textContent = dpPlaying ? "Pause" : "Play";
+dpPlay.addEventListener("click", ()=>{ dpPlaying=!dpPlaying; dpPlay.textContent = dpPlaying ? "Pause" : "Play"; });
+
+/* ---------------- §8 COHERENCE ---------------- */
+const cvCoh=$("cvCoh"), chP=$("chP"), chA=$("chA"), chInc=$("chInc"), chRead=$("chRead");
+let chPhi = 0, chRand = 0, chLast = 0, chVis = true;
+function drawCoh(){
+  const {ctx,w,h} = prep(cvCoh);
+  const A2=+chA.value, dphi = chInc.checked ? chRand : chPhi*Math.PI, ink=css("--ink"), mut=css("--muted"), gr=css("--grid");
+  const x0=30, x1=w-10, mid=h/2, S=Math.min(38,(h/2-10)/2.5), N=500, X=i=>x0+(x1-x0)*i/N, tau=i=>2*i/N;
+  line(ctx,x0,mid,x1,mid,gr,1);
+  txt(ctx,"y",x0-14,mid-S*2.2,mut,"center",12); txt(ctx,"t",x1-4,mid+14,mut,"right",12);
+  const y1=i=>Math.cos(dphi-2*Math.PI*tau(i)), y2=i=>A2*Math.cos(-2*Math.PI*tau(i));
+  curve(ctx,N,X,i=>mid-S*y1(i),css("--inc"),1.5);
+  curve(ctx,N,X,i=>mid-S*y2(i),css("--ref"),1.5);
+  curve(ctx,N,X,i=>mid-S*(y1(i)+y2(i)),ink,2.4);
+  chPOut.textContent = chInc.checked ? "random" : d(chPhi,2)+"π";
+  chAOut.textContent = A2.toFixed(2);
+  const R = Math.sqrt(Math.max(0,1+A2*A2+2*A2*Math.cos(dphi)));
+  if(chInc.checked){
+    chRead.innerHTML = "phase difference keeps jumping, so the sum's size keeps changing (now <b>"+d(R,2)+"</b>). Averaged over time, intensity ∝ y<sub>m,1</sub><sup>2</sup> + y<sub>m,2</sub><sup>2</sup> = <b>"+d(1+A2*A2,2)+"</b>: no stable bright or dark spots.";
+    return;
+  }
+  const md = ((chPhi%2)+2)%2, near = x=>Math.abs(x)<0.001;
+  const kind = near(md) ? '<span class="verdict ok">In phase: φ<sub>1</sub> − φ<sub>2</sub> = 2nπ, n = '+Math.round(chPhi/2)+'</span>' : near(md-1) ? '<span class="verdict no">Out of phase: (2n + 1)π, n = '+Math.round((chPhi-1)/2)+'</span>' : '<span class="verdict mid">In between (still coherent)</span>';
+  chRead.innerHTML = kind+" resultant amplitude = <b>"+d(R,2)+"</b> (y<sub>m,1</sub> = 1, y<sub>m,2</sub> = "+A2.toFixed(2)+")";
+}
+const chPOut=$("chPOut"), chAOut=$("chAOut");
+chP.addEventListener("input", ()=>{ chPhi=+chP.value; drawCoh(); });
+chA.addEventListener("input", drawCoh);
+chInc.addEventListener("change", ()=>{ chRand = Math.random()*2*Math.PI; drawCoh(); });
+document.querySelectorAll("[data-ch]").forEach(b=>b.addEventListener("click", ()=>{ chInc.checked=false; chPhi=+b.dataset.ch; chP.value=chPhi; drawCoh(); }));
+
+/* ---------------- §9 FRINGE LADDER ---------------- */
+const cvYL=$("cvYL"), ylDL=$("ylDL"), ylRead=$("ylRead");
+let ylX = 1;
+function drawYL(){
+  const {ctx,w,h} = prep(cvYL);
+  const mut=css("--muted"), ink=css("--ink"), wc=css("--warm"), lite=css("--scr-lite"), dark=css("--scr-dark");
+  const sw = Math.min(150, w*0.32), sx0 = w/2-sw/2, sx1 = w/2+sw/2, top=14, bot=h-14, R=3.5;
+  const Y = x=>top+(bot-top)*(R-x)/(2*R);
+  for(let py=top; py<=bot; py++){
+    const x = R-(py-top)/(bot-top)*2*R, I = Math.cos(Math.PI*x)**2;
+    ctx.fillStyle = dark; ctx.fillRect(sx0,py,sw,1.2);
+    ctx.globalAlpha = I; ctx.fillStyle = lite; ctx.fillRect(sx0,py,sw,1.2); ctx.globalAlpha = 1;
+  }
+  ctx.strokeStyle = mut; ctx.lineWidth=1; ctx.strokeRect(sx0,top,sw,bot-top);
+  for(let m=-3;m<=3;m++){
+    const y=Y(m); line(ctx,sx0-24,y,sx0-4,y,css("--inc"),1.5);
+    txt(ctx,"m = "+(m<0?"−":"")+Math.abs(m),sx0-30,y,ink,"right",12);
+  }
+  for(let k=-3;k<3;k++){
+    const val=k+0.5, y=Y(val); line(ctx,sx1+4,y,sx1+24,y,css("--trn"),1.5);
+    if(Math.abs(val)===0.5) fracTxt(ctx, val<0?"−":"", "1","2", sx1+30, y, ink, 11);
+    else fracTxt(ctx, val<0?"−":"", String(Math.abs(2*val)),"2", sx1+30, y, ink, 11);
+  }
+  txt(ctx,"bright",sx0-30,top+2,mut,"right",11); txt(ctx,"dark (m + ½)",sx1+30,top+2,mut,"left",11);
+  const yP = Y(ylX);
+  line(ctx,sx0-2,yP,sx1+2,yP,wc,2.5);
+  ctx.fillStyle=wc; ctx.beginPath(); ctx.arc(sx0+sw/2,yP,5,0,2*Math.PI); ctx.fill();
+  txt(ctx,"P",sx0+sw/2+10,yP-10,wc,"left",12,"600");
+  $("ylDLOut").textContent = d(ylX,2)+"λ";
+  const I = Math.cos(Math.PI*ylX)**2, rnd = Math.round(ylX), fr = ylX-Math.floor(ylX);
+  let v;
+  if(Math.abs(ylX-rnd)<0.026) v = '<span class="verdict ok">Bright: d sin θ = mλ with m = '+(rnd<0?"−":"")+Math.abs(rnd)+'</span>';
+  else if(Math.abs(fr-0.5)<0.026){ const m = Math.round(ylX-0.5); v = '<span class="verdict no">Dark: m + ½ = '+d(ylX,1)+', so m = '+(m<0?"−":"")+Math.abs(m)+'</span>'; }
+  else v = '<span class="verdict mid">In between</span>';
+  ylRead.innerHTML = v+" ΔL = d sin θ = <b>"+d(ylX,2)+"λ</b> · phase difference Δφ = "+F("2π","λ")+"ΔL = <b>"+d(2*ylX,2)+"π</b> · brightness <b>"+Math.round(100*I)+"%</b> of the maximum";
+}
+ylDL.addEventListener("input", ()=>{ ylX=+ylDL.value; drawYL(); });
+document.querySelectorAll("[data-yl]").forEach(b=>b.addEventListener("click", ()=>{ ylX=+b.dataset.yl; ylDL.value=ylX; drawYL(); }));
+
+/* ---------------- §10 YOUNG CALCULATOR + SCREEN ---------------- */
+const ycL=$("ycL"), ycd=$("ycd"), ycD=$("ycD"), ycm=$("ycm"), ycSteps=$("ycSteps"), cvScr=$("cvScr");
+function wl(nm){ let r=0,gg=0,b=0;
+  if(nm<440){ r=-(nm-440)/60; b=1; } else if(nm<490){ gg=(nm-440)/50; b=1; } else if(nm<510){ gg=1; b=-(nm-510)/20; } else if(nm<580){ r=(nm-510)/70; gg=1; } else if(nm<645){ r=1; gg=-(nm-645)/65; } else r=1;
+  const f = nm<420 ? 0.4+0.6*(nm-380)/40 : nm>700 ? 0.4+0.6*(780-nm)/80 : 1;
+  const c = x=>Math.round(255*Math.pow(Math.max(0,Math.min(1,x*f)),0.8));
+  return "rgb("+c(r)+","+c(gg)+","+c(b)+")"; }
+function calcY(){
+  const lam=num(ycL), dmm=num(ycd), D=num(ycD), m=Math.round(num(ycm));
+  const c=s=>'<span class="c">'+s+'</span>', A=s=>'<span class="ans">'+s+'</span>';
+  if(!(lam>0&&dmm>0&&D>0&&isFinite(m))){ ycSteps.innerHTML="Enter positive λ, d and D, and a whole number m."; drawScr(null); return; }
+  const l=lam*1e-9, dd=dmm*1e-3, s=m*l/dd, dy=D*l/dd;
+  const L=[];
+  const lamS = g(lam)+" × 10<sup>−9</sup> m", dS = g(dmm)+" × 10<sup>−3</sup> m", mS = m<0 ? "−"+(-m) : String(m);
+  if(Math.abs(s)>1){ L.push("<div>sin θ = "+F("mλ","d")+" = "+g(s)+" &gt; 1, so there is no m = "+mS+" fringe: m can't exceed "+F("d","λ")+" = "+g(dd/l)+".</div>"); ycSteps.innerHTML=L.join(""); drawScr(null); return; }
+  const th=Math.asin(s), yEx=D*Math.tan(th), ySm=m*dy, err = m===0?0:100*Math.abs(ySm-yEx)/Math.abs(yEx);
+  L.push("<div>sin θ = "+F("mλ","d")+" = "+F(mS+" × "+lamS, dS)+" = "+g(s)+" &nbsp;→&nbsp; θ = "+g(th*180/Math.PI)+"°</div>");
+  L.push("<div>Bright: y<sub>m</sub> = "+F("mDλ","d")+" = "+F("("+mS+")("+g(D)+")("+lamS+")", dS)+" = "+A(g(ySm*1e3)+" mm")+c("small-angle")+"</div>");
+  L.push("<div>Exact: y = D tan θ = "+g(yEx*1e3)+" mm"+c("small-angle error "+(err<0.01?"&lt; 0.01":g(err,2))+"%")+"</div>");
+  L.push("<div>Dark: y = (m + ½)"+F("Dλ","d")+" = ("+mS+" + ½) × "+g(dy*1e3)+" mm = "+A(g((m+0.5)*dy*1e3)+" mm")+"</div>");
+  L.push("<div>Spacing: Δy = "+F("Dλ","d")+" = "+F("("+g(D)+")("+lamS+")", dS)+" = "+A(g(dy*1e3)+" mm")+"</div>");
+  ycSteps.innerHTML = L.join("");
+  drawScr({lam, dy, m});
+}
+function drawScr(p){
+  const {ctx,w,h} = prep(cvScr);
+  const mut=css("--muted"), wc=css("--warm");
+  const x0=10, x1=w-10, top=8, bandH=56;
+  ctx.fillStyle=css("--scr-dark"); ctx.fillRect(x0,top,x1-x0,bandH);
+  if(!p) return;
+  const span = Math.max(5, Math.abs(p.m)+2.5), mm = p.dy*1e3;
+  const X = yy=>(x0+x1)/2+(x1-x0)/2*yy/(span*mm);
+  ctx.fillStyle = wl(p.lam);
+  for(let px=x0; px<=x1; px++){ const yy=(px-(x0+x1)/2)/((x1-x0)/2)*span*mm, I=Math.cos(Math.PI*yy/mm)**2; ctx.globalAlpha=I; ctx.fillRect(px,top,1.2,bandH); }
+  ctx.globalAlpha=1;
+  const step = span>8 ? 2 : 1;
+  for(let k=-Math.floor(span); k<=Math.floor(span); k+=step){ const x=X(k*mm); line(ctx,x,top+bandH,x,top+bandH+6,mut,1); txt(ctx,g(k*mm,3),x,top+bandH+16,mut,"center",10); }
+  txt(ctx,"mm from center",x1,h-6,mut,"right",10);
+  const xm = X(p.m*mm);
+  ctx.fillStyle=wc; ctx.beginPath(); ctx.moveTo(xm,top+bandH+2); ctx.lineTo(xm-6,top+bandH+12); ctx.lineTo(xm+6,top+bandH+12); ctx.closePath(); ctx.fill();
+  line(ctx,xm,top,xm,top+bandH,wc,2);
+  const xd = X((p.m+0.5)*mm); line(ctx,xd,top,xd,top+bandH,wc,1.4,[4,3]);
+}
+[ycL,ycd,ycD,ycm].forEach(el=>el.addEventListener("input", calcY));
+
+/* ---------------- §11 INTENSITY ---------------- */
+const cvInt=$("cvInt"), inP=$("inP"), inI0=$("inI0"), inSteps=$("inSteps");
+let inPhi = 0;
+const piFrac = x=>{ const tbl=[[0,"0"],[0.5,F("π","2")],[2/3,F("2π","3")],[1,"π"],[1.5,F("3π","2")],[2,"2π"],[0.25,F("π","4")],[1/3,F("π","3")]]; for(const [v,s] of tbl){ if(Math.abs(Math.abs(x)-v)<1e-6) return (x<0?"−":"")+s; } return d(x,2)+"π"; };
+function drawInt(){
+  const {ctx,w,h} = prep(cvInt);
+  const mut=css("--muted"), gr=css("--grid"), ic=css("--inc"), tc=css("--trn"), wc=css("--warm"), ink=css("--ink");
+  const x0=40, x1=w-12, top=14, bot=h-28;
+  const X = p=>x0+(x1-x0)*(p+2)/4, Y = I=>bot-(bot-top)*I/4.4;
+  line(ctx,x0,bot,x1,bot,mut,1); line(ctx,X(0),top,X(0),bot,gr,1);
+  [-2,-1,0,1,2].forEach(p=>{ line(ctx,X(p),bot,X(p),bot+5,mut,1); txt(ctx,p===0?"0":(p<0?"−":"")+(Math.abs(p)===1?"":"2")+"π",X(p),bot+15,mut,"center",11); });
+  [[1,"I₀"],[2,"2I₀"],[4,"4I₀"]].forEach(([v,s])=>{ line(ctx,x0-4,Y(v),x0,Y(v),mut,1); txt(ctx,s,x0-6,Y(v),mut,"right",11); });
+  txt(ctx,"Δφ",x1,bot-10,mut,"right",12);
+  line(ctx,x0,Y(2),x1,Y(2),mut,1,[3,4]);
+  line(ctx,x0,Y(1),x1,Y(1),tc,3);
+  curve(ctx,600,i=>X(-2+4*i/600),i=>Y(4*Math.cos(Math.PI*(-2+4*i/600)/2)**2),ic,2.4);
+  const I = 4*Math.cos(Math.PI*inPhi/2)**2;
+  line(ctx,X(inPhi),top,X(inPhi),bot,wc,1.4,[4,3]);
+  ctx.fillStyle=wc; ctx.beginPath(); ctx.arc(X(inPhi),Y(I),6,0,2*Math.PI); ctx.fill();
+  $("inPOut").textContent = d(inPhi,2)+"π";
+  const I0 = num(inI0), c=s=>'<span class="c">'+s+'</span>', A=s=>'<span class="ans">'+s+'</span>';
+  const half = piFrac(inPhi/2), cosv = Math.cos(Math.PI*inPhi/2);
+  const L=[];
+  L.push("<div>I = 4I<sub>0</sub>cos<sup>2</sup>("+F("Δφ","2")+") = 4I<sub>0</sub>cos<sup>2</sup>("+half+") = 4I<sub>0</sub> × "+g(cosv*cosv,4)+" = "+A(g(I,4)+"I<sub>0</sub>")+"</div>");
+  if(I0>=0) L.push("<div>With I<sub>0</sub> = "+g(I0)+" W/m²: I = "+A(g(I*I0,4)+" W/m²")+c(I>3.999?"bright fringe":I<1e-6?"dark fringe":"")+"</div>");
+  L.push("<div>Path difference: ΔL = "+F("Δφ","2π")+"λ = "+g(inPhi/2,4)+"λ</div>");
+  inSteps.innerHTML = L.join("");
+}
+inP.addEventListener("input", ()=>{ inPhi=+inP.value; drawInt(); });
+inI0.addEventListener("input", drawInt);
+document.querySelectorAll("[data-in]").forEach(b=>b.addEventListener("click", ()=>{ inPhi = b.dataset.in==="0.6667" ? 2/3 : +b.dataset.in; inP.value = inPhi; drawInt(); }));
+
+/* ---------------- ANIMATION LOOP + INIT ---------------- */
+try{
+  const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.target===cvSW) swVis=e.isIntersecting; if(e.target===cvDop) dpVis=e.isIntersecting; if(e.target===cvCoh) chVis=e.isIntersecting; }));
+  [cvSW,cvDop,cvCoh].forEach(c=>io.observe(c));
+}catch(e){}
+let last = 0;
+function loop(ts){
+  const dt = last ? Math.min(0.05,(ts-last)/1000) : 0; last = ts;
+  if(swPlaying && swVis){ swT += dt; drawSW(); }
+  if(dpPlaying && dpVis){ dpT += dt; drawDop(); }
+  if(chInc.checked && chVis && ts-chLast>180){ chLast = ts; chRand = Math.random()*2*Math.PI; drawCoh(); }
+  requestAnimationFrame(loop);
+}
+function drawAll(){ drawSW(); drawRes(); drawBeat(); drawDop(); drawCoh(); drawYL(); calcY(); drawInt(); }
+setSwMode("amp"); calcBeat(); calcDC(); calcDop(); drawAll();
+requestAnimationFrame(loop);
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(drawAll,80); });
+try{ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll); }catch(e){}
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+
+</script>
+
+</body></html>

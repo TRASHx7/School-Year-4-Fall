@@ -1,0 +1,1024 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AC and Inverters Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+/* TOC */
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  nav.toc{position:static; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain{margin:0 0 14px; padding-left:20px}
+ul.plain li{margin-bottom:6px}
+i.v{font-style:italic}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+/* signal chain */
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+/* equation */
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+/* callouts */
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+/* tables */
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+
+/* worked example */
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+
+/* demos */
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:8px; line-height:1.6}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+
+/* quiz */
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+@media (prefers-reduced-motion: reduce){ *{scroll-behavior:auto!important} }
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <h2>Part 1 · AC fundamentals</h2>
+  <ol>
+    <li><a href="#s1">1 Phasors <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 Impedance &amp; harmonics <span class="chip" data-chip="q2"></span></a></li>
+    <li><a href="#s3">3 Real &amp; reactive power <span class="chip" data-chip="q3"></span></a></li>
+    <li><a href="#s4">4 THD <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 Power factor <span class="chip" data-chip="q5"></span></a></li>
+  </ol>
+  <h2>Part 2 · Single-phase inverter</h2>
+  <ol>
+    <li><a href="#s6">6 The H-bridge <span class="chip" data-chip="q6"></span></a></li>
+    <li><a href="#s7">7 Square wave <span class="chip" data-chip="q7"></span></a></li>
+    <li><a href="#s8">8 Phase shift <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Sinusoidal PWM <span class="chip" data-chip="q9"></span></a></li>
+    <li><a href="#s10">10 Choosing a method <span class="chip" data-chip="q10"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">ENEL 585 · Lecture 5 · Study guide</div>
+  <h1>AC fundamentals and the single-phase inverter</h1>
+  <p class="lede">The whole lecture tells one story: take a DC source, chop it with four switches, smooth it with an inductor, and push clean 60 Hz power into the grid. Part 1 gives you the language to describe AC. Part 2 is the machine that makes it.</p>
+  <div class="chain" aria-label="Signal chain from DC bus to grid">
+    <div class="blk"><b>DC bus</b><span>V<sub>dc</sub>, e.g. a solar panel or battery</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>H-bridge</b><span>4 switches chop it</span><span class="secs">§6 to §10</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>v<sub>t</sub></b><span>choppy: only +V<sub>dc</sub>, 0, −V<sub>dc</sub></span><span class="secs">§2, §4</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Inductor L</b><span>smooths the current</span><span class="secs">§2, §9</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Grid v<sub>g</sub></b><span>receives P and Q</span><span class="secs">§3, §5</span></div>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · AC fundamentals</h2>
+
+<!-- 1 PHASORS -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>Phasors: a sine wave as one arrow</h3>
+<p>In steady state, every voltage and current in an AC circuit wiggles at the same frequency (60 Hz for the grid). So two sine waves in the same circuit can only differ in two ways: <b>how big</b> they are (the peak) and <b>how early or late</b> they are (the phase). A phasor packs exactly those two numbers into one complex number.</p>
+<div class="eq">
+  <span class="row"><i>x</i>(<i>t</i>) = <i>X̂</i> cos(<i>ωt</i> + <i>θ</i>) &nbsp;⟷&nbsp; <u><i>X</i></u> = <i>X̂</i>∠<i>θ</i> = <i>X̂</i> e<sup><i>jθ</i></sup></span>
+  <span class="row">and back again: <i>x</i>(<i>t</i>) = Re{ <u><i>X</i></u> e<sup><i>jωt</i></sup> }</span>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · the clock hand and its shadow</span>
+<p>Picture a clock hand spinning 60 times a second, with a light shining straight down on it. Its shadow on the floor slides back and forth: that shadow is your cosine wave. The hand's length is the peak <i>X̂</i>, and where it points at <i>t</i> = 0 is the phase <i>θ</i>.</p>
+<p>Every hand in the circuit spins at the same speed, like horses on one merry-go-round. Since they all turn together, you only need a single photo taken at <i>t</i> = 0 to know everything. That photo is the phasor. This is why we can drop the <i>e<sup>jωt</sup></i> part: it is the spinning, and everyone shares it.</p>
+</div>
+
+<div class="demo" id="phasorDemo">
+  <div class="dtitle">Try it: the arrow and its shadow</div>
+  <canvas id="cvPhasor" height="230" aria-label="Rotating phasor and its cosine waveform"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>phasor and x(t)</span><span><i style="background:var(--muted)"></i>θ = 0 reference</span></div>
+  <div class="controls">
+    <label for="thPh">phase θ <input id="thPh" type="range" min="-180" max="180" step="5" value="30"><output id="thPhOut">30°</output></label>
+    <button class="btn" id="phPlay" type="button">Pause</button>
+  </div>
+  <div class="readout">Positive θ shifts the wave to the <b>left</b> (it peaks earlier, at t = −θ/ω). That is what "leading" means.</div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>This course uses peak phasors, not RMS.</b> <i>X̂</i> is the peak. RMS is <i>X̂</i>/√2. This choice is why a ½ shows up in every power formula later. Mixing the two conventions is the most common way to get a factor of 2 wrong.</li>
+<li><b>Leading = positive angle = shifted left.</b> It feels backwards, but a wave that is "ahead" reaches its peak at an earlier time, which is further left on a time axis.</li>
+<li><b>Convert sines first.</b> Phasors here are built on cosine. Use sin(<i>ωt</i>) = cos(<i>ωt</i> − 90°).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: phasors"></div>
+</section>
+
+<!-- 2 IMPEDANCE -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>Impedance, and solving one frequency at a time</h3>
+<p>Phasors turn calculus into algebra. With them, R, L and C all act like resistors with complex values, called impedances, and Ohm's law becomes <u><i>V</i></u> = <u><i>Z</i></u> <u><i>I</i></u>. KVL, KCL, series and parallel rules all work exactly as in DC circuits. You just do the arithmetic with complex numbers.</p>
+<div class="tbl"><table>
+<thead><tr><th>Part</th><th>At fundamental ω</th><th>At harmonic kω</th><th>What happens</th></tr></thead>
+<tbody>
+<tr><td>Resistor</td><td><i>R</i></td><td><i>R</i></td><td>unchanged</td></tr>
+<tr><td>Inductor</td><td><i>jωL</i></td><td><i>jkωL</i></td><td>grows ×k</td></tr>
+<tr><td>Capacitor</td><td>1/(<i>jωC</i>)</td><td>1/(<i>jkωC</i>)</td><td>shrinks ÷k</td></tr>
+</tbody></table></div>
+<p class="mono" style="color:var(--muted)">60 Hz: ω₁ = 2π(60) ≈ 377 rad/s. The kth harmonic is at k × 60 Hz.</p>
+
+<div class="callout analogy"><span class="tag">Analogy · heavy door, small bucket</span>
+<p><b>An inductor is a heavy door on a hinge.</b> Swing it back and forth slowly and it follows you. Try to shake it fast and it fights you hard. So at 3 times the frequency, it pushes back 3 times harder: reactance ×k.</p>
+<p><b>A capacitor is a small bucket.</b> A slow flow fills it up and then it blocks. A fast back-and-forth slosh never fills it, so it passes easily: reactance ÷k.</p>
+<p><b>A resistor is a narrow pipe.</b> It doesn't care how fast you push.</p>
+</div>
+
+<h4>Adding phasors: arrows, not plain numbers</h4>
+<p>A resistor branch carries 4 A and a parallel inductor branch carries −j3 A. The source current is 4 − j3 = <b>5 A</b> peak, not 7 A. Walk 4 km east, then 3 km north: you end up 5 km from where you started. The two currents peak at different moments, so they never add up to 7 at the same instant.</p>
+
+<h4>Distorted waves: split into notes, solve each, add</h4>
+<div class="callout analogy"><span class="tag">Analogy · a chord</span>
+<p>A distorted waveform is like a chord on a piano: a main note at 60 Hz (the fundamental) plus quieter notes at 120, 180, 300 Hz and so on (the harmonics). Fourier says any repeating wave can be built this way.</p>
+</div>
+<ul class="plain">
+<li><b>Step 1.</b> Split the source into one sinusoid per harmonic.</li>
+<li><b>Step 2.</b> Solve the circuit separately for each harmonic, using that harmonic's impedances (L gets k times bigger, C gets k times smaller).</li>
+<li><b>Step 3.</b> Convert each answer back to a time function and add them (superposition works because the circuit is linear).</li>
+</ul>
+<details class="work"><summary>Worked example from the slides: the 3rd harmonic</summary><div class="body">
+<p>Series R = 3 Ω and an inductor with ωL = 4 Ω. The source also contains <u><i>V</i></u><sub>s,3</sub> = 3∠0° V at 3ω.</p>
+<p>At 3ω the inductor becomes j12 Ω (tripled). So</p>
+<div class="eq"><span class="row"><u><i>I</i></u><sub>3</sub> = <span class="frac"><span>3</span><span>3 + j12</span></span> = 0.059 − j0.235 = 0.243∠−76.0° A</span></div>
+<p>Then add i<sub>3</sub>(t) = 0.243 cos(3ωt − 76°) to the fundamental current in the time domain.</p>
+</div></details>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Never add phasors of different frequencies.</b> A 60 Hz arrow and a 180 Hz arrow spin at different speeds, so a single snapshot means nothing. Add the time functions instead.</li>
+<li><b>Remember this for Part 2:</b> an inductor is a weak filter for low harmonics (only 3× at the 3rd) and a strong one for high harmonics (39× at the 39th). That single fact explains why PWM wins.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: impedance and harmonics"></div>
+</section>
+
+<!-- 3 POWER -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>Real and reactive power</h3>
+<p>When voltage and current are both sinusoids, the average power depends on how well they line up in time. Complex power captures both parts at once. With <b>peak</b> phasors:</p>
+<div class="eq">
+<span class="row"><u><i>S</i></u> = ½ <u><i>V</i></u> <u><i>I</i></u>* = <i>P</i> + <i>jQ</i></span>
+<span class="row"><i>P</i> = ½ <i>V̂ Î</i> cos<i>θ</i> <span class="note">real power, W</span></span>
+<span class="row"><i>Q</i> = ½ <i>V̂ Î</i> sin<i>θ</i> <span class="note">reactive power, var</span></span>
+</div>
+<p>Here <i>θ</i> is how far the voltage leads the current. With RMS values the ½ disappears: <i>P</i> = <i>V</i><sub>rms</sub><i>I</i><sub>rms</sub> cos<i>θ</i>.</p>
+<ul class="plain">
+<li><b>Q &gt; 0, lagging:</b> current lags voltage. Inductive. Absorbs reactive power.</li>
+<li><b>Q &lt; 0, leading:</b> current leads voltage. Capacitive. Supplies reactive power.</li>
+</ul>
+
+<div class="callout analogy"><span class="tag">Analogy · the horse and the barge</span>
+<p>A horse walks along the bank pulling a barge with a rope held at an angle. Only the part of the pull that points along the canal moves the barge forward. That useful part is <b>P</b>. The sideways part of the pull, <b>Q</b>, moves nothing forward, but the rope still has to carry it and the horse still feels it.</p>
+<p>Physically, Q is energy that sloshes into an inductor's magnetic field or a capacitor's electric field and comes back out every cycle. It is borrowed and returned, so its average is zero, but it still makes current flow in the wires.</p>
+</div>
+
+<h4>The key example: an inverter feeding the grid through an inductor</h4>
+<p>This circuit is the model for everything in Part 2. The inverter makes <u><i>V</i></u><sub>t</sub>, the grid is <u><i>V</i></u><sub>g</sub>, and an inductor sits between them. KVL gives the current:</p>
+<div class="eq">
+<span class="row"><u><i>I</i></u><sub>g</sub> = <span class="frac"><span><u><i>V</i></u><sub>t</sub> − <u><i>V</i></u><sub>g</sub></span><span><i>jωL</i></span></span> = <span class="frac"><span><i>V̂</i><sub>t</sub> sin<i>θ</i></span><span><i>ωL</i></span></span> + <i>j</i> <span class="frac"><span><i>V̂</i><sub>g</sub> − <i>V̂</i><sub>t</sub> cos<i>θ</i></span><span><i>ωL</i></span></span></span>
+</div>
+<details class="work" open><summary>Worked example: 340∠10° V into a 340∠0° V grid, ωL = 2 Ω</summary><div class="body">
+<p><u><i>I</i></u><sub>g</sub> = 340 sin10°/2 + j(340 − 340 cos10°)/2 = 29.5 + j2.6 = 29.6∠5.0° A (peak)</p>
+<p><u><i>S</i></u><sub>g</sub> = ½ (340)(29.5 − j2.6) → <b>P ≈ 5.02 kW, Q ≈ −0.439 kvar</b></p>
+<p><u><i>S</i></u><sub>g</sub> is the power <b>absorbed by the grid</b>. So the grid takes in 5 kW of real power and gives out 439 var of reactive power.</p>
+</div></details>
+
+<p>Multiply out the current and you get two rules of thumb that are worth memorizing:</p>
+<div class="eq">
+<span class="row"><i>P</i> = <span class="frac"><span><i>V̂</i><sub>t</sub> <i>V̂</i><sub>g</sub> sin<i>θ</i></span><span>2<i>ωL</i></span></span> <span class="note">the angle θ sets real power</span></span>
+<span class="row"><i>Q</i><sub>g</sub> = <span class="frac"><span><i>V̂</i><sub>g</sub>(<i>V̂</i><sub>t</sub> cos<i>θ</i> − <i>V̂</i><sub>g</sub>)</span><span>2<i>ωL</i></span></span> <span class="note">the magnitude V̂<sub>t</sub> mostly sets reactive power</span></span>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · pushing a swing</span>
+<p>To add energy to a child on a swing, you push slightly ahead of the swing's motion. The inverter voltage leading the grid by a small angle θ is that push: it sends real power into the grid. Making the inverter voltage <i>bigger</i> than the grid (same timing) doesn't add energy. It just shoves reactive power around.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Don't forget the ½.</b> With peak phasors, <u><i>S</i></u> = ½<u><i>V</i></u><u><i>I</i></u>*. Leaving it out doubles your answer.</li>
+<li><b>Conjugate the current</b>, not the voltage.</li>
+<li><b>Watch the sign convention.</b> Q<sub>g</sub> = −0.439 kvar "absorbed" means the grid is <i>supplying</i> 439 var. Where does it go? Into the inductor, which needs ½ωLÎ² = ½(2)(29.6²) ≈ 0.88 kvar. Because the inverter and grid voltages have equal magnitude, they each supply about half.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: power"></div>
+</section>
+
+<!-- 4 THD -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Total harmonic distortion (THD)</h3>
+<p>Converters switch, so the current they push or pull is not a perfect sine wave, even when the grid voltage is. THD is one number that says how much junk rides along with the useful 60 Hz part.</p>
+<div class="eq">
+<span class="row"><i>I</i><sub>rms</sub> = √( <i>I</i><sub>1</sub>² + <i>I</i><sub>2</sub>² + <i>I</i><sub>3</sub>² + … )</span>
+<span class="row">THD = <span class="frac"><span>√( <i>I</i><sub>2</sub>² + <i>I</i><sub>3</sub>² + … )</span><span><i>I</i><sub>1</sub></span></span> × 100%</span>
+</div>
+<p>Harmonic RMS values are <i>I<sub>k</sub></i> = <i>Î<sub>k</sub></i>/√2. The top of the THD fraction is everything <i>except</i> the fundamental; the bottom is the fundamental only.</p>
+<div class="callout analogy"><span class="tag">Analogy · off-key notes</span>
+<p>THD is the combined loudness of all the off-key notes compared to the melody note. Why square-and-root? Different frequencies are independent, like the east and north legs of a walk, so they combine like the sides of a right triangle.</p>
+</div>
+<details class="work" open><summary>Worked example: fundamental 10 A, 5th 0.6 A, 7th 0.8 A</summary><div class="body">
+<p>THD = √(0.6² + 0.8²)/10 = 1.0/10 = <b>10%</b>. (The 0.6 and 0.8 form a 3-4-5 triangle, so the harmonics total 1.0 A.)</p>
+</div></details>
+<h4>Measuring it</h4>
+<ul class="plain">
+<li>Capture a whole number of cycles at steady state, e.g. 6 cycles of 60 Hz = 0.100 s (one cycle is 16.67 ms).</li>
+<li>Run an FFT and read RMS amps at 60, 120, 180 Hz and so on.</li>
+<li>Plug into the formula. For three-phase gear, repeat for each phase.</li>
+</ul>
+<h4>The lesson from real inverter data</h4>
+<p>The same inverter gave about <b>0.66%</b> current THD on a perfect sinusoidal grid, but about <b>20%</b> when the grid voltage had just 3% of 11th harmonic in it. A low THD number measured on an ideal grid tells you very little about how the inverter behaves on a real, messy one.</p>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li>The denominator is <b>I<sub>1</sub></b>, not I<sub>rms</sub>. THD can exceed 100%.</li>
+<li>Peak or RMS doesn't matter for THD as long as you're consistent, because the √2 cancels.</li>
+<li>A whole number of cycles matters: otherwise the FFT bins don't line up with the harmonics and energy smears into neighbouring bins (spectral leakage).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: THD"></div>
+</section>
+
+<!-- 5 PF -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>Power factor: two ways to waste the wire</h3>
+<p>Power factor says what fraction of the current-carrying effort actually delivers power:</p>
+<div class="eq">
+<span class="row"><i>k<sub>p</sub></i> = <span class="frac"><span><i>P</i></span><span><i>V</i><sub>rms</sub> <i>I</i><sub>rms</sub></span></span> = cos<i>θ</i> × <span class="frac"><span><i>I</i><sub>1</sub></span><span><i>I</i><sub>rms</sub></span></span></span>
+<span class="row"><span class="note" style="margin-left:0">displacement factor × distortion factor, where</span> <span class="frac"><span><i>I</i><sub>1</sub></span><span><i>I</i><sub>rms</sub></span></span> = <span class="frac"><span>1</span><span>√(1 + THD²)</span></span></span>
+</div>
+<p>Here θ is the angle between the voltage and the <b>fundamental</b> current, and THD is written as a fraction (10% = 0.10).</p>
+<ul class="plain">
+<li><b>Displacement:</b> the 60 Hz current is out of step with the voltage. Costs cos θ.</li>
+<li><b>Distortion:</b> harmonic currents add to I<sub>rms</sub> (they heat wires and use up ratings) but, with a sinusoidal grid voltage, deliver zero average power.</li>
+</ul>
+<div class="callout analogy"><span class="tag">Analogy · the delivery truck</span>
+<p>A truck's capacity is V<sub>rms</sub>×I<sub>rms</sub>; the cargo that actually gets delivered is P. Displacement is boxes loaded sideways, wasting space. Distortion is packing peanuts: they fill the truck, nobody paid for them, and you still pay for the fuel.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Why do harmonics deliver no average power?</b> Multiply a 60 Hz voltage by a 180 Hz current. They keep drifting in and out of step, so the product is positive half the time and negative half the time, and it averages to zero.</li>
+<li><b>Even perfectly in-phase current can have k<sub>p</sub> &lt; 1.</b> A square-wave-like current (THD 48%) has k<sub>p</sub> ≈ 0.90 even with θ = 0.</li>
+<li>Small THD barely matters: 10% THD gives 1/√1.01 = 0.995.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: power factor"></div>
+</section>
+
+<h2 class="part">Part 2 · The single-phase inverter</h2>
+
+<!-- 6 H-BRIDGE -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>The H-bridge</h3>
+<p>Four switches in two legs. Leg A has S<sub>1</sub> on top and S<sub>3</sub> below; leg B has S<sub>2</sub> on top and S<sub>4</sub> below. Each leg connects its midpoint to either the + or the − rail of the DC bus. The output is the difference between the two midpoints, <i>v<sub>t</sub></i> = <i>v<sub>A</sub></i> − <i>v<sub>B</sub></i>, which drives current through the inductor into the grid:</p>
+<div class="eq"><span class="row"><i>L</i> <span class="frac"><span><i>di<sub>g</sub></i></span><span><i>dt</i></span></span> = <i>v<sub>t</sub></i> − <i>v<sub>g</sub></i></span></div>
+<div class="tbl"><table>
+<thead><tr><th>Switches on</th><th>A is tied to</th><th>B is tied to</th><th>v<sub>t</sub></th></tr></thead>
+<tbody>
+<tr><td>S<sub>1</sub>, S<sub>4</sub></td><td>+ rail</td><td>− rail</td><td><b>+V<sub>dc</sub></b></td></tr>
+<tr><td>S<sub>2</sub>, S<sub>3</sub></td><td>− rail</td><td>+ rail</td><td><b>−V<sub>dc</sub></b></td></tr>
+<tr><td>S<sub>1</sub>, S<sub>2</sub></td><td>+ rail</td><td>+ rail</td><td>0</td></tr>
+<tr><td>S<sub>3</sub>, S<sub>4</sub></td><td>− rail</td><td>− rail</td><td>0</td></tr>
+</tbody></table></div>
+<p>Compactly, <i>v<sub>t</sub></i> = (S<sub>1</sub> + S<sub>4</sub> − 1)V<sub>dc</sub>, where each S is 1 (on) or 0 (off) and each leg's bottom switch is the opposite of its top.</p>
+<div class="callout analogy"><span class="tag">Analogy · a reversing switch for a battery</span>
+<p>Think of connecting a battery to a lamp with jumper cables. You can hook it up forwards (+V<sub>dc</sub>), backwards (−V<sub>dc</sub>), or clip both lamp wires to the same battery terminal (0). The H-bridge does exactly this, electronically, thousands of times a second.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Shoot-through:</b> never turn on S<sub>1</sub> with S<sub>3</sub>, or S<sub>2</sub> with S<sub>4</sub>. That connects + to − directly and shorts the DC bus. Huge current, dead switches.</li>
+<li><b>The bridge cannot make a sine wave.</b> It can only output +V<sub>dc</sub>, 0 or −V<sub>dc</sub>. The trick of the rest of the lecture, called <b>modulation</b>, is choosing <i>when</i> to switch so that the 60 Hz part (the fundamental) of v<sub>t</sub> has the amplitude and phase you want. The inductor then smooths the current.</li>
+<li>From §3: the amplitude and phase of v<sub>t</sub>'s fundamental are what set P and Q into the grid.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: the H-bridge"></div>
+</section>
+
+<!-- 7 SQUARE -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Square-wave modulation</h3>
+<p>The simplest plan: S<sub>1</sub>, S<sub>4</sub> on for the first half cycle, S<sub>2</sub>, S<sub>3</sub> on for the second half. The output is a ±V<sub>dc</sub> square wave at 60 Hz. Each switch turns on and off only once per cycle, so switching losses are tiny.</p>
+<p>Its Fourier series contains only odd harmonics:</p>
+<div class="eq">
+<span class="row"><i>V̂</i><sub>t,k</sub> = <span class="frac"><span>4<i>V</i><sub>dc</sub></span><span><i>kπ</i></span></span>, &nbsp; k = 1, 3, 5, 7, … <span class="note">peak; even harmonics are zero</span></span>
+<span class="row">Fundamental ≈ 1.27 V<sub>dc</sub> · 3rd = ⅓ of it · 5th = ⅕ · voltage THD = 48.3%</span>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · drawing a circle with a square</span>
+<p>A square wave is a very rough sketch of a sine wave. The sketch contains the right main tone, plus a loud 3rd harmonic at a third of the volume, a 5th at a fifth, and so on. They are all close to 60 Hz, which is the problem.</p>
+</div>
+<h4>Why it's not good enough</h4>
+<ul class="plain">
+<li><b>Amplitude is fixed</b> at 4V<sub>dc</sub>/π. The only way to change it is to change V<sub>dc</sub> itself. (Phase is adjustable by shifting the switching times.)</li>
+<li><b>The harmonics are low-order</b>, and the inductor barely filters them. With the §3 example (fundamental 340 V, ωL = 2 Ω, I<sub>g</sub> = 29.6 A):</li>
+</ul>
+<div class="tbl"><table>
+<thead><tr><th>Harmonic</th><th>V̂<sub>t,h</sub></th><th>Inductor hωL</th><th>Current Î<sub>h</sub></th><th>% of 29.6 A</th></tr></thead>
+<tbody>
+<tr><td>3rd</td><td>113.3 V</td><td>6 Ω</td><td>18.9 A</td><td><b>64%</b></td></tr>
+<tr><td>5th</td><td>68.0 V</td><td>10 Ω</td><td>6.8 A</td><td>23%</td></tr>
+<tr><td>7th</td><td>48.6 V</td><td>14 Ω</td><td>3.5 A</td><td>12%</td></tr>
+</tbody></table></div>
+<div class="callout tricky"><span class="tag">Tricky bit · the fundamental is taller than the square</span>
+<p>The fundamental's peak (1.27 V<sub>dc</sub>) is bigger than the square wave's own height (V<sub>dc</sub>). That seems impossible, but the square wave sits at full height for the whole half cycle, while a sine only touches its peak for an instant. To carry the same "area", the best-fit sine has to overshoot. This is why nothing else in this lecture can beat 4V<sub>dc</sub>/π.</p>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: square wave"></div>
+</section>
+
+<!-- 8 PHASE SHIFT -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>Phase-shift modulation</h3>
+<p>Now run each leg as its own 50% square wave, but slide leg A later and leg B earlier by αT<sub>1</sub>/2 each. Whenever both midpoints sit on the same rail, v<sub>t</sub> = 0. The output becomes three-level: +V<sub>dc</sub>, 0, −V<sub>dc</sub>, with zero gaps of length αT<sub>1</sub>.</p>
+<div class="eq">
+<span class="row"><i>V̂</i><sub>t,k</sub> = <span class="frac"><span>4<i>V</i><sub>dc</sub></span><span><i>kπ</i></span></span> |cos(<i>kπα</i>)| &nbsp;⇒&nbsp; fundamental <i>V̂</i><sub>t,1</sub> = <span class="frac"><span>4<i>V</i><sub>dc</sub></span><span><i>π</i></span></span> cos(<i>πα</i>)</span>
+<span class="row">α = 0: square wave (max output) · α = 0.5: zero output</span>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · two curtains</span>
+<p>Each leg is a curtain that opens and closes once per cycle. The output is the light that gets through when one is open and the other is closed. Sliding the two curtains' timing closer together narrows the window, so less light (a smaller fundamental) gets through. α is how far you've closed the window.</p>
+</div>
+<div class="demo">
+  <div class="dtitle">Try it: slide α and watch the harmonics</div>
+  <canvas id="cvPS" height="230" aria-label="Phase shift output waveform and harmonic bars"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>v<sub>t</sub>/V<sub>dc</sub></span><span><i style="background:var(--fund)"></i>fundamental</span><span><i style="background:var(--curr)"></i>harmonic peaks</span></div>
+  <div class="controls">
+    <label for="alPS">α <input id="alPS" type="range" min="0" max="0.5" step="0.005" value="0.25"><output id="alPSOut">0.250</output></label>
+    <button class="btn" type="button" data-al="0">α = 0</button>
+    <button class="btn" type="button" data-al="0.1">α = 0.1</button>
+    <button class="btn" type="button" data-al="0.16667">α = 1/6</button>
+    <button class="btn" type="button" data-al="0.25">α = 0.25</button>
+  </div>
+  <div class="readout" id="psRead"></div>
+</div>
+<h4>Bonus: you can delete one harmonic</h4>
+<p>Pick α so that cos(kπα) = 0, which means kπα = 90°, so <b>α = 1/(2k)</b>. α = 1/6 kills the 3rd; α = 0.1 kills the 5th. Try both in the demo.</p>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>α sets amplitude only.</b> To change the phase, shift all four gate signals together in time.</li>
+<li>You can null one harmonic, never all of them. The rest are still low-order and still hard to filter.</li>
+<li>Still only 2 switchings per device per cycle, same as the square wave.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: phase shift"></div>
+</section>
+
+<!-- 9 SPWM -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Bipolar sinusoidal PWM (SPWM)</h3>
+<p>The big idea: <b>switch fast</b> (kHz) instead of once per cycle, and use the duty ratio to control the average. Over one short switching period T<sub>s</sub>, if the output is +V<sub>dc</sub> for a fraction d and −V<sub>dc</sub> for the rest:</p>
+<div class="eq">
+<span class="row">⟨<i>v<sub>t</sub></i>⟩ = (2<i>d</i> − 1) <i>V</i><sub>dc</sub> <span class="note">d = 0.5 gives 0, d = 1 gives +V<sub>dc</sub></span></span>
+</div>
+<p>Now make d rise and fall slowly as a sine, and the local average traces a sine: m<sub>a</sub>V<sub>dc</sub> sin(ω<sub>1</sub>t). In practice this is done by comparing a sine <b>reference</b> with a fast triangle <b>carrier</b>: reference above carrier → S<sub>1</sub>, S<sub>4</sub> on (+V<sub>dc</sub>); otherwise S<sub>2</sub>, S<sub>3</sub> on (−V<sub>dc</sub>). It is "bipolar" because the output always jumps between +V<sub>dc</sub> and −V<sub>dc</sub>, never resting at 0.</p>
+<div class="tbl"><table>
+<thead><tr><th>Knob</th><th>Definition</th><th>What it controls</th></tr></thead>
+<tbody>
+<tr><td>m<sub>a</sub></td><td>reference peak ÷ carrier peak</td><td>fundamental size: V̂<sub>t,1</sub> = m<sub>a</sub>V<sub>dc</sub> (linear for m<sub>a</sub> ≤ 1)</td></tr>
+<tr><td>m<sub>f</sub></td><td>f<sub>sw</sub> ÷ f<sub>1</sub></td><td>where the harmonics sit: in clusters around m<sub>f</sub>, 2m<sub>f</sub>, 3m<sub>f</sub>, …</td></tr>
+</tbody></table></div>
+<div class="callout analogy"><span class="tag">Analogy · newspaper photos and a dog whistle</span>
+<p>Look closely at a printed newspaper photo: it's only black dots on white. From arm's length your eye averages them into smooth greys. SPWM is the same: only ±V<sub>dc</sub> up close, a smooth sine on average. The inductor plays the role of "arm's length".</p>
+<p>And the harmonics don't disappear, they get moved. SPWM shifts the noise up near the switching frequency, like moving a noise to a pitch only dogs can hear. The inductor, which is deaf to high frequencies, easily blocks it.</p>
+</div>
+<div class="demo">
+  <div class="dtitle">Try it: sine-triangle comparison</div>
+  <canvas id="cvPWM" height="280" aria-label="Sine triangle PWM comparison and output"></canvas>
+  <div class="legend"><span><i style="background:var(--fund)"></i>reference m<sub>a</sub> sin</span><span><i style="background:var(--muted)"></i>triangle carrier</span><span><i style="background:var(--volt)"></i>output v<sub>t</sub></span><span><i style="background:var(--curr)"></i>average over each T<sub>s</sub></span></div>
+  <div class="controls">
+    <label for="maPWM"><span>m<sub>a</sub></span> <input id="maPWM" type="range" min="0" max="1.3" step="0.05" value="0.8"><output id="maOut">0.80</output></label>
+    <label for="mfPWM"><span>m<sub>f</sub></span> <input id="mfPWM" type="range" min="3" max="41" step="2" value="15"><output id="mfOut">15</output></label>
+  </div>
+  <div class="readout" id="pwmRead"></div>
+</div>
+<h4>Reading the harmonic table</h4>
+<p>Textbook tables give each harmonic as V̂<sub>t,h</sub> = c<sub>h</sub>V<sub>dc</sub>. For m<sub>a</sub> = 0.8: c<sub>1</sub> = 0.800, c<sub>m<sub>f</sub></sub> = 0.818, c<sub>m<sub>f</sub>±2</sub> = 0.220.</p>
+<details class="work" open><summary>Worked example: V<sub>dc</sub> = 425 V, m<sub>a</sub> = 0.8, m<sub>f</sub> = 39, ωL = 2 Ω</summary><div class="body">
+<ul class="plain">
+<li>Fundamental: 0.8 × 425 = 340 V. ✓ matches the grid.</li>
+<li>Carrier harmonic h = 39 (2340 Hz): V̂ = 0.818 × 425 = 347.7 V. Current = 347.7 / (39 × 2) = <b>4.46 A (15%)</b>.</li>
+<li>Sidebands h = 37, 41: V̂ = 0.220 × 425 = 93.5 V. Currents ≈ 1.26 A and 1.14 A (about 4% each).</li>
+<li>Compare the square wave's 3rd: <b>18.9 A (64%)</b>.</li>
+</ul>
+</div></details>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>SPWM's voltage THD is huge (≈146% at m<sub>a</sub> = 0.8), much worse than the square wave's 48%. Yet its current is far cleaner.</b> Why? Current = V<sub>h</sub>/(hωL). The 39th harmonic's voltage is big, but it has to push through 39 times the reactance. Voltage THD alone is a misleading way to compare modulation methods when an inductor sits in between.</li>
+<li><b>Voltage ceiling:</b> in the linear range the fundamental can't exceed V<sub>dc</sub> (m<sub>a</sub> = 1), which is less than the square wave's 1.27V<sub>dc</sub>. So you need V<sub>dc</sub> &gt; V̂<sub>g</sub>. Overmodulation (m<sub>a</sub> &gt; 1) gets you more, up to 4V<sub>dc</sub>/π, but brings the low-order harmonics back.</li>
+<li><b>The price:</b> about 2m<sub>f</sub> switchings per device per cycle, so more switching loss.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: SPWM"></div>
+</section>
+
+<!-- 10 COMPARE -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>Choosing a method, and the big comparison</h3>
+<p>Goal: make a 340 V peak fundamental from a 425 V DC bus. What do you command?</p>
+<div class="tbl"><table>
+<thead><tr><th>Method</th><th>Formula</th><th>Command</th></tr></thead>
+<tbody>
+<tr><td>SPWM (linear)</td><td>V̂<sub>t,1</sub> = m<sub>a</sub>V<sub>dc</sub></td><td>m<sub>a</sub> = 340/425 = <b>0.800</b></td></tr>
+<tr><td>Phase shift</td><td>V̂<sub>t,1</sub> = (4V<sub>dc</sub>/π) cos(πα)</td><td>cos(πα) = 340π/(4·425) = 0.628 → <b>α = 0.284</b></td></tr>
+<tr><td>Square wave</td><td>V̂<sub>t,1</sub> = 4V<sub>dc</sub>/π, fixed</td><td>can't adjust; must change the bus to V<sub>dc</sub> = 340π/4 = <b>267 V</b></td></tr>
+</tbody></table></div>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Square</th><th>Phase shift</th><th>Bipolar SPWM</th></tr></thead>
+<tbody>
+<tr><td>Fundamental range</td><td>4V<sub>dc</sub>/π, fixed</td><td>0 to 4V<sub>dc</sub>/π</td><td>0 to V<sub>dc</sub> (linear)</td></tr>
+<tr><td>Lowest big harmonic</td><td>3</td><td>3 (depends on α)</td><td>m<sub>f</sub> − 2</td></tr>
+<tr><td>Switchings per device per cycle</td><td>2</td><td>2</td><td>2m<sub>f</sub></td></tr>
+<tr><td>Voltage THD</td><td>48.3%</td><td>31% at α = 1/6, 48.3% at 0.25</td><td>≈146% at m<sub>a</sub> = 0.8, all near m<sub>f</sub> and above</td></tr>
+<tr><td>In one line</td><td>simplest, worst current</td><td>adds amplitude control, can kill one harmonic</td><td>cleanest current, costs switching loss</td></tr>
+</tbody></table></div>
+<div class="callout analogy"><span class="tag">The whole lecture in one picture</span>
+<p>Square wave, phase shift and SPWM are three ways of sketching a sine wave with only three crayons (+, 0, −). The square wave uses two big strokes. Phase shift adds a gap. SPWM uses thousands of tiny strokes, so the mess ends up at a scale the inductor simply smooths away.</p>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: choosing a method"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across the whole lecture, mostly calculations. Grab paper and a calculator. Your score shows at the top; the explanation after each answer tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Phasors (peak)</h5><div>x(t) = X̂ cos(ωt + θ) ↔ X̂∠θ<br>RMS = X̂/√2<br>sin(ωt) = cos(ωt − 90°)</div></div>
+  <div class="card"><h5>Impedance at harmonic k</h5><div>R → R<br>jωL → jkωL<br>1/(jωC) → 1/(jkωC)</div></div>
+  <div class="card"><h5>Power (peak phasors)</h5><div>S = ½ V I* = P + jQ<br>P = ½V̂Î cos θ, Q = ½V̂Î sin θ<br>Q &gt; 0 lagging, Q &lt; 0 leading</div></div>
+  <div class="card"><h5>Inverter into grid via L</h5><div>I<sub>g</sub> = (V<sub>t</sub> − V<sub>g</sub>)/(jωL)<br>P = V̂<sub>t</sub>V̂<sub>g</sub> sin θ/(2ωL)<br>Q<sub>g</sub> = V̂<sub>g</sub>(V̂<sub>t</sub>cos θ − V̂<sub>g</sub>)/(2ωL)</div></div>
+  <div class="card"><h5>THD and PF</h5><div>I<sub>rms</sub> = √ΣI<sub>k</sub>²<br>THD = √(Σ<sub>k≥2</sub>I<sub>k</sub>²)/I<sub>1</sub><br>k<sub>p</sub> = cos θ / √(1 + THD²)</div></div>
+  <div class="card"><h5>H-bridge</h5><div>v<sub>t</sub> = (S<sub>1</sub> + S<sub>4</sub> − 1)V<sub>dc</sub><br>never S<sub>1</sub>+S<sub>3</sub> or S<sub>2</sub>+S<sub>4</sub><br>L di<sub>g</sub>/dt = v<sub>t</sub> − v<sub>g</sub></div></div>
+  <div class="card"><h5>Square and phase shift</h5><div>V̂<sub>t,k</sub> = (4V<sub>dc</sub>/kπ)|cos(kπα)|, odd k<br>α = 0 is square, THD 48.3%<br>null kth: α = 1/(2k)</div></div>
+  <div class="card"><h5>Bipolar SPWM</h5><div>⟨v<sub>t</sub>⟩ = (2d − 1)V<sub>dc</sub><br>V̂<sub>t,1</sub> = m<sub>a</sub>V<sub>dc</sub> (m<sub>a</sub> ≤ 1)<br>m<sub>f</sub> = f<sub>sw</sub>/f<sub>1</sub>; I<sub>h</sub> = V̂<sub>t,h</sub>/(hωL)</div></div>
+</div>
+</section>
+
+<footer>Built from the ENEL 585 Lecture 5 notes (Dr. Philippe Gray, September 15, 2026). Next lecture: unipolar SPWM and power balance.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------------- QUIZ DATA ---------------- */
+const QUIZ = {
+q1:[
+ {q:"What is the phasor of v(t) = 170 cos(377t − 45°) V, using this course's convention?",
+  o:["120∠−45° V","170∠−45° V","170∠45° V","377∠−45° V"],a:1,
+  e:"Peak magnitude, same angle: 170∠−45°. 120 V is the RMS value (170/√2), but this course uses peak phasors. 377 is ω, which the phasor leaves out."},
+ {q:"A voltage phasor is 10∠30° and a current phasor is 5∠−30°. Which statement is true?",
+  o:["The current leads the voltage by 60°","They are in phase","The current lags the voltage by 60°","The current lags the voltage by 30°"],a:2,
+  e:"The angle difference is 30° − (−30°) = 60°, with the voltage further ahead. So the current lags by 60°. That makes the load inductive."},
+ {q:"Write i(t) = 100 sin(ωt) A as a cosine-based phasor.",
+  o:["100∠0° A","100∠90° A","100∠−90° A","70.7∠0° A"],a:2,
+  e:"sin(ωt) = cos(ωt − 90°), so the phasor is 100∠−90°. Always convert sines to cosines before reading off the angle."},
+ {q:"Why is it OK to drop the e^{jωt} factor when working with phasors?",
+  o:["Because it is always equal to 1","Because every signal in the analysis spins at the same ω, so it's a common factor","Because it only matters for DC circuits","Because we only care about RMS values"],a:1,
+  e:"All the arrows spin together at the same speed. The spinning is shared, so a single snapshot at t = 0 holds all the information. That's also why you must analyse one frequency at a time."}
+],
+q2:[
+ {q:"An inductor has a reactance of 4 Ω at 60 Hz. What is its reactance at 300 Hz?",
+  o:["0.8 Ω","4 Ω","20 Ω","1200 Ω"],a:2,
+  e:"300 Hz is the 5th harmonic, and inductor reactance scales ×k: 5 × 4 = 20 Ω. (0.8 Ω would be the capacitor rule, ÷k.)"},
+ {q:"A capacitor has impedance −j10 Ω at 60 Hz. What is it at the 5th harmonic?",
+  o:["−j50 Ω","−j2 Ω","−j10 Ω","+j2 Ω"],a:1,
+  e:"Capacitor impedance is 1/(jkωC), so it shrinks by k: −j10/5 = −j2 Ω. The bucket gets easier to slosh at high frequency."},
+ {q:"Two parallel branches draw 6 A (resistor) and −j8 A (inductor). What is the peak source current?",
+  o:["14 A","2 A","10 A","48 A"],a:2,
+  e:"Add as arrows: |6 − j8| = √(36 + 64) = 10 A. The two currents peak at different instants, so they never add to 14 A."},
+ {q:"You've solved a circuit separately at 60 Hz and at 180 Hz. How do you get the total current?",
+  o:["Add the two phasors","Add the magnitudes","Convert each to a time function and add them","Take the larger one"],a:2,
+  e:"Phasors at different frequencies spin at different speeds, so adding them is meaningless. Convert each to i(t) and use superposition in the time domain."}
+],
+q3:[
+ {q:"V̂ = 340 V, Î = 20 A (peak phasors), and the voltage leads the current by 30°. What is P?",
+  o:["5.89 kW","2.94 kW","3.40 kW","1.70 kW"],a:1,
+  e:"P = ½ V̂ Î cos θ = ½(340)(20)(0.866) = 2.94 kW. 5.89 kW is what you get if you forget the ½ that comes with peak phasors."},
+ {q:"A load absorbs Q > 0. It is:",
+  o:["Capacitive, current leading","Inductive, current lagging","Purely resistive","Supplying reactive power"],a:1,
+  e:"Positive Q means lagging current, which is inductive, and it absorbs reactive power."},
+ {q:"In the grid example (equal magnitudes, V_t leads V_g by θ), how do you send MORE real power into the grid?",
+  o:["Increase θ","Decrease ωL to zero","Make θ negative","Reduce V̂_t"],a:0,
+  e:"P = V̂_t V̂_g sin θ /(2ωL). A bigger lead angle means a bigger push, like pushing a swing a bit further ahead of its motion. A negative θ would pull power out of the grid."},
+ {q:"V_t = 350∠0° V, V_g = 340∠0° V, ωL = 2 Ω. What does the grid absorb?",
+  o:["About 1.7 kW real power","Nothing at all","About 850 var of reactive power, no real power","About −850 var (grid supplies vars)"],a:2,
+  e:"I_g = (350 − 340)/(j2) = −j5 A. S_g = ½(340)(−j5)* = ½(340)(j5) = j850. With no angle difference there is no real power; making V̂_t larger than V̂_g pushes reactive power INTO the grid."}
+],
+q4:[
+ {q:"I₁ = 20 A, I₃ = 3 A, I₅ = 4 A (RMS). What is the THD?",
+  o:["35%","25%","24.3%","5%"],a:1,
+  e:"√(3² + 4²) = 5 A of harmonics. 5/20 = 25%. (35% comes from adding 3 + 4 directly, which is wrong: harmonics combine as root-sum-square.)"},
+ {q:"For the same current, what is I_rms?",
+  o:["27 A","20.6 A","25 A","20 A"],a:1,
+  e:"I_rms = √(20² + 3² + 4²) = √425 = 20.6 A. The harmonics raise the RMS only a little, but they still count."},
+ {q:"Why capture exactly 6 whole 60 Hz cycles (0.100 s) before running the FFT?",
+  o:["It's the fastest the scope can sample","So the FFT frequency bins line up with the harmonics and avoid leakage","Because the 6th harmonic is the most important","To average out the DC offset"],a:1,
+  e:"With a whole number of cycles, 60, 120, 180 Hz fall exactly on FFT bins. A partial cycle smears energy across neighbouring bins (spectral leakage) and corrupts the THD."},
+ {q:"A vendor reports 0.7% current THD measured with an ideal sinusoidal grid simulator. What can you conclude about THD on a real grid with some voltage distortion?",
+  o:["It will also be about 0.7%","It will be exactly 0%","Not much: it could be far higher","It will be lower"],a:2,
+  e:"The lecture's example went from 0.66% to about 20% when the grid had just 3% 11th harmonic. THD depends on the grid conditions it was measured under."}
+],
+q5:[
+ {q:"The fundamental current is exactly in phase with the voltage, and THD = 25%. What is the power factor?",
+  o:["1.00","0.75","0.970","0.800"],a:2,
+  e:"k_p = cos θ / √(1 + THD²) = 1/√(1.0625) = 0.970. Even with perfect timing, the harmonics cost a little PF."},
+ {q:"cos θ = 0.95 and THD = 33%. What is k_p?",
+  o:["0.95","0.90","0.64","0.62"],a:1,
+  e:"Distortion factor = 1/√(1 + 0.33²) = 0.950. So k_p = 0.95 × 0.95 ≈ 0.90. Both penalties multiply."},
+ {q:"With a pure sinusoidal grid voltage, why does 5th harmonic current deliver zero average power?",
+  o:["Because harmonics are always small","Because a 60 Hz voltage times a 300 Hz current averages to zero over a cycle","Because inductors block the 5th harmonic","Because the 5th harmonic is out of phase by 90°"],a:1,
+  e:"Different frequencies keep drifting in and out of step, so their product is positive half the time and negative half the time. Net average: zero. The harmonic current still heats wires, though."}
+],
+q6:[
+ {q:"S₂ and S₃ are on. What is v_t?",
+  o:["+V_dc","0","−V_dc","2V_dc"],a:2,
+  e:"S₃ ties A to the − rail and S₂ ties B to the + rail, so v_t = v_A − v_B = −V_dc. Check with v_t = (S₁ + S₄ − 1)V_dc = (0 + 0 − 1)V_dc."},
+ {q:"What happens if S₁ and S₃ turn on together?",
+  o:["v_t = 0","v_t = +V_dc","The DC bus is short-circuited (shoot-through)","The inductor current reverses"],a:2,
+  e:"S₁ and S₃ are in the same leg: turning both on connects + straight to −. That's shoot-through, and it destroys switches."},
+ {q:"Which values can v_t take?",
+  o:["Any value between −V_dc and +V_dc","Only +V_dc, 0 and −V_dc","Only +V_dc and −V_dc","Only a sine wave"],a:1,
+  e:"Four valid states give +V_dc, −V_dc and 0 (twice). The smooth sine only exists on average, after modulation and the inductor's filtering."},
+ {q:"What mainly sets P and Q delivered to the grid?",
+  o:["The DC bus voltage alone","The amplitude and phase of v_t's fundamental","The switching frequency","The number of switches"],a:1,
+  e:"L di_g/dt = v_t − v_g. The 60 Hz part of v_t, via its amplitude and phase relative to the grid, sets P and Q exactly as in §3."}
+],
+q7:[
+ {q:"V_dc = 400 V, square-wave modulation. What is the peak fundamental?",
+  o:["400 V","283 V","509 V","127 V"],a:2,
+  e:"V̂₁ = 4V_dc/π = 4(400)/π = 509 V. Yes, it's taller than 400 V: see the tricky bit in §7."},
+ {q:"Same inverter: what is the peak 3rd harmonic voltage?",
+  o:["170 V","133 V","509 V","0 V"],a:0,
+  e:"V̂₃ = 4V_dc/(3π) = 509/3 = 170 V. A third of the fundamental, which is a lot, and only 3× the reactance to stop it."},
+ {q:"What is the biggest drawback of square-wave modulation for a grid inverter?",
+  o:["Too many switching events","Fixed amplitude and large low-order harmonics","It can't control phase","It produces even harmonics"],a:1,
+  e:"Amplitude is stuck at 4V_dc/π, and the 3rd, 5th, 7th harmonics are close to 60 Hz where the inductor filters poorly (64% current at the 3rd in the example)."}
+],
+q8:[
+ {q:"Which α removes the 5th harmonic?",
+  o:["α = 1/6","α = 0.1","α = 0.2","α = 0.5"],a:1,
+  e:"Need cos(5πα) = 0, so 5πα = π/2, giving α = 1/(2·5) = 0.1. (1/6 removes the 3rd.)"},
+ {q:"V_dc = 400 V, α = 0.25. What is the peak fundamental?",
+  o:["509 V","360 V","255 V","400 V"],a:1,
+  e:"(4·400/π)·cos(π/4) = 509 × 0.707 = 360 V (that's 0.900 V_dc)."},
+ {q:"What does α = 0.5 give?",
+  o:["A square wave","Maximum output","Zero output","Only the 3rd harmonic"],a:2,
+  e:"cos(π/2) = 0. The two legs are in step, so both midpoints are always on the same rail and v_t = 0 all the time."},
+ {q:"You want to change the PHASE of the output with phase-shift modulation. What do you do?",
+  o:["Change α","Change V_dc","Shift all four gate signals together in time","Nothing: phase is fixed"],a:2,
+  e:"α only sets amplitude. Sliding the whole switching pattern earlier or later shifts the phase."}
+],
+q9:[
+ {q:"In one switching period the duty ratio is d = 0.75 (bipolar). What is the average v_t?",
+  o:["0.75 V_dc","0.25 V_dc","0.5 V_dc","V_dc"],a:2,
+  e:"⟨v_t⟩ = (2d − 1)V_dc = (1.5 − 1)V_dc = 0.5 V_dc. Check the ends: d = 0.5 gives 0, d = 1 gives V_dc."},
+ {q:"V_dc = 400 V and you need a 320 V peak fundamental with linear SPWM. m_a = ?",
+  o:["1.25","0.8","0.63","0.4"],a:1,
+  e:"V̂₁ = m_a V_dc, so m_a = 320/400 = 0.8."},
+ {q:"f_sw = 3060 Hz and f₁ = 60 Hz. Where are the dominant voltage harmonics?",
+  o:["At 180 and 300 Hz","Around 3060 Hz (h = 51), with sidebands at h = 49, 53","At 60 Hz","Spread evenly everywhere"],a:1,
+  e:"m_f = 3060/60 = 51. Harmonics cluster around m_f, 2m_f, 3m_f, with sidebands like m_f ± 2. Low-order harmonics are essentially gone."},
+ {q:"SPWM has voltage THD ≈ 146%, the square wave only 48%. Why is SPWM's CURRENT much cleaner?",
+  o:["SPWM's harmonics are in phase with the grid","The harmonics sit at high h, where the inductor's impedance hωL is large","Voltage THD is measured wrongly","SPWM uses a bigger DC bus"],a:1,
+  e:"Î_h = V̂_h/(hωL). At h = 39 the inductor is 39× stronger than at 60 Hz, so a big voltage harmonic makes only a small current (4.46 A vs 18.9 A for the square wave's 3rd)."},
+ {q:"The grid is 240 V RMS. Roughly what is the minimum V_dc for linear bipolar SPWM?",
+  o:["240 V","170 V","About 340 V","About 480 V"],a:2,
+  e:"Grid peak = 240√2 ≈ 339 V. In the linear range V̂₁ ≤ V_dc, so V_dc must exceed ≈ 340 V (in practice with some margin, like the 425 V used in the notes)."}
+],
+q10:[
+ {q:"Want V̂₁ = 340 V from V_dc = 425 V. Which command works for phase-shift modulation?",
+  o:["α = 0.800","α = 0.284","α = 0.628","It's impossible"],a:1,
+  e:"cos(πα) = 340π/(4·425) = 0.628, so πα = 51.1° = 0.892 rad, α = 0.284. (0.628 is cos(πα), not α; 0.800 is the SPWM m_a.)"},
+ {q:"Which method gives the most switching events per cycle?",
+  o:["Square wave","Phase shift","Bipolar SPWM","They're all equal"],a:2,
+  e:"SPWM switches about 2m_f times per device per cycle, versus 2 for the other two. That's its cost: higher switching loss."},
+ {q:"With square-wave modulation, how can you get exactly 340 V peak fundamental?",
+  o:["Set α = 0.284","Set m_a = 0.8","Change the DC bus to about 267 V","You can't with any bus voltage"],a:2,
+  e:"Square wave amplitude is fixed at 4V_dc/π, so the only knob is V_dc itself: V_dc = 340π/4 = 267 V."}
+],
+qf:[
+ {q:"A current is 50 cos(ωt + 20°) A. Which is its phasor, and does it lead or lag a voltage 100∠0° V?",
+  o:["50∠20° A, lagging","35.4∠20° A, leading","50∠20° A, leading","50∠−20° A, lagging"],a:2,
+  e:"Peak phasor 50∠20°. Its angle is ahead of the voltage's 0°, so it leads (capacitive). Review §1."},
+ {q:"Series R = 3 Ω, ωL = 4 Ω at 60 Hz, source 10∠0° V at 60 Hz. What is the current?",
+  o:["2∠−53.1° A","2∠53.1° A","1.43∠0° A","10∠−53.1° A"],a:0,
+  e:"Z = 3 + j4 = 5∠53.1° Ω. I = 10∠0°/5∠53.1° = 2∠−53.1° A = 1.2 − j1.6 A. Review §2."},
+ {q:"Same series R-L, but now a 5th harmonic source of 5∠0° V. What is |I₅|?",
+  o:["1 A","0.25 A","0.98 A","0.51 A"],a:1,
+  e:"At the 5th, jωL becomes j20 Ω. |Z₅| = √(3² + 20²) = 20.2 Ω. |I₅| = 5/20.2 ≈ 0.25 A. Review §2."},
+ {q:"V̂ = 300 V, Î = 10 A, current lags voltage by 60°. Find P and Q (absorbed).",
+  o:["P = 1.5 kW, Q = 2.6 kvar","P = 750 W, Q = 1.30 kvar","P = 750 W, Q = −1.30 kvar","P = 1.30 kW, Q = 750 var"],a:1,
+  e:"P = ½(300)(10)cos60° = 750 W. Q = ½(300)(10)sin60° = 1.30 kvar, positive because lagging means inductive. Review §3."},
+ {q:"In the grid-tied setup, with V̂_t = V̂_g = 340 V and ωL = 2 Ω, what angle θ delivers about 10 kW?",
+  o:["About 10°","About 20.3°","About 45°","About 5°"],a:1,
+  e:"P = V̂_tV̂_g sin θ/(2ωL) = 115600 sin θ/4 = 28900 sin θ. For 10 kW, sin θ = 0.346, θ ≈ 20.3°. (10° gives about 5 kW, as in the notes.) Review §3."},
+ {q:"A current has I₁ = 8 A, I₃ = 1.5 A, I₅ = 2 A, I₇ = 0 (RMS). THD?",
+  o:["43.8%","31.3%","25%","3.1%"],a:1,
+  e:"√(1.5² + 2²) = 2.5 A. 2.5/8 = 31.3%. Review §4."},
+ {q:"Same current, fundamental in phase with the voltage. Power factor?",
+  o:["1.00","0.954","0.688","0.900"],a:1,
+  e:"1/√(1 + 0.3125²) = 1/√1.0977 = 0.954. Review §5."},
+ {q:"In an H-bridge, S₁ and S₂ are on. What is v_t and is it a valid state?",
+  o:["+V_dc, valid","0, valid","0, but it's a short circuit","−V_dc, valid"],a:1,
+  e:"S₁ and S₂ are the top switches of different legs: both midpoints sit on the + rail, so v_t = 0. Different legs, so no short. Review §6."},
+ {q:"Square wave, V_dc = 300 V, ωL = 3 Ω. What is the peak 5th harmonic current?",
+  o:["5.1 A","25.5 A","76.4 A","1.7 A"],a:0,
+  e:"V̂₅ = 4(300)/(5π) = 76.4 V. Inductor at the 5th: 5 × 3 = 15 Ω. Î₅ = 76.4/15 = 5.1 A. Review §7."},
+ {q:"Phase shift with α = 1/6. Which harmonic is removed, and what is V̂₁ in terms of V_dc?",
+  o:["3rd; 1.10 V_dc","5th; 1.21 V_dc","3rd; 0.64 V_dc","7th; 1.27 V_dc"],a:0,
+  e:"cos(3π/6) = cos 90° = 0, so the 3rd is gone. V̂₁ = (4/π)cos(30°)V_dc = 1.273 × 0.866 = 1.10 V_dc. Review §8."},
+ {q:"SPWM, V_dc = 425 V, m_a = 0.8, m_f = 39, ωL = 2 Ω. c_{m_f} = 0.818. Peak current at h = 39?",
+  o:["174 A","4.46 A","8.9 A","0.82 A"],a:1,
+  e:"V̂₃₉ = 0.818 × 425 = 347.7 V. Inductor at h = 39: 39 × 2 = 78 Ω. Î = 347.7/78 = 4.46 A. Review §9."},
+ {q:"You need the highest possible fundamental from a given V_dc and don't care about harmonics. Which method?",
+  o:["Linear SPWM at m_a = 1","Phase shift with α = 0.25","Square wave (α = 0)","Any: they're the same"],a:2,
+  e:"The square wave gives 4V_dc/π ≈ 1.27 V_dc, the maximum possible. Linear SPWM stops at V_dc. Review §7 and §10."}
+]
+};
+
+/* ---------------- QUIZ ENGINE ---------------- */
+const LET = "ABCD";
+function chip(id, correct, answered, total){
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+"/"+total;
+  c.classList.toggle("done", answered===total);
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+  }
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(item.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    const btns = item.o.map((t, oi)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt"; b.id = id+"-"+qi+"-"+oi;
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[oi];
+      const s = document.createElement("span"); s.textContent = t;
+      b.append(L, s);
+      b.addEventListener("click", ()=>{
+        btns.forEach(x=>x.disabled=true);
+        const ok = oi===item.a;
+        btns[item.a].classList.add("right");
+        if(!ok) b.classList.add("wrong");
+        answered++; if(ok) correct++;
+        ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[item.a]+'.</b> ';
+        ex.appendChild(document.createTextNode(item.e));
+        ex.hidden = false;
+        upd();
+      });
+      opts.appendChild(b); return b;
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+  });
+  reset.addEventListener("click", ()=>buildQuiz(box));
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- CANVAS HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function prep(cv, hOverride){
+  // Base CSS height is read once and stored, so resizing the backing store never feeds back into layout.
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = hOverride || +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size){ ctx.fillStyle=col; ctx.font=(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------------- PHASOR DEMO ---------------- */
+const cvP = document.getElementById("cvPhasor"), thS = document.getElementById("thPh"), thO = document.getElementById("thPhOut"), playB = document.getElementById("phPlay");
+let tNorm = 0, playing = !reduce, last = null;
+playB.textContent = playing ? "Pause" : "Play";
+function drawPhasor(){
+  const {ctx,w,h} = prep(cvP);
+  const ink=css("--ink"), mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), fc=css("--fund");
+  const th = (+thS.value)*Math.PI/180;
+  const narrow = w < 480;
+  const r = narrow ? 62 : 82, cx = r+18, cy = h/2 - 6;
+  // axes
+  line(ctx,cx-r-12,cy,cx+r+12,cy,gr,1); line(ctx,cx,cy-r-12,cx,cy+r+12,gr,1);
+  ctx.beginPath(); ctx.setLineDash([3,4]); ctx.strokeStyle=gr; ctx.arc(cx,cy,r,0,2*Math.PI); ctx.stroke(); ctx.setLineDash([]);
+  txt(ctx,"Re",cx+r+14,cy-10,mut,"left",11); txt(ctx,"Im",cx+6,cy-r-8,mut,"left",11);
+  const ang = 2*Math.PI*tNorm + th;
+  const tx = cx + r*Math.cos(ang), ty = cy - r*Math.sin(ang);
+  // snapshot arrow at t=0 (faint)
+  const sx = cx + r*Math.cos(th), sy = cy - r*Math.sin(th);
+  line(ctx,cx,cy,sx,sy,mut,1.5,[4,4]);
+  // rotating arrow
+  line(ctx,cx,cy,tx,ty,vc,3);
+  const ah = Math.atan2(ty-cy, tx-cx); ctx.beginPath(); ctx.fillStyle=vc;
+  ctx.moveTo(tx,ty); ctx.lineTo(tx-10*Math.cos(ah-0.4), ty-10*Math.sin(ah-0.4)); ctx.lineTo(tx-10*Math.cos(ah+0.4), ty-10*Math.sin(ah+0.4)); ctx.fill();
+  // shadow
+  line(ctx,tx,ty,tx,cy,vc,1,[2,3]);
+  ctx.beginPath(); ctx.fillStyle=fc; ctx.arc(tx,cy,5,0,2*Math.PI); ctx.fill();
+  txt(ctx,"shadow = x(t)",cx,cy+r+22,mut,"center",11);
+  // time plot
+  const x0 = cx + r + 44, x1 = w - 10, A = r;
+  if(x1 - x0 > 80){
+    line(ctx,x0,cy,x1,cy,gr,1); line(ctx,x0,cy-A-10,x0,cy+A+10,gr,1);
+    const N=300;
+    // reference theta=0
+    ctx.beginPath(); ctx.setLineDash([4,4]); ctx.strokeStyle=mut; ctx.lineWidth=1.2;
+    for(let i=0;i<=N;i++){ const t=2*i/N; const x=x0+(x1-x0)*i/N, y=cy - A*Math.cos(2*Math.PI*t); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.strokeStyle=vc; ctx.lineWidth=2.2;
+    for(let i=0;i<=N;i++){ const t=2*i/N; const x=x0+(x1-x0)*i/N, y=cy - A*Math.cos(2*Math.PI*t+th); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
+    // cursor
+    const tc = tNorm % 2, xc = x0 + (x1-x0)*tc/2, yc = cy - A*Math.cos(2*Math.PI*tc+th);
+    line(ctx,xc,cy-A-8,xc,cy+A+8,gr,1);
+    ctx.beginPath(); ctx.fillStyle=fc; ctx.arc(xc,yc,5,0,2*Math.PI); ctx.fill();
+    txt(ctx,"0",x0,cy+A+18,mut,"center",11); txt(ctx,"T",x0+(x1-x0)/2,cy+A+18,mut,"center",11); txt(ctx,"2T",x1-8,cy+A+18,mut,"center",11);
+    txt(ctx,"X̂",x0-6,cy-A,mut,"right",11);
+  }
+}
+let onScreen = true, rafId = 0;
+function tick(ts){
+  rafId = 0;
+  if(!playing || !onScreen){ last = null; return; }
+  if(last!==null) tNorm = (tNorm + (ts-last)/1000*0.25) % 2;
+  last = ts; drawPhasor();
+  rafId = requestAnimationFrame(tick);
+}
+function startAnim(){ if(playing && onScreen && !rafId) rafId = requestAnimationFrame(tick); }
+if("IntersectionObserver" in window){
+  new IntersectionObserver(es=>{ onScreen = es[0].isIntersecting; startAnim(); }).observe(cvP);
+}
+thS.addEventListener("input", ()=>{ thO.textContent = thS.value+"°"; drawPhasor(); });
+playB.addEventListener("click", ()=>{ playing=!playing; playB.textContent = playing?"Pause":"Play"; startAnim(); });
+
+/* ---------------- PHASE SHIFT DEMO ---------------- */
+const cvS = document.getElementById("cvPS"), alS = document.getElementById("alPS"), alO = document.getElementById("alPSOut"), psR = document.getElementById("psRead");
+function vPS(t, al){ // t in [0,1)
+  t = ((t%1)+1)%1;
+  if(t>=al/2 && t<0.5-al/2) return 1;
+  if(t>=0.5+al/2 && t<1-al/2) return -1;
+  return 0;
+}
+function drawPS(){
+  const stacked = (cvS.clientWidth || cvS.parentElement.clientWidth) < 520;
+  const {ctx,w,h} = prep(cvS, stacked ? 310 : 230);
+  const al = +alS.value;
+  const mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), fc=css("--fund"), cc=css("--curr"), ink=css("--ink");
+  const wx0 = 34, wx1 = stacked ? w-8 : w*0.6, wy = stacked ? 62 : h/2, A = stacked ? 44 : 70;
+  // waveform
+  line(ctx,wx0,wy,wx1,wy,gr,1);
+  txt(ctx,"+1",wx0-6,wy-A,mut,"right",11); txt(ctx,"0",wx0-6,wy,mut,"right",11); txt(ctx,"−1",wx0-6,wy+A,mut,"right",11);
+  line(ctx,wx0,wy-A,wx1,wy-A,gr,1,[2,4]); line(ctx,wx0,wy+A,wx1,wy+A,gr,1,[2,4]);
+  const b1 = 4/Math.PI*Math.cos(Math.PI*al);
+  const N=600;
+  ctx.beginPath(); ctx.strokeStyle=vc; ctx.lineWidth=2.2;
+  let prev=null;
+  for(let i=0;i<=N;i++){ const t=i/N, v=vPS(t,al), x=wx0+(wx1-wx0)*t, y=wy - A*v; if(i===0) ctx.moveTo(x,y); else { if(v!==prev){ ctx.lineTo(x, wy - A*prev);} ctx.lineTo(x,y);} prev=v; }
+  ctx.stroke();
+  ctx.beginPath(); ctx.setLineDash([5,4]); ctx.strokeStyle=fc; ctx.lineWidth=2;
+  for(let i=0;i<=N;i++){ const t=i/N, x=wx0+(wx1-wx0)*t, y=wy - A*b1*Math.sin(2*Math.PI*t); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke(); ctx.setLineDash([]);
+  txt(ctx,"0",wx0,wy+A+14,mut,"center",11); txt(ctx,"T₁/2",(wx0+wx1)/2,wy+A+14,mut,"center",11); txt(ctx,"T₁",wx1,wy+A+14,mut,"center",11);
+  // bars
+  const bx0 = stacked ? 34 : w*0.6+44, bx1 = w-8, by = stacked ? h-22 : h-28, bh = stacked ? 110 : 150;
+  const ks=[1,3,5,7,9], maxv = 4/Math.PI;
+  line(ctx,bx0,by,bx1,by,gr,1);
+  txt(ctx,"1.27",bx0-4,by-bh,mut,"right",10); line(ctx,bx0,by-bh,bx1,by-bh,gr,1,[2,4]);
+  const slot = (bx1-bx0)/ks.length;
+  ks.forEach((k,i)=>{
+    const v = 4/(k*Math.PI)*Math.abs(Math.cos(k*Math.PI*al));
+    const bw = Math.min(26, slot*0.55), x = bx0 + slot*i + (slot-bw)/2, hh = bh*v/maxv;
+    ctx.fillStyle = k===1? fc : cc; ctx.fillRect(x, by-hh, bw, hh);
+    txt(ctx,String(k),x+bw/2,by+12,mut,"center",11);
+    if(v<0.005 && al>0) txt(ctx,"0",x+bw/2,by-8,cc,"center",11);
+  });
+  txt(ctx,"V̂ₖ/V_dc",bx0,by-bh-14,mut,"left",11);
+  // readout
+  const thd = b1>1e-6 ? Math.sqrt(Math.max(0,(1-2*al) - b1*b1/2))/(b1/Math.SQRT2)*100 : NaN;
+  let nulled = [3,5,7,9].filter(k=>Math.abs(Math.cos(k*Math.PI*al))<0.01);
+  psR.innerHTML = "Fundamental <b>V̂₁ = "+b1.toFixed(3)+" V_dc</b> · voltage THD <b>"+(isNaN(thd)?"undefined (no output)":thd.toFixed(1)+"%")+"</b>"+(nulled.length? " · harmonic "+nulled.join(", ")+" <b>removed</b>":"");
+}
+alS.addEventListener("input", ()=>{ alO.textContent=(+alS.value).toFixed(3); drawPS(); });
+document.querySelectorAll("[data-al]").forEach(b=>b.addEventListener("click", ()=>{ alS.value=b.dataset.al; alO.textContent=(+alS.value).toFixed(3); drawPS(); }));
+
+/* ---------------- PWM DEMO ---------------- */
+const cvW = document.getElementById("cvPWM"), maS=document.getElementById("maPWM"), mfS=document.getElementById("mfPWM"), maO=document.getElementById("maOut"), mfO=document.getElementById("mfOut"), pwR=document.getElementById("pwmRead");
+function tri(t, mf){ const p = ((t*mf)%1+1)%1; return p<0.5 ? 1-4*p : -3+4*p; } // starts at +1
+function drawPWM(){
+  const {ctx,w,h} = prep(cvW);
+  const ma=+maS.value, mf=+mfS.value;
+  const mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), fc=css("--fund"), cc=css("--curr");
+  const x0=34, x1=w-8, topY=62, A1=48, botY=196, A2=56;
+  const N=Math.max(1200, mf*80);
+  line(ctx,x0,topY,x1,topY,gr,1); line(ctx,x0,botY,x1,botY,gr,1);
+  txt(ctx,"+1",x0-6,topY-A1,mut,"right",10); txt(ctx,"−1",x0-6,topY+A1,mut,"right",10);
+  txt(ctx,"+V",x0-6,botY-A2,mut,"right",10); txt(ctx,"−V",x0-6,botY+A2,mut,"right",10);
+  line(ctx,x0,botY-A2,x1,botY-A2,gr,1,[2,4]); line(ctx,x0,botY+A2,x1,botY+A2,gr,1,[2,4]);
+  // carrier
+  ctx.beginPath(); ctx.strokeStyle=mut; ctx.lineWidth=1;
+  for(let i=0;i<=N;i++){ const t=i/N, x=x0+(x1-x0)*t, y=topY - A1*tri(t,mf); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
+  // reference (clip display to +-1.3)
+  ctx.beginPath(); ctx.strokeStyle=fc; ctx.lineWidth=2.2;
+  for(let i=0;i<=N;i++){ const t=i/N, x=x0+(x1-x0)*t, y=topY - A1*ma*Math.sin(2*Math.PI*t); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
+  // output
+  const out = new Float32Array(N+1);
+  for(let i=0;i<=N;i++){ const t=i/N; out[i] = ma*Math.sin(2*Math.PI*t) >= tri(t,mf) ? 1 : -1; }
+  ctx.beginPath(); ctx.strokeStyle=vc; ctx.lineWidth=1.4;
+  for(let i=0;i<=N;i++){ const x=x0+(x1-x0)*i/N, y=botY - A2*out[i]; if(i===0) ctx.moveTo(x,y); else { if(out[i]!==out[i-1]) ctx.lineTo(x, botY - A2*out[i-1]); ctx.lineTo(x,y);} }
+  ctx.stroke();
+  // moving average over one carrier period
+  const win = Math.round(N/mf), half = Math.floor(win/2);
+  ctx.beginPath(); ctx.strokeStyle=cc; ctx.lineWidth=2.4;
+  let s=0; for(let j=-half;j<win-half;j++){ s += out[((j%N)+N)%N]; }
+  for(let i=0;i<=N;i++){
+    const avg = s/win, x=x0+(x1-x0)*i/N, y=botY - A2*avg;
+    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    s += out[((i+win-half)%N+N)%N] - out[((i-half)%N+N)%N];
+  }
+  ctx.stroke();
+  txt(ctx,"reference vs carrier",x0+4,topY-A1-10,mut,"left",11);
+  txt(ctx,"output v_t and its local average",x0+4,botY-A2-12,mut,"left",11);
+  txt(ctx,"one fundamental period T₁",(x0+x1)/2,h-8,mut,"center",11);
+  // readout
+  let s1 = "Fundamental ≈ <b>"+Math.min(ma, 4/Math.PI).toFixed(2)+" V_dc</b>";
+  if(ma>1) s1 = "<b>Overmodulation:</b> fundamental above V_dc (up to 1.27 V_dc) but low-order harmonics come back";
+  pwR.innerHTML = s1 + " · harmonics cluster near <b>h = "+mf+"</b> ("+(mf*60)+" Hz at 60 Hz), sidebands at "+(mf-2)+" and "+(mf+2)+" · "+(2*mf)+" switchings per device per cycle";
+}
+maS.addEventListener("input", ()=>{ maO.textContent=(+maS.value).toFixed(2); drawPWM(); });
+mfS.addEventListener("input", ()=>{ mfO.textContent=mfS.value; drawPWM(); });
+
+/* ---------------- INIT + THEME ---------------- */
+function drawAll(){ drawPhasor(); drawPS(); drawPWM(); }
+drawAll();
+startAnim();
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(drawAll,80); });
+try{ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll); }catch(e){}
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+</script>
+
+</body></html>

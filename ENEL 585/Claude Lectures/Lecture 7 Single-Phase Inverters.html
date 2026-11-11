@@ -1,0 +1,1275 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Single-Phase Inverters Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num, th.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+td.nil{color:var(--muted); text-align:right}
+.hlcol{background:var(--hl)}
+tr.dim td{opacity:.38}
+.tagpill{display:inline-block; font-family:var(--display); font-size:11px; font-weight:700; letter-spacing:.04em; padding:1px 7px; border-radius:99px; margin-left:6px; vertical-align:1px}
+.tagpill.first{background:var(--accent-soft); color:var(--accent)}
+.tagpill.big{background:var(--bad-bg); color:var(--bad)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls label[hidden]{display:none}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{color:var(--muted)}
+
+/* H-bridge svg */
+#hb{width:100%; max-width:460px; display:block; margin:0 auto}
+#hb .w{stroke:var(--muted); stroke-width:2.5; fill:none; stroke-linecap:round}
+#hb .w.hot{stroke:var(--curr); stroke-width:4}
+#hb .w.short{stroke:var(--bad); stroke-width:5}
+#hb .sw rect{fill:var(--surface-2); stroke:var(--line); stroke-width:1.5; transition:fill .15s}
+#hb .sw text{fill:var(--ink); font-family:var(--display); font-weight:700; font-size:14px; pointer-events:none}
+#hb .sw{cursor:pointer}
+#hb .sw:hover rect{stroke:var(--accent)}
+#hb .sw:focus{outline:none}
+#hb .sw:focus-visible rect{stroke:var(--accent); stroke-width:3}
+#hb .sw.on rect{fill:var(--accent); stroke:var(--accent)}
+#hb .sw.on text{fill:var(--on-accent)}
+#hb .lbl{fill:var(--muted); font-family:var(--mono); font-size:12px}
+#hb .lbl.ink{fill:var(--ink); font-weight:600}
+#hb .node{fill:var(--ink)}
+#hb .src{fill:var(--surface); stroke:var(--muted); stroke-width:2}
+#hb .load{fill:var(--surface); stroke:var(--muted); stroke-width:2}
+#hb .pot{font-family:var(--mono); font-size:12px; font-weight:600}
+.hbbar{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:8px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} #hb .sw rect{transition:none} }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <h2>Part 1 · Build the voltage</h2>
+  <ol>
+    <li><a href="#s1">1 The H-bridge <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 Dead time and overlap <span class="chip" data-chip="q2"></span></a></li>
+  </ol>
+  <h2>Part 2 · Slow switching</h2>
+  <ol>
+    <li><a href="#s3">3 Square wave <span class="chip" data-chip="q3"></span></a></li>
+    <li><a href="#s4">4 Phase shift <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 Harmonic currents <span class="chip" data-chip="q5"></span></a></li>
+  </ol>
+  <h2>Part 3 · Fast switching (PWM)</h2>
+  <ol>
+    <li><a href="#s6">6 Bipolar PWM <span class="chip" data-chip="q6"></span></a></li>
+    <li><a href="#s7">7 Reading Table 8-1 <span class="chip" data-chip="q7"></span></a></li>
+    <li><a href="#s8">8 Overmodulation <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Unipolar PWM <span class="chip" data-chip="q9"></span></a></li>
+    <li><a href="#s10">10 Choosing a method <span class="chip" data-chip="q10"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">ENEL 585 · Lecture 7 · Study guide</div>
+  <h1>Single-phase inverters: from DC to a controlled AC voltage</h1>
+  <p class="lede">An inverter has no sine-wave generator inside. It only has four switches that connect the load to the top or bottom of a DC source. This whole lecture is about <b>which switches to flip, and when</b>, so the output's 60 Hz part has the size you want and the leftover junk (harmonics) is easy to filter.</p>
+  <div class="chain" aria-label="Signal chain from DC source to grid">
+    <div class="blk"><b>DC source</b><span>v<sub>d</sub>, e.g. a battery or solar panel</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>H-bridge</b><span>4 switches, 2 legs</span><span class="secs">§1, §2</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Modulation</b><span>the switching recipe</span><span class="secs">§3 to §10</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>v<sub>t</sub></b><span>only +v<sub>d</sub>, 0 or −v<sub>d</sub></span><span class="secs">§3, §6, §9</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Inductor L</b><span>blocks fast wiggles</span><span class="secs">§5, §7</span></div>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · Build the voltage</h2>
+
+<!-- 1 H-BRIDGE -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>The H-bridge: two legs, one output</h3>
+<p>The bridge has two <b>legs</b>. Leg A has S<sub>1</sub> on top and S<sub>3</sub> below. Leg B has S<sub>2</sub> on top and S<sub>4</sub> below. The bottom rail is called N and is the 0 V reference.</p>
+<p>Each leg connects its middle point (A or B) to <b>either</b> the top rail (v<sub>d</sub>) <b>or</b> the bottom rail (0). The load only sees the difference:</p>
+<div class="eq">
+  <span class="row"><i>v<sub>t</sub></i> = <i>v<sub>AN</sub></i> − <i>v<sub>BN</sub></i>, &nbsp; where <i>v<sub>AN</sub></i>, <i>v<sub>BN</sub></i> ∈ {0, <i>v<sub>d</sub></i>}</span>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · two people, a stage and a floor</span>
+<p>Each leg is a person who can stand either on the stage (v<sub>d</sub>) or on the floor (0). The load only cares about the <b>height difference</b> between the two people. A on stage and B on the floor: +v<sub>d</sub>. The reverse: −v<sub>d</sub>. Both on the stage or both on the floor: no difference, so 0.</p>
+</div>
+
+<div class="demo" id="hbDemo">
+  <div class="dtitle">Try it: click the switches</div>
+  <svg id="hb" viewBox="0 0 440 270" role="img" aria-labelledby="hbTitle">
+    <title id="hbTitle">H-bridge with four clickable switches</title>
+    <!-- source wires -->
+    <line class="w" data-seg="src" x1="40" y1="40" x2="40" y2="116"/>
+    <line class="w" data-seg="src" x1="40" y1="154" x2="40" y2="230"/>
+    <circle class="src" cx="40" cy="135" r="19"/>
+    <text class="lbl ink" x="40" y="130" text-anchor="middle">+</text>
+    <text class="lbl ink" x="40" y="148" text-anchor="middle">−</text>
+    <text class="lbl" x="66" y="139">v<tspan baseline-shift="sub" font-size="9">d</tspan></text>
+    <!-- rails -->
+    <line class="w" data-seg="top" x1="40" y1="40" x2="340" y2="40"/>
+    <line class="w" data-seg="bot" x1="40" y1="230" x2="340" y2="230"/>
+    <text class="lbl" x="190" y="30" text-anchor="middle">top rail (v<tspan baseline-shift="sub" font-size="9">d</tspan>)</text>
+    <text class="lbl" x="190" y="252" text-anchor="middle">bottom rail N (0 V)</text>
+    <!-- leg A -->
+    <line class="w" data-seg="at" x1="160" y1="40" x2="160" y2="60"/>
+    <line class="w" data-seg="at" x1="160" y1="100" x2="160" y2="135"/>
+    <line class="w" data-seg="ab" x1="160" y1="135" x2="160" y2="170"/>
+    <line class="w" data-seg="ab" x1="160" y1="210" x2="160" y2="230"/>
+    <g class="sw" data-s="1" tabindex="0" role="button" aria-label="Switch S1"><rect x="137" y="60" width="46" height="40" rx="7"/><text x="160" y="85" text-anchor="middle">S1</text></g>
+    <g class="sw" data-s="3" tabindex="0" role="button" aria-label="Switch S3"><rect x="137" y="170" width="46" height="40" rx="7"/><text x="160" y="195" text-anchor="middle">S3</text></g>
+    <!-- leg B -->
+    <line class="w" data-seg="bt" x1="340" y1="40" x2="340" y2="60"/>
+    <line class="w" data-seg="bt" x1="340" y1="100" x2="340" y2="135"/>
+    <line class="w" data-seg="bb" x1="340" y1="135" x2="340" y2="170"/>
+    <line class="w" data-seg="bb" x1="340" y1="210" x2="340" y2="230"/>
+    <g class="sw" data-s="2" tabindex="0" role="button" aria-label="Switch S2"><rect x="317" y="60" width="46" height="40" rx="7"/><text x="340" y="85" text-anchor="middle">S2</text></g>
+    <g class="sw" data-s="4" tabindex="0" role="button" aria-label="Switch S4"><rect x="317" y="170" width="46" height="40" rx="7"/><text x="340" y="195" text-anchor="middle">S4</text></g>
+    <!-- load -->
+    <line class="w" data-seg="load" x1="160" y1="135" x2="218" y2="135"/>
+    <line class="w" data-seg="load" x1="282" y1="135" x2="340" y2="135"/>
+    <rect class="load" x="218" y="121" width="64" height="28" rx="4"/>
+    <text class="lbl" x="250" y="139" text-anchor="middle">load</text>
+    <text class="lbl ink" x="206" y="115" text-anchor="middle">+</text>
+    <text class="lbl ink" x="250" y="112" text-anchor="middle">v<tspan baseline-shift="sub" font-size="9">t</tspan></text>
+    <text class="lbl ink" x="294" y="115" text-anchor="middle">−</text>
+    <circle class="node" cx="160" cy="135" r="4"/><circle class="node" cx="340" cy="135" r="4"/>
+    <text class="lbl ink" x="146" y="139" text-anchor="end">A</text>
+    <text class="lbl ink" x="354" y="139">B</text>
+    <text class="pot" id="potA" x="176" y="162" fill="currentColor"></text>
+    <text class="pot" id="potB" x="324" y="162" text-anchor="end" fill="currentColor"></text>
+  </svg>
+  <div class="hbbar">
+    <button class="btn" type="button" data-hb="1,4">S1 + S4</button>
+    <button class="btn" type="button" data-hb="2,3">S2 + S3</button>
+    <button class="btn" type="button" data-hb="1,2">S1 + S2</button>
+    <button class="btn" type="button" data-hb="3,4">S3 + S4</button>
+    <button class="btn" type="button" data-hb="1,3">S1 + S3 (don't!)</button>
+  </div>
+  <div class="readout" id="hbRead" aria-live="polite"></div>
+</div>
+
+<div class="tbl"><table>
+<thead><tr><th>Switches on</th><th>A sits at</th><th>B sits at</th><th>v<sub>t</sub></th></tr></thead>
+<tbody>
+<tr><td>S<sub>1</sub> + S<sub>4</sub></td><td>top (v<sub>d</sub>)</td><td>bottom (0)</td><td><b>+v<sub>d</sub></b></td></tr>
+<tr><td>S<sub>2</sub> + S<sub>3</sub></td><td>bottom (0)</td><td>top (v<sub>d</sub>)</td><td><b>−v<sub>d</sub></b></td></tr>
+<tr><td>S<sub>1</sub> + S<sub>2</sub></td><td>top</td><td>top</td><td>0</td></tr>
+<tr><td>S<sub>3</sub> + S<sub>4</sub></td><td>bottom</td><td>bottom</td><td>0</td></tr>
+</tbody></table></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Four states, three levels.</b> Two different states both give 0 (the "zero states"). That's not a mistake; it's why the bridge makes exactly +v<sub>d</sub>, 0 and −v<sub>d</sub>.</li>
+<li><b>One switch per leg.</b> In every commanded state, exactly one switch in each leg is on. The top and bottom switch of a leg are always opposites.</li>
+<li><b>The bridge cannot make a sine wave directly.</b> The smooth sine only appears as an <i>average</i>, after clever switching (modulation) and the inductor's smoothing.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: the H-bridge"></div>
+</section>
+
+<!-- 2 DEAD TIME -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>Safe switching: dead time and overlap time</h3>
+<p><b>Shoot-through</b> happens when both switches in one leg are on (S<sub>1</sub> with S<sub>3</sub>, or S<sub>2</sub> with S<sub>4</sub>). That's a wire straight from + to −: it shorts the DC source, and the huge current destroys the switches.</p>
+<p>The catch is that real switches take a little time to turn off. If you command "S<sub>1</sub> off, S<sub>3</sub> on" at the same instant, both conduct for a moment. So we add <b>dead time</b>:</p>
+<ol class="plain"><li>Turn S<sub>1</sub> off.</li><li>Wait (both off).</li><li>Turn S<sub>3</sub> on.</li></ol>
+
+<div class="callout analogy"><span class="tag">Analogy · an airlock vs a relay baton</span>
+<p><b>Voltage source = airlock.</b> You never open the inner and outer doors together, or all the air rushes out. Close one, wait, then open the other.</p>
+<p><b>Current source = relay baton.</b> A current source (a DC source behind a big inductor) insists its current keeps flowing. If every path is broken, the voltage spikes violently trying to push that current through. So both runners hold the baton for a moment: turn S<sub>3</sub> on first, wait, then turn S<sub>1</sub> off. That's <b>overlap time</b>.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: move the handover from S1 to S3</div>
+  <canvas id="cvDT" height="190" aria-label="Gate signals for S1 and S3 during a handover"></canvas>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Source type">
+      <button type="button" id="dtV" aria-pressed="true">Voltage source</button>
+      <button type="button" id="dtI" aria-pressed="false">Current source</button>
+    </div>
+    <label for="dtGap">overlap ← gap → dead time <input id="dtGap" type="range" min="-1" max="1" step="0.05" value="0.5"></label>
+  </div>
+  <div class="readout" id="dtRead" aria-live="polite"></div>
+</div>
+
+<div class="tbl"><table>
+<thead><tr><th></th><th>Voltage-source bridge</th><th>Current-source bridge</th></tr></thead>
+<tbody>
+<tr><td>What it hates</td><td>A short (both switches in a leg on)</td><td>An open (no path for i<sub>d</sub>)</td></tr>
+<tr><td>Fix</td><td><b>Dead time</b>: never both on</td><td><b>Overlap time</b>: never both off</td></tr>
+<tr><td>S<sub>1</sub> → S<sub>3</sub> sequence</td><td>S<sub>1</sub> off, wait, S<sub>3</sub> on</td><td>S<sub>3</sub> on, wait, S<sub>1</sub> off</td></tr>
+</tbody></table></div>
+
+<div class="callout tricky"><span class="tag">Tricky bit · where does the load current go during dead time?</span>
+<p>In a voltage-source bridge, the load (often an inductor) still carries current during the brief dead time. It flows through diodes that sit across each switch. You don't need the details for this lecture; just know that dead time is safe because of them.</p>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: safe switching"></div>
+</section>
+
+<h2 class="part">Part 2 · Slow switching: one or two flips per cycle</h2>
+
+<!-- 3 SQUARE -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>Square wave</h3>
+<p><b>Modulation</b> is the recipe that decides when each switch turns on. The simplest recipe: S<sub>1</sub> + S<sub>4</sub> on for the first half of each cycle (+v<sub>d</sub>), then S<sub>2</sub> + S<sub>3</sub> on for the second half (−v<sub>d</sub>). Each gate is on for 0.5T<sub>1</sub>. Each switch flips only twice per 60 Hz cycle, so switching losses are tiny.</p>
+<p>Every repeating wave is secretly a sum of sine waves. For the square wave:</p>
+<div class="eq">
+  <span class="row"><i>V̂</i><sub>t,k</sub> = <span class="frac"><span>4<i>v<sub>d</sub></i></span><span><i>kπ</i></span></span>, &nbsp; k = 1, 3, 5, … <span class="note">peak; even harmonics are zero</span></span>
+  <span class="row">Fundamental = 4v<sub>d</sub>/π ≈ 1.27 v<sub>d</sub> · 3rd = ⅓ of it · 5th = ⅕ · voltage THD = 48.3%</span>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a flute and a buzzy synth</span>
+<p>A flute and a buzzy synthesizer can play the same note. They share the same <b>fundamental</b> (the pitch), but the synth adds loud <b>overtones</b> (harmonics) that make it sound harsh. The square wave is the buzzy synth: right pitch, lots of junk close to it.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: shift the square wave's phase</div>
+  <canvas id="cvSQ" height="230" aria-label="Square wave, its fundamental and a reference sine, with harmonic bars"></canvas>
+  <div class="legend"><span><i style="background:var(--muted)"></i>reference</span><span><i style="background:var(--volt)"></i>switched v<sub>t</sub>/v<sub>d</sub></span><span><i style="background:var(--fund)"></i>fundamental</span><span><i style="background:var(--curr)"></i>harmonics</span></div>
+  <div class="controls">
+    <label for="phSQ">phase φ <input id="phSQ" type="range" min="-90" max="90" step="1" value="0"><output id="phSQOut">0°</output></label>
+  </div>
+  <div class="readout" id="sqRead"></div>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Why is the fundamental (1.27v<sub>d</sub>) taller than the square wave (v<sub>d</sub>)?</b> The square wave sits at full height for the whole half cycle, while a sine only touches its peak for an instant. To carry the same "area", the best-fit sine has to poke above v<sub>d</sub>.</li>
+<li><b>Phase is the only control.</b> Sliding the wave in time moves the fundamental with it, but its size stays locked at 4v<sub>d</sub>/π. To change the size, you'd have to change v<sub>d</sub> itself.</li>
+<li><b>Why only odd harmonics?</b> The negative half is an exact mirror of the positive half (half-wave symmetry). Even harmonics can't have that shape, so they cancel out.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: square wave"></div>
+</section>
+
+<!-- 4 PHASE SHIFT -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Phase shift: dial in some zeros</h3>
+<p>Instead of flipping both legs together, <b>delay one leg relative to the other</b>. Now there are moments when A and B sit on the same rail, so v<sub>t</sub> = 0. The output becomes three-level: +v<sub>d</sub>, 0, −v<sub>d</sub>, 0, … Each gate is still on for 0.5T<sub>1</sub>; each zero interval lasts <b>αT<sub>1</sub></b>, with 0 ≤ α ≤ 0.5.</p>
+<div class="eq">
+  <span class="row"><i>V̂</i><sub>t,k</sub> = <span class="frac"><span>4<i>v<sub>d</sub></i> |cos(<i>kπα</i>)|</span><span><i>kπ</i></span></span> &nbsp;⇒&nbsp; <i>V̂</i><sub>t,1</sub> = <span class="frac"><span>4<i>v<sub>d</sub></i></span><span><i>π</i></span></span> cos(<i>πα</i>)</span>
+  <span class="row">α = 0: plain square wave (1.27 v<sub>d</sub>) · α = 0.5: zero output</span>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · two dancers</span>
+<p>Leg A and leg B are two dancers doing the same steps. v<sub>t</sub> is the difference between them. Moving exactly opposite gives the biggest difference (the square wave). Moving in perfect sync gives zero. Sliding one dancer's timing (α) lets you dial anything in between.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: slide α and watch the harmonics</div>
+  <canvas id="cvPS" height="230" aria-label="Phase shift output waveform and harmonic bars"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>v<sub>t</sub>/v<sub>d</sub></span><span><i style="background:var(--fund)"></i>fundamental</span><span><i style="background:var(--curr)"></i>harmonic peaks</span></div>
+  <div class="controls">
+    <label for="alPS">α <input id="alPS" type="range" min="0" max="0.5" step="0.005" value="0.25"><output id="alPSOut">0.250</output></label>
+    <button class="btn" type="button" data-al="0">α = 0</button>
+    <button class="btn" type="button" data-al="0.1">α = 0.1</button>
+    <button class="btn" type="button" data-al="0.16667">α = 1/6</button>
+    <button class="btn" type="button" data-al="0.25">α = 0.25</button>
+  </div>
+  <div class="readout" id="psRead"></div>
+</div>
+<h4>Bonus: delete one harmonic</h4>
+<p>Pick α so cos(kπα) = 0, i.e. kπα = 90°, so <b>α = 1/(2k)</b>. α = 1/6 removes the 3rd; α = 0.1 removes the 5th. Try both above.</p>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>α controls size, not timing.</b> To move the phase, shift all four gate signals together.</li>
+<li>You can null one harmonic, never all of them. The rest are still low-order (close to 60 Hz).</li>
+<li>Still only two flips per switch per cycle, same as the square wave.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: phase shift"></div>
+</section>
+
+<!-- 5 HARMONIC CURRENT -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>Why harmonics matter: harmonic current</h3>
+<p>Picture the bridge feeding a clean grid through an inductor L. A clean grid has no harmonics (V<sub>g,k</sub> = 0 for k &gt; 1), so at every harmonic frequency the grid acts like a short circuit. The harmonic voltage drives <b>only the inductor</b>:</p>
+<div class="eq">
+  <span class="row"><i>Î</i><sub>t,k</sub> = <span class="frac"><span><i>V̂</i><sub>t,k</sub></span><span><i>kω</i><sub>1</sub><i>L</i></span></span> <span class="note">inductor impedance grows with k</span></span>
+</div>
+<div class="callout analogy"><span class="tag">Analogy · a heavy shopping cart</span>
+<p>An inductor is a heavy shopping cart. Pushing it slowly back and forth is easy; shaking it rapidly barely moves it. Slow wiggles (low k) get through. Fast wiggles (high k) are crushed. For the square wave, high harmonics lose twice: their voltage falls as 1/k <i>and</i> the impedance grows as k, so the current falls as <b>1/k²</b>.</p>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Calculator: harmonic currents for slow switching</div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Method">
+      <button type="button" id="hcSq" aria-pressed="true">Square wave</button>
+      <button type="button" id="hcPs" aria-pressed="false">Phase shift</button>
+    </div>
+    <label for="hcVd">v<sub>d</sub> (V) <input id="hcVd" type="number" value="400" min="1" step="1"></label>
+    <label for="hcL">L (mH) <input id="hcL" type="number" value="10" min="0.01" step="0.5"></label>
+    <label for="hcF">f<sub>1</sub> (Hz) <input id="hcF" type="number" value="60" min="1" step="1"></label>
+    <label for="hcAl" id="hcAlWrap" hidden>α <input id="hcAl" type="number" value="0.1667" min="0" max="0.5" step="0.01"></label>
+  </div>
+  <div class="tbl" style="margin-top:12px"><table id="hcTable"></table></div>
+  <div class="readout" id="hcRead"></div>
+</div>
+<p><b>Lesson:</b> 15 A of useless 3rd-harmonic current is terrible. The fix is to <b>move the harmonics to high frequency</b>, where the inductor crushes them. That's exactly what PWM does.</p>
+<div class="quiz" data-quiz="q5" data-title="Check: harmonic currents"></div>
+</section>
+
+<h2 class="part">Part 3 · Fast switching: sinusoidal PWM</h2>
+
+<!-- 6 BIPOLAR -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Bipolar PWM: the duty cycle sets the average</h3>
+<p>Switch <b>much faster</b> than 60 Hz (kHz) and vary how much of each short switching period T<sub>s</sub> = 1/f<sub>sw</sub> is spent at +v<sub>d</sub>. Call that fraction d:</p>
+<div class="eq">
+  <span class="row">⟨<i>v<sub>t</sub></i>⟩<sub>T<sub>s</sub></sub> = <i>d</i>(+<i>v<sub>d</sub></i>) + (1 − <i>d</i>)(−<i>v<sub>d</sub></i>) = (2<i>d</i> − 1)<i>v<sub>d</sub></i> <span class="note">d = 0.5 gives 0</span></span>
+  <span class="row">Choose <i>d<sub>k</sub></i> = (1 + <i>m<sub>i</sub></i> sin <i>ω</i><sub>1</sub><i>t<sub>k</sub></i>)/2 &nbsp;⇒&nbsp; ⟨<i>v<sub>t</sub></i>⟩ = <i>m<sub>i</sub>v<sub>d</sub></i> sin <i>ω</i><sub>1</sub><i>t</i> &nbsp;⇒&nbsp; <i>V̂</i><sub>t,1</sub> = <i>m<sub>i</sub>v<sub>d</sub></i></span>
+</div>
+<p>In hardware, a slow <b>sine reference</b> is compared with a fast <b>triangle carrier</b>: reference above the triangle → S<sub>1</sub> + S<sub>4</sub> on (+v<sub>d</sub>); below → S<sub>2</sub> + S<sub>3</sub> on (−v<sub>d</sub>). It's "bipolar" because v<sub>t</sub> only ever jumps between +v<sub>d</sub> and −v<sub>d</sub>.</p>
+<div class="tbl"><table>
+<thead><tr><th>Knob</th><th>Definition</th><th>What it controls</th></tr></thead>
+<tbody>
+<tr><td>m<sub>i</sub> (modulation index)</td><td>reference peak ÷ carrier peak, 0 to 1</td><td><b>How big</b>: V̂<sub>t,1</sub> = m<sub>i</sub>v<sub>d</sub>, and the harmonic sizes</td></tr>
+<tr><td>m<sub>f</sub> (frequency ratio)</td><td>f<sub>sw</sub> ÷ f<sub>1</sub></td><td><b>Where</b> the harmonics sit: around m<sub>f</sub>, 2m<sub>f</sub>, 3m<sub>f</sub>, …</td></tr>
+</tbody></table></div>
+
+<div class="callout analogy"><span class="tag">Analogy · newspaper photos</span>
+<p>A printed photo is only black dots on white paper, yet from arm's length you see smooth greys: dense dots look dark, sparse dots look light. PWM does the same with voltage. Up close it's only ±v<sub>d</sub>; "from arm's length" (through the inductor) it's a smooth sine. The harmonics didn't vanish, they moved up to the switching frequency, where the inductor can't hear them.</p>
+</div>
+
+<div class="demo" id="pwmDemo">
+  <div class="dtitle">Try it: sine-triangle PWM with live spectrum</div>
+  <canvas id="cvPWM" height="430" aria-label="PWM reference and carrier, output voltage, and harmonic spectrum"></canvas>
+  <div class="legend"><span><i style="background:var(--fund)"></i>reference</span><span><i style="background:var(--muted)"></i>triangle carrier</span><span><i style="background:var(--volt)"></i>output v<sub>t</sub></span><span><i style="background:var(--curr)"></i>average over each T<sub>s</sub></span></div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="PWM type">
+      <button type="button" id="pwBi" aria-pressed="true">Bipolar</button>
+      <button type="button" id="pwUni" aria-pressed="false">Unipolar</button>
+    </div>
+    <label for="miPWM"><span>m<sub>i</sub></span> <input id="miPWM" type="range" min="0" max="2.5" step="0.05" value="0.8"><output id="miOut">0.80</output></label>
+    <label for="mfPWM"><span>m<sub>f</sub></span> <input id="mfPWM" type="range" min="3" max="41" step="2" value="15"><output id="mfOut">15</output></label>
+  </div>
+  <div class="readout" id="pwmRead"></div>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Voltage ceiling.</b> In the linear range (m<sub>i</sub> ≤ 1) the fundamental can't exceed v<sub>d</sub>, which is less than the square wave's 1.27v<sub>d</sub>. That's the price of amplitude control.</li>
+<li><b>Bigger m<sub>f</sub> = smoother tracking.</b> More switching periods per cycle, so the staircase of averages hugs the sine more closely. Drag m<sub>f</sub> from 3 to 41 above.</li>
+<li><b>Notation.</b> The lecture uses m<sub>i</sub>; Table 8-1 labels the same thing m<sub>a</sub>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: bipolar PWM"></div>
+</section>
+
+<!-- 7 TABLE -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Reading Table 8-1 and computing harmonic current</h3>
+<p>The table gives <b>c<sub>h</sub> = V̂<sub>t,h</sub>/v<sub>d</sub></b>, a normalized amplitude, so V̂<sub>t,h</sub> = c<sub>h</sub>v<sub>d</sub> for <i>any</i> DC voltage. A row like "2m<sub>f</sub> ± 3" means two harmonics, h = 2m<sub>f</sub> − 3 and h = 2m<sub>f</sub> + 3, each with that amplitude. Harmonic h sits at frequency hf<sub>1</sub>.</p>
+
+<div class="callout tricky"><span class="tag">Tricky bit · interpolating between columns</span>
+<p>Your m<sub>i</sub> is almost never exactly 0.2, 0.4, … 1.0. Find the two columns it sits between, work out how far along you are, and go that far between the two table values:</p>
+<p style="font-family:var(--mono); font-size:14px">c<sub>h</sub> = c<sub>low</sub> + (m<sub>i</sub> − m<sub>low</sub>)/(m<sub>high</sub> − m<sub>low</sub>) × (c<sub>high</sub> − c<sub>low</sub>)</p>
+<p>Watch the sign: some rows shrink as m<sub>i</sub> grows (like m<sub>f</sub> and 2m<sub>f</sub> ± 1), so c<sub>high</sub> − c<sub>low</sub> is negative.</p>
+</div>
+
+<div class="demo" id="t81Demo">
+  <div class="dtitle">Calculator: the lecture's worked example, step by step</div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="PWM type for table">
+      <button type="button" id="tBi" aria-pressed="true">Bipolar</button>
+      <button type="button" id="tUni" aria-pressed="false">Unipolar</button>
+    </div>
+    <label for="tVd">v<sub>d</sub> (V) <input id="tVd" type="number" value="525" min="1" step="1"></label>
+    <label for="tV1">V̂<sub>t,1</sub> (V) <input id="tV1" type="number" value="509.3" min="0" step="0.1"></label>
+    <label for="tF1">f<sub>1</sub> (Hz) <input id="tF1" type="number" value="60" min="1" step="1"></label>
+    <label for="tFsw">f<sub>sw</sub> (Hz) <input id="tFsw" type="number" value="2700" min="1" step="10"></label>
+    <label for="tL">L (mH) <input id="tL" type="number" value="10" min="0.01" step="0.5"></label>
+  </div>
+  <div class="steps" id="tSteps"></div>
+  <h4 style="margin-top:16px">Table 8-1 (bipolar, c<sub>h</sub> = V̂<sub>t,h</sub>/v<sub>d</sub>), your columns highlighted</h4>
+  <div class="tbl"><table id="t81"></table></div>
+  <h4>Every harmonic in the table, for your numbers</h4>
+  <div class="tbl"><table id="tAll"></table></div>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: using Table 8-1"></div>
+</section>
+
+<!-- 8 OVERMOD -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>Overmodulation (m<sub>i</sub> &gt; 1): back toward the square wave</h3>
+<p>Make the reference taller than the triangle and, near its peaks, it stays above the carrier the whole time. No crossings means no switching: pulses merge together. The fundamental grows <b>less</b> than m<sub>i</sub>v<sub>d</sub>, maxes out at 4v<sub>d</sub>/π, and low-order harmonics (3rd, 5th) come back.</p>
+<div class="tbl"><table>
+<thead><tr><th class="num">m<sub>i</sub></th><th class="num">V̂<sub>t,1</sub>/v<sub>d</sub></th><th class="num">V̂<sub>t,3</sub>/v<sub>d</sub></th></tr></thead>
+<tbody>
+<tr><td class="num">0.8</td><td class="num">0.80</td><td class="num">0</td></tr>
+<tr><td class="num">1.5</td><td class="num">1.17</td><td class="num">0.17</td></tr>
+<tr><td class="num">2.5</td><td class="num">1.24</td><td class="num">0.34</td></tr>
+<tr><td class="num">→ ∞</td><td class="num">4/π = 1.27</td><td class="num">0.42</td></tr>
+</tbody></table></div>
+<p>Try it in the PWM demo: <button class="btn" type="button" data-om="1.5">set m<sub>i</sub> = 1.5</button> <button class="btn" type="button" data-om="2.5">set m<sub>i</sub> = 2.5</button> and watch the bar at h = 3 appear.</p>
+<div class="callout analogy"><span class="tag">Analogy · volume past max</span>
+<p>Cranking a speaker past its maximum makes it a little louder, but the sound clips and distorts. Overmodulation trades waveform quality for at most 27% more fundamental.</p>
+</div>
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Table 8-1 only applies for m<sub>i</sub> ≤ 1</b> (the linear range). Don't use V̂<sub>t,1</sub> = m<sub>i</sub>v<sub>d</sub> above that.</li>
+<li>Modern converters run m<sub>f</sub> ≫ 21, so the exact m<sub>f</sub> hardly matters. Low-m<sub>f</sub> rules are in Mohan §8-2-1.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: overmodulation"></div>
+</section>
+
+<!-- 9 UNIPOLAR -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Unipolar PWM: double the effective frequency for free</h3>
+<p>Bipolar already pushed the harmonics up to m<sub>f</sub>. But its carrier harmonic is big: in the lecture example, 332.6 V at h = 45, giving <b>1.96 A</b>. Can we push harmonics even higher without switching faster?</p>
+<p>Yes: control each leg <b>separately</b>. Leg A compares <b>+v<sub>ref</sub></b> with the triangle; leg B compares <b>−v<sub>ref</sub></b> with the same triangle. The output now has three levels: +v<sub>d</sub>, 0, −v<sub>d</sub>.</p>
+<div class="callout analogy"><span class="tag">Analogy · two drummers</span>
+<p>Two drummers each hit once per bar, but offset by half a bar. The audience hears double the tempo, yet neither drummer works any harder. Each switch still flips once per carrier cycle, but the legs' edges interleave, so v<sub>t</sub> changes level twice as often: <b>effective frequency 2f<sub>sw</sub></b>.</p>
+<p>Bonus: the steps are smaller. Bipolar leaps the whole flight from +v<sub>d</sub> to −v<sub>d</sub>; unipolar walks down one stair at a time (between 0 and ±v<sub>d</sub>).</p>
+</div>
+<p><b>Result:</b> the m<sub>f</sub> group cancels completely. The first surviving group sits at <b>2m<sub>f</sub> ± 1</b>. Go back to the <a href="#pwmDemo">PWM demo</a> and press <b>Unipolar</b>: the bars around m<sub>f</sub> vanish.</p>
+<details class="work" open><summary>Worked example: same bridge, unipolar</summary><div class="body">
+<ul class="plain">
+<li>m<sub>f</sub> = 2700/60 = 45 and m<sub>i</sub> = 0.9701 (both unchanged).</li>
+<li>The m<sub>f</sub> rows cancel, so the first harmonic is h = 2m<sub>f</sub> − 1 = <b>89</b>, at 5340 Hz.</li>
+<li>Interpolate row 2m<sub>f</sub> ± 1: c<sub>h</sub> = 0.314 + 0.8505 × (0.181 − 0.314) = <b>0.2009</b>.</li>
+<li>V̂<sub>t,89</sub> = 0.2009 × 525 = 105.5 V.</li>
+<li>Î<sub>t,89</sub> = 105.5 / [2π(89)(60)(0.010)] = 105.5/335.5 = <b>0.31 A</b>, about six times less than bipolar's 1.96 A.</li>
+</ul>
+<p>Switch the calculator in §7 to <b>Unipolar</b> to see this worked automatically.</p>
+</div></details>
+<div class="quiz" data-quiz="q9" data-title="Check: unipolar PWM"></div>
+</section>
+
+<!-- 10 COMPARE -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>Choosing a method, and the big comparison</h3>
+<p>Goal: a 340 V peak fundamental from a 425 V DC source. What do you command?</p>
+<div class="tbl"><table>
+<thead><tr><th>Method</th><th>Formula</th><th>Command</th></tr></thead>
+<tbody>
+<tr><td>Sinusoidal PWM (m<sub>i</sub> ≤ 1)</td><td>V̂<sub>t,1</sub> = m<sub>i</sub>v<sub>d</sub></td><td>m<sub>i</sub> = 340/425 = <b>0.800</b></td></tr>
+<tr><td>Phase shift</td><td>V̂<sub>t,1</sub> = (4v<sub>d</sub>/π) cos(πα)</td><td>cos(πα) = 340π/(4·425) = 0.628 → <b>α = 0.284</b></td></tr>
+<tr><td>Square wave</td><td>V̂<sub>t,1</sub> = 4v<sub>d</sub>/π, fixed</td><td>can't adjust; change the bus: v<sub>d</sub> = 340π/4 = <b>267 V</b></td></tr>
+</tbody></table></div>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Square</th><th>Phase shift</th><th>Bipolar PWM</th><th>Unipolar PWM</th></tr></thead>
+<tbody>
+<tr><td>Output levels</td><td>±v<sub>d</sub></td><td>+v<sub>d</sub>, 0, −v<sub>d</sub></td><td>±v<sub>d</sub></td><td>+v<sub>d</sub>, 0, −v<sub>d</sub></td></tr>
+<tr><td>Size knob</td><td>none (change v<sub>d</sub>)</td><td>α</td><td>m<sub>i</sub></td><td>m<sub>i</sub></td></tr>
+<tr><td>Max fundamental</td><td>1.27v<sub>d</sub></td><td>1.27v<sub>d</sub></td><td>v<sub>d</sub> (linear)</td><td>v<sub>d</sub> (linear)</td></tr>
+<tr><td>First harmonics</td><td>3, 5, 7</td><td>3, 5, 7 (can null one)</td><td>around m<sub>f</sub></td><td>around 2m<sub>f</sub></td></tr>
+<tr><td>Lecture example</td><td>15.0 A at k = 3</td><td>n/a</td><td>1.96 A at h = 45</td><td>0.31 A at h = 89</td></tr>
+</tbody></table></div>
+<div class="callout analogy"><span class="tag">The whole lecture in one picture</span>
+<p>You're sketching a sine wave with only three crayons: +, 0 and −. The square wave uses two big strokes. Phase shift adds a gap. Bipolar PWM uses thousands of tiny strokes so the mess ends up at a scale the inductor smooths away. Unipolar uses the 0 crayon too, so the strokes are smaller and twice as fine.</p>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: choosing a method"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across the whole lecture, mostly calculations. Grab paper and a calculator. Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>H-bridge</h5><div>v<sub>t</sub> = v<sub>AN</sub> − v<sub>BN</sub><br>S<sub>1</sub>S<sub>4</sub>: +v<sub>d</sub> · S<sub>2</sub>S<sub>3</sub>: −v<sub>d</sub><br>S<sub>1</sub>S<sub>2</sub> or S<sub>3</sub>S<sub>4</sub>: 0</div></div>
+  <div class="card"><h5>Safe switching</h5><div>Never S<sub>1</sub>+S<sub>3</sub> or S<sub>2</sub>+S<sub>4</sub> (VSI)<br>VSI: dead time (off, wait, on)<br>CSI: overlap (on, wait, off)</div></div>
+  <div class="card"><h5>Square wave</h5><div>V̂<sub>t,k</sub> = 4v<sub>d</sub>/(kπ), odd k<br>V̂<sub>t,1</sub> = 1.27v<sub>d</sub>, fixed<br>THD = 48.3%</div></div>
+  <div class="card"><h5>Phase shift</h5><div>V̂<sub>t,k</sub> = 4v<sub>d</sub>|cos(kπα)|/(kπ)<br>zero interval αT<sub>1</sub>, 0 ≤ α ≤ 0.5<br>null kth: α = 1/(2k)</div></div>
+  <div class="card"><h5>Harmonic current (clean grid)</h5><div>Î<sub>t,h</sub> = V̂<sub>t,h</sub>/(hω<sub>1</sub>L)<br>= V̂<sub>t,h</sub>/(2πhf<sub>1</sub>L)</div></div>
+  <div class="card"><h5>Sinusoidal PWM</h5><div>⟨v<sub>t</sub>⟩ = (2d − 1)v<sub>d</sub> (bipolar)<br>V̂<sub>t,1</sub> = m<sub>i</sub>v<sub>d</sub> (m<sub>i</sub> ≤ 1)<br>m<sub>f</sub> = f<sub>sw</sub>/f<sub>1</sub>; V̂<sub>t,h</sub> = c<sub>h</sub>v<sub>d</sub></div></div>
+  <div class="card"><h5>Where the harmonics sit</h5><div>Bipolar: m<sub>f</sub>, m<sub>f</sub> ± 2, 2m<sub>f</sub> ± 1, …<br>Unipolar: 2m<sub>f</sub> ± 1, 2m<sub>f</sub> ± 3, …<br>frequency = h f<sub>1</sub></div></div>
+  <div class="card"><h5>Overmodulation</h5><div>m<sub>i</sub> &gt; 1: V̂<sub>t,1</sub> &lt; m<sub>i</sub>v<sub>d</sub><br>limit 4v<sub>d</sub>/π; 3rd, 5th return<br>Table 8-1 invalid</div></div>
+</div>
+</section>
+
+<footer>Built from the ENEL 585 Lecture 7 notes (Dr. Philippe Gray, September 22, 2026). Reading: Kassakian Ch. 8, Mohan §8-2 and §8-3. Next lecture: power balance and the DC link.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------------- QUIZ DATA ---------------- */
+const QUIZ = {
+q1:[
+ {q:"S₂ and S₃ are on. What is v_t?",
+  o:["+v_d","0","−v_d","2v_d"],a:2,
+  e:"S₃ puts A on the bottom rail (0) and S₂ puts B on the top rail (v_d). v_t = v_AN − v_BN = 0 − v_d = −v_d."},
+ {q:"S₃ and S₄ are on. What is v_t, and is this a valid state?",
+  o:["−v_d, valid","0, valid (a zero state)","0, but it shorts the source","Undefined"],a:1,
+  e:"Both A and B sit on the bottom rail, so the difference is 0. S₃ and S₄ are in different legs, so nothing is shorted. It's one of the two zero states."},
+ {q:"The bridge has four valid states. Why only three output voltage levels?",
+  o:["One state is forbidden","Two different states both give v_t = 0","The source only supplies positive voltage","The load averages two states"],a:1,
+  e:"S₁+S₂ (both on top) and S₃+S₄ (both on the bottom) both give zero difference. Two states share one level."},
+ {q:"N is the bottom rail. Which values can v_AN take?",
+  o:["0 or v_d","−v_d or +v_d","−v_d, 0 or +v_d","Anything between 0 and v_d"],a:0,
+  e:"A single leg only connects its point to the top rail (v_d) or the bottom rail (0). Negative voltage only appears in the DIFFERENCE v_AN − v_BN."}
+],
+q2:[
+ {q:"In a voltage-source bridge, which pair must NEVER be on together?",
+  o:["S₁ and S₄","S₁ and S₂","S₃ and S₄","S₁ and S₃"],a:3,
+  e:"S₁ and S₃ are the top and bottom of the same leg. Both on is a wire from + to −: shoot-through. The other pairs are normal states."},
+ {q:"Why can't you just command 'S₁ off, S₃ on' at exactly the same instant?",
+  o:["The gate driver can't do two things at once","Real switches take time to turn off, so both would conduct briefly","It would make v_t = 0","It would reverse the source"],a:1,
+  e:"Turn-off isn't instant. With no gap, S₁ is still partly on when S₃ turns on, which is a brief shoot-through. Dead time gives S₁ time to fully turn off."},
+ {q:"In a CURRENT-source bridge, what is the correct handover from S₁ to S₃?",
+  o:["S₁ off, wait, S₃ on","S₃ on, wait, S₁ off","Both off together, then S₃ on","The order doesn't matter"],a:1,
+  e:"A current source must always have a path. Make the new path first (S₃ on), hold both (overlap), then break the old one (S₁ off). Relay baton."},
+ {q:"During overlap in a current-source bridge, S₁ and S₃ are both on. Why is that OK here?",
+  o:["It isn't; it's shoot-through","The big inductor fixes the current, so briefly shorting the leg just gives i_d a path","The switches are rated for it","The source turns off during overlap"],a:1,
+  e:"A current source can't deliver a runaway current: the inductor holds it at i_d. Shorting the leg only gives that current somewhere to go. What a current source can't stand is an OPEN circuit."}
+],
+q3:[
+ {q:"Square wave, v_d = 300 V. What is the peak fundamental?",
+  o:["300 V","382 V","212 V","127 V"],a:1,
+  e:"V̂₁ = 4v_d/π = 4(300)/π = 382 V. Yes, taller than 300 V: the square wave is 'fatter' than a sine."},
+ {q:"Square wave, v_d = 400 V. What is the peak 7th harmonic?",
+  o:["72.8 V","509 V","57.1 V","0 V"],a:0,
+  e:"V̂₇ = 4(400)/(7π) = 72.8 V. It matches the lecture's table."},
+ {q:"With square-wave modulation, how can you make the fundamental smaller?",
+  o:["Shift its phase","Switch faster","Lower v_d","Turn S₁ and S₃ on briefly"],a:2,
+  e:"The size is locked at 4v_d/π. Phase shifting only moves it in time. The only knob left is v_d. (Option D is shoot-through!)"},
+ {q:"Why does a square wave have no even harmonics?",
+  o:["Even harmonics are filtered by the load","Its negative half is a mirror image of its positive half (half-wave symmetry)","It switches only twice per cycle","Because v_d is DC"],a:1,
+  e:"Half-wave symmetry: f(t + T/2) = −f(t). Even harmonics can't satisfy that, so their coefficients are zero."}
+],
+q4:[
+ {q:"v_d = 400 V, α = 0.25. What is the peak fundamental?",
+  o:["509 V","360 V","255 V","400 V"],a:1,
+  e:"(4·400/π)·cos(0.25π) = 509 × 0.707 = 360 V, which is 0.900 v_d."},
+ {q:"Which α removes the 5th harmonic?",
+  o:["1/6","0.1","0.2","0.5"],a:1,
+  e:"Need cos(5πα) = 0, so 5πα = π/2 and α = 1/(2·5) = 0.1. (1/6 removes the 3rd.)"},
+ {q:"What does α = 0.5 give?",
+  o:["A square wave","Maximum output","Zero output","Only the 3rd harmonic"],a:2,
+  e:"cos(0.5π) = 0. The two legs switch in sync, so A and B are always on the same rail and v_t = 0."},
+ {q:"f₁ = 60 Hz and α = 0.25. How long does each zero interval last?",
+  o:["4.17 ms","8.33 ms","2.08 ms","0.25 ms"],a:0,
+  e:"Zero interval = αT₁ = 0.25 × (1/60 s) = 0.25 × 16.67 ms = 4.17 ms."}
+],
+q5:[
+ {q:"Why is the grid treated as a short circuit at harmonic frequencies?",
+  o:["The grid has zero impedance at 60 Hz","A clean grid has no harmonic voltage, so V_g,k = 0 for k > 1","Harmonics can't reach the grid","The inductor removes the grid"],a:1,
+  e:"A clean grid only has a 60 Hz voltage. At, say, 180 Hz it contributes 0 V, so the harmonic circuit is just V_t,k across L."},
+ {q:"Square wave, v_d = 400 V, L = 10 mH, ω₁ = 377 rad/s. Peak 5th-harmonic current?",
+  o:["5.40 A","27.0 A","1.08 A","15.0 A"],a:0,
+  e:"V̂₅ = 4(400)/(5π) = 101.9 V. Impedance = 5 × 377 × 0.01 = 18.85 Ω. Î₅ = 101.9/18.85 = 5.40 A."},
+ {q:"The square wave's 3rd-harmonic current is 15 A. Roughly what is the 9th?",
+  o:["5 A","1.67 A","0.56 A","15 A"],a:1,
+  e:"Current falls as 1/k²: voltage ÷ k and impedance × k. 15 × (3/9)² = 15/9 = 1.67 A."},
+ {q:"You double L. What happens to all the harmonic currents?",
+  o:["They double","They halve","They drop by 4×","Nothing"],a:1,
+  e:"Î = V̂/(kω₁L). Doubling L doubles every impedance, so every harmonic current halves."}
+],
+q6:[
+ {q:"Bipolar PWM, d = 0.75 in one switching period. Average v_t?",
+  o:["0.75 v_d","0.5 v_d","0.25 v_d","1.5 v_d"],a:1,
+  e:"(2d − 1)v_d = (1.5 − 1)v_d = 0.5 v_d. The 'off' time sits at −v_d, not 0, so it subtracts."},
+ {q:"m_i = 0.8. At the peak of the reference (sin = 1), what is d?",
+  o:["0.8","0.9","0.4","1.0"],a:1,
+  e:"d = (1 + m_i sin)/2 = (1 + 0.8)/2 = 0.9. Check: (2·0.9 − 1)v_d = 0.8v_d = m_i v_d."},
+ {q:"v_d = 600 V. You want V̂_t,1 = 450 V. What m_i?",
+  o:["0.75","1.33","0.59","0.45"],a:0,
+  e:"V̂_t,1 = m_i v_d, so m_i = 450/600 = 0.75."},
+ {q:"At one instant v_ref = 0.3 and v_tri = 0.5. Which switches are on (bipolar)?",
+  o:["S₁ + S₄, v_t = +v_d","S₂ + S₃, v_t = −v_d","S₁ + S₂, v_t = 0","All off"],a:1,
+  e:"Reference below the carrier → S₂ + S₃ on → v_t = −v_d. Bipolar never uses the zero state."},
+ {q:"f₁ = 60 Hz, f_sw = 3000 Hz, bipolar. Where is the first big harmonic group?",
+  o:["180 Hz (3rd)","Around h = 50 (3000 Hz)","Around h = 100 (6000 Hz)","60 Hz"],a:1,
+  e:"m_f = 3000/60 = 50. Bipolar puts its first group around m_f, i.e. near f_sw. Unipolar would push it to around 2m_f."}
+],
+q7:[
+ {q:"Bipolar, m_i = 0.8, v_d = 500 V. Table 8-1 gives c_h = 0.818 at h = m_f. Peak of that harmonic?",
+  o:["400 V","409 V","818 V","327 V"],a:1,
+  e:"The table is normalized: V̂ = c_h v_d = 0.818 × 500 = 409 V."},
+ {q:"f₁ = 60 Hz, f_sw = 2340 Hz. Which frequencies does row 2m_f ± 3 represent?",
+  o:["4500 Hz and 4860 Hz","2337 Hz and 2343 Hz","4680 Hz only","2160 Hz and 2520 Hz"],a:0,
+  e:"m_f = 39, so h = 78 − 3 = 75 and 78 + 3 = 81. Frequencies 75 × 60 = 4500 Hz and 81 × 60 = 4860 Hz."},
+ {q:"m_i = 0.9. Row m_f has 0.818 at 0.8 and 0.601 at 1.0. What c_h?",
+  o:["0.710","0.601","0.818","0.655"],a:0,
+  e:"0.9 is halfway between 0.8 and 1.0: 0.818 + 0.5 × (0.601 − 0.818) = 0.818 − 0.1085 = 0.710."},
+ {q:"V̂_t,h = 100 V at h = 51, f₁ = 60 Hz, L = 5 mH. Peak harmonic current?",
+  o:["1.04 A","0.33 A","53 A","20 A"],a:0,
+  e:"Impedance = 2π(51)(60)(0.005) = 96.1 Ω. Î = 100/96.1 = 1.04 A."}
+],
+q8:[
+ {q:"What happens at m_i = 1.5?",
+  o:["V̂_t,1 = 1.5 v_d exactly","V̂_t,1 ≈ 1.17 v_d, and a 3rd harmonic appears","The inverter shuts down","All harmonics move to 2m_f"],a:1,
+  e:"Pulses drop out near the peaks, so the fundamental grows less than m_i v_d (1.17 instead of 1.5), and low-order harmonics return (V̂₃ ≈ 0.17 v_d)."},
+ {q:"What's the largest fundamental any m_i can give?",
+  o:["v_d","1.5 v_d","4v_d/π ≈ 1.27 v_d","Unlimited"],a:2,
+  e:"As m_i → ∞ the output becomes a square wave, whose fundamental is 4v_d/π."},
+ {q:"Why do pulses drop out during overmodulation?",
+  o:["The carrier frequency drops","The reference rises above the carrier's peak, so there are no crossings and no switching","The switches overheat","The DC voltage sags"],a:1,
+  e:"Switching happens where the reference crosses the triangle. If the reference is above the triangle's top, there are no crossings, so the output stays stuck at +v_d."}
+],
+q9:[
+ {q:"In unipolar PWM, what does leg B compare with the triangle?",
+  o:["The same +v_ref","−v_ref (the flipped reference)","A second triangle at 2f_sw","Nothing; it stays off"],a:1,
+  e:"Leg A uses +v_ref and leg B uses −v_ref, both against the same triangle. That's what interleaves their edges."},
+ {q:"f₁ = 60 Hz, f_sw = 2700 Hz, unipolar. What's the first harmonic?",
+  o:["h = 43 at 2580 Hz","h = 45 at 2700 Hz","h = 89 at 5340 Hz","h = 3 at 180 Hz"],a:2,
+  e:"m_f = 45. The m_f group cancels, so the first surviving harmonic is 2m_f − 1 = 89, at 89 × 60 = 5340 Hz."},
+ {q:"f_sw = 3 kHz, unipolar. How often does each individual switch turn on and off?",
+  o:["3 kHz (once per carrier cycle)","6 kHz","1.5 kHz","60 Hz"],a:0,
+  e:"Each switch still switches once per carrier cycle, so 3 kHz. Only the OUTPUT v_t changes level at an effective 6 kHz. Same switching loss, better waveform."},
+ {q:"Unipolar, v_d = 400 V, m_i = 0.8 (c_h = 0.314), m_f = 21, f₁ = 60 Hz, L = 10 mH. Peak current at h = 41?",
+  o:["0.81 A","1.63 A","0.40 A","12.6 A"],a:0,
+  e:"V̂ = 0.314 × 400 = 125.6 V. Impedance = 2π(41)(60)(0.01) = 154.6 Ω. Î = 125.6/154.6 = 0.81 A."}
+],
+q10:[
+ {q:"Want V̂_t,1 = 340 V from v_d = 425 V using phase shift. What α?",
+  o:["0.800","0.284","0.628","Impossible"],a:1,
+  e:"cos(πα) = 340π/(4·425) = 0.628, so πα = 0.892 rad and α = 0.284. (0.628 is cos(πα), not α; 0.800 is the PWM m_i.)"},
+ {q:"With a square wave, how do you get exactly 340 V peak fundamental?",
+  o:["Set α = 0.284","Set m_i = 0.8","Change the DC source to about 267 V","You can't"],a:2,
+  e:"The square wave's size is fixed at 4v_d/π, so change v_d: v_d = 340π/4 = 267 V."},
+ {q:"Same f_sw, same fundamental. Which gives the smallest harmonic current?",
+  o:["Square wave","Phase shift","Bipolar PWM","Unipolar PWM"],a:3,
+  e:"Unipolar pushes its first harmonics to 2m_f, where the inductor's impedance is twice as big. In the lecture: 0.31 A vs 1.96 A (bipolar) vs 15 A (square)."},
+ {q:"You need the biggest possible fundamental from a given v_d and don't care about harmonics. Which method?",
+  o:["Linear PWM at m_i = 1","Phase shift with α = 0.25","Square wave","They're all equal"],a:2,
+  e:"The square wave gives 4v_d/π ≈ 1.27 v_d, the maximum. Linear PWM stops at v_d."}
+],
+qf:[
+ {q:"S₁ and S₄ are on (v_t = +v_d). You want v_t = 0 by changing only leg B. What's the safe sequence?",
+  o:["Turn S₄ off, wait, then turn S₂ on","Turn S₂ on, then turn S₄ off","Turn S₃ on while S₁ stays on","Turn all four off"],a:0,
+  e:"Moving B from bottom to top gives A and B both on top: v_t = 0. In a voltage-source bridge you use dead time: S₄ off first, then S₂ on. Option B risks shoot-through in leg B; option C is shoot-through in leg A. Review §1 and §2."},
+ {q:"In a current-source bridge, which situation is dangerous?",
+  o:["S₁ and S₃ on together for a moment","No switch path for i_d, even briefly","S₁ and S₄ on","Overlap time"],a:1,
+  e:"A current source can't be opened: the inductor forces a huge voltage spike. Brief overlap is the SAFE fix. Review §2."},
+ {q:"Square wave, v_d = 250 V. Peak 3rd harmonic?",
+  o:["106 V","318 V","83.3 V","35.4 V"],a:0,
+  e:"V̂₃ = 4(250)/(3π) = 106 V. Review §3."},
+ {q:"Phase shift, v_d = 400 V. You want V̂_t,1 = 400 V. What α?",
+  o:["0.212","0.785","0.250","0.333"],a:0,
+  e:"cos(πα) = 400π/(4·400) = π/4 = 0.785. πα = acos(0.785) = 0.667 rad, α = 0.212. Review §4."},
+ {q:"Square wave, v_d = 300 V, L = 5 mH, ω₁ = 377 rad/s. Peak 3rd-harmonic current?",
+  o:["22.5 A","7.5 A","67.5 A","2.5 A"],a:0,
+  e:"V̂₃ = 4(300)/(3π) = 127.3 V. Impedance = 3 × 377 × 0.005 = 5.66 Ω. Î₃ = 127.3/5.66 = 22.5 A. Review §5."},
+ {q:"v_d = 400 V. You need a 230 V RMS fundamental with linear PWM. What m_i?",
+  o:["0.813","0.575","1.23","0.650"],a:0,
+  e:"Convert to peak first: 230√2 = 325.3 V. m_i = 325.3/400 = 0.813. (0.575 is what you get if you forget the √2.) Review §6."},
+ {q:"f₁ = 50 Hz, f_sw = 2.55 kHz, bipolar. Lowest harmonic order and frequency?",
+  o:["h = 49 at 2450 Hz","h = 51 at 2550 Hz","h = 101 at 5050 Hz","h = 3 at 150 Hz"],a:0,
+  e:"m_f = 2550/50 = 51. Lowest in the m_f ± 2 row: h = 49, at 49 × 50 = 2450 Hz. Review §6 and §7."},
+ {q:"Bipolar, v_d = 500 V, m_i = 0.9. Row m_f ± 2 has 0.220 (0.8) and 0.318 (1.0). Peak voltage of that harmonic?",
+  o:["134.5 V","110 V","159 V","269 V"],a:0,
+  e:"c_h = 0.220 + 0.5 × 0.098 = 0.269. V̂ = 0.269 × 500 = 134.5 V. Review §7."},
+ {q:"Bipolar, v_d = 600 V, m_i = 0.8, m_f = 21, f₁ = 60 Hz, L = 8 mH. Peak current at h = m_f?",
+  o:["7.75 A","0.37 A","3.10 A","61.4 A"],a:0,
+  e:"V̂ = 0.818 × 600 = 490.8 V. Impedance = 2π(21)(60)(0.008) = 63.3 Ω. Î = 7.75 A. Review §7."},
+ {q:"v_d = 400 V, m_i = 2.5. Roughly what fundamental do you get?",
+  o:["About 496 V","1000 V","400 V","509 V"],a:0,
+  e:"From the overmodulation table, m_i = 2.5 gives 1.24 v_d = 496 V. It's creeping toward the 509 V ceiling (4v_d/π), not 2.5 × 400. Review §8."},
+ {q:"Same bridge as Q9 (m_f = 21) but unipolar. Which harmonic comes first?",
+  o:["h = 41","h = 19","h = 21","h = 43"],a:0,
+  e:"The m_f group cancels; first is 2m_f − 1 = 41. Review §9."},
+ {q:"Unipolar vs bipolar with the same f_sw. Which statement is true?",
+  o:["Unipolar switches each device twice as often","Each device switches at f_sw in both, but unipolar's output changes level twice as often","Bipolar uses three levels","Unipolar has a bigger m_f harmonic"],a:1,
+  e:"Same per-switch rate (same losses), but the legs' edges interleave, so the effective output frequency is 2f_sw. Review §9."}
+]
+};
+
+/* ---------------- QUIZ ENGINE ---------------- */
+const LET = "ABCD";
+function chip(id, correct, answered, total){
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+"/"+total;
+  c.classList.toggle("done", answered===total);
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+  }
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(item.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    const btns = item.o.map((t, oi)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[oi];
+      const s = document.createElement("span"); s.textContent = t;
+      b.append(L, s);
+      b.addEventListener("click", ()=>{
+        btns.forEach(x=>x.disabled=true);
+        const ok = oi===item.a;
+        btns[item.a].classList.add("right");
+        if(!ok) b.classList.add("wrong");
+        answered++; if(ok) correct++;
+        ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[item.a]+'.</b> ';
+        ex.appendChild(document.createTextNode(item.e));
+        ex.hidden = false;
+        upd();
+      });
+      opts.appendChild(b); return b;
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+  });
+  reset.addEventListener("click", ()=>buildQuiz(box));
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function prep(cv, hOverride){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = hOverride || +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size){ ctx.fillStyle=col; ctx.font=(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function stepPath(ctx, N, fx, fy, vals){ // draws a step waveform
+  ctx.beginPath();
+  for(let i=0;i<=N;i++){ const x=fx(i), y=fy(vals[i]); if(i===0) ctx.moveTo(x,y); else { if(vals[i]!==vals[i-1]) ctx.lineTo(x, fy(vals[i-1])); ctx.lineTo(x,y);} }
+  ctx.stroke();
+}
+function setPressed(on, off){ on.setAttribute("aria-pressed","true"); off.setAttribute("aria-pressed","false"); }
+const fmt = (x,d)=> (Math.abs(x)<1e-9?0:x).toFixed(d);
+
+/* ---------------- H-BRIDGE ---------------- */
+const hbState = {1:true,2:false,3:false,4:true};
+const hbRead = document.getElementById("hbRead"), potA = document.getElementById("potA"), potB = document.getElementById("potB");
+function drawHB(){
+  document.querySelectorAll("#hb .sw").forEach(g=>{ const on = hbState[g.dataset.s]; g.classList.toggle("on", on); g.setAttribute("aria-pressed", on?"true":"false"); });
+  const s1=hbState[1], s2=hbState[2], s3=hbState[3], s4=hbState[4];
+  const hot = new Set(), shortS = new Set();
+  const shortA = s1&&s3, shortB = s2&&s4;
+  if(shortA){ ["src","top","bot","at","ab"].forEach(x=>shortS.add(x)); }
+  if(shortB){ ["src","top","bot","bt","bb"].forEach(x=>shortS.add(x)); }
+  const vA = s1&&!s3 ? 1 : (s3&&!s1 ? 0 : null);
+  const vB = s2&&!s4 ? 1 : (s4&&!s2 ? 0 : null);
+  if(!shortA && !shortB && vA!==null && vB!==null && vA!==vB){
+    ["src","top","bot","load"].forEach(x=>hot.add(x));
+    if(vA===1){ hot.add("at"); hot.add("bb"); } else { hot.add("ab"); hot.add("bt"); }
+  }
+  document.querySelectorAll("#hb .w").forEach(l=>{
+    const sg = l.dataset.seg;
+    l.classList.toggle("short", shortS.has(sg));
+    l.classList.toggle("hot", !shortS.has(sg) && hot.has(sg));
+  });
+  const ink = css("--ink"), bad = css("--bad");
+  potA.textContent = shortA ? "short!" : vA===null ? "A floats" : (vA? "v_AN = v_d" : "v_AN = 0");
+  potB.textContent = shortB ? "short!" : vB===null ? "B floats" : (vB? "v_BN = v_d" : "v_BN = 0");
+  potA.setAttribute("fill", shortA?bad:ink); potB.setAttribute("fill", shortB?bad:ink);
+  let v, msg, cls;
+  if(shortA||shortB){
+    cls="no"; v="SHOOT-THROUGH";
+    msg = "Leg "+(shortA&&shortB?"A and leg B":shortA?"A":"B")+" connects the top rail straight to the bottom rail. The DC source is shorted and the switches are destroyed.";
+  } else if(vA===null || vB===null){
+    cls="mid"; v="undefined";
+    msg = "A leg with no switch on is floating. In this lecture every commanded state keeps exactly one switch on per leg.";
+  } else {
+    cls="ok";
+    const vt = vA - vB;
+    v = vt===1?"+v_d": vt===-1?"−v_d":"0";
+    msg = vt===0 ? "A and B sit on the same rail, so there's no difference between them: a zero state." : "Current path highlighted: from the source, through one switch in each leg, and through the load"+(vt===1?" from A to B.":" from B to A.");
+  }
+  hbRead.innerHTML = '<span class="verdict '+cls+'">v_t = '+v+'</span>'+msg;
+}
+document.querySelectorAll("#hb .sw").forEach(g=>{
+  const toggle = ()=>{ hbState[g.dataset.s] = !hbState[g.dataset.s]; drawHB(); };
+  g.addEventListener("click", toggle);
+  g.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); } });
+});
+document.querySelectorAll("[data-hb]").forEach(b=>b.addEventListener("click", ()=>{
+  const on = b.dataset.hb.split(",").map(Number);
+  [1,2,3,4].forEach(k=>hbState[k]=on.includes(k)); drawHB();
+}));
+
+/* ---------------- DEAD TIME DEMO ---------------- */
+const cvDT = document.getElementById("cvDT"), dtGap = document.getElementById("dtGap"), dtRead = document.getElementById("dtRead"), dtV = document.getElementById("dtV"), dtI = document.getElementById("dtI");
+let dtCurrent = false;
+function drawDT(){
+  const {ctx,w,h} = prep(cvDT);
+  const mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), good=css("--good"), bad=css("--bad"), ink=css("--ink");
+  const g = +dtGap.value;
+  const x0 = 70, x1 = w-12, span = x1-x0;
+  const t1 = 0.46, t2 = t1 + g*0.16;
+  const X = t => x0 + span*t;
+  const rows = [{name:"S1 gate", y:52, hi:t=>t<t1}, {name:"S3 gate", y:122, hi:t=>t>=t2}];
+  // shaded region
+  const a = Math.min(t1,t2), b = Math.max(t1,t2);
+  let bad2;
+  if(g>0) bad2 = dtCurrent; else if(g<0) bad2 = !dtCurrent; else bad2 = null;
+  if(Math.abs(g)>0.001){
+    ctx.fillStyle = bad2 ? css("--bad-bg") : css("--good-bg");
+    ctx.fillRect(X(a), 18, X(b)-X(a), 136);
+    txt(ctx, g>0 ? "both OFF" : "both ON", (X(a)+X(b))/2, 166, bad2?bad:good, "center", 12);
+  } else {
+    line(ctx, X(t1), 18, X(t1), 154, css("--ana-line"), 2, [4,3]);
+    txt(ctx, "zero gap", X(t1), 166, css("--ana-ink"), "center", 12);
+  }
+  rows.forEach(r=>{
+    txt(ctx, r.name, 8, r.y, ink, "left", 12);
+    const hi = r.y-22, lo = r.y+14;
+    line(ctx, x0, lo, x1, lo, gr, 1);
+    ctx.beginPath(); ctx.strokeStyle = vc; ctx.lineWidth = 2.4;
+    const N = 400; let prev = null;
+    for(let i=0;i<=N;i++){ const t=i/N, v=r.hi(t), x=X(t), y= v?hi:lo; if(i===0) ctx.moveTo(x,y); else { if(v!==prev) ctx.lineTo(x, prev?hi:lo); ctx.lineTo(x,y);} prev=v; }
+    ctx.stroke();
+    txt(ctx,"on",x1-4,hi-8,mut,"right",10);
+  });
+  txt(ctx,"time →", x1, 182, mut, "right", 11);
+  let v, cls, msg;
+  if(!dtCurrent){
+    if(g>0){ cls="ok"; v="Safe: dead time"; msg="Both switches are off for a moment, so the source can never be shorted. This is the airlock."; }
+    else if(g<0){ cls="no"; v="Shoot-through"; msg="Both switches are on at once: a short from + to − across the voltage source."; }
+    else { cls="mid"; v="Risky"; msg="On paper there's no overlap, but a real switch takes time to turn off, so both would conduct briefly. Add dead time."; }
+  } else {
+    if(g<0){ cls="ok"; v="Safe: overlap time"; msg="Both switches are on for a moment, so i_d always has a path. This is the relay baton."; }
+    else if(g>0){ cls="no"; v="Open circuit"; msg="Both switches are off: the current source has no path, so the voltage spikes and destroys the switches."; }
+    else { cls="mid"; v="Risky"; msg="Any delay in S3 turning on leaves i_d with no path. Add overlap time."; }
+  }
+  dtRead.innerHTML = '<span class="verdict '+cls+'">'+v+'</span>'+msg;
+}
+dtGap.addEventListener("input", drawDT);
+dtV.addEventListener("click", ()=>{ dtCurrent=false; setPressed(dtV,dtI); drawDT(); });
+dtI.addEventListener("click", ()=>{ dtCurrent=true; setPressed(dtI,dtV); drawDT(); });
+
+/* ---------------- SQUARE WAVE DEMO ---------------- */
+const cvSQ = document.getElementById("cvSQ"), phSQ = document.getElementById("phSQ"), phSQOut = document.getElementById("phSQOut"), sqRead = document.getElementById("sqRead");
+function drawSQ(){
+  const stacked = (cvSQ.clientWidth || cvSQ.parentElement.clientWidth) < 520;
+  const {ctx,w,h} = prep(cvSQ, stacked ? 330 : 230);
+  const phi = (+phSQ.value)*Math.PI/180;
+  const mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), fc=css("--fund"), cc=css("--curr");
+  const wx0 = 34, wx1 = stacked ? w-8 : w*0.62, wy = stacked ? 80 : h/2, A = stacked ? 48 : 64;
+  line(ctx,wx0,wy,wx1,wy,gr,1);
+  line(ctx,wx0,wy-A,wx1,wy-A,gr,1,[2,4]); line(ctx,wx0,wy+A,wx1,wy+A,gr,1,[2,4]);
+  txt(ctx,"+1",wx0-6,wy-A,mut,"right",11); txt(ctx,"0",wx0-6,wy,mut,"right",11); txt(ctx,"−1",wx0-6,wy+A,mut,"right",11);
+  const N=600, X=i=>wx0+(wx1-wx0)*i/N;
+  ctx.beginPath(); ctx.setLineDash([3,4]); ctx.strokeStyle=mut; ctx.lineWidth=1.3;
+  for(let i=0;i<=N;i++){ const t=i/N, y=wy-A*Math.sin(2*Math.PI*t); i?ctx.lineTo(X(i),y):ctx.moveTo(X(i),y);} ctx.stroke(); ctx.setLineDash([]);
+  const vals = new Float32Array(N+1);
+  for(let i=0;i<=N;i++){ const s=Math.sin(2*Math.PI*i/N+phi); vals[i] = s>=0?1:-1; }
+  ctx.strokeStyle=vc; ctx.lineWidth=2.2; stepPath(ctx,N,X,v=>wy-A*v,vals);
+  ctx.beginPath(); ctx.setLineDash([6,4]); ctx.strokeStyle=fc; ctx.lineWidth=2;
+  for(let i=0;i<=N;i++){ const t=i/N, y=wy-A*(4/Math.PI)*Math.sin(2*Math.PI*t+phi); i?ctx.lineTo(X(i),y):ctx.moveTo(X(i),y);} ctx.stroke(); ctx.setLineDash([]);
+  txt(ctx,"0",wx0,wy+A*1.3+12,mut,"center",11); txt(ctx,"T₁/2",(wx0+wx1)/2,wy+A*1.3+12,mut,"center",11); txt(ctx,"T₁",wx1,wy+A*1.3+12,mut,"center",11);
+  // bars
+  const bx0 = stacked ? 34 : w*0.62+46, bx1 = w-8, by = stacked ? h-22 : h-30, bh = stacked ? 100 : 150;
+  const ks=[1,3,5,7,9], maxv=4/Math.PI, slot=(bx1-bx0)/ks.length;
+  line(ctx,bx0,by,bx1,by,gr,1); line(ctx,bx0,by-bh,bx1,by-bh,gr,1,[2,4]);
+  txt(ctx,"1.27",bx0-4,by-bh,mut,"right",10);
+  ks.forEach((k,i)=>{ const v=4/(k*Math.PI), bw=Math.min(26,slot*0.55), x=bx0+slot*i+(slot-bw)/2, hh=bh*v/maxv; ctx.fillStyle=k===1?fc:cc; ctx.fillRect(x,by-hh,bw,hh); txt(ctx,String(k),x+bw/2,by+12,mut,"center",11); });
+  txt(ctx,"V̂ₖ/v_d",bx0,by-bh-14,mut,"left",11);
+  const p = +phSQ.value;
+  phSQOut.textContent = (p>0?"+":"")+p+"°";
+  sqRead.innerHTML = "phase offset <b>"+(p===0?"0° (aligned)":Math.abs(p)+"° "+(p>0?"lead":"lag"))+"</b> · fundamental peak stays <b>4v_d/π = 1.273 v_d</b> · the harmonic bars never change. Phase is the only thing you control.";
+}
+phSQ.addEventListener("input", drawSQ);
+
+/* ---------------- PHASE SHIFT DEMO ---------------- */
+const cvS = document.getElementById("cvPS"), alS = document.getElementById("alPS"), alO = document.getElementById("alPSOut"), psR = document.getElementById("psRead");
+function vPS(t, al){ t = ((t%1)+1)%1; if(t>=al/2 && t<0.5-al/2) return 1; if(t>=0.5+al/2 && t<1-al/2) return -1; return 0; }
+function drawPS(){
+  const stacked = (cvS.clientWidth || cvS.parentElement.clientWidth) < 520;
+  const {ctx,w,h} = prep(cvS, stacked ? 320 : 230);
+  const al = +alS.value;
+  const mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), fc=css("--fund"), cc=css("--curr");
+  const wx0 = 34, wx1 = stacked ? w-8 : w*0.6, wy = stacked ? 72 : h/2, A = stacked ? 44 : 64;
+  line(ctx,wx0,wy,wx1,wy,gr,1);
+  txt(ctx,"+1",wx0-6,wy-A,mut,"right",11); txt(ctx,"0",wx0-6,wy,mut,"right",11); txt(ctx,"−1",wx0-6,wy+A,mut,"right",11);
+  line(ctx,wx0,wy-A,wx1,wy-A,gr,1,[2,4]); line(ctx,wx0,wy+A,wx1,wy+A,gr,1,[2,4]);
+  const b1 = 4/Math.PI*Math.cos(Math.PI*al);
+  const N=600, X=i=>wx0+(wx1-wx0)*i/N, vals=new Float32Array(N+1);
+  for(let i=0;i<=N;i++) vals[i]=vPS(i/N,al);
+  ctx.strokeStyle=vc; ctx.lineWidth=2.2; stepPath(ctx,N,X,v=>wy-A*v,vals);
+  ctx.beginPath(); ctx.setLineDash([5,4]); ctx.strokeStyle=fc; ctx.lineWidth=2;
+  for(let i=0;i<=N;i++){ const t=i/N, y=wy-A*b1*Math.sin(2*Math.PI*t); i?ctx.lineTo(X(i),y):ctx.moveTo(X(i),y);} ctx.stroke(); ctx.setLineDash([]);
+  txt(ctx,"0",wx0,wy+A*1.3+12,mut,"center",11); txt(ctx,"T₁/2",(wx0+wx1)/2,wy+A*1.3+12,mut,"center",11); txt(ctx,"T₁",wx1,wy+A*1.3+12,mut,"center",11);
+  const bx0 = stacked ? 34 : w*0.6+44, bx1 = w-8, by = stacked ? h-22 : h-28, bh = stacked ? 100 : 150;
+  const ks=[1,3,5,7,9], maxv=4/Math.PI;
+  line(ctx,bx0,by,bx1,by,gr,1);
+  txt(ctx,"1.27",bx0-4,by-bh,mut,"right",10); line(ctx,bx0,by-bh,bx1,by-bh,gr,1,[2,4]);
+  const slot=(bx1-bx0)/ks.length;
+  ks.forEach((k,i)=>{
+    const v=4/(k*Math.PI)*Math.abs(Math.cos(k*Math.PI*al));
+    const bw=Math.min(26,slot*0.55), x=bx0+slot*i+(slot-bw)/2, hh=bh*v/maxv;
+    ctx.fillStyle=k===1?fc:cc; ctx.fillRect(x,by-hh,bw,hh);
+    txt(ctx,String(k),x+bw/2,by+12,mut,"center",11);
+    if(v<0.005 && al>0) txt(ctx,"0",x+bw/2,by-8,cc,"center",11);
+  });
+  txt(ctx,"V̂ₖ/v_d",bx0,by-bh-14,mut,"left",11);
+  const thd = b1>1e-6 ? Math.sqrt(Math.max(0,(1-2*al)-b1*b1/2))/(b1/Math.SQRT2)*100 : NaN;
+  const nulled = [3,5,7,9].filter(k=>Math.abs(Math.cos(k*Math.PI*al))<0.01);
+  psR.innerHTML = "zero interval <b>"+al.toFixed(3)+" T₁</b> · fundamental <b>V̂₁ = "+b1.toFixed(3)+" v_d</b> · voltage THD <b>"+(isNaN(thd)?"undefined (no output)":thd.toFixed(1)+"%")+"</b>"+(nulled.length?" · harmonic "+nulled.join(", ")+" <b>removed</b>":"");
+}
+alS.addEventListener("input", ()=>{ alO.textContent=(+alS.value).toFixed(3); drawPS(); });
+document.querySelectorAll("[data-al]").forEach(b=>b.addEventListener("click", ()=>{ alS.value=b.dataset.al; alO.textContent=(+alS.value).toFixed(3); drawPS(); }));
+
+/* ---------------- HARMONIC CURRENT CALC ---------------- */
+const hcSq=document.getElementById("hcSq"), hcPs=document.getElementById("hcPs"), hcVd=document.getElementById("hcVd"), hcL=document.getElementById("hcL"), hcF=document.getElementById("hcF"), hcAl=document.getElementById("hcAl"), hcAlWrap=document.getElementById("hcAlWrap"), hcTable=document.getElementById("hcTable"), hcRead=document.getElementById("hcRead");
+let hcPhase=false;
+function calcHC(){
+  const vd=+hcVd.value||0, L=(+hcL.value||0)/1000, f=+hcF.value||0, w1=2*Math.PI*f;
+  const al = hcPhase ? Math.min(0.5,Math.max(0,+hcAl.value||0)) : 0;
+  let rows = '<thead><tr><th class="num">k</th><th class="num">f (Hz)</th><th class="num">V̂<sub>t,k</sub> (V)</th><th class="num">kω₁L (Ω)</th><th class="num">Î<sub>t,k</sub> (A peak)</th></tr></thead><tbody>';
+  const V1 = 4*vd/Math.PI*Math.cos(Math.PI*al);
+  [3,5,7,9,11].forEach(k=>{
+    const V = 4*vd*Math.abs(Math.cos(k*Math.PI*al))/(k*Math.PI), X = k*w1*L, I = X>0? V/X : 0;
+    rows += '<tr><td class="num">'+k+'</td><td class="num">'+(k*f).toFixed(0)+'</td><td class="num">'+fmt(V,1)+'</td><td class="num">'+fmt(X,2)+'</td><td class="num"><b>'+fmt(I,2)+'</b></td></tr>';
+  });
+  hcTable.innerHTML = rows+'</tbody>';
+  hcRead.innerHTML = "fundamental V̂<sub>t,1</sub> = <b>"+fmt(V1,1)+" V</b> peak · ω₁ = "+w1.toFixed(1)+" rad/s"+(hcPhase?" · try α = 1/6 (0.1667) to zero the 3rd row":" · lecture example: 400 V, 10 mH, 60 Hz gives 15.01 A at k = 3");
+}
+[hcVd,hcL,hcF,hcAl].forEach(el=>el.addEventListener("input",calcHC));
+hcSq.addEventListener("click",()=>{ hcPhase=false; setPressed(hcSq,hcPs); hcAlWrap.hidden=true; calcHC(); });
+hcPs.addEventListener("click",()=>{ hcPhase=true; setPressed(hcPs,hcSq); hcAlWrap.hidden=false; calcHC(); });
+
+/* ---------------- PWM DEMO ---------------- */
+const cvW=document.getElementById("cvPWM"), miS=document.getElementById("miPWM"), mfS=document.getElementById("mfPWM"), miO=document.getElementById("miOut"), mfO=document.getElementById("mfOut"), pwR=document.getElementById("pwmRead"), pwBi=document.getElementById("pwBi"), pwUni=document.getElementById("pwUni");
+let uni=false;
+function tri(t,mf){ const p=((t*mf)%1+1)%1; return p<0.5 ? 1-4*p : -3+4*p; }
+function drawPWM(){
+  const {ctx,w,h}=prep(cvW);
+  const mi=+miS.value, mf=+mfS.value;
+  const mut=css("--muted"), gr=css("--grid"), vc=css("--volt"), fc=css("--fund"), cc=css("--curr"), ink=css("--ink");
+  const x0=40, x1=w-8, topY=66, A1=44, midY=196, A2=48;
+  const N=Math.max(4000, mf*200);
+  const X=i=>x0+(x1-x0)*i/N;
+  // panel 1: reference and carrier
+  const sc = A1/Math.max(1, mi);
+  line(ctx,x0,topY,x1,topY,gr,1);
+  line(ctx,x0,topY-sc,x1,topY-sc,gr,1,[2,4]); line(ctx,x0,topY+sc,x1,topY+sc,gr,1,[2,4]);
+  txt(ctx,"+1",x0-6,topY-sc,mut,"right",10); txt(ctx,"−1",x0-6,topY+sc,mut,"right",10);
+  const NP = Math.min(N, 3000);
+  ctx.beginPath(); ctx.strokeStyle=mut; ctx.lineWidth=1;
+  for(let i=0;i<=NP;i++){ const t=i/NP, x=x0+(x1-x0)*t, y=topY-sc*tri(t,mf); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
+  ctx.beginPath(); ctx.strokeStyle=fc; ctx.lineWidth=2.2;
+  for(let i=0;i<=NP;i++){ const t=i/NP, x=x0+(x1-x0)*t, y=topY-sc*mi*Math.sin(2*Math.PI*t); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
+  if(uni){
+    ctx.beginPath(); ctx.setLineDash([5,4]); ctx.strokeStyle=fc; ctx.lineWidth=1.6;
+    for(let i=0;i<=NP;i++){ const t=i/NP, x=x0+(x1-x0)*t, y=topY+sc*mi*Math.sin(2*Math.PI*t); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke(); ctx.setLineDash([]);
+  }
+  txt(ctx, uni ? "leg A: +v_ref vs carrier · leg B: −v_ref (dashed) vs carrier" : "v_ref vs carrier: above → S1+S4 on, below → S2+S3 on", x0, 12, mut, "left", 11);
+  // output
+  const out=new Int8Array(N+1); let swA=0;
+  for(let i=0;i<=N;i++){
+    const t=i/N, r=mi*Math.sin(2*Math.PI*t), c=tri(t,mf);
+    const a = r>=c ? 1:0;
+    if(uni){ const b = (-r)>=c ? 1:0; out[i]=a-b; } else out[i]= a?1:-1;
+  }
+  let lev=0; for(let i=1;i<N;i++){ if(out[i]!==out[i-1]) lev++; }
+  { let prevA=null; for(let i=0;i<N;i++){ const t=i/N, a = mi*Math.sin(2*Math.PI*t)>=tri(t,mf); if(prevA!==null && a!==prevA) swA++; prevA=a; } }
+  line(ctx,x0,midY,x1,midY,gr,1);
+  line(ctx,x0,midY-A2,x1,midY-A2,gr,1,[2,4]); line(ctx,x0,midY+A2,x1,midY+A2,gr,1,[2,4]);
+  txt(ctx,"+v_d",x0-6,midY-A2,mut,"right",10); txt(ctx,"0",x0-6,midY,mut,"right",10); txt(ctx,"−v_d",x0-6,midY+A2,mut,"right",10);
+  ctx.strokeStyle=vc; ctx.lineWidth=1.3; stepPath(ctx,N,X,v=>midY-A2*v,out);
+  const win=Math.round(N/mf), half=Math.floor(win/2);
+  ctx.beginPath(); ctx.strokeStyle=cc; ctx.lineWidth=2.4;
+  let s=0; for(let j=-half;j<win-half;j++) s+=out[((j%N)+N)%N];
+  for(let i=0;i<=N;i++){ const y=midY-A2*s/win; i?ctx.lineTo(X(i),y):ctx.moveTo(X(i),y); s+=out[((i+win-half)%N+N)%N]-out[((i-half)%N+N)%N]; }
+  ctx.stroke();
+  txt(ctx,"output v_t and its average over each switching period",x0,midY-A2-16,mut,"left",11);
+  // spectrum
+  const hmax = 3*mf+8, amp=new Float64Array(hmax+1);
+  const cs=new Float64Array(N), sn=new Float64Array(N);
+  for(let i=0;i<N;i++){ cs[i]=Math.cos(2*Math.PI*i/N); sn[i]=Math.sin(2*Math.PI*i/N); }
+  for(let hh=1;hh<=hmax;hh++){ let a=0,b=0,idx=0; for(let i=0;i<N;i++){ const o=out[i]; if(o){ a+=o*cs[idx]; b+=o*sn[idx]; } idx+=hh; if(idx>=N) idx-=N; } amp[hh]=2/N*Math.hypot(a,b); }
+  const sy=h-26, sH=112, smax=1.3;
+  line(ctx,x0,sy,x1,sy,gr,1);
+  [0.5,1.0].forEach(v=>{ line(ctx,x0,sy-sH*v/smax,x1,sy-sH*v/smax,gr,1,[2,4]); txt(ctx,v.toFixed(1),x0-6,sy-sH*v/smax,mut,"right",10); });
+  const HX = hh => x0 + (x1-x0)*hh/(hmax+1);
+  const bw = Math.max(1.5, Math.min(8,(x1-x0)/(hmax+1)*0.7));
+  for(let hh=1;hh<=hmax;hh++){ const v=Math.min(amp[hh],smax); if(v<0.004) continue; ctx.fillStyle = hh===1?fc:cc; ctx.fillRect(HX(hh)-bw/2, sy-sH*v/smax, bw, sH*v/smax); }
+  txt(ctx,"1",HX(1),sy+12,mut,"center",10);
+  [[mf,"m_f"],[2*mf,"2m_f"],[3*mf,"3m_f"]].forEach(([hh,l])=>{ line(ctx,HX(hh),sy,HX(hh),sy+4,mut,1); txt(ctx,l,HX(hh),sy+14,mut,"center",10); });
+  txt(ctx,"harmonic spectrum, peak/v_d",x0,sy-sH-12,mut,"left",11);
+  // readout
+  let first=0; for(let hh=2;hh<=hmax;hh++){ if(amp[hh]>0.02){ first=hh; break; } }
+  let big=2; for(let hh=2;hh<=hmax;hh++){ if(amp[hh]>amp[big]) big=hh; }
+  let r1 = "fundamental <b>V̂₁ = "+amp[1].toFixed(2)+" v_d</b>";
+  if(mi>1) r1 += " (not "+mi.toFixed(2)+": <b>overmodulation</b>, 3rd harmonic = "+amp[3].toFixed(2)+" v_d)";
+  else r1 += " (= m_i v_d)";
+  pwR.innerHTML = r1+"<br>first harmonic <b>h = "+first+"</b> · largest harmonic <b>h = "+big+"</b> ("+amp[big].toFixed(3)+" v_d)<br>each switch: <b>"+swA+"</b> on/off edges per cycle · v_t: <b>"+lev+"</b> level changes per cycle"+(uni?" (about twice bipolar's)":"");
+}
+miS.addEventListener("input", ()=>{ miO.textContent=(+miS.value).toFixed(2); drawPWM(); });
+mfS.addEventListener("input", ()=>{ mfO.textContent=mfS.value; drawPWM(); });
+pwBi.addEventListener("click", ()=>{ uni=false; setPressed(pwBi,pwUni); drawPWM(); });
+pwUni.addEventListener("click", ()=>{ uni=true; setPressed(pwUni,pwBi); drawPWM(); });
+document.querySelectorAll("[data-om]").forEach(b=>b.addEventListener("click", ()=>{
+  miS.value=b.dataset.om; miO.textContent=(+miS.value).toFixed(2); drawPWM();
+  document.getElementById("pwmDemo").scrollIntoView({block:"start"});
+}));
+
+/* ---------------- TABLE 8-1 CALC ---------------- */
+const COLS=[0.2,0.4,0.6,0.8,1.0];
+const ROWS=[
+ {k:1,o:[0],   lab:"m_f",      html:"m<sub>f</sub>",       v:[1.242,1.150,1.006,0.818,0.601]},
+ {k:1,o:[-2,2],lab:"m_f ± 2",  html:"m<sub>f</sub> ± 2",   v:[0.016,0.061,0.131,0.220,0.318]},
+ {k:2,o:[-1,1],lab:"2m_f ± 1", html:"2m<sub>f</sub> ± 1",  v:[0.190,0.326,0.370,0.314,0.181]},
+ {k:2,o:[-3,3],lab:"2m_f ± 3", html:"2m<sub>f</sub> ± 3",  v:[null,0.024,0.071,0.139,0.212]},
+ {k:2,o:[-5,5],lab:"2m_f ± 5", html:"2m<sub>f</sub> ± 5",  v:[null,null,null,0.013,0.033]},
+ {k:3,o:[0],   lab:"3m_f",     html:"3m<sub>f</sub>",      v:[0.335,0.123,0.083,0.171,0.113]},
+ {k:3,o:[-2,2],lab:"3m_f ± 2", html:"3m<sub>f</sub> ± 2",  v:[0.044,0.139,0.203,0.176,0.062]},
+ {k:3,o:[-4,4],lab:"3m_f ± 4", html:"3m<sub>f</sub> ± 4",  v:[null,0.012,0.047,0.104,0.157]},
+ {k:3,o:[-6,6],lab:"3m_f ± 6", html:"3m<sub>f</sub> ± 6",  v:[null,null,null,0.016,0.044]}
+];
+const tBi=document.getElementById("tBi"), tUni=document.getElementById("tUni"), tVd=document.getElementById("tVd"), tV1=document.getElementById("tV1"), tF1=document.getElementById("tF1"), tFsw=document.getElementById("tFsw"), tL=document.getElementById("tL"), tSteps=document.getElementById("tSteps"), t81=document.getElementById("t81"), tAll=document.getElementById("tAll");
+let tUniMode=false;
+function interp(vals, mi){
+  const m=Math.min(1,Math.max(0.2,mi));
+  let j=Math.min(3, Math.floor((m-0.2)/0.2+1e-9));
+  const lo=vals[j]==null?0:vals[j], hi=vals[j+1]==null?0:vals[j+1];
+  const frac=(m-COLS[j])/(COLS[j+1]-COLS[j]);
+  return {c:Math.round((lo+frac*(hi-lo))*1e4)/1e4, j, lo, hi, frac, m};
+}
+function calcT(){
+  const vd=+tVd.value||0, V1=+tV1.value||0, f1=+tF1.value||0, fsw=+tFsw.value||0, L=(+tL.value||0)/1000;
+  const mfRaw = f1>0? fsw/f1 : 0, mf=Math.round(mfRaw), mi = vd>0? V1/vd : 0;
+  const rows = ROWS.filter(r=> !tUniMode || r.k===2);
+  const it = interp(ROWS[0].v, mi);
+  // table 8-1 render
+  let th='<thead><tr><th>Order h</th>'+COLS.map((c,ci)=>'<th class="num'+((ci===it.j||ci===it.j+1)?' hlcol':'')+'">m<sub>a</sub> = '+c.toFixed(1)+'</th>').join('')+'</tr></thead><tbody>';
+  th+='<tr><td>1</td>'+COLS.map((c,ci)=>'<td class="num'+((ci===it.j||ci===it.j+1)?' hlcol':'')+'">'+c.toFixed(3)+'</td>').join('')+'</tr>';
+  ROWS.forEach(r=>{
+    const dim = tUniMode && r.k!==2;
+    th+='<tr'+(dim?' class="dim"':'')+'><td>'+r.html+'</td>'+r.v.map((v,ci)=>'<td class="'+(v==null?'nil':'num')+((ci===it.j||ci===it.j+1)?' hlcol':'')+'"'+(v==null?' title="negligible"':'')+'>'+(v==null?'·':v.toFixed(3))+'</td>').join('')+'</tr>';
+  });
+  t81.innerHTML = th+'</tbody>';
+  // all harmonics
+  const list=[];
+  rows.forEach(r=>{ const ii=interp(r.v,mi); r.o.forEach(o=>{ const hh=r.k*mf+o; if(hh<2) return; const V=ii.c*vd, X=2*Math.PI*hh*f1*L; list.push({h:hh,r,ii,V,X,I:X>0?V/X:0}); }); });
+  list.sort((a,b)=>a.h-b.h);
+  const first=list[0]; let big=list[0]; list.forEach(x=>{ if(x.I>big.I) big=x; });
+  let ta='<thead><tr><th class="num">h</th><th class="num">f (Hz)</th><th>row</th><th class="num">c<sub>h</sub></th><th class="num">V̂<sub>t,h</sub> (V)</th><th class="num">Î<sub>t,h</sub> (A)</th></tr></thead><tbody>';
+  list.forEach(x=>{
+    const tags=(x===first?'<span class="tagpill first">lowest</span>':'')+(x===big?'<span class="tagpill big">largest I</span>':'');
+    ta+='<tr><td class="num">'+x.h+'</td><td class="num">'+(x.h*f1).toFixed(0)+'</td><td>'+x.r.html+tags+'</td><td class="num">'+x.ii.c.toFixed(4)+'</td><td class="num">'+x.V.toFixed(1)+'</td><td class="num"><b>'+x.I.toFixed(3)+'</b></td></tr>';
+  });
+  tAll.innerHTML=ta+'</tbody>';
+  // steps
+  const warn=[];
+  if(Math.abs(mfRaw-mf)>0.01) warn.push("f_sw/f₁ isn't a whole number, so m_f was rounded to "+mf+".");
+  if(mi>1) warn.push("m_i > 1 is overmodulation: Table 8-1 no longer applies. Values shown use the m_a = 1.0 column only as a placeholder.");
+  if(mi<0.2) warn.push("m_i < 0.2 is below the table; values use the 0.2 column.");
+  function work(x, title){
+    const ii=x.ii, lo=COLS[ii.j], hi=COLS[ii.j+1];
+    return '<div class="c">'+title+'</div>'+
+      '<div>h = '+(x.r.k===1?'':x.r.k)+'m_f'+(x.h===x.r.k*mf?'':(x.h-x.r.k*mf>0?' + ':' − ')+Math.abs(x.h-x.r.k*mf))+' = <b>'+x.h+'</b>, at '+x.h+' × '+f1+' = '+(x.h*f1).toFixed(0)+' Hz (row '+x.r.lab+')</div>'+
+      '<div>c_h = '+ii.lo.toFixed(3)+' + ('+ii.m.toFixed(4)+' − '+lo.toFixed(3)+')/('+hi.toFixed(3)+' − '+lo.toFixed(3)+') × ('+ii.hi.toFixed(3)+' − '+ii.lo.toFixed(3)+') = <b>'+ii.c.toFixed(4)+'</b></div>'+
+      '<div>V̂ = c_h v_d = '+ii.c.toFixed(4)+' × '+vd+' = <b>'+x.V.toFixed(1)+' V</b></div>'+
+      '<div>Î = V̂ / (2π h f₁ L) = '+x.V.toFixed(1)+' / [2π('+x.h+')('+f1+')('+L.toFixed(4)+')] = '+x.V.toFixed(1)+'/'+x.X.toFixed(1)+' = <b>'+x.I.toFixed(3)+' A</b></div>';
+  }
+  let st='<div>m_f = f_sw/f₁ = '+fsw+'/'+f1+' = <b>'+mf+'</b></div><div>m_i = V̂_t,1/v_d = '+V1+'/'+vd+' = <b>'+mi.toFixed(4)+'</b></div>';
+  st+='<div class="c">'+(tUniMode?'Unipolar: the m_f and 3m_f rows cancel; only the 2m_f rows remain.':'Bipolar: every row of the table applies.')+'</div>';
+  if(first) st+=work(first,"Lowest harmonic:");
+  if(big && big!==first) st+=work(big,"Largest harmonic current:");
+  warn.forEach(wn=>st+='<div class="c" style="color:var(--bad)">'+wn+'</div>');
+  tSteps.innerHTML=st;
+}
+[tVd,tV1,tF1,tFsw,tL].forEach(el=>el.addEventListener("input",calcT));
+tBi.addEventListener("click",()=>{ tUniMode=false; setPressed(tBi,tUni); calcT(); });
+tUni.addEventListener("click",()=>{ tUniMode=true; setPressed(tUni,tBi); calcT(); });
+
+/* ---------------- INIT + THEME ---------------- */
+function drawAll(){ drawHB(); drawDT(); drawSQ(); drawPS(); drawPWM(); }
+calcHC(); calcT(); drawAll();
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(drawAll,80); });
+try{ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll); }catch(e){}
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+</script>
+
+</body></html>

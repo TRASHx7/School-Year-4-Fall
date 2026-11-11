@@ -1,0 +1,1420 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Reflection and Transmission Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: same system as the earlier guides. Sticky contents rail on the left, one reading column on the right. */
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --inc:#1D5FC2; --ref:#C24E12; --tra:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --inc:#78AAFF; --ref:#F0935A; --tra:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --inc:#78AAFF; --ref:#F0935A; --tra:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+.tally{margin-top:16px; padding:10px 10px 8px; border-top:1px solid var(--line); font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.6}
+.tally b{display:block; font-family:var(--display); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:2px}
+.tally .big{font-size:15px; color:var(--ink); font-weight:600}
+.tally .meter{height:6px; border-radius:99px; background:var(--surface-2); overflow:hidden; margin:6px 0 4px}
+.tally .meter i{display:block; height:100%; width:0; background:var(--good); transition:width .3s}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+.pg{font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+.note{margin-top:18px; font-size:15px; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px; max-width:none}
+.note b{color:var(--ink)}
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note2{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+.wsteps{counter-reset:ws; list-style:none; margin:0 0 12px; padding:0; display:grid; gap:8px}
+.wsteps li{counter-increment:ws; display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:baseline}
+.wsteps li::before{content:counter(ws); font-family:var(--mono); font-size:12px; color:var(--accent); text-align:right}
+.wsteps .m{display:block; font-size:18px; overflow-x:auto; white-space:nowrap; padding:2px 0}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .dsub{font-family:var(--display); font-size:12.5px; color:var(--muted); margin:-4px 0 8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.seg{display:inline-flex; flex-wrap:wrap; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.legend i.dash{background:none!important; border-top:2px dashed; height:0}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{color:var(--muted)}
+.steps .ok{color:var(--good); font-weight:600}
+.calcgrid{display:flex; flex-wrap:wrap; gap:10px 18px; font-family:var(--display); font-size:14px}
+.calcgrid label{display:flex; flex-direction:column; gap:4px; color:var(--muted); font-size:12.5px; font-weight:700}
+.calcgrid input{width:110px; font-family:var(--mono); font-size:14px; padding:6px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.calcgrid input:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.calcbar{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.err{color:var(--bad); font-family:var(--display); font-size:13.5px; margin-top:8px}
+
+.split{display:flex; height:38px; border-radius:8px; overflow:hidden; border:1px solid var(--line); background:var(--surface-2); margin-top:6px}
+.split div{display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:12.5px; font-weight:600; color:var(--on-accent); white-space:nowrap; overflow:hidden; transition:width .25s}
+.split .sr{background:var(--ref)}
+.split .st{background:var(--tra)}
+.split-lab{display:flex; justify-content:space-between; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:4px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} .split div, .tally .meter i{transition:none} }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <h2>Part 1 · The setup</h2>
+  <ol>
+    <li><a href="#s1">1 Two strings, three waves <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 Boundary conditions <span class="chip" data-chip="q2"></span></a></li>
+  </ol>
+  <h2>Part 2 · Impedance</h2>
+  <ol>
+    <li><a href="#s3">3 Impedance of a string <span class="chip" data-chip="q3"></span></a></li>
+  </ol>
+  <h2>Part 3 · Amplitudes</h2>
+  <ol>
+    <li><a href="#s4">4 Solving for the amplitudes <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 Coefficients r and t <span class="chip" data-chip="q5"></span></a></li>
+    <li><a href="#s6">6 Ring on a rod (Z₂ = 0) <span class="chip" data-chip="q6"></span></a></li>
+    <li><a href="#s7">7 Tied to a wall (Z₂ = ∞) <span class="chip" data-chip="q7"></span></a></li>
+  </ol>
+  <h2>Part 4 · Power</h2>
+  <ol>
+    <li><a href="#s8">8 Power and R <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Transmitted power T <span class="chip" data-chip="q9"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+  <div class="tally" aria-live="polite"><b>Your scores</b><span class="big" id="tallyMain">0 / 0</span><div class="meter"><i id="tallyBar"></i></div><span id="tallySub"></span></div>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">PHYS 365 · Lecture 5 · Study guide</div>
+  <h1>Reflection and transmission: a wave meets a new string</h1>
+  <p class="lede">When a wave on one string reaches a different string, it splits. Part of it bounces back, part of it carries on. This lecture works out <b>exactly how much of each</b>, using two rules at the joint and one number for each string: its impedance Z.</p>
+  <div class="chain" aria-label="Lecture road map">
+    <div class="blk"><b>Incident wave</b><span>y<sub>i</sub> on string 1</span><span class="secs">§1</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Joint at x = 0</b><span>same height, same slope</span><span class="secs">§2</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Impedance Z</b><span>√(τμ), one per string</span><span class="secs">§3</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>r and t</b><span>amplitudes from Z<sub>1</sub>, Z<sub>2</sub></span><span class="secs">§4 to §7</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Power</b><span>R = r², T = (Z<sub>2</sub>/Z<sub>1</sub>)t²</span><span class="secs">§8, §9</span></div>
+  </div>
+  <p class="note"><b>About the numbers.</b> The lecture works only in symbols, so the demos and quizzes use one running example of my own: τ = 100 N, μ<sub>1</sub> = 0.01 kg/m, μ<sub>2</sub> = 0.04 kg/m, f = 50 Hz, y<sub>m,i</sub> = 6 mm. That gives Z<sub>1</sub> = 1 kg/s and Z<sub>2</sub> = 2 kg/s. The lecture's own worked cases are the ring on a rod and the wall, and every demo has presets that reproduce them.</p>
+</header>
+
+<h2 class="part">Part 1 · The setup</h2>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+<h3><span class="num">01 · p.1</span>Two strings, three waves</h3>
+<p>Region I (x &lt; 0) is a string with mass per length μ<sub>1</sub> and tension τ<sub>1</sub>. Region II (x &gt; 0) is a different string with μ<sub>2</sub>, τ<sub>2</sub>. They're tied together at <b>x = 0</b>. A wave comes in from the left. At the joint it splits, so there are three waves to keep track of:</p>
+<div class="eq">
+  <span class="row"><b>Incident</b> (moves +x, region I): &nbsp;<i>y<sub>i</sub></i> = <i>y</i><sub>m,i</sub> sin(<i>k</i><sub>1</sub><i>x</i> − <i>ωt</i>)</span>
+  <span class="row"><b>Reflected</b> (moves −x, region I): &nbsp;<i>y<sub>r</sub></i> = <i>y</i><sub>m,r</sub> sin(<i>k</i><sub>1</sub><i>x</i> + <i>ωt</i>)</span>
+  <span class="row"><b>Transmitted</b> (moves +x, region II): &nbsp;<i>y<sub>t</sub></i> = <i>y</i><sub>m,t</sub> sin(<i>k</i><sub>2</sub><i>x</i> − <i>ωt</i>)</span>
+</div>
+<p>The goal of the whole lecture: find y<sub>m,r</sub> and y<sub>m,t</sub> in terms of y<sub>m,i</sub>. On the left string you see the <b>sum</b> y<sub>i</sub> + y<sub>r</sub>; on the right string you see only y<sub>t</sub>.</p>
+<p>Notice what is shared and what isn't. All three waves have the <b>same ω</b>. The wave number changes with the string, because k = ω/v and each string has its own speed v = √(τ/μ).</p>
+
+<div class="demo" id="wvDemo">
+  <div class="dtitle">Try it: the three waves on two strings</div>
+  <div class="dsub">Slowed way down. Region II is shaded. Same tension on both strings.</div>
+  <canvas id="wvCv" height="240" aria-label="Animated waves on two joined strings"></canvas>
+  <div class="legend">
+    <span><i class="dash" style="border-color:var(--inc)"></i>incident y<sub>i</sub></span>
+    <span><i class="dash" style="border-color:var(--ref)"></i>reflected y<sub>r</sub></span>
+    <span><i style="background:var(--ink)"></i>what string 1 does (y<sub>i</sub> + y<sub>r</sub>)</span>
+    <span><i style="background:var(--tra)"></i>transmitted y<sub>t</sub></span>
+  </div>
+  <div class="controls">
+    <label for="wvMu"><span>μ<sub>2</sub>/μ<sub>1</sub></span> <input type="range" id="wvMu" min="-1.2" max="1.2" step="any" value="0.60206"> <output id="wvMuOut">4.00</output></label>
+    <div class="seg" role="group" aria-label="Show waves">
+      <button type="button" data-wv="inc" aria-pressed="true">y<sub>i</sub></button>
+      <button type="button" data-wv="ref" aria-pressed="true">y<sub>r</sub></button>
+      <button type="button" data-wv="tot" aria-pressed="true">sum</button>
+      <button type="button" data-wv="tra" aria-pressed="true">y<sub>t</sub></button>
+    </div>
+    <button class="btn" type="button" id="wvPlay">Pause</button>
+  </div>
+  <div class="calcbar">
+    <button class="btn" type="button" data-wvset="0.60206">Example: μ<sub>2</sub> = 4μ<sub>1</sub></button>
+    <button class="btn" type="button" data-wvset="0">Same string</button>
+    <button class="btn" type="button" data-wvset="-0.60206">μ<sub>2</sub> = μ<sub>1</sub>/4</button>
+  </div>
+  <div class="readout" id="wvRead" aria-live="off"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a shop window at dusk</span>
+<p>Look at a shop window in the evening. You see your own reflection, and people inside can still see you. The light splits at the glass: some bounces back, some goes through. The joint between two strings is the glass. The colour (frequency) of the light doesn't change, but how it travels on the other side does.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The reflected wave uses k<sub>1</sub>, not k<sub>2</sub>.</b> It travels back along string 1, so it has string 1's speed and wavelength.</li>
+<li><b>The sign inside the sine sets the direction.</b> sin(kx − ωt) moves toward +x; sin(kx + ωt) moves toward −x.</li>
+<li><b>Frequency stays, wavelength changes.</b> On a slower (heavier) string the same ω gives a bigger k and a shorter λ. In the demo, set μ<sub>2</sub> = 4μ<sub>1</sub> and the waves on the right are half as long.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: the three waves"></div>
+</section>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+<h3><span class="num">02 · pp.2 to 3</span>Boundary conditions at the joint</h3>
+<p>Two rules hold at x = 0 at every instant. They're all you need to find the two unknown amplitudes.</p>
+<div class="eq">
+  <span class="row"><b>1. Continuity</b> (the string doesn't break): &nbsp;<i>y<sub>i</sub></i> + <i>y<sub>r</sub></i> = <i>y<sub>t</sub></i> &nbsp;at x = 0</span>
+  <span class="row"><b>2. Slope</b> (no kink at the joint): &nbsp;<span class="frac"><span>∂<i>y<sub>i</sub></i></span><span>∂<i>x</i></span></span> + <span class="frac"><span>∂<i>y<sub>r</sub></i></span><span>∂<i>x</i></span></span> = <span class="frac"><span>∂<i>y<sub>t</sub></i></span><span>∂<i>x</i></span></span> &nbsp;at x = 0</span>
+</div>
+<p>Rule 1 is obvious: the point at x = 0 has one height. Rule 2 is about force. The knot has no mass, so the vertical pulls on it from each side, τ ∂y/∂x, must cancel exactly (otherwise it would have infinite acceleration). With the same tension on both sides, that means the same slope.</p>
+<p>Rule 1 alone already gives a clean amplitude equation:</p>
+<div class="eq"><span class="row"><i>y</i><sub>m,i</sub> = <i>y</i><sub>m,r</sub> + <i>y</i><sub>m,t</sub> <span class="note2">"amplitude equivalence," p.3</span></span></div>
+
+<details class="work" open>
+<summary>Worked example (pp.2 to 3): continuity → amplitude equation</summary>
+<div class="body">
+<ol class="wsteps">
+<li><div>Set x = 0 in each wave (the k x terms vanish):<span class="m"><i>y<sub>i</sub></i> = (<i>y<sub>m</sub></i>)<sub>i</sub> sin(−<i>ωt</i>), &nbsp; <i>y<sub>r</sub></i> = (<i>y<sub>m</sub></i>)<sub>r</sub> sin(<i>ωt</i>), &nbsp; <i>y<sub>t</sub></i> = (<i>y<sub>m</sub></i>)<sub>t</sub> sin(−<i>ωt</i>)</span></div></li>
+<li><div>Plug into y<sub>i</sub> + y<sub>r</sub> = y<sub>t</sub>:<span class="m">(<i>y<sub>m</sub></i>)<sub>i</sub> sin(−<i>ωt</i>) + (<i>y<sub>m</sub></i>)<sub>r</sub> sin(<i>ωt</i>) = (<i>y<sub>m</sub></i>)<sub>t</sub> sin(−<i>ωt</i>)</span></div></li>
+<li><div>Use sin(−ωt) = −sin(ωt):<span class="m">−<i>y</i><sub>m,i</sub> sin <i>ωt</i> + <i>y</i><sub>m,r</sub> sin <i>ωt</i> = −<i>y</i><sub>m,t</sub> sin <i>ωt</i></span></div></li>
+<li><div>This holds at every t, so the coefficients of sin ωt must match:<span class="m">−<i>y</i><sub>m,i</sub> + <i>y</i><sub>m,r</sub> = −<i>y</i><sub>m,t</sub></span></div></li>
+<li><div>Rearrange:<span class="m"><b><i>y</i><sub>m,i</sub> = <i>y</i><sub>m,r</sub> + <i>y</i><sub>m,t</sub></b></span></div></li>
+</ol>
+<p>Then (p.3): since y<sub>i</sub> + y<sub>r</sub> = y<sub>t</sub> at x = 0, the lecture also requires ∂y<sub>i</sub>/∂x + ∂y<sub>r</sub>/∂x = ∂y<sub>t</sub>/∂x there. That second rule is used in §4.</p>
+</div>
+</details>
+
+<div class="demo" id="kinkDemo">
+  <div class="dtitle">Try it: what goes wrong without both rules</div>
+  <div class="dsub">Zoomed in around the joint, frozen at one instant. Example strings: Z<sub>2</sub>/Z<sub>1</sub> = 2, y<sub>m,i</sub> = 6 mm.</div>
+  <canvas id="kinkCv" height="220" aria-label="String shape near the joint"></canvas>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Amplitudes used">
+      <button type="button" data-kink="0" aria-pressed="true">Lecture's amplitudes</button>
+      <button type="button" data-kink="1" aria-pressed="false">No reflection, y<sub>m,t</sub> = y<sub>m,i</sub></button>
+      <button type="button" data-kink="2" aria-pressed="false">No reflection, y<sub>m,t</sub> = 4 mm</button>
+    </div>
+    <label for="kinkT">time (ωt) <input type="range" id="kinkT" min="0" max="6.283" step="0.01" value="1"> <output id="kinkTOut">1.00</output></label>
+  </div>
+  <div class="readout" id="kinkRead" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a weightless referee</span>
+<p>Picture the knot as a referee with zero mass standing between two tug-of-war teams who pull up and down. If the teams' vertical pulls didn't cancel exactly, a massless referee would shoot off instantly. So the pulls always balance, and that's the slope rule. The continuity rule is simpler: the referee can't be in two places at once.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The minus signs come from sin(−ωt).</b> Forget that sin(−ωt) = −sin(ωt) and you get y<sub>m,i</sub> + y<sub>m,r</sub> = y<sub>m,t</sub>, which is wrong for the way this lecture writes y<sub>r</sub>.</li>
+<li><b>Other books get a different-looking equation.</b> Many textbooks write the reflected wave so that continuity reads y<sub>m,i</sub> + y<sub>m,r</sub> = y<sub>m,t</sub>. Both are fine; they just define y<sub>m,r</sub> with opposite signs. Stick to one convention per problem. (This matters again in §5.)</li>
+<li><b>Why the slope rule really holds.</b> The lecture writes "since y<sub>i</sub> + y<sub>r</sub> = y<sub>t</sub>, then the derivatives are equal." Equal heights at one point don't force equal slopes on their own. The physical reason is the force balance on the massless knot.</li>
+<li><b>You can cancel sin ωt only because the rule holds for all t.</b> That's also why every wave must share the same ω.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: boundary conditions"></div>
+</section>
+
+<h2 class="part">Part 2 · Impedance</h2>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+<h3><span class="num">03 · p.4</span>Impedance: how hard a string is to shake</h3>
+<p>Impedance measures how much vertical force it takes to make a point on the string move up and down at a given speed:</p>
+<div class="eq">
+  <span class="row"><i>Z</i> = <span class="frac"><span>force on the string (<i>F<sub>y</sub></i>)</span><span>velocity amplitude (<i>v<sub>y</sub></i>)</span></span> = <span class="frac"><span><i>τk</i></span><span><i>ω</i></span></span> = <span class="frac"><span><i>τ</i></span><span><i>v</i></span></span> = √(<i>τμ</i>) = <i>μv</i></span>
+</div>
+<p>A heavy or tight string has a big Z: it's hard to shake. A light or slack string has a small Z. Z depends only on the string (τ and μ), not on the wave's amplitude or frequency. Units: N·s/m = <b>kg/s</b>.</p>
+<p>Why it matters: when the lecture solves for the amplitudes in §4, the answer depends on the two strings only through Z<sub>1</sub> and Z<sub>2</sub>.</p>
+
+<details class="work" open>
+<summary>Worked example (p.4): from F<sub>y</sub>/v<sub>y</sub> to √(τμ)</summary>
+<div class="body">
+<ol class="wsteps">
+<li><div>Take the wave:<span class="m"><i>y</i> = <i>y<sub>m</sub></i> sin(<i>kx</i> − <i>ωt</i>)</span></div></li>
+<li><div>Vertical force (eq. ①):<span class="m"><i>F<sub>y</sub></i> = <i>τ</i>(∂<i>y</i>/∂<i>x</i>) = <i>τk y<sub>m</sub></i> cos(<i>kx</i> − <i>ωt</i>) &nbsp;→ amplitude <i>τk y<sub>m</sub></i></span></div></li>
+<li><div>Vertical velocity (eq. ②):<span class="m"><i>v<sub>y</sub></i> = ∂<i>y</i>/∂<i>t</i> = −<i>ω y<sub>m</sub></i> cos(<i>kx</i> − <i>ωt</i>) &nbsp;→ amplitude <i>ω y<sub>m</sub></i></span></div></li>
+<li><div>Divide the amplitudes (y<sub>m</sub> and the cosine cancel):<span class="m"><b><i>Z</i> = <i>τk</i>/<i>ω</i></b></span></div></li>
+<li><div>Since v = ω/k:<span class="m"><i>Z</i> = <i>τ</i>/<i>v</i></span></div></li>
+<li><div>Since v = √(τ/μ):<span class="m"><i>Z</i> = <i>τ</i>/√(<i>τ</i>/<i>μ</i>) = <b>√(<i>τμ</i>)</b></span></div></li>
+</ol>
+</div>
+</details>
+
+<div class="demo" id="impDemo">
+  <div class="dtitle">Calculator: impedance of a string</div>
+  <div class="dsub">Loaded with string 1 of the running example. All four forms of Z should agree.</div>
+  <div class="calcgrid">
+    <label for="impT">tension τ (N)<input type="number" id="impT" value="100" step="any" min="0"></label>
+    <label for="impMu">μ (kg/m)<input type="number" id="impMu" value="0.01" step="any" min="0"></label>
+    <label for="impF">frequency f (Hz)<input type="number" id="impF" value="50" step="any" min="0"></label>
+  </div>
+  <div class="calcbar">
+    <button class="btn" type="button" data-imp="100,0.01,50">String 1 (example)</button>
+    <button class="btn" type="button" data-imp="100,0.04,50">String 2 (example)</button>
+  </div>
+  <div class="steps" id="impOut" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · Ohm's law for strings</span>
+<p>In a circuit, resistance is voltage per unit current: how much push you need for a given flow. Impedance is the same idea for a string: force per unit transverse velocity. Shaking the end of a heavy rope is like pushing current through a big resistor. You need a lot of force to get a little motion.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Z doesn't depend on frequency</b>, even though τk/ω has k and ω in it. Their ratio k/ω = 1/v is fixed by the string.</li>
+<li><b>It's a ratio of amplitudes.</b> F<sub>y</sub> and v<sub>y</sub> both swing as cos(kx − ωt), so the cosine (and the minus sign from ∂/∂t) drops out. Z is always positive.</li>
+<li><b>Same tension, different μ:</b> Z<sub>2</sub>/Z<sub>1</sub> = √(μ<sub>2</sub>/μ<sub>1</sub>). Four times heavier means twice the impedance.</li>
+<li><b>Units are kg/s</b>, not kg/m. A quick check: μv = (kg/m)(m/s).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: impedance"></div>
+</section>
+
+<h2 class="part">Part 3 · Amplitudes</h2>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+<h3><span class="num">04 · pp.5 to 6</span>Solving for the amplitudes</h3>
+<p>Now use the slope rule. Differentiate each wave with respect to x and set x = 0. Every cosine becomes cos(ωt) and cancels, leaving:</p>
+<div class="eq"><span class="row"><i>k</i><sub>1</sub><i>y</i><sub>m,i</sub> + <i>k</i><sub>1</sub><i>y</i><sub>m,r</sub> = <i>k</i><sub>2</sub><i>y</i><sub>m,t</sub></span></div>
+<p>Next swap k for Z. From Z = τk/ω we get k = Zω/τ, so k<sub>1</sub> = Z<sub>1</sub>ω/τ<sub>1</sub> and k<sub>2</sub> = Z<sub>2</sub>ω/τ<sub>2</sub>. The tensions on both sides of the knot are equal (see Tricky bits), so ω/τ cancels and the slope rule becomes Z<sub>1</sub>(y<sub>m,i</sub> + y<sub>m,r</sub>) = Z<sub>2</sub>y<sub>m,t</sub>. Two equations, two unknowns:</p>
+<div class="eq">
+  <span class="row"><i>y</i><sub>m,r</sub> = <span class="frac"><span><i>Z</i><sub>2</sub> − <i>Z</i><sub>1</sub></span><span><i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub></span></span> <i>y</i><sub>m,i</sub> &nbsp;&nbsp;&nbsp; <i>y</i><sub>m,t</sub> = <span class="frac"><span>2<i>Z</i><sub>1</sub></span><span><i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub></span></span> <i>y</i><sub>m,i</sub></span>
+</div>
+
+<details class="work" open>
+<summary>Worked example (pp.5 to 6): slope rule → y<sub>m,r</sub> and y<sub>m,t</sub></summary>
+<div class="body">
+<ol class="wsteps">
+<li><div>Differentiate each wave (∂/∂x of sin(kx ± ωt) is +k cos(kx ± ωt)):<span class="m"><i>k</i><sub>1</sub><i>y</i><sub>m,i</sub> cos(<i>k</i><sub>1</sub><i>x</i> − <i>ωt</i>) + <i>k</i><sub>1</sub><i>y</i><sub>m,r</sub> cos(<i>k</i><sub>1</sub><i>x</i> + <i>ωt</i>) = <i>k</i><sub>2</sub><i>y</i><sub>m,t</sub> cos(<i>k</i><sub>2</sub><i>x</i> − <i>ωt</i>)</span></div></li>
+<li><div>Set x = 0. cos(−ωt) = cos(ωt), so all three cosines are the same and cancel (eq. ③):<span class="m"><i>k</i><sub>1</sub><i>y</i><sub>m,i</sub> + <i>k</i><sub>1</sub><i>y</i><sub>m,r</sub> = <i>k</i><sub>2</sub><i>y</i><sub>m,t</sub></span></div></li>
+<li><div>Substitute k = Zω/τ (same ω and τ on both sides):<span class="m"><i>Z</i><sub>1</sub><i>y</i><sub>m,i</sub> + <i>Z</i><sub>1</sub><i>y</i><sub>m,r</sub> = <i>Z</i><sub>2</sub><i>y</i><sub>m,t</sub></span></div></li>
+<li><div>From §2, y<sub>m,t</sub> = y<sub>m,i</sub> − y<sub>m,r</sub>. Substitute:<span class="m"><i>Z</i><sub>1</sub><i>y</i><sub>m,i</sub> + <i>Z</i><sub>1</sub><i>y</i><sub>m,r</sub> = <i>Z</i><sub>2</sub><i>y</i><sub>m,i</sub> − <i>Z</i><sub>2</sub><i>y</i><sub>m,r</sub></span></div></li>
+<li><div>Collect the y<sub>m,r</sub> terms:<span class="m"><i>y</i><sub>m,r</sub>(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>) = (<i>Z</i><sub>2</sub> − <i>Z</i><sub>1</sub>)<i>y</i><sub>m,i</sub> &nbsp;→&nbsp; <b><i>y</i><sub>m,r</sub> = [(<i>Z</i><sub>2</sub> − <i>Z</i><sub>1</sub>)/(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>)] <i>y</i><sub>m,i</sub></b></span></div></li>
+<li><div>Back into y<sub>m,t</sub> = y<sub>m,i</sub> − y<sub>m,r</sub>:<span class="m"><i>y</i><sub>m,t</sub> = [(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>) − (<i>Z</i><sub>2</sub> − <i>Z</i><sub>1</sub>)]/(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>) · <i>y</i><sub>m,i</sub> = <b>[2<i>Z</i><sub>1</sub>/(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>)] <i>y</i><sub>m,i</sub></b></span></div></li>
+</ol>
+</div>
+</details>
+
+<div class="demo" id="solDemo">
+  <div class="dtitle">Calculator: solve the two boundary equations</div>
+  <div class="dsub">Loaded with the running example (Z<sub>1</sub> = 1, Z<sub>2</sub> = 2 kg/s, y<sub>m,i</sub> = 6 mm). Both checks at the bottom should pass for any input.</div>
+  <div class="calcgrid">
+    <label for="solZ1">Z<sub>1</sub> (kg/s)<input type="number" id="solZ1" value="1" step="any" min="0"></label>
+    <label for="solZ2">Z<sub>2</sub> (kg/s)<input type="number" id="solZ2" value="2" step="any" min="0"></label>
+    <label for="solY">y<sub>m,i</sub> (mm)<input type="number" id="solY" value="6" step="any"></label>
+  </div>
+  <div class="steps" id="solOut" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · splitting a bill with two clues</span>
+<p>Two friends split a bill and you want to know each share. One clue gives the total (continuity: y<sub>m,r</sub> + y<sub>m,t</sub> = y<sub>m,i</sub>). The other says how they split it (slope: a weighting by Z<sub>1</sub> and Z<sub>2</sub>). Either clue alone leaves you guessing; together they pin down both shares.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The tensions must be equal.</b> The lecture writes τ<sub>1</sub> and τ<sub>2</sub>, but the clean Z-only answer needs τ<sub>1</sub> = τ<sub>2</sub>. That's true physically: the massless knot can't have an unbalanced horizontal pull either. So k<sub>1</sub>/k<sub>2</sub> = Z<sub>1</sub>/Z<sub>2</sub>.</li>
+<li><b>No sign flip here.</b> Unlike the sines in §2, cos(−ωt) = cos(ωt), and ∂/∂x of sin(k<sub>1</sub>x + ωt) is +k<sub>1</sub> cos(…). Every term in the slope rule comes out positive.</li>
+<li><b>Substitute, don't guess.</b> Most algebra slips happen in step 4. Replace y<sub>m,t</sub> with y<sub>m,i</sub> − y<sub>m,r</sub> before collecting terms.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: solving for the amplitudes"></div>
+</section>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+<h3><span class="num">05 · pp.7 to 8</span>Reflection and transmission coefficients</h3>
+<p>Divide each amplitude by the incident one and you get two numbers that depend only on the impedances:</p>
+<div class="eq">
+  <span class="row"><i>r</i> = <span class="frac"><span>amplitude of reflected wave</span><span>amplitude of incident wave</span></span> = <span class="frac"><span><i>y</i><sub>m,r</sub></span><span><i>y</i><sub>m,i</sub></span></span> = <span class="frac"><span><i>Z</i><sub>2</sub> − <i>Z</i><sub>1</sub></span><span><i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub></span></span></span>
+  <span class="row"><i>t</i> = <span class="frac"><span>amplitude of transmitted wave</span><span>amplitude of incident wave</span></span> = <span class="frac"><span><i>y</i><sub>m,t</sub></span><span><i>y</i><sub>m,i</sub></span></span> = <span class="frac"><span>2<i>Z</i><sub>1</sub></span><span><i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub></span></span></span>
+</div>
+<p>A handy check that falls out of continuity: <b>t = 1 − r</b>. And the big picture:</p>
+<ul class="plain">
+<li><b>Z<sub>2</sub> = Z<sub>1</sub></b> (matched): r = 0, t = 1. No reflection at all.</li>
+<li><b>Z<sub>2</sub> &gt; Z<sub>1</sub></b> (into a harder-to-shake string): |r| grows toward 1, t shrinks toward 0.</li>
+<li><b>Z<sub>2</sub> &lt; Z<sub>1</sub></b> (into an easier string): t grows above 1, up to 2.</li>
+</ul>
+
+<h4>Reading the sign of r</h4>
+<p>This is the one part of the lecture where you have to be careful. Because the lecture writes the reflected wave as sin(k<sub>1</sub>x + ωt), at the joint it equals +y<sub>m,r</sub> sin ωt while the incident wave equals −y<sub>m,i</sub> sin ωt. That built-in minus sign means a <b>positive r from the formula describes a reflection that moves opposite to the incident wave at the joint</b>: an inverted pulse. The special-case pages (§6, §7) instead report r with the "what you see" sign. Here is how they line up:</p>
+<div class="tbl"><table>
+<thead><tr><th>Case</th><th>r from the p.7 formula</th><th>Reflected pulse you see</th><th>How the lecture reports it</th></tr></thead>
+<tbody>
+<tr><td>Z<sub>2</sub> &gt; Z<sub>1</sub> (heavier, or a wall)</td><td>positive (wall: → +1)</td><td><b>inverted</b></td><td>wall, p.11: r ≅ −1, y<sub>m,r</sub> = −y<sub>m,i</sub></td></tr>
+<tr><td>Z<sub>2</sub> &lt; Z<sub>1</sub> (lighter, or a ring)</td><td>negative (ring: → −1)</td><td><b>upright</b></td><td>ring, p.10: r = 1, y<sub>m,r</sub> = y<sub>m,i</sub></td></tr>
+<tr><td>Z<sub>2</sub> = Z<sub>1</sub></td><td>0</td><td>none</td><td>no reflection</td></tr>
+</tbody></table></div>
+<p><b>Rule that never fails:</b> going into a <b>higher</b> Z flips the pulse; going into a <b>lower</b> Z doesn't. Get the size from |r| = |Z<sub>2</sub> − Z<sub>1</sub>|/(Z<sub>1</sub> + Z<sub>2</sub>) and the orientation from that rule. In this guide's quizzes, "r from the lecture's formula" always means the signed p.7 value.</p>
+
+<div class="demo" id="coefDemo">
+  <div class="dtitle">Try it: r and t as you change Z<sub>2</sub>/Z<sub>1</sub></div>
+  <div class="dsub">Loaded with the running example (Z<sub>2</sub>/Z<sub>1</sub> = 2). The Ring and Wall presets reproduce pp.10 and 11.</div>
+  <canvas id="coefCv" height="250" aria-label="Plot of r and t against impedance ratio"></canvas>
+  <div class="legend">
+    <span><i style="background:var(--ref)"></i>r = (Z<sub>2</sub> − Z<sub>1</sub>)/(Z<sub>1</sub> + Z<sub>2</sub>)</span>
+    <span><i style="background:var(--tra)"></i>t = 2Z<sub>1</sub>/(Z<sub>1</sub> + Z<sub>2</sub>)</span>
+  </div>
+  <div class="controls">
+    <label for="coefZ"><span>Z<sub>2</sub>/Z<sub>1</sub></span> <input type="range" id="coefZ" min="-2" max="2" step="any" value="0.30103"> <output id="coefZOut">2.00</output></label>
+  </div>
+  <div class="calcbar">
+    <div class="seg" role="group" aria-label="Presets">
+      <button type="button" data-coef="ring" aria-pressed="false">Ring (Z<sub>2</sub> = 0)</button>
+      <button type="button" data-coef="match" aria-pressed="false">Matched</button>
+      <button type="button" data-coef="ex" aria-pressed="true">Example (×2)</button>
+      <button type="button" data-coef="wall" aria-pressed="false">Wall (Z<sub>2</sub> → ∞)</button>
+    </div>
+  </div>
+  <div class="readout" id="coefRead" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · billiard balls</span>
+<p>Roll a ball into another one at rest. <b>Equal masses</b> (Z<sub>2</sub> = Z<sub>1</sub>): the first ball stops dead and the second takes all the motion. No "reflection." <b>Into a bowling ball</b> (Z<sub>2</sub> ≫ Z<sub>1</sub>): your ball bounces back, reversed, and the bowling ball barely moves. That's the wall. <b>Into a ping-pong ball</b> (Z<sub>2</sub> ≪ Z<sub>1</sub>): your ball keeps going forward and the ping-pong ball flies off faster than your ball was moving. That's t &gt; 1.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The sign of r depends on convention.</b> See the table above. If you plug Z<sub>2</sub> = ∞ straight into the p.7 formula you get +1, but the lecture writes −1 for the wall. Both describe the same inverted pulse.</li>
+<li><b>t can be bigger than 1.</b> That's not free energy: power also depends on Z (§9).</li>
+<li><b>t is never negative.</b> Impedances are positive, so 2Z<sub>1</sub>/(Z<sub>1</sub> + Z<sub>2</sub>) &gt; 0. The transmitted pulse is always upright.</li>
+<li><b>|r| ≤ 1 and 0 ≤ t ≤ 2</b> always. If you get anything outside those ranges, you've swapped Z<sub>1</sub> and Z<sub>2</sub> or dropped a factor of 2.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: r and t"></div>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+<h3><span class="num">06 · pp.9 to 10</span>Special case: ring on a rod (Z<sub>2</sub> = 0)</h3>
+<p>Tie the end of string 1 to a massless ring that slides freely up and down a vertical rod. Nothing beyond the joint resists vertical motion, so it takes zero force to move the end at any speed: <b>Z<sub>2</sub> = 0</b>. This is a "free end."</p>
+<p>Result: the pulse comes back <b>upright and full size</b> (y<sub>m,r</sub> = y<sub>m,i</sub>), and nothing is transmitted. While the pulse is reflecting, the ring rises to <b>twice</b> the incident height, because the incident and reflected pulses add there.</p>
+
+<details class="work" open>
+<summary>Worked example (pp.9 to 10): the ring on a rod</summary>
+<div class="body">
+<ol class="wsteps">
+<li><div>Start from the coefficient:<span class="m"><i>r</i> = (<i>Z</i><sub>2</sub> − <i>Z</i><sub>1</sub>)/(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>)</span></div></li>
+<li><div>"Allow for rod-ring motion (same amplitude sign)": the lecture puts a minus sign in front, then sets Z<sub>2</sub> = 0:<span class="m"><i>r</i> = −(<i>Z</i><sub>2</sub> − <i>Z</i><sub>1</sub>)/(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>) = −(0 − <i>Z</i><sub>1</sub>)/(<i>Z</i><sub>1</sub> + 0) = <i>Z</i><sub>1</sub>/<i>Z</i><sub>1</sub> = <b>1</b></span></div></li>
+<li><div>So:<span class="m">∴ <b><i>y</i><sub>m,r</sub> = <i>y</i><sub>m,i</sub></b></span></div></li>
+<li><div>There is no string past the ring, so y<sub>m,t</sub> = 0:<span class="m"><i>t</i> = (<i>y</i><sub>m,t</sub> = 0)/<i>y</i><sub>m,i</sub> = <b>0</b> &nbsp;(no transmitted wave)</span></div></li>
+</ol>
+<p>Why the minus sign: it converts the p.7 convention (where an upright reflection comes out negative) into the "what you see" sign. See the table in §5.</p>
+</div>
+</details>
+
+<div class="demo" id="pulseA">
+  <div class="dtitle">Try it: a pulse reaches the end</div>
+  <div class="dsub">Loaded on the ring (p.9). Switch ends to compare.</div>
+  <canvas height="220" aria-label="Pulse reflecting at the end of a string"></canvas>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="What is at the end">
+      <button type="button" data-mode="ring" aria-pressed="true">Ring (Z<sub>2</sub> = 0)</button>
+      <button type="button" data-mode="rope" aria-pressed="false">Another string</button>
+      <button type="button" data-mode="wall" aria-pressed="false">Wall (Z<sub>2</sub> → ∞)</button>
+    </div>
+    <label class="pzlab" for="pulseAZ" hidden><span>Z<sub>2</sub>/Z<sub>1</sub></span> <input type="range" class="pz" id="pulseAZ" min="-1" max="1" step="any" value="0.30103"> <output class="pzout">2.00</output></label>
+  </div>
+  <div class="controls">
+    <button class="btn pplay" type="button">Pause</button>
+    <label for="pulseAT">time <input type="range" class="ptime" id="pulseAT" min="0" max="11.5" step="0.01" value="0"></label>
+  </div>
+  <div class="readout" aria-live="off"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · cracking a whip</span>
+<p>The free tip of a whip moves much farther and faster than the handle. A free end has nothing holding it back, so when the pulse arrives the end overshoots: it rises to twice the pulse height, then sends the pulse back the same way up.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Plugging Z<sub>2</sub> = 0 straight into the p.7 formula gives r = −1.</b> The lecture's extra minus sign turns that into r = 1. Both mean the same upright reflection; the lecture's answer to remember is <b>r = 1, y<sub>m,r</sub> = y<sub>m,i</sub></b>.</li>
+<li><b>The t formula gives 2, but the lecture says t = 0.</b> 2Z<sub>1</sub>/(Z<sub>1</sub> + 0) = 2 is how far the ring itself moves (2 × y<sub>m,i</sub>). It isn't a wave, since there's no string to carry one. Power agrees: T = (Z<sub>2</sub>/Z<sub>1</sub>)t² = 0 × 4 = 0.</li>
+<li><b>"Same amplitude sign"</b> on p.10 means the reflected pulse is the same way up as the incident one.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: free end"></div>
+</section>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+<h3><span class="num">07 · p.11</span>Special case: string tied to a wall (Z<sub>2</sub> = ∞)</h3>
+<p>Now tie the end to a wall. The wall won't move no matter how hard you pull, so it would take infinite force to give it any speed: <b>Z<sub>2</sub> = ∞</b>. This is a "fixed end."</p>
+<p>Result: the pulse comes back <b>inverted and full size</b> (y<sub>m,r</sub> = −y<sub>m,i</sub>), and nothing goes through the wall. The tied point never moves, because the incident and inverted reflected pulses cancel there at every instant.</p>
+
+<details class="work" open>
+<summary>Worked example (p.11): the wall</summary>
+<div class="body">
+<ol class="wsteps">
+<li><div>Reflection coefficient with Z<sub>2</sub> = ∞:<span class="m"><i>r</i> = (<i>Z</i><sub>2</sub> − <i>Z</i><sub>1</sub>)/(<i>Z</i><sub>2</sub> + <i>Z</i><sub>1</sub>) = (∞ − <i>Z</i><sub>1</sub>)/(∞ + <i>Z</i><sub>1</sub>)</span></div></li>
+<li><div>The lecture's result:<span class="m"><i>r</i> ≅ −1 &nbsp;→&nbsp; <b><i>y</i><sub>m,r</sub> = −<i>y</i><sub>m,i</sub></b></span></div></li>
+<li><div>Transmission coefficient:<span class="m"><i>t</i> = 2<i>Z</i><sub>1</sub>/(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>) = 2<i>Z</i><sub>1</sub>/∞ &nbsp;→&nbsp; <b><i>t</i> ≈ 0</b></span></div></li>
+<li><div>No transmitted wave through the wall.</div></li>
+</ol>
+<p>As with the ring, the lecture reports the "what you see" sign. The ratio (∞ − Z<sub>1</sub>)/(∞ + Z<sub>1</sub>) by itself tends to +1 in the p.7 convention, which is that same inverted pulse (table in §5).</p>
+</div>
+</details>
+
+<div class="demo" id="pulseB">
+  <div class="dtitle">Try it: a pulse hits the wall</div>
+  <div class="dsub">Loaded on the wall (p.11). Try "Another string" and slide Z<sub>2</sub>/Z<sub>1</sub> to the right: it approaches the wall.</div>
+  <canvas height="220" aria-label="Pulse reflecting at the end of a string"></canvas>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="What is at the end">
+      <button type="button" data-mode="ring" aria-pressed="false">Ring (Z<sub>2</sub> = 0)</button>
+      <button type="button" data-mode="rope" aria-pressed="false">Another string</button>
+      <button type="button" data-mode="wall" aria-pressed="true">Wall (Z<sub>2</sub> → ∞)</button>
+    </div>
+    <label class="pzlab" for="pulseBZ" hidden><span>Z<sub>2</sub>/Z<sub>1</sub></span> <input type="range" class="pz" id="pulseBZ" min="-1" max="1" step="any" value="0.30103"> <output class="pzout">2.00</output></label>
+  </div>
+  <div class="controls">
+    <button class="btn pplay" type="button">Pause</button>
+    <label for="pulseBT">time <input type="range" class="ptime" id="pulseBT" min="0" max="11.5" step="0.01" value="0"></label>
+  </div>
+  <div class="readout" aria-live="off"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a rope tied to a doorknob</span>
+<p>Flick a rope tied to a doorknob and the bump comes back upside down. The knob can't move, so when your upward bump arrives, the knob pulls the rope down to keep its own end still. That downward pull launches the upside-down return pulse.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Ring and wall are mirror images.</b> Free end: upright, end moves 2×. Fixed end: inverted, end doesn't move. Both: |r| = 1, no transmitted wave.</li>
+<li><b>"≅" and "≈" are deliberate.</b> ∞ is a limit. A real "wall" is just a string with Z<sub>2</sub> ≫ Z<sub>1</sub>, so |r| is a hair under 1 and t a hair above 0.</li>
+<li><b>Don't mix the signs.</b> For the wall the lecture says r ≅ −1. If you plug ∞ into (Z<sub>2</sub> − Z<sub>1</sub>)/(Z<sub>2</sub> + Z<sub>1</sub>) mechanically you get +1. The picture (inverted) is what matters.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: fixed end"></div>
+</section>
+
+<h2 class="part">Part 4 · Power</h2>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+<h3><span class="num">08 · p.12</span>Power on a string, and the reflected fraction R</h3>
+<p>The average power a sinusoidal wave carries along a string can be written neatly with Z:</p>
+<div class="eq">
+  <span class="row"><i>P</i><sub>ave</sub> = ½ <i>μv y<sub>m</sub></i>² <i>ω</i>² = ½ <i>Z y<sub>m</sub></i>² <i>ω</i>²</span>
+</div>
+<p>The power reflection coefficient R is the fraction of the incident power that comes back. Both waves are on string 1, so Z<sub>1</sub> and ω cancel and you're left with the amplitude ratio squared:</p>
+<div class="eq"><span class="row"><i>R</i> = <span class="frac"><span><i>P<sub>r</sub></i></span><span><i>P<sub>i</sub></i></span></span> = <i>r</i>²</span></div>
+
+<details class="work" open>
+<summary>Worked example (p.12): Z = μv and R = r²</summary>
+<div class="body">
+<ol class="wsteps">
+<li><div>Why μv = Z:<span class="m"><i>v</i> = √(<i>τ</i>/<i>μ</i>) → <i>τ</i> = <i>μv</i>², &nbsp; so &nbsp; <i>Z</i> = √(<i>μτ</i>) = √(<i>μ</i>²<i>v</i>²) → <i>Z</i> = <i>μv</i></span></div></li>
+<li><div>So the average power is:<span class="m"><i>P</i><sub>ave</sub> = ½ <i>μv y<sub>m</sub></i>² <i>ω</i>² = ½ <i>Z y<sub>m</sub></i>² <i>ω</i>²</span></div></li>
+<li><div>Ratio of reflected to incident power (both on string 1):<span class="m"><i>R</i> = <i>P<sub>r</sub></i>/<i>P<sub>i</sub></i> = (½ <i>Z</i><sub>1</sub><i>y</i><sub>m,r</sub>² <i>ω</i>²)/(½ <i>Z</i><sub>1</sub><i>y</i><sub>m,i</sub>² <i>ω</i>²)</span></div></li>
+<li><div>Everything but the amplitudes cancels:<span class="m"><i>R</i> = <i>y</i><sub>m,r</sub>²/<i>y</i><sub>m,i</sub>² = <b><i>r</i>²</b></span></div></li>
+</ol>
+</div>
+</details>
+
+<div class="demo" id="powDemo">
+  <div class="dtitle">Calculator: power in each wave</div>
+  <div class="dsub">Loaded with the running example. Uses the lecture's formulas for r and t.</div>
+  <div class="calcgrid">
+    <label for="powZ1">Z<sub>1</sub> (kg/s)<input type="number" id="powZ1" value="1" step="any" min="0"></label>
+    <label for="powZ2">Z<sub>2</sub> (kg/s)<input type="number" id="powZ2" value="2" step="any" min="0"></label>
+    <label for="powY">y<sub>m,i</sub> (mm)<input type="number" id="powY" value="6" step="any" min="0"></label>
+    <label for="powF">f (Hz)<input type="number" id="powF" value="50" step="any" min="0"></label>
+  </div>
+  <div class="steps" id="powOut" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · kinetic energy, ½mv²</span>
+<p>Each bit of string moves up and down with top speed y<sub>m</sub>ω. Power is ½ Z × (y<sub>m</sub>ω)², which looks just like ½ × mass × speed². Z plays the role of mass: a heavier string carries more energy at the same wiggle.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Use ω, not f.</b> ω = 2πf. Using f undercounts the power by (2π)² ≈ 39.5.</li>
+<li><b>Convert mm to m</b> before squaring. 6 mm is 0.006 m, and y<sub>m</sub>² = 3.6 × 10⁻⁵ m².</li>
+<li><b>R = r² ignores the sign of r</b>, so the convention mess in §5 doesn't matter here.</li>
+<li><b>Power goes as y<sub>m</sub>² and ω².</b> Double either one and the power goes up 4×.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: power and R"></div>
+</section>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+<h3><span class="num">09 · p.13</span>Transmitted power and T</h3>
+<p>The transmitted wave travels on string 2, so its power uses <b>Z<sub>2</sub></b>, while the incident power uses Z<sub>1</sub>. That leaves a factor Z<sub>2</sub>/Z<sub>1</sub> in front:</p>
+<div class="eq"><span class="row"><i>T</i> = <span class="frac"><span><i>P<sub>t</sub></i></span><span><i>P<sub>i</sub></i></span></span> = <span class="frac"><span><i>Z</i><sub>2</sub></span><span><i>Z</i><sub>1</sub></span></span> <i>t</i>²</span></div>
+<p>A good check (not written in the lecture, but it follows from its formulas): <b>R + T = 1</b>. Every bit of incident power is either reflected or transmitted; nothing is lost at the knot. For the ring and the wall, R = 1 and T = 0.</p>
+
+<details class="work" open>
+<summary>Worked example (p.13): T = (Z<sub>2</sub>/Z<sub>1</sub>)t², plus the R + T check</summary>
+<div class="body">
+<ol class="wsteps">
+<li><div>Transmitted power over incident power:<span class="m"><i>T</i> = <i>P<sub>t</sub></i>/<i>P<sub>i</sub></i> = (½ <i>Z</i><sub>2</sub><i>y</i><sub>m,t</sub>² <i>ω</i>²)/(½ <i>Z</i><sub>1</sub><i>y</i><sub>m,i</sub>² <i>ω</i>²)</span></div></li>
+<li><div>Cancel ½ and ω²:<span class="m"><i>T</i> = (<i>Z</i><sub>2</sub>/<i>Z</i><sub>1</sub>)[<i>y</i><sub>m,t</sub>/<i>y</i><sub>m,i</sub>]²</span></div></li>
+<li><div>That bracket is t:<span class="m"><b><i>T</i> = (<i>Z</i><sub>2</sub>/<i>Z</i><sub>1</sub>)<i>t</i>²</b></span></div></li>
+<li><div>Check (extra): R + T = [(Z<sub>2</sub> − Z<sub>1</sub>)² + (Z<sub>2</sub>/Z<sub>1</sub>)(2Z<sub>1</sub>)²]/(Z<sub>1</sub> + Z<sub>2</sub>)²<span class="m">= [<i>Z</i><sub>2</sub>² − 2<i>Z</i><sub>1</sub><i>Z</i><sub>2</sub> + <i>Z</i><sub>1</sub>² + 4<i>Z</i><sub>1</sub><i>Z</i><sub>2</sub>]/(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>)² = (<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>)²/(<i>Z</i><sub>1</sub> + <i>Z</i><sub>2</sub>)² = <b>1</b></span></div></li>
+</ol>
+</div>
+</details>
+
+<div class="demo" id="splitDemo">
+  <div class="dtitle">Try it: where the power goes</div>
+  <div class="dsub">Loaded with the running example (Z<sub>2</sub>/Z<sub>1</sub> = 2). The bar always fills exactly 100%.</div>
+  <div class="split" role="img" aria-label="Share of incident power reflected and transmitted"><div class="sr" id="spR"></div><div class="st" id="spT"></div></div>
+  <div class="split-lab"><span>reflected R</span><span>transmitted T</span></div>
+  <div class="controls">
+    <label for="spZ"><span>Z<sub>2</sub>/Z<sub>1</sub></span> <input type="range" id="spZ" min="-2" max="2" step="any" value="0.30103"> <output id="spZOut">2.00</output></label>
+  </div>
+  <div class="calcbar">
+    <div class="seg" role="group" aria-label="Presets">
+      <button type="button" data-sp="ring" aria-pressed="false">Ring</button>
+      <button type="button" data-sp="match" aria-pressed="false">Matched</button>
+      <button type="button" data-sp="ex" aria-pressed="true">Example (×2)</button>
+      <button type="button" data-sp="wall" aria-pressed="false">Wall</button>
+    </div>
+  </div>
+  <div class="readout" id="spRead" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · an exchange rate</span>
+<p>Think of amplitude as money in two different currencies. On string 2, each millimetre of amplitude is "worth" Z<sub>2</sub>/Z<sub>1</sub> times as much power as on string 1. So t² alone is like counting foreign cash without converting it. The factor Z<sub>2</sub>/Z<sub>1</sub> is the exchange rate. The ping-pong ball from §5 moves fast (big t) but carries little energy, because it's light.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Typo on p.13.</b> The first fraction shows Z<sub>2</sub> in the denominator too. It should be <b>Z<sub>1</sub></b>, since the incident wave is on string 1. The next step (Z<sub>2</sub>/Z<sub>1</sub>)[y<sub>m,t</sub>/y<sub>m,i</sub>]² and the final answer are correct.</li>
+<li><b>T ≠ t².</b> The most common exam slip. In the running example t² = 0.444 but T = 0.889.</li>
+<li><b>T ≤ 1 even when t &gt; 1.</b> When t is big, Z<sub>2</sub> is small, and the factor brings T back down.</li>
+<li><b>Use R + T = 1 to check your work.</b> If they don't add to 1, something's off.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: transmitted power"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across the whole lecture, mostly calculations. Grab paper and a calculator. Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>The three waves</h5><div>y<sub>i</sub> = y<sub>m,i</sub> sin(k<sub>1</sub>x − ωt)<br>y<sub>r</sub> = y<sub>m,r</sub> sin(k<sub>1</sub>x + ωt)<br>y<sub>t</sub> = y<sub>m,t</sub> sin(k<sub>2</sub>x − ωt)<br>same ω; k = ω/v, v = √(τ/μ)</div></div>
+  <div class="card"><h5>Boundary conditions (x = 0)</h5><div>y<sub>i</sub> + y<sub>r</sub> = y<sub>t</sub> → y<sub>m,i</sub> = y<sub>m,r</sub> + y<sub>m,t</sub><br>∂y<sub>i</sub>/∂x + ∂y<sub>r</sub>/∂x = ∂y<sub>t</sub>/∂x<br>→ k<sub>1</sub>y<sub>m,i</sub> + k<sub>1</sub>y<sub>m,r</sub> = k<sub>2</sub>y<sub>m,t</sub></div></div>
+  <div class="card"><h5>Impedance</h5><div>Z = F<sub>y</sub>/v<sub>y</sub> = τk/ω = τ/v<br>Z = √(τμ) = μv &nbsp;[kg/s]<br>k = Zω/τ</div></div>
+  <div class="card"><h5>Amplitude coefficients</h5><div>r = y<sub>m,r</sub>/y<sub>m,i</sub> = (Z<sub>2</sub> − Z<sub>1</sub>)/(Z<sub>1</sub> + Z<sub>2</sub>)<br>t = y<sub>m,t</sub>/y<sub>m,i</sub> = 2Z<sub>1</sub>/(Z<sub>1</sub> + Z<sub>2</sub>)<br>t = 1 − r; |r| ≤ 1; 0 ≤ t ≤ 2</div></div>
+  <div class="card"><h5>Which way up?</h5><div>Into higher Z: reflection <b>inverted</b><br>Into lower Z: reflection <b>upright</b><br>Equal Z: no reflection<br>Transmitted pulse: always upright</div></div>
+  <div class="card"><h5>Special ends</h5><div>Ring, Z<sub>2</sub> = 0: r = 1, y<sub>m,r</sub> = y<sub>m,i</sub>, t = 0<br>Wall, Z<sub>2</sub> = ∞: r ≅ −1, y<sub>m,r</sub> = −y<sub>m,i</sub>, t ≈ 0<br>Both: R = 1, T = 0</div></div>
+  <div class="card"><h5>Power</h5><div>P<sub>ave</sub> = ½μv y<sub>m</sub>²ω² = ½Z y<sub>m</sub>²ω²<br>R = P<sub>r</sub>/P<sub>i</sub> = r²<br>T = P<sub>t</sub>/P<sub>i</sub> = (Z<sub>2</sub>/Z<sub>1</sub>)t²<br>R + T = 1</div></div>
+  <div class="card"><h5>Running example (not lecture)</h5><div>τ = 100 N, μ<sub>1</sub> = 0.01, μ<sub>2</sub> = 0.04 kg/m<br>Z<sub>1</sub> = 1, Z<sub>2</sub> = 2 kg/s; r = 1/3, t = 2/3<br>6 mm → 2 mm + 4 mm<br>R = 0.111, T = 0.889</div></div>
+</div>
+</section>
+
+<footer>Built from the PHYS 365 Lecture 5 notes, "Reflection/Transmission at Boundary between 2 media" (13 handwritten pages). The lecture works in symbols only; the running example's numbers are mine. Sign-convention notes are in §5 to §7, and a typo on p.13 is flagged in §9.</footer>
+</main>
+</div>
+
+<script type="application/json" id="quizData">
+{
+"q1":[
+ {"q":"The incident wave is y_i = y_m,i sin(k₁x − ωt). Which reflected wave travels back toward −x in region I?",
+  "o":["y_m,r sin(k₁x + ωt)","y_m,r sin(k₁x − ωt)","y_m,r sin(k₂x + ωt)","y_m,r sin(k₂x − ωt)"],"p":2,
+  "e":"sin(kx + ωt) keeps a constant phase when x = −(ω/k)t + const, so it moves toward −x. It lives on string 1, so it uses k₁. The k₂ version has the right direction but the wrong string's wave number."},
+ {"q":"String 1 has v₁ = 100 m/s and string 2 has v₂ = 50 m/s. The incident wave has f = 50 Hz. What are λ₁ and λ₂?",
+  "o":["λ₁ = 2 m, λ₂ = 1 m","λ₁ = 2 m, λ₂ = 2 m","λ₁ = 1 m, λ₂ = 2 m","λ₁ = 2 m, λ₂ = 4 m"],"p":0,
+  "e":"f is the same on both strings, so λ = v/f changes with v. λ₁ = 100/50 = 2 m and λ₂ = 50/50 = 1 m. Slower string, shorter waves."},
+ {"q":"Why do all three waves share the same ω?",
+  "o":["The joint is one point, and it drives string 2 at exactly the rate string 1 shakes it","Because the two strings have the same tension","Because ω depends only on the amplitude","It's an approximation for small amplitudes"],"p":3,
+  "e":"The boundary conditions must hold at every instant. That only works if every wave oscillates at the same ω at x = 0. What changes from string to string is k (and λ), through k = ω/v."},
+ {"q":"Example strings: k₁ = π rad/m and k₂ = 2π rad/m, with f = 50 Hz. Find ω and v₂.",
+  "o":["ω = 314 rad/s, v₂ = 50 m/s","ω = 50 rad/s, v₂ = 25 m/s","ω = 314 rad/s, v₂ = 100 m/s","ω = 157 rad/s, v₂ = 50 m/s"],"p":1,
+  "e":"ω = 2πf = 2π(50) = 314 rad/s. v₂ = ω/k₂ = 314/(2π) = 50 m/s. Using f where you need ω (giving 50 rad/s) is the classic slip."}
+],
+"q2":[
+ {"q":"At x = 0 the lecture's waves give (y_m)_i sin(−ωt) + (y_m)_r sin(ωt) = (y_m)_t sin(−ωt). What amplitude equation follows?",
+  "o":["y_m,i = y_m,r + y_m,t","y_m,i + y_m,r = y_m,t","y_m,i = y_m,t","y_m,r = y_m,t"],"p":1,
+  "e":"Use sin(−ωt) = −sin(ωt): −y_m,i + y_m,r = −y_m,t. Rearranged, y_m,i = y_m,r + y_m,t. Writing y_m,i + y_m,r = y_m,t is what you get if you forget the sign flip on sin(−ωt)."},
+ {"q":"With the lecture's convention, y_m,i = 6 mm and y_m,r = 2 mm. What must y_m,t be?",
+  "o":["4 mm","8 mm","3 mm","2 mm"],"p":3,
+  "e":"From continuity, y_m,t = y_m,i − y_m,r = 6 − 2 = 4 mm. 8 mm comes from the other textbook convention (y_m,i + y_m,r = y_m,t), which doesn't match how this lecture writes y_r."},
+ {"q":"Why do we need the slope condition as well as continuity?",
+  "o":["Continuity gives one equation for two unknowns, and a kink at the massless joint would mean an unbalanced vertical force","The slope condition is only needed for very heavy strings","Continuity alone already fixes both amplitudes","It makes the frequencies match"],"p":0,
+  "e":"The unknowns are y_m,r and y_m,t, and one equation can't fix two. Physically, the knot has no mass, so the vertical pulls τ ∂y/∂x from both sides must cancel. With equal tension, that means equal slopes."},
+ {"q":"Continuity gives −y_m,i sin ωt + y_m,r sin ωt = −y_m,t sin ωt. Why is it fine to cancel sin ωt?",
+  "o":["The equation holds at every t, so the coefficients must match","sin ωt = 1 at the boundary","Because ωt is small","Because x = 0 makes the sine vanish"],"p":2,
+  "e":"If the equation only had to hold at one instant, you couldn't cancel. It holds for all t, and sin ωt is nonzero at most times, so the amplitudes on each side must agree."}
+],
+"q3":[
+ {"q":"τ = 100 N, μ = 0.01 kg/m. What is Z?",
+  "o":["1.0 kg/s","100 kg/s","0.01 kg/s","10 kg/s"],"p":0,
+  "e":"Z = √(τμ) = √(100 × 0.01) = √1 = 1.0 kg/s. Check with Z = μv: v = √(100/0.01) = 100 m/s, and μv = 0.01 × 100 = 1.0 kg/s."},
+ {"q":"τ = 64 N, μ = 0.25 kg/m. Find Z and v.",
+  "o":["Z = 4.0 kg/s, v = 16 m/s","Z = 16 kg/s, v = 4.0 m/s","Z = 4.0 kg/s, v = 256 m/s","Z = 16 kg/s, v = 16 m/s"],"p":2,
+  "e":"Z = √(64 × 0.25) = √16 = 4.0 kg/s. v = √(64/0.25) = √256 = 16 m/s. Check: τ/v = 64/16 = 4.0 kg/s."},
+ {"q":"A string has τ = 80 N. A wave on it has ω = 400 rad/s and k = 10 rad/m. What is μ?",
+  "o":["0.05 kg/m","2.0 kg/m","0.5 kg/m","20 kg/m"],"p":1,
+  "e":"Z = τk/ω = 80 × 10/400 = 2.0 kg/s. v = ω/k = 40 m/s. μ = Z/v = 2/40 = 0.05 kg/m (or μ = τ/v² = 80/1600). 2.0 is Z, not μ."},
+ {"q":"Two joined strings share the same tension, and μ₂ = 4μ₁. What is Z₂/Z₁?",
+  "o":["2","4","1/2","16"],"p":3,
+  "e":"Z = √(τμ). Same τ, so Z₂/Z₁ = √(μ₂/μ₁) = √4 = 2."},
+ {"q":"You quadruple a string's tension and keep μ the same. What happens to Z?",
+  "o":["It doubles","It quadruples","It halves","It stays the same, since k changes to compensate"],"p":0,
+  "e":"Z = √(τμ), so 4× the tension gives √4 = 2× the impedance. k does change (v doubles, so k halves), but τ goes up 4×, so τk/ω still doubles."}
+],
+"q4":[
+ {"q":"Differentiating the three waves with respect to x and setting x = 0 gives which equation?",
+  "o":["k₁y_m,i + k₁y_m,r = k₂y_m,t","k₁y_m,i − k₁y_m,r = k₂y_m,t","y_m,i + y_m,r = y_m,t","k₁y_m,i + k₂y_m,r = k₂y_m,t"],"p":2,
+  "e":"∂/∂x of sin(kx ± ωt) is +k cos(kx ± ωt) in both cases. At x = 0 every cosine becomes cos ωt (cosine is even) and cancels. The reflected wave uses k₁ because it's on string 1."},
+ {"q":"Why can the lecture swap k₁ and k₂ for Z₁ and Z₂?",
+  "o":["k = Zω/τ, and ω and τ are the same on both sides of the joint, so they cancel","Because k = Z for any string","Because the amplitudes are equal","It only works for the ring on a rod"],"p":0,
+  "e":"From Z = τk/ω, k = Zω/τ. All waves share ω, and the massless knot needs equal tension on both sides, so k₁/k₂ = Z₁/Z₂."},
+ {"q":"Z₁ = 1 kg/s, Z₂ = 3 kg/s, y_m,i = 8 mm. Using the lecture's results, find y_m,r and y_m,t.",
+  "o":["y_m,r = 4 mm, y_m,t = 4 mm","y_m,r = 4 mm, y_m,t = 12 mm","y_m,r = 2 mm, y_m,t = 6 mm","y_m,r = 0, y_m,t = 8 mm"],"p":3,
+  "e":"y_m,r = (3 − 1)/(1 + 3) × 8 = 4 mm and y_m,t = 2(1)/(1 + 3) × 8 = 4 mm. Continuity: 4 + 4 = 8. Slope: 1 × (8 + 4) = 12 and 3 × 4 = 12. Both pass."},
+ {"q":"k₁ = 3.14 rad/m, k₂ = 6.28 rad/m, y_m,i = 6 mm, y_m,r = 2 mm. Use the slope condition to find y_m,t.",
+  "o":["4 mm","8 mm","2 mm","16 mm"],"p":1,
+  "e":"k₁(y_m,i + y_m,r) = k₂y_m,t, so 3.14 × (6 + 2) = 6.28 × y_m,t and y_m,t = 25.1/6.28 = 4 mm. It also agrees with continuity: 6 = 2 + 4."}
+],
+"q5":[
+ {"q":"Z₁ = 2 kg/s, Z₂ = 6 kg/s. What are r and t from the lecture's formulas?",
+  "o":["r = 0.5, t = 0.5","r = −0.5, t = 1.5","r = 0.5, t = 1.5","r = 0.33, t = 0.67"],"p":1,
+  "e":"r = (6 − 2)/(2 + 6) = 0.5 and t = 2(2)/(2 + 6) = 0.5. Quick check: t = 1 − r = 0.5."},
+ {"q":"A wave goes from Z₁ = 3 kg/s into Z₂ = 1 kg/s. What is t, and does t > 1 break energy conservation?",
+  "o":["t = 1.5; no, because T = (Z₂/Z₁)t² = 0.75","t = 1.5; yes, so the formula fails here","t = 0.5; no","t = 0.75; no"],"p":3,
+  "e":"t = 2(3)/(3 + 1) = 1.5. A bigger amplitude on a lighter string is fine, because power also scales with Z: T = (1/3)(1.5)² = 0.75 (see §9)."},
+ {"q":"Z₁ = 1 kg/s, Z₂ = 2 kg/s, incident amplitude 6 mm. How big is the reflected wave, and is the reflected pulse upright or inverted?",
+  "o":["2 mm, inverted","2 mm, upright","3 mm, inverted","4 mm, upright"],"p":2,
+  "e":"|y_m,r| = (2 − 1)/(1 + 2) × 6 = 2 mm. Going into a higher impedance (a harder-to-shake string) flips the pulse, just like the wall in §7. 4 mm is the transmitted amplitude."},
+ {"q":"Can the transmitted pulse ever come out inverted?",
+  "o":["No, because t = 2Z₁/(Z₁ + Z₂) is always positive","Yes, whenever Z₂ > Z₁","Yes, whenever Z₂ < Z₁","Only when Z₁ = Z₂"],"p":0,
+  "e":"Impedances are positive, so t > 0 for every pair of strings. Only the reflected pulse can flip."}
+],
+"q6":[
+ {"q":"Why is Z₂ = 0 for the ring on the rod?",
+  "o":["The massless, frictionless ring needs no vertical force to move, so F_y/v_y = 0","The rod is rigid, so the ring can't move","Because no wave reaches the ring","Because the rod has infinite mass"],"p":1,
+  "e":"Z = F_y/v_y. Nothing beyond the joint pushes back on a free, massless ring, whatever its speed. Zero force per unit speed is zero impedance: a free end. (A rigid, unmoving end is the wall, Z₂ = ∞.)"},
+ {"q":"A pulse of height 5 mm reaches the ring. What is the ring's largest displacement?",
+  "o":["10 mm","5 mm","0 mm","2.5 mm"],"p":2,
+  "e":"At a free end the reflected pulse is upright and full size (y_m,r = y_m,i), so at the ring the two add: 5 + 5 = 10 mm. That's also what t = 2Z₁/(Z₁ + 0) = 2 is telling you: the end moves 2× as far."},
+ {"q":"Plugging Z₂ = 0 into t = 2Z₁/(Z₁ + Z₂) gives 2, but the lecture says t = 0. Which way of thinking is right?",
+  "o":["There's no string past the ring, so no transmitted wave; the 2 is how far the ring moves, and T = (Z₂/Z₁)t² = 0","The t formula is wrong for all strings","t = 2 means the transmitted wave carries double the power","t = 0 because the ring doesn't move"],"p":0,
+  "e":"There's nothing beyond the ring to carry a wave, so the lecture sets y_m,t = 0. The ring itself does move, by 2 × y_m,i. Either way, no power gets through: T = 0 × 4 = 0."},
+ {"q":"On p.10 the lecture inserts a minus sign to get r = 1, 'same amplitude sign'. What does the returning pulse look like?",
+  "o":["Upright, the same way up and same height as the incident pulse","Upside down, same height","Upright, half the height","There is no returning pulse"],"p":3,
+  "e":"The free ring follows the pulse up, so the pulse returns upright and full size. The minus sign converts the p.7 convention (where an upright reflection comes out negative) into the 'what you see' sign. See the table in §5."}
+],
+"q7":[
+ {"q":"A pulse travels toward a string end tied to a wall. What comes back?",
+  "o":["An inverted pulse of the same height","An upright pulse of the same height","An inverted pulse of half the height","Nothing; the wall absorbs it"],"p":0,
+  "e":"Z₂ = ∞ gives |r| = 1 and t ≈ 0: the whole pulse comes back, flipped. The lecture writes this as y_m,r = −y_m,i."},
+ {"q":"Why must the reflection at a wall be inverted?",
+  "o":["The tied point can't move, so y_i + y_r = 0 there at every instant","Walls absorb the upright part","The wall pushes the string upward","The wave speed reverses at the wall"],"p":2,
+  "e":"Continuity at x = 0 with y_t = 0 means y_i + y_r = 0 at all times. The reflected wave has to cancel the incident one at the wall, so it comes back upside down."},
+ {"q":"A light rope (Z₁ = 1 kg/s) is tied to a very heavy rope (Z₂ = 99 kg/s). Find |r| and t.",
+  "o":["|r| = 0.98, t = 0.02","|r| = 1, t = 0","|r| = 0.98, t = 1.98","|r| = 0.02, t = 0.98"],"p":1,
+  "e":"|r| = (99 − 1)/(1 + 99) = 0.98 and t = 2(1)/100 = 0.02. That's nearly a wall: as Z₂ → ∞, |r| → 1 and t → 0."},
+ {"q":"A 4 mm pulse reflects from the wall. What is the string's displacement exactly at the wall while this happens?",
+  "o":["0 mm at every instant","8 mm at the peak","4 mm at the peak","−4 mm at the peak"],"p":3,
+  "e":"The wall holds that point still. The incident pulse (+) and the inverted reflected pulse (−) overlap there and cancel exactly. 8 mm is what happens at a free end (§6)."}
+],
+"q8":[
+ {"q":"Z = 1 kg/s, y_m = 6 mm, ω = 100π rad/s. What is P_ave?",
+  "o":["1.78 W","3.55 W","296 W","0.0057 W"],"p":2,
+  "e":"P = ½ Z y_m² ω² = ½ × 1 × (0.006)² × (314.16)² = ½ × 3.6×10⁻⁵ × 98 696 = 1.78 W. 3.55 W forgets the ½, 296 W forgets to square y_m, and 0.0057 W forgets to square ω."},
+ {"q":"Running example: r = 1/3. What fraction of the incident power is reflected?",
+  "o":["11.1%","33.3%","66.7%","88.9%"],"p":0,
+  "e":"R = r² = (1/3)² = 1/9 = 0.111, so 11.1%. Power goes as amplitude squared. 88.9% is T, the transmitted share."},
+ {"q":"Why does R = r² have no impedance factor in it?",
+  "o":["The incident and reflected waves are on the same string, so Z₁ and ω cancel","Because Z₁ = Z₂ at the boundary","Because power doesn't depend on Z","Because r is already squared in its definition"],"p":1,
+  "e":"R = (½ Z₁ y_m,r² ω²)/(½ Z₁ y_m,i² ω²). Same Z₁ and same ω on top and bottom, so only the amplitude ratio squared survives."},
+ {"q":"Same string, same amplitude, but you double the frequency. The average power:",
+  "o":["goes up 4×","goes up 2×","stays the same","goes up 8×"],"p":3,
+  "e":"P = ½ Z y_m² ω². Z depends only on the string, so doubling ω gives 2² = 4× the power. Each point moves twice as fast, and power goes as speed squared."}
+],
+"q9":[
+ {"q":"Running example: Z₁ = 1, Z₂ = 2 kg/s, so t = 2/3. What is T?",
+  "o":["0.889","0.444","0.667","1.333"],"p":1,
+  "e":"T = (Z₂/Z₁)t² = 2 × (2/3)² = 2 × 4/9 = 8/9 = 0.889. 0.444 is t² alone (the Z₂/Z₁ factor was forgotten)."},
+ {"q":"Why does T need the factor Z₂/Z₁?",
+  "o":["The transmitted wave carries power on string 2 (Z₂), while the incident wave is on string 1 (Z₁)","Because t is defined with Z₂ on top","To keep T below 0.5","Because the two waves have different frequencies"],"p":0,
+  "e":"P = ½ Z y_m² ω² uses the impedance of the string the wave is on. P_t uses Z₂ and P_i uses Z₁, so their ratio keeps Z₂/Z₁. The frequencies are the same."},
+ {"q":"Z₁ = 3 kg/s, Z₂ = 1 kg/s. Find R and T, and check them.",
+  "o":["R = 0.25, T = 0.75, sum 1","R = 0.25, T = 2.25, sum 2.5","R = 0.5, T = 0.5, sum 1","R = 0.25, T = 0.25, sum 0.5"],"p":3,
+  "e":"r = (1 − 3)/4 = −0.5, so R = 0.25. t = 6/4 = 1.5, so T = (1/3)(2.25) = 0.75. R + T = 1, so nothing is lost at the joint. 2.25 is t² without the Z₂/Z₁ factor."},
+ {"q":"Running example: P_i = 1.78 W. How much power goes into string 2?",
+  "o":["1.58 W","1.18 W","0.79 W","0.197 W"],"p":2,
+  "e":"P_t = T × P_i = 0.889 × 1.78 = 1.58 W. The other 0.197 W (R = 0.111) is reflected. 0.79 W uses t² instead of T, and 1.18 W uses t."}
+],
+"qf":[
+ {"q":"Incident wave: y_i = 3 mm × sin(2πx − 100πt), with x in m and t in s. String 2 has half string 1's wave speed. What is k₂?",
+  "o":["4π rad/m","π rad/m","2π rad/m","8π rad/m"],"p":2,
+  "e":"v₁ = ω/k₁ = 100π/2π = 50 m/s, so v₂ = 25 m/s. ω is the same on both strings, so k₂ = ω/v₂ = 100π/25 = 4π rad/m (12.6 rad/m). Halving v doubles k. Review §1."},
+ {"q":"Using the lecture's convention, y_m,i = 10 mm and y_m,t = 13 mm. What is y_m,r?",
+  "o":["−3 mm","3 mm","23 mm","−23 mm"],"p":0,
+  "e":"y_m,i = y_m,r + y_m,t, so y_m,r = 10 − 13 = −3 mm. In this convention a negative y_m,r is an upright reflection, which fits t = 1.3 > 1 (string 2 is lighter). Review §2 and the sign table in §5."},
+ {"q":"τ = 90 N, μ = 0.1 kg/m. What is Z?",
+  "o":["3.0 kg/s","9.0 kg/s","30 kg/s","0.33 kg/s"],"p":3,
+  "e":"Z = √(90 × 0.1) = √9 = 3.0 kg/s. Check: v = √(90/0.1) = 30 m/s and μv = 0.1 × 30 = 3.0 kg/s. 30 is v, not Z. Review §3."},
+ {"q":"That string (τ = 90 N, μ₁ = 0.1 kg/m) is joined to one with μ₂ = 0.4 kg/m. Using the lecture's formulas, find r and t.",
+  "o":["r = 1/3, t = 2/3","r = 1/2, t = 1/2","r = −1/3, t = 4/3","r = 1/3, t = 4/3"],"p":1,
+  "e":"Same tension, so Z₂ = √(90 × 0.4) = 6 kg/s and Z₁ = 3 kg/s. r = (6 − 3)/(3 + 6) = 1/3 and t = 2(3)/9 = 2/3. Review §3 and §5."},
+ {"q":"Z₁ = 3 kg/s, Z₂ = 6 kg/s, y_m,i = 9 mm. Which pair (y_m,r, y_m,t) satisfies BOTH boundary conditions?",
+  "o":["3 mm, 6 mm","−3 mm, 12 mm","6 mm, 3 mm","3 mm, 12 mm"],"p":3,
+  "e":"Continuity: y_m,r + y_m,t = 9. Slope: Z₁(y_m,i + y_m,r) = Z₂y_m,t. Only (3, 6) passes both: 3 + 6 = 9 and 3 × 12 = 6 × 6 = 36. (−3, 12) and (6, 3) pass continuity but fail the slope test. Review §2 and §4."},
+ {"q":"A pulse goes from a heavy string (Z₁ = 6 kg/s) into a light one (Z₂ = 2 kg/s). Describe the reflection and find t.",
+  "o":["Upright, |r| = 0.5, t = 1.5","Inverted, |r| = 0.5, t = 0.5","Upright, |r| = 0.5, t = 0.5","Inverted, |r| = 0.25, t = 1.5"],"p":0,
+  "e":"|r| = |2 − 6|/(6 + 2) = 0.5. Going into a lower impedance, the pulse returns upright (like the ring). t = 2(6)/8 = 1.5. Review §5 and §6."},
+ {"q":"A 4 mm pulse reaches the ring-on-a-rod end. What comes back, and what passes the ring?",
+  "o":["A 4 mm upright pulse; nothing passes","A 4 mm inverted pulse; nothing passes","A 4 mm upright pulse; an 8 mm pulse passes","Nothing comes back"],"p":1,
+  "e":"Z₂ = 0: the lecture gets r = 1 (y_m,r = y_m,i, same sign) and no transmitted wave. The ring itself bobs up to 8 mm, but that isn't a wave. Review §6."},
+ {"q":"For a string tied to a wall, what does the lecture conclude?",
+  "o":["y_m,r = −y_m,i and t ≈ 0","y_m,r = y_m,i and t = 2","y_m,r = 0 and t = 1","y_m,r = −y_m,i and t = 2"],"p":2,
+  "e":"Z₂ → ∞: the reflection is full size but inverted, and t = 2Z₁/∞ → 0, so nothing goes through. Review §7."},
+ {"q":"Z = 3 kg/s, y_m = 2 mm, f = 20 Hz. What is P_ave?",
+  "o":["94.7 mW","189 mW","2.40 mW","47.4 mW"],"p":0,
+  "e":"ω = 2π(20) = 125.7 rad/s. P = ½ × 3 × (0.002)² × (125.7)² = 0.0947 W = 94.7 mW. 2.40 mW uses f in place of ω, and 189 mW drops the ½. Review §8."},
+ {"q":"Same strings as Q4 (Z₁ = 3, Z₂ = 6 kg/s). What percent of the incident power goes into string 2?",
+  "o":["88.9%","44.4%","66.7%","11.1%"],"p":3,
+  "e":"T = (Z₂/Z₁)t² = 2 × (2/3)² = 0.889. Check: R = (1/3)² = 0.111, and R + T = 1. 44.4% is t² alone. Review §8 and §9."},
+ {"q":"When is t > 1, and why doesn't that create energy?",
+  "o":["When Z₂ < Z₁; T = (Z₂/Z₁)t² stays at or below 1","When Z₂ > Z₁; the heavier string stores more energy","Never; t ≤ 1 always","When Z₂ = Z₁; then T = t² = 1"],"p":1,
+  "e":"t = 2Z₁/(Z₁ + Z₂) > 1 exactly when Z₂ < Z₁. A lighter string needs a bigger amplitude to carry the same power, and the Z₂/Z₁ factor accounts for that. Review §5 and §9."},
+ {"q":"String 1: τ = 100 N, μ₁ = 0.01 kg/m. You join a heavier string 2 (same tension) that transmits 75% of the power. What is μ₂?",
+  "o":["0.09 kg/m","0.03 kg/m","0.04 kg/m","0.0225 kg/m"],"p":2,
+  "e":"R = 1 − 0.75 = 0.25, so |r| = 0.5. With Z₂ > Z₁, (Z₂ − Z₁)/(Z₁ + Z₂) = 0.5 gives Z₂ = 3Z₁. Z₁ = √(100 × 0.01) = 1 kg/s, so Z₂ = 3 kg/s and μ₂ = Z₂²/τ = 9/100 = 0.09 kg/m. Review §3, §5 and §8."}
+]
+}
+</script>
+
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s);
+const REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const MINUS = "−";
+const sgn = (x,d) => (x < 0 ? MINUS : "") + Math.abs(x).toFixed(d);
+const sgnP = (x,d) => (x < 0 ? MINUS : (x > 0 ? "+" : "")) + Math.abs(x).toFixed(d);
+function num(x){ // compact display
+  const a = Math.abs(x);
+  if(a === 0) return "0";
+  if(a >= 1000) return sgn(x,0);
+  if(a >= 100) return sgn(x,1);
+  if(a >= 10) return sgn(x,2);
+  if(a >= 0.01) return sgn(x,3);
+  return (x<0?MINUS:"") + a.toExponential(2).replace("e-", "×10^-").replace("e+", "×10^");
+}
+
+/* ---------------- QUIZ DATA + ENGINE ---------------- */
+const RAW = JSON.parse(document.getElementById("quizData").textContent);
+const QUIZ = {};
+Object.keys(RAW).forEach(id => {
+  QUIZ[id] = RAW[id].map(it => {
+    const o = it.o.slice(1); o.splice(it.p, 0, it.o[0]);
+    return {q: it.q, o: o, a: it.p, e: it.e};
+  });
+});
+const STORE = "phys365-l5-answers-v1";
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(STORE) || "{}") || {}; } catch(e){ saved = {}; }
+function persist(){ try { localStorage.setItem(STORE, JSON.stringify(saved)); } catch(e){} }
+
+const LET = "ABCD";
+const tallies = {};
+function chip(id, correct, answered, total){
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+"/"+total;
+  c.classList.toggle("done", answered===total);
+}
+function tally(){
+  let c=0, a=0, n=0;
+  Object.values(tallies).forEach(t => { c+=t.c; a+=t.a; n+=t.n; });
+  $("#tallyMain").textContent = c+" / "+a+" correct";
+  $("#tallySub").textContent = a+" of "+n+" questions answered";
+  $("#tallyBar").style.width = (n? (100*c/n) : 0)+"%";
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+    tallies[id] = {c:correct, a:answered, n:qs.length};
+    tally();
+  }
+  const pickers = [];
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(item.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    let done = false;
+    function choose(oi, store){
+      if(done) return; done = true;
+      btns.forEach(x=>x.disabled=true);
+      const ok = oi===item.a;
+      btns[item.a].classList.add("right");
+      if(!ok) btns[oi].classList.add("wrong");
+      answered++; if(ok) correct++;
+      ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[item.a]+'.</b> ';
+      ex.appendChild(document.createTextNode(item.e));
+      ex.hidden = false;
+      if(store){ (saved[id] = saved[id] || {})[qi] = oi; persist(); }
+      upd();
+    }
+    const btns = item.o.map((t, oi)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[oi];
+      const s = document.createElement("span"); s.textContent = t;
+      b.append(L, s);
+      b.addEventListener("click", ()=>choose(oi, true));
+      opts.appendChild(b); return b;
+    });
+    pickers.push(choose);
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+  });
+  reset.addEventListener("click", ()=>{ delete saved[id]; persist(); buildQuiz(box); });
+  box.append(head, list, foot);
+  upd();
+  const prev = saved[id];
+  if(prev) Object.keys(prev).forEach(k => { const qi=+k, oi=+prev[k]; if(pickers[qi] && oi>=0 && oi<4) pickers[qi](oi, false); });
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- DRAW HELPERS ---------------- */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function prep(cv){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth || 600;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size){ ctx.fillStyle=col; ctx.font=(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function curve(ctx, f, a, b, sx, sy, col, wid, dash){
+  ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid; ctx.lineJoin="round";
+  const N = Math.max(80, Math.round(Math.abs(sx(b)-sx(a))));
+  for(let j=0;j<=N;j++){ const x=a+(b-a)*j/N; const X=sx(x), Y=sy(f(x)); if(j) ctx.lineTo(X,Y); else ctx.moveTo(X,Y); }
+  ctx.stroke(); ctx.setLineDash([]);
+}
+function dot(ctx,x,y,r,fill,stroke){ ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); if(fill){ctx.fillStyle=fill; ctx.fill();} if(stroke){ctx.strokeStyle=stroke; ctx.lineWidth=2; ctx.stroke();} }
+const redraws = [];
+const anims = [];
+function loop(ts){
+  anims.forEach(a => { if(a.playing && a.visible) a.step(ts); });
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+const io = ("IntersectionObserver" in window) ? new IntersectionObserver(es => es.forEach(e => {
+  const a = anims.find(x => x.el === e.target); if(a){ a.visible = e.isIntersecting; a.last = null; }
+})) : null;
+function register(a){ a.visible = !io; anims.push(a); if(io) io.observe(a.el); }
+const fmtRatio = r => r >= 10 ? r.toFixed(1) : r.toFixed(2);
+
+/* ---------------- §1 THREE WAVES ---------------- */
+(function(){
+  const root = $("#wvDemo"), cv = $("#wvCv"), sl = $("#wvMu"), out = $("#wvMuOut"), rd = $("#wvRead"), pb = $("#wvPlay");
+  const show = {inc:true, ref:true, tot:true, tra:true};
+  const A = {el:root, playing:!REDUCE, phase:1.0, last:null};
+  root.querySelectorAll("[data-wv]").forEach(b => b.addEventListener("click", ()=>{
+    const k = b.dataset.wv; show[k] = !show[k]; b.setAttribute("aria-pressed", String(show[k])); draw();
+  }));
+  root.querySelectorAll("[data-wvset]").forEach(b => b.addEventListener("click", ()=>{ sl.value = b.dataset.wvset; draw(); }));
+  sl.addEventListener("input", draw);
+  pb.addEventListener("click", ()=>{ A.playing = !A.playing; A.last = null; pb.textContent = A.playing ? "Pause" : "Play"; });
+  pb.textContent = A.playing ? "Pause" : "Play";
+  function P(){
+    const m = Math.pow(10, +sl.value), zr = Math.sqrt(m);
+    return {m, zr, r:(zr-1)/(zr+1), t:2/(zr+1), k1:Math.PI, k2:Math.PI*zr};
+  }
+  function draw(){
+    const p = P(); out.textContent = fmtRatio(p.m);
+    const {ctx,w,h} = prep(cv);
+    const X0=-4, X1=4, Y=13, padL=8, padR=8, padT=24, padB=24;
+    const sx = x => padL + (x-X0)/(X1-X0)*(w-padL-padR);
+    const sy = y => padT + (Y-y)/(2*Y)*(h-padT-padB);
+    ctx.fillStyle = css("--surface-2"); ctx.fillRect(sx(0), padT-8, sx(X1)-sx(0), h-padT-padB+16);
+    line(ctx, padL, sy(0), w-padR, sy(0), css("--grid"), 1);
+    line(ctx, sx(0), padT-8, sx(0), h-padB+8, css("--muted"), 1, [4,4]);
+    txt(ctx, "REGION I", sx(-2), 11, css("--muted"), "center", 11);
+    txt(ctx, "REGION II", sx(2), 11, css("--muted"), "center", 11);
+    txt(ctx, "x = 0", sx(0), h-9, css("--muted"), "center", 11);
+    const A0 = 6, ph = A.phase;
+    const yi = x => A0*Math.sin(p.k1*x - ph), yr = x => A0*p.r*Math.sin(p.k1*x + ph), yt = x => A0*p.t*Math.sin(p.k2*x - ph);
+    if(show.inc) curve(ctx, yi, X0, 0, sx, sy, css("--inc"), 1.6, [6,4]);
+    if(show.ref) curve(ctx, yr, X0, 0, sx, sy, css("--ref"), 1.6, [6,4]);
+    if(show.tot) curve(ctx, x => yi(x)+yr(x), X0, 0, sx, sy, css("--ink"), 2.6);
+    if(show.tra) curve(ctx, yt, 0, X1, sx, sy, css("--tra"), 2.6);
+    const y0 = yi(0)+yr(0);
+    dot(ctx, sx(0), sy(y0), 4.5, css("--ink"));
+    const yt0 = yt(0);
+    rd.innerHTML =
+      "μ₂/μ₁ = <b>"+fmtRatio(p.m)+"</b> → Z₂/Z₁ = k₂/k₁ = √(μ₂/μ₁) = <b>"+p.zr.toFixed(2)+"</b><br>"+
+      "With the running example (v₁ = 100 m/s, f = 50 Hz): λ₁ = <b>2.00 m</b>, λ₂ = <b>"+(2/p.zr).toFixed(2)+" m</b><br>"+
+      "For y_m,i = 6 mm: y_m,r = <b>"+sgn(6*p.r,2)+" mm</b>, y_m,t = <b>"+(6*p.t).toFixed(2)+" mm</b> (lecture formulas)<br>"+
+      "At x = 0 right now: y_i + y_r = <b>"+sgn(y0,2)+" mm</b>, y_t = <b>"+sgn(yt0,2)+" mm</b> (always equal)";
+  }
+  A.step = ts => { if(A.last==null) A.last = ts; const dt = Math.min(0.05,(ts-A.last)/1000); A.last = ts; A.phase = (A.phase + dt*1.8) % (2*Math.PI); draw(); };
+  register(A); redraws.push(draw); draw();
+})();
+
+/* ---------------- §2 KINK DEMO ---------------- */
+(function(){
+  const root = $("#kinkDemo"), cv = $("#kinkCv"), sl = $("#kinkT"), out = $("#kinkTOut"), rd = $("#kinkRead");
+  let mode = 0;
+  const k1 = Math.PI, k2 = 2*Math.PI, A0 = 6, r = 1/3, t = 2/3;
+  root.querySelectorAll("[data-kink]").forEach(b => b.addEventListener("click", ()=>{
+    mode = +b.dataset.kink;
+    root.querySelectorAll("[data-kink]").forEach(x => x.setAttribute("aria-pressed", String(x===b)));
+    draw();
+  }));
+  sl.addEventListener("input", draw);
+  function draw(){
+    const wt = +sl.value; out.textContent = wt.toFixed(2);
+    const ymr = mode===0 ? A0*r : 0;
+    const ymt = mode===0 ? A0*t : (mode===1 ? A0 : A0*t);
+    const left = x => A0*Math.sin(k1*x - wt) + ymr*Math.sin(k1*x + wt);
+    const right = x => ymt*Math.sin(k2*x - wt);
+    const {ctx,w,h} = prep(cv);
+    const X0=-0.75, X1=0.75, Y=13, padL=40, padR=10, padT=14, padB=26;
+    const sx = x => padL + (x-X0)/(X1-X0)*(w-padL-padR);
+    const sy = y => padT + (Y-y)/(2*Y)*(h-padT-padB);
+    ctx.fillStyle = css("--surface-2"); ctx.fillRect(sx(0), padT, sx(X1)-sx(0), h-padT-padB);
+    [-10,-5,0,5,10].forEach(v => { line(ctx, padL, sy(v), w-padR, sy(v), css("--grid"), 1); txt(ctx, (v>0?"+":"")+(v<0?MINUS+Math.abs(v):v), padL-6, sy(v), css("--muted"), "right", 10); });
+    txt(ctx, "mm", padL-6, padT+2, css("--muted"), "right", 10);
+    line(ctx, sx(0), padT, sx(0), h-padB, css("--muted"), 1, [4,4]);
+    txt(ctx, "x = 0", sx(0), h-10, css("--muted"), "center", 11);
+    txt(ctx, "−0.75 m", sx(X0)+4, h-10, css("--muted"), "left", 10);
+    txt(ctx, "+0.75 m", sx(X1)-4, h-10, css("--muted"), "right", 10);
+    curve(ctx, left, X0, 0, sx, sy, css("--ink"), 2.6);
+    curve(ctx, right, 0, X1, sx, sy, css("--tra"), 2.6);
+    const hL = left(0), hR = right(0);
+    const sL = k1*(A0 + ymr)*Math.cos(wt), sR = k2*ymt*Math.cos(wt);
+    dot(ctx, sx(0), sy(hL), 4.5, css("--ink"));
+    dot(ctx, sx(0), sy(hR), 4.5, css("--tra"));
+    const gap = Math.abs(hL-hR) > 0.005, kink = Math.abs(sL-sR) > 0.05;
+    rd.innerHTML =
+      "<span class=\"verdict "+(gap?"no":"ok")+"\">"+(gap?"Broken: gap of "+Math.abs(hL-hR).toFixed(2)+" mm":"Joined")+"</span>"+
+      "<span class=\"verdict "+(kink?"no":"ok")+"\">"+(kink?"Kinked":"Smooth")+"</span><br>"+
+      "Height at x = 0: left <b>"+sgn(hL,2)+" mm</b>, right <b>"+sgn(hR,2)+" mm</b><br>"+
+      "Slope at x = 0: left <b>"+sgn(sL,1)+" mm/m</b>, right <b>"+sgn(sR,1)+" mm/m</b>"+
+      (mode===0 ? "<br>y_m,r = 2 mm, y_m,t = 4 mm: both rules hold at every instant." :
+       mode===1 ? "<br>Heights match, but k₂ = 2k₁ so the slopes can't. A massless knot can't hold a kink." :
+                  "<br>Without a reflected wave, nothing makes up the difference: the string tears.");
+  }
+  redraws.push(draw); draw();
+})();
+
+/* ---------------- §3 IMPEDANCE ---------------- */
+(function(){
+  const iT = $("#impT"), iM = $("#impMu"), iF = $("#impF"), out = $("#impOut");
+  [iT,iM,iF].forEach(el => el.addEventListener("input", calc));
+  document.querySelectorAll("[data-imp]").forEach(b => b.addEventListener("click", ()=>{
+    const v = b.dataset.imp.split(","); iT.value=v[0]; iM.value=v[1]; iF.value=v[2]; calc();
+  }));
+  function calc(){
+    const T = parseFloat(iT.value), M = parseFloat(iM.value), F = parseFloat(iF.value);
+    if(!(T>0 && M>0 && F>0)){ out.innerHTML = '<div class="c">Enter positive numbers for τ, μ and f.</div>'; return; }
+    const v = Math.sqrt(T/M), Z = Math.sqrt(T*M), w = 2*Math.PI*F, k = w/v;
+    out.innerHTML =
+      "<div>v = √(τ/μ) = √("+num(T)+"/"+num(M)+") = <b>"+num(v)+" m/s</b></div>"+
+      "<div>Z = √(τμ) = √("+num(T)+" × "+num(M)+") = <b>"+num(Z)+" kg/s</b></div>"+
+      "<div>Z = μv = "+num(M)+" × "+num(v)+" = <b>"+num(M*v)+" kg/s</b></div>"+
+      "<div>Z = τ/v = "+num(T)+"/"+num(v)+" = <b>"+num(T/v)+" kg/s</b></div>"+
+      "<div class=\"c\">ω = 2πf = "+num(w)+" rad/s, &nbsp;k = ω/v = "+num(k)+" rad/m</div>"+
+      "<div>Z = τk/ω = "+num(T)+" × "+num(k)+"/"+num(w)+" = <b>"+num(T*k/w)+" kg/s</b> <span class=\"ok\">all four agree</span></div>";
+  }
+  calc();
+})();
+
+/* ---------------- §4 SOLVER ---------------- */
+(function(){
+  const a = $("#solZ1"), b = $("#solZ2"), c = $("#solY"), out = $("#solOut");
+  [a,b,c].forEach(el => el.addEventListener("input", calc));
+  function calc(){
+    const Z1 = parseFloat(a.value), Z2 = parseFloat(b.value), Y = parseFloat(c.value);
+    if(!(Z1>0 && Z2>0 && isFinite(Y))){ out.innerHTML = '<div class="c">Enter positive impedances and an amplitude.</div>'; return; }
+    const yr = (Z2-Z1)/(Z1+Z2)*Y, yt = 2*Z1/(Z1+Z2)*Y;
+    const L = Z1*(Y+yr), R = Z2*yt;
+    out.innerHTML =
+      "<div><span class=\"c\">(A) continuity:</span> y_m,t = y_m,i − y_m,r = "+num(Y)+" − y_m,r</div>"+
+      "<div><span class=\"c\">(B) slope, k = Zω/τ:</span> Z₁(y_m,i + y_m,r) = Z₂ y_m,t → "+num(Z1)+"("+num(Y)+" + y_m,r) = "+num(Z2)+"("+num(Y)+" − y_m,r)</div>"+
+      "<div><span class=\"c\">collect y_m,r:</span> y_m,r("+num(Z1)+" + "+num(Z2)+") = ("+num(Z2)+" − "+num(Z1)+") × "+num(Y)+"</div>"+
+      "<div>y_m,r = "+num((Z2-Z1)*Y)+"/"+num(Z1+Z2)+" = <b>"+num(yr)+" mm</b> &nbsp;<span class=\"c\">(r = "+sgnP((Z2-Z1)/(Z1+Z2),3)+")</span></div>"+
+      "<div>y_m,t = "+num(Y)+" − ("+num(yr)+") = <b>"+num(yt)+" mm</b> &nbsp;<span class=\"c\">(t = "+(2*Z1/(Z1+Z2)).toFixed(3)+")</span></div>"+
+      "<div><span class=\"c\">check (A):</span> "+num(yr)+" + "+num(yt)+" = "+num(yr+yt)+" <span class=\"ok\">= y_m,i</span></div>"+
+      "<div><span class=\"c\">check (B):</span> "+num(Z1)+" × ("+num(Y)+" + "+num(yr)+") = "+num(L)+", &nbsp;"+num(Z2)+" × "+num(yt)+" = "+num(R)+" <span class=\"ok\">equal</span></div>";
+  }
+  calc();
+})();
+
+/* ---------------- §5 COEFFICIENT EXPLORER ---------------- */
+(function(){
+  const root = $("#coefDemo"), cv = $("#coefCv"), sl = $("#coefZ"), out = $("#coefZOut"), rd = $("#coefRead");
+  let mode = "ex";
+  const presets = {match:0, ex:Math.log10(2)};
+  root.querySelectorAll("[data-coef]").forEach(b => b.addEventListener("click", ()=>{
+    mode = b.dataset.coef;
+    if(mode in presets) sl.value = presets[mode];
+    if(mode==="ring") sl.value = sl.min;
+    if(mode==="wall") sl.value = sl.max;
+    sync(); draw();
+  }));
+  sl.addEventListener("input", ()=>{ mode = "rope"; sync(); draw(); });
+  function sync(){ root.querySelectorAll("[data-coef]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.coef===mode))); }
+  function draw(){
+    const lg = +sl.value, rho = Math.pow(10, lg);
+    const {ctx,w,h} = prep(cv);
+    const padL=40, padR=16, padT=14, padB=40;
+    const sx = x => padL + (x+2)/4*(w-padL-padR);
+    const sy = y => padT + (2.15-y)/(3.3)*(h-padT-padB);
+    [-1,0,1,2].forEach(v => { line(ctx, padL, sy(v), w-padR, sy(v), css("--grid"), 1); txt(ctx, v<0?MINUS+"1":String(v), padL-8, sy(v), css("--muted"), "right", 11); });
+    const ticks = [[-2,"0.01"],[-1,"0.1"],[0,"1"],[1,"10"],[2,"100"]];
+    ticks.forEach(([v,l]) => { line(ctx, sx(v), h-padB, sx(v), h-padB+4, css("--muted"), 1); txt(ctx, l, sx(v), h-padB+14, css("--muted"), "center", 11); });
+    txt(ctx, "Z₂/Z₁ (log scale)", (padL+w-padR)/2, h-8, css("--muted"), "center", 11);
+    const rf = x => { const q=Math.pow(10,x); return (q-1)/(q+1); }, tf = x => 2/(1+Math.pow(10,x));
+    curve(ctx, rf, -2, 2, sx, sy, css("--ref"), 2.4);
+    curve(ctx, tf, -2, 2, sx, sy, css("--tra"), 2.4);
+    let r, t, xpos;
+    if(mode==="ring"){ r=-1; t=2; xpos=-2; } else if(mode==="wall"){ r=1; t=0; xpos=2; } else { r=(rho-1)/(rho+1); t=2/(1+rho); xpos=lg; }
+    line(ctx, sx(xpos), padT, sx(xpos), h-padB, css("--muted"), 1, [4,4]);
+    dot(ctx, sx(xpos), sy(r), 5.5, css("--ref"), css("--surface"));
+    dot(ctx, sx(xpos), sy(t), 5.5, css("--tra"), css("--surface"));
+    if(mode==="ring") txt(ctx, "Z₂ = 0", sx(-2)+8, sy(0.5), css("--ink"), "left", 11);
+    if(mode==="wall") txt(ctx, "Z₂ → ∞", sx(2)-8, sy(0.5), css("--ink"), "right", 11);
+    out.textContent = mode==="ring" ? "0" : mode==="wall" ? "∞" : fmtRatio(rho);
+    let html;
+    if(mode==="ring"){
+      html = "Formula as written: r = (0 − Z₁)/(Z₁ + 0) = <b>"+MINUS+"1</b>, t = 2Z₁/Z₁ = <b>2</b><br>"+
+             "<b>Lecture p.10:</b> r = <b>1</b> (upright, y_m,r = y_m,i = 6 mm) and <b>no transmitted wave</b> (t = 0)<br>"+
+             "The 2 is the ring's own motion: it bobs up to 2 × 6 = 12 mm.";
+    } else if(mode==="wall"){
+      html = "Formula as written: r → <b>+1</b>, t = 2Z₁/∞ → <b>0</b><br>"+
+             "<b>Lecture p.11:</b> r ≅ <b>"+MINUS+"1</b>, y_m,r = "+MINUS+"y_m,i = "+MINUS+"6 mm (inverted), t ≈ 0<br>"+
+             "Same physics, different sign convention (see the table above).";
+    } else {
+      const look = Math.abs(r) < 0.005 ? "no reflection" : (r > 0 ? "<b>inverted</b> (into a higher Z)" : "<b>upright</b> (into a lower Z)");
+      html = "r = (Z₂ − Z₁)/(Z₁ + Z₂) = <b>"+sgnP(r,3)+"</b> &nbsp; t = 2Z₁/(Z₁ + Z₂) = <b>"+t.toFixed(3)+"</b> &nbsp;<span class=\"c\">check: 1 − r = "+(1-r).toFixed(3)+"</span><br>"+
+             "For y_m,i = 6 mm: y_m,r = <b>"+sgn(6*r,2)+" mm</b>, y_m,t = <b>"+(6*t).toFixed(2)+" mm</b><br>"+
+             "Reflected pulse: "+look+", "+(Math.abs(r)*100).toFixed(1)+"% of the incident height. Transmitted pulse: upright, "+(t*100).toFixed(1)+"%.";
+    }
+    rd.innerHTML = html;
+  }
+  redraws.push(draw); draw();
+})();
+
+/* ---------------- §6, §7 PULSE DEMOS ---------------- */
+function makePulse(rootId, mode0){
+  const root = document.getElementById(rootId), cv = root.querySelector("canvas"), sl = root.querySelector(".pz"),
+        zo = root.querySelector(".pzout"), zlab = root.querySelector(".pzlab"), rd = root.querySelector(".readout"),
+        pb = root.querySelector(".pplay"), scrub = root.querySelector(".ptime");
+  const A = {el:root, mode:mode0, T:0.6, playing:!REDUCE, last:null};
+  root.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", ()=>{ A.mode = b.dataset.mode; A.T = 0.6; sync(); draw(); }));
+  sl.addEventListener("input", draw);
+  pb.addEventListener("click", ()=>{ A.playing = !A.playing; A.last = null; sync(); });
+  scrub.addEventListener("input", ()=>{ A.T = +scrub.value; A.playing = false; sync(); draw(); });
+  function sync(){
+    root.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode===A.mode)));
+    zlab.hidden = A.mode !== "rope";
+    pb.textContent = A.playing ? "Pause" : "Play";
+  }
+  const sig = 0.45;
+  const f = s => Math.exp(-((s+5)*(s+5))/(2*sig*sig));
+  function co(){
+    if(A.mode==="ring") return {rho:0, rp:1, t:0};
+    if(A.mode==="wall") return {rho:Infinity, rp:-1, t:0};
+    const rho = Math.pow(10, +sl.value); return {rho, rp:(1-rho)/(1+rho), t:2/(1+rho)};
+  }
+  function draw(){
+    const c = co(), T = A.T;
+    zo.textContent = fmtRatio(Math.pow(10, +sl.value));
+    scrub.value = T;
+    const {ctx,w,h} = prep(cv);
+    const X0 = -6, X1 = A.mode==="rope" ? 6 : 1.4, Y = 2.4, padL=8, padR=8, padT=22, padB=12;
+    const sx = x => padL + (x-X0)/(X1-X0)*(w-padL-padR);
+    const sy = y => padT + (Y-y)/(2*Y)*(h-padT-padB);
+    const ink = css("--ink"), mut = css("--muted");
+    line(ctx, padL, sy(0), w-padR, sy(0), css("--grid"), 1, [3,4]);
+    const left = x => f(x - T) + c.rp*f(-x - T);
+    curve(ctx, left, X0, 0, sx, sy, ink, 2.6);
+    txt(ctx, "string 1 (Z₁)", sx(-3), 10, mut, "center", 11);
+    const y0 = left(0);
+    if(A.mode==="rope"){
+      ctx.fillStyle = css("--surface-2"); ctx.fillRect(sx(0), padT-12, sx(X1)-sx(0), h-padT-padB+12);
+      line(ctx, sx(0), padT-12, sx(0), h-padB, mut, 1, [4,4]);
+      curve(ctx, left, X0, 0, sx, sy, ink, 2.6);
+      const rho = c.rho;
+      curve(ctx, x => c.t*f(rho*x - T), 0, X1, sx, sy, css("--tra"), 2.2 + 1.6*Math.min(1, Math.max(0, (Math.log10(rho)+1)/2)));
+      txt(ctx, "string 2 (Z₂)", sx(3), 10, mut, "center", 11);
+      dot(ctx, sx(0), sy(y0), 4, ink);
+    } else if(A.mode==="ring"){
+      const rx = sx(0);
+      ctx.fillStyle = mut; ctx.fillRect(rx-3, padT-10, 6, h-padT-padB+10);
+      ctx.beginPath(); ctx.ellipse(rx, sy(y0), 7, 11, 0, 0, Math.PI*2); ctx.strokeStyle = css("--accent"); ctx.lineWidth = 3; ctx.stroke();
+      txt(ctx, "rod + ring", rx-12, 10, mut, "right", 11);
+    } else {
+      const wx = sx(0);
+      ctx.fillStyle = css("--surface-2"); ctx.fillRect(wx, padT-12, w-padR-wx, h-padT-padB+12);
+      ctx.save(); ctx.beginPath(); ctx.rect(wx, padT-12, w-padR-wx, h-padT-padB+12); ctx.clip();
+      for(let yy = padT-40; yy < h+40; yy += 12){ line(ctx, wx, yy, wx+40, yy-40, css("--line"), 1.5); }
+      ctx.restore();
+      line(ctx, wx, padT-12, wx, h-padB, ink, 3);
+      dot(ctx, wx, sy(0), 4.5, ink);
+      txt(ctx, "wall", wx-8, 10, mut, "right", 11);
+    }
+    let html;
+    if(A.mode==="ring"){
+      html = "Free end, Z₂ = 0. Reflected pulse: <b>upright, same height</b> (lecture p.10: r = 1, y_m,r = y_m,i). No transmitted wave.<br>"+
+             "Ring height now: <b>"+y0.toFixed(2)+" × y_m,i</b> (peaks at 2.00 as the pulse turns around)";
+    } else if(A.mode==="wall"){
+      html = "Fixed end, Z₂ → ∞. Reflected pulse: <b>inverted, same height</b> (lecture p.11: r ≅ "+MINUS+"1, y_m,r = "+MINUS+"y_m,i). t ≈ 0, nothing gets through.<br>"+
+             "Height at the wall now: <b>"+Math.abs(y0).toFixed(2)+" × y_m,i</b> (always zero)";
+    } else {
+      const rho = c.rho, look = Math.abs(c.rp) < 0.005 ? "none" : (c.rp < 0 ? "<b>inverted</b>" : "<b>upright</b>");
+      html = "Z₂/Z₁ = <b>"+fmtRatio(rho)+"</b>, so v₂ = v₁/"+fmtRatio(rho)+" (same tension). Reflected pulse: "+look+", "+Math.abs(c.rp).toFixed(2)+" × incident height.<br>"+
+             "Transmitted pulse: upright, <b>"+c.t.toFixed(2)+" × incident height</b>, "+(1/rho).toFixed(2)+" × the width";
+    }
+    rd.innerHTML = html;
+  }
+  A.step = ts => { if(A.last==null) A.last = ts; const dt = Math.min(0.05,(ts-A.last)/1000); A.last = ts; A.T += dt*1.6; if(A.T > 11.5) A.T = 0; draw(); };
+  sync(); register(A); redraws.push(draw); draw();
+}
+makePulse("pulseA", "ring");
+makePulse("pulseB", "wall");
+
+/* ---------------- §8 POWER CALCULATOR ---------------- */
+(function(){
+  const ids = ["#powZ1","#powZ2","#powY","#powF"].map(s => $(s)), out = $("#powOut");
+  ids.forEach(el => el.addEventListener("input", calc));
+  function calc(){
+    const [Z1,Z2,Ymm,F] = ids.map(el => parseFloat(el.value));
+    if(!(Z1>0 && Z2>0 && Ymm>0 && F>0)){ out.innerHTML = '<div class="c">Enter positive numbers in every box.</div>'; return; }
+    const y = Ymm/1000, w = 2*Math.PI*F, r = (Z2-Z1)/(Z1+Z2), t = 2*Z1/(Z1+Z2);
+    const Pi = 0.5*Z1*y*y*w*w, yr = r*Ymm, Pr = 0.5*Z1*Math.pow(yr/1000,2)*w*w, yt = t*Ymm, Pt = 0.5*Z2*Math.pow(yt/1000,2)*w*w;
+    out.innerHTML =
+      "<div>ω = 2πf = 2π × "+num(F)+" = <b>"+num(w)+" rad/s</b></div>"+
+      "<div>P_i = ½ Z₁ y_m,i² ω² = ½ × "+num(Z1)+" × ("+num(y)+")² × ("+num(w)+")² = <b>"+num(Pi)+" W</b></div>"+
+      "<div>r = "+sgnP(r,4)+" → y_m,r = <b>"+num(yr)+" mm</b>; &nbsp;P_r = ½ Z₁ y_m,r² ω² = <b>"+num(Pr)+" W</b></div>"+
+      "<div>R = P_r/P_i = <b>"+(Pr/Pi).toFixed(4)+"</b> &nbsp;and r² = "+(r*r).toFixed(4)+" <span class=\"ok\">same</span></div>"+
+      "<div class=\"c\">§9: t = "+t.toFixed(4)+" → y_m,t = "+num(yt)+" mm; P_t = ½ Z₂ y_m,t² ω² = "+num(Pt)+" W; T = "+(Pt/Pi).toFixed(4)+"</div>"+
+      "<div><span class=\"c\">energy check:</span> P_r + P_t = "+num(Pr+Pt)+" W <span class=\"ok\">= P_i</span></div>";
+  }
+  calc();
+})();
+
+/* ---------------- §9 SPLIT BAR ---------------- */
+(function(){
+  const root = $("#splitDemo"), sl = $("#spZ"), out = $("#spZOut"), rd = $("#spRead"), bR = $("#spR"), bT = $("#spT");
+  let mode = "ex";
+  const presets = {match:0, ex:Math.log10(2)};
+  root.querySelectorAll("[data-sp]").forEach(b => b.addEventListener("click", ()=>{
+    mode = b.dataset.sp;
+    if(mode in presets) sl.value = presets[mode];
+    if(mode==="ring") sl.value = sl.min;
+    if(mode==="wall") sl.value = sl.max;
+    sync(); calc();
+  }));
+  sl.addEventListener("input", ()=>{ mode = "rope"; sync(); calc(); });
+  function sync(){ root.querySelectorAll("[data-sp]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.sp===mode))); }
+  function calc(){
+    let R, T, html;
+    if(mode==="ring" || mode==="wall"){
+      R = 1; T = 0; out.textContent = mode==="ring" ? "0" : "∞";
+      html = (mode==="ring" ? "Ring, Z₂ = 0: T = (0/Z₁) × t² = 0" : "Wall, Z₂ → ∞: t ≈ 0 so T ≈ 0") + ". All the power comes back: <b>R = 1, T = 0</b>.";
+    } else {
+      const rho = Math.pow(10, +sl.value), r = (rho-1)/(rho+1), t = 2/(1+rho);
+      R = r*r; T = rho*t*t; out.textContent = fmtRatio(rho);
+      html = "r = "+sgnP(r,3)+" → R = r² = <b>"+R.toFixed(3)+"</b><br>"+
+             "t = "+t.toFixed(3)+" → T = (Z₂/Z₁)t² = "+fmtRatio(rho)+" × "+(t*t).toFixed(3)+" = <b>"+T.toFixed(3)+"</b><br>"+
+             "R + T = <b>"+(R+T).toFixed(3)+"</b> &nbsp;<span class=\"c\">(t² alone would be "+(t*t).toFixed(3)+")</span><br>"+
+             "With the running example's P_i = 1.78 W: P_r = "+(R*1.7765).toFixed(3)+" W, P_t = "+(T*1.7765).toFixed(3)+" W";
+    }
+    bR.style.width = (R*100)+"%"; bT.style.width = (T*100)+"%";
+    bR.textContent = R > 0.12 ? (R*100).toFixed(1)+"%" : "";
+    bT.textContent = T > 0.12 ? (T*100).toFixed(1)+"%" : "";
+    rd.innerHTML = html;
+  }
+  calc();
+})();
+
+/* ---------------- RESIZE / THEME ---------------- */
+let rz = null;
+window.addEventListener("resize", ()=>{ clearTimeout(rz); rz = setTimeout(()=>redraws.forEach(f=>f()), 120); });
+if(window.matchMedia){ const mq = window.matchMedia("(prefers-color-scheme: dark)"); (mq.addEventListener ? mq.addEventListener("change", ()=>redraws.forEach(f=>f())) : mq.addListener(()=>redraws.forEach(f=>f()))); }
+new MutationObserver(()=>redraws.forEach(f=>f())).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>redraws.forEach(f=>f()));
+})();
+</script>
+
+</body></html>

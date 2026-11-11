@@ -1,0 +1,1622 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Simple Harmonic Motion Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF;
+  --xcol:#1D5FC2; --vcol:#8A3FB8; --acol:#23804D; --fcol:#C24E12; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+    --xcol:#78AAFF; --vcol:#C79BEF; --acol:#5CC48A; --fcol:#F0935A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+  --xcol:#78AAFF; --vcol:#C79BEF; --acol:#5CC48A; --fcol:#F0935A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:24px; align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+.total{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:14px}
+.total .lab{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700}
+.total .big{font-family:var(--mono); font-size:20px; font-weight:600; margin-top:2px}
+.total .sub{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+.bar{height:6px; border-radius:99px; background:var(--surface-2); overflow:hidden; margin-top:8px}
+.bar i{display:block; height:100%; width:0; background:var(--good); transition:width .25s}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 130px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+.sqrt{white-space:nowrap}
+.sqrt > span{border-top:1px solid currentColor; padding:0 2px; display:inline-block; line-height:1.3}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num, th.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+.prob{font-style:italic; color:var(--muted); border-left:3px solid var(--line); padding-left:12px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:100px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls output{font-family:var(--mono); font-size:13px; min-width:52px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.btnrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.btn[aria-pressed="true"]{background:var(--accent); color:var(--on-accent); border-color:var(--accent)}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{color:var(--muted)}
+.steps b{color:var(--good)}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} .bar i{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="total" aria-live="polite">
+    <div class="lab">Quiz scores</div>
+    <div class="big" id="totBig">0 / 0</div>
+    <div class="sub" id="totSub">0 of 0 questions answered</div>
+    <div class="bar"><i id="totBar"></i></div>
+  </div>
+  <h2>Part 1 · Describing SHM</h2>
+  <ol>
+    <li><a href="#s1">1 Period and frequency <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 Equation of motion <span class="chip" data-chip="q2"></span></a></li>
+    <li><a href="#s3">3 The phase constant φ <span class="chip" data-chip="q3"></span></a></li>
+    <li><a href="#s4">4 Comparing oscillators <span class="chip" data-chip="q4"></span></a></li>
+  </ol>
+  <h2>Part 2 · Velocity and acceleration</h2>
+  <ol>
+    <li><a href="#s5">5 Velocity <span class="chip" data-chip="q5"></span></a></li>
+    <li><a href="#s6">6 Acceleration <span class="chip" data-chip="q6"></span></a></li>
+    <li><a href="#s7">7 Example: tire tread <span class="chip" data-chip="q7"></span></a></li>
+  </ol>
+  <h2>Part 3 · Mass-spring system</h2>
+  <ol>
+    <li><a href="#s8">8 Hooke's law <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Mass-spring period <span class="chip" data-chip="q9"></span></a></li>
+  </ol>
+  <h2>Part 4 · Simple pendulum</h2>
+  <ol>
+    <li><a href="#s10">10 Forces, small angles <span class="chip" data-chip="q10"></span></a></li>
+    <li><a href="#s11">11 Pendulum period <span class="chip" data-chip="q11"></span></a></li>
+  </ol>
+  <h2>Part 5 · Practice problems</h2>
+  <ol>
+    <li><a href="#s12">12 Measuring g <span class="chip" data-chip="q12"></span></a></li>
+    <li><a href="#s13">13 Car suspension <span class="chip" data-chip="q13"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">PHYS 365 · Lectures 1a and 1b · Study guide</div>
+  <h1>Simple harmonic motion: one cosine, two machines</h1>
+  <p class="lede">Anything that gets pulled back toward its middle, with a pull proportional to how far it strayed, swings back and forth in a perfect cosine. Lecture 1a describes that motion (position, velocity, acceleration). Lecture 1b shows that a mass on a spring and a pendulum both obey it, and gives you their periods.</p>
+  <div class="chain" aria-label="How the lecture builds up">
+    <div class="blk"><b>Describe it</b><span>x(t) = x<sub>m</sub> cos(ωt + φ)</span><span class="secs">§1 to §4</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Differentiate</b><span>v and a, with a = −ω²x</span><span class="secs">§5 to §7</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Spring</b><span>F = −kx gives ω = √(k/m)</span><span class="secs">§8, §9, §13</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Pendulum</b><span>sin θ ≈ θ gives ω = √(g/L)</span><span class="secs">§10 to §12</span></div>
+  </div>
+</header>
+
+<h2 class="part">Part 1 · Describing simple harmonic motion (Lecture 1a)</h2>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>Oscillation, period and frequency</h3>
+<p>Picture a particle sliding left and right along the x-axis, never going past −x<sub>m</sub> on the left or +x<sub>m</sub> on the right. One <b>full cycle</b> is the trip from +x<sub>m</sub> over to −x<sub>m</sub> and back again.</p>
+<ul class="plain">
+<li><b>Period T</b>: the time for one full cycle (seconds).</li>
+<li><b>Frequency f</b>: how many full cycles it completes per second (hertz, Hz).</li>
+</ul>
+<div class="eq">
+  <span class="row"><i>T</i> = <span class="frac"><span>1</span><span><i>f</i></span></span> &nbsp;&nbsp; and &nbsp;&nbsp; <i>f</i> = <span class="frac"><span>1</span><span><i>T</i></span></span></span>
+</div>
+<p>The lecture's frame-by-frame breakdown shows <i>how</i> it moves: it starts at +x<sub>m</sub> at rest (t = 0), speeds up heading left, is fastest as it crosses 0, slows down, stops at −x<sub>m</sub> at t = T/2, then repeats the trip to the right and is back at +x<sub>m</sub> at t = T.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: the frame-by-frame breakdown, animated</div>
+  <canvas id="cv1" height="150" aria-label="Particle oscillating between minus x m and plus x m with its velocity arrow"></canvas>
+  <div class="controls">
+    <button class="btn" type="button" id="p1">Pause</button>
+    <button class="btn" type="button" id="st1">Step T/8</button>
+    <button class="btn" type="button" id="r1">Back to t = 0</button>
+    <label for="f1">f <input id="f1" type="range" min="0.2" max="2" step="0.05" value="0.5"><output id="f1o">0.50 Hz</output></label>
+  </div>
+  <div class="readout" id="rd1" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a playground swing</span>
+<p>Stand beside a swing and count how many times per second the child comes back to your side: that's f. The wait between two visits is T. A fast swing has a big f and a short T; they are just two ways of saying the same thing.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Count full cycles, not crossings.</b> The particle passes x = 0 <i>twice</i> per cycle (once going each way). A cycle only ends when it is back at the same place moving the same way.</li>
+<li><b>Fastest in the middle, stopped at the ends.</b> Speed is zero at ±x<sub>m</sub> (it has to stop to turn around) and largest at 0. Students often flip this.</li>
+<li><b>Units travel together.</b> T in ms gives f in kHz; T in s gives f in Hz.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: period and frequency"></div>
+</section>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>The equation of motion</h3>
+<p>Take the frame-by-frame snapshots, turn the x-axis vertical, and lay the frames side by side in time (the lecture's "rotated view"). The dots trace out a <b>cosine</b>. That's the whole mathematical description of simple harmonic motion:</p>
+<div class="eq">
+  <span class="row"><i>x</i>(<i>t</i>) = <i>x<sub>m</sub></i> cos(<i>ωt</i> + <i>φ</i>) <span class="note">displacement of the particle versus time</span></span>
+  <span class="row"><i>x<sub>m</sub></i> = amplitude · <i>ω</i> = angular frequency (rad/s) · <i>t</i> = time · <i>φ</i> = phase constant</span>
+</div>
+<p>The angular frequency is "angle per time": <i>ω</i> = θ/T. One full wave sweeps the cosine's angle through θ = 2π rad, and that takes one period, so:</p>
+<div class="eq">
+  <span class="row"><i>ω</i> = <span class="frac"><span>2π</span><span><i>T</i></span></span> = 2π<i>f</i></span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: build x(t) = x<sub>m</sub> cos(ωt + φ)</div>
+  <canvas id="cv2" height="220" aria-label="Graph of x of t with adjustable amplitude, frequency and phase"></canvas>
+  <div class="controls">
+    <label for="xm2">x<sub>m</sub> <input id="xm2" type="range" min="1" max="10" step="0.5" value="5"><output id="xm2o">5.0 cm</output></label>
+    <label for="f2">f <input id="f2" type="range" min="0.25" max="3" step="0.25" value="1"><output id="f2o">1.00 Hz</output></label>
+    <label for="ph2">φ <input id="ph2" type="range" min="0" max="360" step="15" value="0"><output id="ph2o">0</output></label>
+  </div>
+  <div class="readout" id="rd2" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · the shadow of a clock hand</span>
+<p>Imagine a clock hand of length x<sub>m</sub> spinning steadily. Its shadow on a horizontal wall slides back and forth exactly like our particle. The hand's angle is ωt + φ: ω is how fast it spins (radians per second) and φ is the angle it started at. One full turn of the hand (2π) is one full cycle of the shadow.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>ω is not f.</b> ω is in rad/s; f is in Hz. They differ by 2π. In x(t) = 0.04 cos(10πt), ω = 10π rad/s but f = 5 Hz.</li>
+<li><b>Radians mode.</b> ωt + φ is an angle in radians. A calculator in degree mode gives garbage for cos(ωt + φ).</li>
+<li><b>ωt + φ is an angle, not a position.</b> The position is x<sub>m</sub> times the cosine of that angle, so it never leaves the range −x<sub>m</sub> to +x<sub>m</sub>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: equation of motion"></div>
+</section>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>What exactly is φ?</h3>
+<p>The <b>phase constant</b> φ (also called the <b>phase angle</b>) sets where the particle is when the clock starts, at t = 0. Put t = 0 into the equation of motion and only φ is left inside the cosine:</p>
+<div class="eq">
+  <span class="row"><i>x</i>(0) = <i>x<sub>m</sub></i> cos(0 + <i>φ</i>) = <i>x<sub>m</sub></i> cos <i>φ</i></span>
+</div>
+<p>The lecture marks four starting points on the axis:</p>
+<div class="tbl"><table>
+<thead><tr><th>Position</th><th>Where at t = 0</th><th>Moving</th><th>φ</th></tr></thead>
+<tbody>
+<tr><td>①</td><td>−x<sub>m</sub></td><td>at rest (about to go right)</td><td><b>π</b></td></tr>
+<tr><td>②</td><td>0</td><td>to the right</td><td><b>3π/2</b></td></tr>
+<tr><td>③</td><td>0</td><td>to the left</td><td><b>π/2</b></td></tr>
+<tr><td>④</td><td>+x<sub>m</sub></td><td>at rest (about to go left)</td><td><b>0</b></td></tr>
+</tbody></table></div>
+
+<details class="work" open><summary>Worked example: test each position at t = 0</summary><div class="body">
+<p>The lecture works positions ① and ③ and leaves ② and ④ as an exercise. All four:</p>
+<div class="steps">
+<div><span class="c">① φ = π:</span> x(0) = x<sub>m</sub> cos(0 + π) = x<sub>m</sub> cos(π) = <b>−x<sub>m</sub></b></div>
+<div><span class="c">③ φ = π/2:</span> x(0) = x<sub>m</sub> cos(0 + π/2) = <b>0</b></div>
+<div><span class="c">② φ = 3π/2:</span> x(0) = x<sub>m</sub> cos(3π/2) = <b>0</b> <span class="c">(same as ③!)</span></div>
+<div><span class="c">④ φ = 0:</span> x(0) = x<sub>m</sub> cos(0) = <b>+x<sub>m</sub></b></div>
+</div>
+<p style="margin-top:12px">② and ③ both start at 0. What separates them is the direction. Using the velocity from Section 5, v(0) = −x<sub>m</sub>ω sin φ:</p>
+<div class="steps">
+<div><span class="c">③ φ = π/2:</span> v(0) = −x<sub>m</sub>ω sin(π/2) = −x<sub>m</sub>ω <span class="c">→ moving left</span></div>
+<div><span class="c">② φ = 3π/2:</span> v(0) = −x<sub>m</sub>ω sin(3π/2) = +x<sub>m</sub>ω <span class="c">→ moving right</span></div>
+</div>
+</div></details>
+
+<p><b>What the analysis says (lecture slide 7):</b> the starting position at t = 0 depends on φ. At any later time, the full phase ωt + φ tells you where the particle is in its cycle.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: pick a starting point</div>
+  <canvas id="cv3" height="245" aria-label="Particle start position and direction for the chosen phase, with one period of x of t"></canvas>
+  <div class="btnrow" role="group" aria-label="Lecture positions">
+    <button class="btn" type="button" data-ph3="180">① φ = π</button>
+    <button class="btn" type="button" data-ph3="270">② φ = 3π/2</button>
+    <button class="btn" type="button" data-ph3="90">③ φ = π/2</button>
+    <button class="btn" type="button" data-ph3="0">④ φ = 0</button>
+  </div>
+  <div class="controls">
+    <label for="ph3">or any φ <input id="ph3" type="range" min="0" max="360" step="15" value="90"><output id="ph3o">π/2</output></label>
+  </div>
+  <div class="steps" id="rd3" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · starting a song partway through</span>
+<p>Every oscillator with the same x<sub>m</sub> and ω plays the same tune. φ is just the timestamp where you hit play. φ = 0 starts at the top of the wave; φ = π starts at the bottom; φ = π/2 starts on the way down through the middle.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>x = 0 has two φ values.</b> π/2 (moving left) and 3π/2 (moving right). If a problem says "starts at equilibrium", look for the direction before picking φ.</li>
+<li><b>Adding π flips the sign.</b> cos(θ + π) = −cos θ, so φ = π gives the mirror image of φ = 0.</li>
+<li><b>φ and φ + 2π are the same start.</b> A full extra turn changes nothing.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: the phase constant"></div>
+</section>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Comparing two oscillators</h3>
+<p>Slide 8 compares two pairs of oscillators to separate what amplitude and frequency each control:</p>
+<ul class="plain">
+<li><b>A<sub>1</sub> ≠ A<sub>2</sub> but f<sub>1</sub> = f<sub>2</sub>:</b> one curve is taller (x<sub>m</sub> &gt; x′<sub>m</sub>), but the peaks and zero crossings line up in time. Same period.</li>
+<li><b>A<sub>1</sub> = A<sub>2</sub> but f<sub>1</sub> ≠ f<sub>2</sub>:</b> both reach the same height, but one cycles more slowly. The slow (blue) one has the longer period: T<sub>blue</sub> &gt; T<sub>purple</sub>.</li>
+</ul>
+
+<div class="demo">
+  <div class="dtitle">Try it: two oscillators on one graph</div>
+  <canvas id="cv4" height="210" aria-label="Two cosine curves with adjustable amplitude and frequency ratios"></canvas>
+  <div class="legend"><span><i style="background:var(--vcol)"></i>oscillator 1 (f₁ = 1 Hz, x<sub>m</sub>)</span><span><i style="background:var(--xcol)"></i>oscillator 2</span></div>
+  <div class="btnrow">
+    <button class="btn" type="button" id="pre4a">Slide 8 top: A₁ ≠ A₂, f₁ = f₂</button>
+    <button class="btn" type="button" id="pre4b">Slide 8 bottom: A₁ = A₂, f₁ ≠ f₂</button>
+  </div>
+  <div class="controls">
+    <label for="ar4">amplitude ratio x′<sub>m</sub>/x<sub>m</sub> <input id="ar4" type="range" min="0.2" max="1.4" step="0.05" value="0.6"><output id="ar4o">0.60</output></label>
+    <label for="fr4">f₂ <input id="fr4" type="range" min="0.25" max="3" step="0.05" value="1"><output id="fr4o">1.00 Hz</output></label>
+  </div>
+  <div class="readout" id="rd4" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · two swings</span>
+<p>Push one child higher than the other on identical swings: they still go back and forth in step (same f, different amplitude). Put them on swings with different chain lengths: now they drift out of step no matter how high they go (different f).</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Amplitude does not change the period.</b> A bigger swing moves faster and covers more ground in the same time.</li>
+<li><b>Longer T means lower f.</b> On a graph, the "stretched out" curve is the low-frequency one.</li>
+<li><b>Compare like with like.</b> If one oscillator is given by T and the other by f, convert one before comparing.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: comparing oscillators"></div>
+</section>
+
+<h2 class="part">Part 2 · Velocity and acceleration (Lecture 1a)</h2>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>Velocity: differentiate with the chain rule</h3>
+<p>Velocity is the rate of change of position, v = dx/dt. The cosine has something inside it (ωt + φ), so we need the chain rule.</p>
+<details class="work" open><summary>Derivation from the lecture (slides 9 and 10)</summary><div class="body">
+<div class="steps">
+<div><span class="c">Start:</span> x(t) = x<sub>m</sub> cos(ωt + φ)</div>
+<div><span class="c">Let</span> Z = cos(ωt + φ), <span class="c">then</span> x = x<sub>m</sub>Z</div>
+<div><span class="c">Chain rule:</span> dx/dt = (dZ/dt) · (dx/dZ)</div>
+<div><span class="c">Inner piece:</span> dZ/dt = −ω sin(ωt + φ)</div>
+<div><span class="c">Outer piece:</span> dx/dZ = x<sub>m</sub></div>
+<div><span class="c">Multiply:</span> <b>v(t) = −x<sub>m</sub>ω sin(ωt + φ)</b></div>
+<div><span class="c">Rewrite using cos(x − π/2) = sin x:</span> v(t) = −x<sub>m</sub>ω cos(ωt + φ − π/2)</div>
+</div>
+</div></details>
+<div class="eq">
+  <span class="row"><i>v</i>(<i>t</i>) = −<i>x<sub>m</sub>ω</i> sin(<i>ωt</i> + <i>φ</i>) <span class="note">velocity amplitude (top speed) = ωx<sub>m</sub></span></span>
+</div>
+<p>The second form says velocity is the same kind of wave as x, with the same ω, but shifted by a quarter cycle (π/2). That's why speed peaks where x = 0 and is zero where x = ±x<sub>m</sub>.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: velocity is the slope of x(t)</div>
+  <canvas id="cv5" height="260" aria-label="x of t with a tangent line, and v of t below"></canvas>
+  <div class="legend"><span><i style="background:var(--xcol)"></i>x(t)</span><span><i style="background:var(--fcol)"></i>tangent (slope = v)</span><span><i style="background:var(--vcol)"></i>v(t)</span></div>
+  <div class="controls">
+    <label for="t5">time t/T <input id="t5" type="range" min="0" max="1" step="0.005" value="0.125"><output id="t5o">0.125</output></label>
+    <label for="xm5">x<sub>m</sub> (cm) <input id="xm5" type="number" value="4" min="0.1" step="0.5"></label>
+    <label for="f5">f (Hz) <input id="f5" type="number" value="5" min="0.1" step="0.5"></label>
+  </div>
+  <div class="readout" id="rd5" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · reading a hill's steepness</span>
+<p>Walk along the x(t) curve. Velocity is how steep the path is under your feet. At the top of a hill (x = +x<sub>m</sub>) the ground is flat: v = 0. Halfway down, where the curve crosses zero, it's steepest: top speed.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Don't drop the ω.</b> The inner derivative of (ωt + φ) is ω. Top speed is ωx<sub>m</sub>, not x<sub>m</sub>.</li>
+<li><b>Mind the minus sign.</b> With φ = 0 the particle starts at +x<sub>m</sub> and heads left, so v must go negative first. The minus sign does that.</li>
+<li><b>Two correct forms.</b> −x<sub>m</sub>ω sin(ωt + φ) and −x<sub>m</sub>ω cos(ωt + φ − π/2) are the same function. Use whichever the question asks for.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: velocity"></div>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Acceleration and the three graphs</h3>
+<p>Differentiate once more (slide 11). x<sub>m</sub>ω is a constant, and the derivative of sin(ωt + φ) is ω cos(ωt + φ):</p>
+<div class="steps">
+<div>a(t) = dv/dt = d/dt[−x<sub>m</sub>ω sin(ωt + φ)]</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= −x<sub>m</sub>ω · d/dt[sin(ωt + φ)]</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <b>−x<sub>m</sub>ω² cos(ωt + φ)</b> <span class="c">→ acceleration amplitude x<sub>m</sub>ω²</span></div>
+</div>
+<div class="eq" style="margin-top:14px">
+  <span class="row"><i>a</i>(<i>t</i>) = −<i>x<sub>m</sub>ω</i>² cos(<i>ωt</i> + <i>φ</i>) = −<i>ω</i>² <i>x</i>(<i>t</i>) <span class="note">same cosine as x, times −ω²</span></span>
+</div>
+<p>Spot the pattern: each derivative multiplies the amplitude by ω. Amplitudes go x<sub>m</sub> → ωx<sub>m</sub> → ω²x<sub>m</sub>. And because a(t) contains the same cosine as x(t), acceleration is always −ω² times the displacement. That relation is the fingerprint of SHM; Lecture 1b uses it directly.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Where</th><th>x</th><th>v</th><th>a</th></tr></thead>
+<tbody>
+<tr><td>Right end</td><td>+x<sub>m</sub></td><td>0</td><td>−ω²x<sub>m</sub> (largest, pointing left)</td></tr>
+<tr><td>Middle</td><td>0</td><td>±ωx<sub>m</sub> (largest)</td><td>0</td></tr>
+<tr><td>Left end</td><td>−x<sub>m</sub></td><td>0</td><td>+ω²x<sub>m</sub> (largest, pointing right)</td></tr>
+</tbody></table></div>
+
+<div class="demo">
+  <div class="dtitle">Try it: the lecture's three graphs (slide 12), with a moving cursor</div>
+  <canvas id="cv6" height="330" aria-label="Displacement, velocity and acceleration over one period with a time cursor"></canvas>
+  <div class="legend"><span><i style="background:var(--xcol)"></i>displacement</span><span><i style="background:var(--vcol)"></i>velocity</span><span><i style="background:var(--acol)"></i>acceleration</span></div>
+  <div class="controls">
+    <button class="btn" type="button" id="p6">Play</button>
+    <label for="t6">t/T <input id="t6" type="range" min="0" max="1" step="0.005" value="0"><output id="t6o">0.000</output></label>
+    <div class="seg" role="group" aria-label="Phase constant">
+      <button type="button" data-ph6="0" aria-pressed="true">φ = 0</button>
+      <button type="button" data-ph6="90" aria-pressed="false">π/2</button>
+      <button type="button" data-ph6="180" aria-pressed="false">π</button>
+      <button type="button" data-ph6="270" aria-pressed="false">3π/2</button>
+    </div>
+  </div>
+  <div class="controls">
+    <label for="xm6">x<sub>m</sub> (cm) <input id="xm6" type="number" value="4" min="0.1" step="0.5"></label>
+    <label for="f6">f (Hz) <input id="f6" type="number" value="5" min="0.1" step="0.5"></label>
+  </div>
+  <div class="readout" id="rd6" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a bungee cord to the middle</span>
+<p>Imagine the particle tied to x = 0 by a stretchy cord. The farther out it goes, the harder the cord yanks it back (big |a| at the ends). As it passes through the middle the cord is slack (a = 0), but by then it's going fastest, so it overshoots and the cycle continues.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Biggest acceleration where it's stopped.</b> At ±x<sub>m</sub>, v = 0 but |a| is maximum. Zero velocity does not mean zero acceleration.</li>
+<li><b>a and x always have opposite signs</b> because of a = −ω²x. On the graphs, the acceleration curve is the displacement curve flipped upside down.</li>
+<li><b>Unit check.</b> x<sub>m</sub> in m, ωx<sub>m</sub> in m/s, ω²x<sub>m</sub> in m/s². If your units don't match, you've lost or gained an ω.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: acceleration"></div>
+</section>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Worked example: the tire tread</h3>
+<p class="prob">A car tire has a tread pattern with 5 cm spacing between the crevices. As the tire moves, each crevice makes a single vibration. Determine the frequency of these vibrations if the car moves at a velocity of 50 m/s.</p>
+<details class="work" open><summary>Lecture solution (slide 14)</summary><div class="body">
+<div class="steps">
+<div><span class="c">Given:</span> Δx = 5 cm = 0.05 m, v = 50 m/s</div>
+<div><span class="c">Speed:</span> v = Δx/Δt <span class="c">(Δt = time for one spacing to pass)</span></div>
+<div><span class="c">One vibration per spacing:</span> f = 1/Δt</div>
+<div><span class="c">Combine:</span> v = Δx · f &nbsp;→&nbsp; f = v/Δx</div>
+<div><span class="c">Plug in:</span> f = (50 m/s)/(0.05 m) = <b>1 kHz</b></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: tread vibration frequency (loaded with the lecture's numbers)</div>
+  <div class="controls">
+    <label for="v7">v (m/s) <input id="v7" type="number" value="50" min="0" step="1"></label>
+    <label for="dx7">Δx (cm) <input id="dx7" type="number" value="5" min="0.01" step="0.5"></label>
+  </div>
+  <div class="steps" id="rd7" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a stick along a picket fence</span>
+<p>Run past a picket fence dragging a stick: it clacks once per picket. Clacks per second = your speed ÷ the picket spacing. Run twice as fast, twice the clacks. The tire's crevices are the pickets.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Convert cm to m first.</b> 50 ÷ 5 = 10 Hz is the classic wrong answer. 50 m/s ÷ 0.05 m = 1000 Hz.</li>
+<li><b>The period is the time per crevice.</b> T = 1/f = Δx/v = 1 ms here.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: tire tread"></div>
+</section>
+
+<h2 class="part">Part 3 · The mass-spring system (Lecture 1b)</h2>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>Hooke's law</h3>
+<p>A block of mass m sits on a frictionless floor, attached to a wall by a spring. At x = 0 the spring is relaxed. Pull the block out and let go: it oscillates between −x<sub>m</sub> and +x<sub>m</sub>, a real example of SHM.</p>
+<p>The spring's force follows <b>Hooke's law</b>, where k is the spring stiffness (spring constant, N/m):</p>
+<div class="eq">
+  <span class="row"><i>F</i> = −<i>kx</i> <span class="note">x measured from the relaxed position</span></span>
+</div>
+<p>The minus sign makes it a <b>restoring force</b>: stretch the spring (x &gt; 0) and it pulls back left; squash it (x &lt; 0) and it pushes back right.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: drag the block, watch the force</div>
+  <canvas id="cv8" height="170" aria-label="Block on a spring with the spring force arrow"></canvas>
+  <div class="controls">
+    <label for="x8">x <input id="x8" type="range" min="-10" max="10" step="0.5" value="5"><output id="x8o">+5.0 cm</output></label>
+    <label for="k8">k (N/m) <input id="k8" type="number" value="200" min="1" step="10"></label>
+  </div>
+  <div class="readout" id="rd8" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a rubber band</span>
+<p>Stretch a rubber band a little and it tugs gently; stretch it twice as far and it tugs twice as hard, always back toward its rest length. k is how "tough" the band is: a stiff band (big k) tugs hard per centimetre.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>x is the stretch, not the spring's length.</b> Measure from the relaxed position x = 0.</li>
+<li><b>The sign is the direction.</b> F = −10 N means 10 N pointing toward −x.</li>
+<li><b>Why frictionless?</b> With friction the amplitude would shrink every cycle. Setting friction to 0 keeps the only horizontal force −kx, so the motion is pure SHM.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: Hooke's law"></div>
+</section>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Period and frequency of a mass-spring system</h3>
+<p>Combine Hooke's law with Newton's second law, then insert what we already know about SHM.</p>
+<details class="work" open><summary>Derivation from the lecture (slides 2 and 3)</summary><div class="body">
+<div class="steps">
+<div><span class="c">Newton:</span> F = ma</div>
+<div><span class="c">Spring:</span> −kx = ma = m d²x/dt² <span class="c">(1)</span></div>
+<div><span class="c">SHM:</span> x(t) = x<sub>m</sub> cos(ωt + φ), &nbsp;a(t) = d²x/dt² = −x<sub>m</sub>ω² cos(ωt + φ)</div>
+<div><span class="c">Substitute into (1):</span> −k(x<sub>m</sub> cos(ωt + φ)) = −m x<sub>m</sub>ω² cos(ωt + φ)</div>
+<div><span class="c">Cancel x<sub>m</sub> cos(ωt + φ):</span> −k = −mω²</div>
+<div><span class="c">Solve:</span> <b>ω = √(k/m)</b></div>
+<div><span class="c">Since ω = 2π/T = 2πf:</span> T = 2π/ω = <b>2π√(m/k)</b></div>
+<div><span class="c">and</span> f = 1/T = <b>(1/2π)√(k/m)</b></div>
+</div>
+</div></details>
+<div class="eq">
+  <span class="row"><i>ω</i> = <span class="sqrt">√<span><span class="frac"><span><i>k</i></span><span><i>m</i></span></span></span></span> &nbsp;&nbsp; <i>T</i> = 2π<span class="sqrt">√<span><span class="frac"><span><i>m</i></span><span><i>k</i></span></span></span></span> &nbsp;&nbsp; <i>f</i> = <span class="frac"><span>1</span><span>2π</span></span><span class="sqrt">√<span><span class="frac"><span><i>k</i></span><span><i>m</i></span></span></span></span></span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: change k and m, watch the rhythm change</div>
+  <canvas id="cv9" height="170" aria-label="Animated mass on a spring"></canvas>
+  <div class="controls">
+    <button class="btn" type="button" id="p9">Pause</button>
+    <div class="seg" role="group" aria-label="Playback speed">
+      <button type="button" id="sp9a" aria-pressed="true">Real time</button>
+      <button type="button" id="sp9b" aria-pressed="false">Slow ×¼</button>
+    </div>
+  </div>
+  <div class="controls">
+    <label for="k9">k <input id="k9" type="range" min="20" max="500" step="10" value="200"><output id="k9o">200 N/m</output></label>
+    <label for="m9">m <input id="m9" type="range" min="0.1" max="5" step="0.1" value="0.5"><output id="m9o">0.5 kg</output></label>
+  </div>
+  <div class="steps" id="rd9" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · trucks and sports cars</span>
+<p>A stiff spring with a light load (big k, small m) buzzes quickly, like a sports car's tight suspension. A soft spring with a heavy load (small k, big m) bounces slowly, like a loaded truck. ω = √(k/m) is "stiffness per unit of laziness".</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>T has m/k; f has k/m.</b> They are reciprocals, so the fraction flips. Mixing them up is the most common mistake.</li>
+<li><b>Square root.</b> 4× the mass gives 2× the period, not 4×.</li>
+<li><b>No amplitude.</b> x<sub>m</sub> cancelled, so how far you pull the block does not change T.</li>
+<li><b>Why cancel the cosine?</b> The equation must hold at every instant t, so the coefficients in front of cos(ωt + φ) must match.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: mass-spring period"></div>
+</section>
+
+<h2 class="part">Part 4 · The simple pendulum (Lecture 1b)</h2>
+
+<!-- 10 -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>Forces on a pendulum and the small-angle approximation</h3>
+<p><b>Definition:</b> a simple pendulum is an object with small mass m hanging from a light wire or string of length L. When it's pulled aside by an angle θ, two forces act on it: the string's <b>tension</b> (along the string) and its <b>weight</b> W = −mg (straight down).</p>
+<p>Split the weight into two parts. The part along the string just pulls on the string. The part <b>along the arc</b>, W sin θ, is what pulls the bob back toward the bottom. Newton's second law along the arc:</p>
+<div class="steps">
+<div>W sin θ = ma <span class="c">(a = tangential acceleration)</span></div>
+<div><span class="c">With W = −mg:</span> −mg sin θ = ma</div>
+<div><span class="c">Cancel m:</span> <b>a = −g sin θ</b></div>
+<div><span class="c">If θ is very small:</span> sin θ ≈ θ &nbsp;→&nbsp; <b>a = −gθ</b></div>
+</div>
+<div class="eq" style="margin-top:14px">
+  <span class="row"><i>a</i> = −<i>g</i> sin <i>θ</i> &nbsp;≈&nbsp; −<i>gθ</i> <span class="note">θ in radians, small angles only</span></span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: how small is "small"?</div>
+  <canvas id="cv10" height="280" aria-label="Pendulum with weight, tangential component and tension"></canvas>
+  <div class="legend"><span><i style="background:var(--fcol)"></i>W sin θ (restoring)</span><span><i style="background:var(--muted)"></i>weight W and tension</span></div>
+  <div class="controls">
+    <label for="th10">θ <input id="th10" type="range" min="0" max="60" step="1" value="10"><output id="th10o">10°</output></label>
+  </div>
+  <div class="readout" id="rd10" aria-live="polite"></div>
+</div>
+
+<div class="tbl"><table>
+<thead><tr><th class="num">θ</th><th class="num">θ (rad)</th><th class="num">sin θ</th><th class="num">gap</th></tr></thead>
+<tbody>
+<tr><td class="num">5°</td><td class="num">0.0873</td><td class="num">0.0872</td><td class="num">0.13%</td></tr>
+<tr><td class="num">10°</td><td class="num">0.1745</td><td class="num">0.1736</td><td class="num">0.51%</td></tr>
+<tr><td class="num">15°</td><td class="num">0.2618</td><td class="num">0.2588</td><td class="num">1.15%</td></tr>
+<tr><td class="num">30°</td><td class="num">0.5236</td><td class="num">0.5000</td><td class="num">4.72%</td></tr>
+</tbody></table></div>
+
+<div class="callout analogy"><span class="tag">Analogy · a ball on a ramp</span>
+<p>The bob always sits on a little "ramp" (the arc). Near the bottom the ramp is almost flat, so only a sliver of gravity pushes along it. Swing it higher and the ramp gets steeper, so more of gravity pushes it back. For small angles the "steepness" is just θ itself.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Radians only.</b> sin θ ≈ θ works because sin 0.1745 ≈ 0.1745. In degrees you'd be comparing 0.17 with 10.</li>
+<li><b>Tension does no restoring.</b> It points along the string, at right angles to the motion.</li>
+<li><b>Mass cancels.</b> m appears in both the weight and ma, so a = −g sin θ has no m in it.</li>
+<li><b>Two T's.</b> The lecture uses T for tension here and T for period later. Read the context.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: pendulum forces"></div>
+</section>
+
+<!-- 11 -->
+<section class="sec" id="s11">
+<h3><span class="num">11</span>The pendulum equation and its period</h3>
+<p>The bob moves along an arc of radius L, so its tangential acceleration is L times its angular acceleration α = d²θ/dt². Combine that with a = −gθ:</p>
+<div class="steps">
+<div><span class="c">Arc motion:</span> a = Lα = L d²θ/dt²</div>
+<div><span class="c">Combine:</span> −gθ = L d²θ/dt²</div>
+<div><span class="c">Rearrange:</span> <b>L d²θ/dt² + gθ = 0</b></div>
+</div>
+<p style="margin-top:14px">Now compare with the mass-spring equation from Lecture 1b, whose solution we already know:</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Mass-spring</th><th>Simple pendulum</th></tr></thead>
+<tbody>
+<tr><td>Equation</td><td>m d²x/dt² + kx = 0</td><td>L d²θ/dt² + gθ = 0</td></tr>
+<tr><td>What swings</td><td>x(t) = x<sub>m</sub> cos(ωt + φ)</td><td>θ(t), the same cosine</td></tr>
+<tr><td>Swap</td><td>m, k</td><td>L, g</td></tr>
+<tr><td>ω</td><td>√(k/m)</td><td><b>√(g/L)</b></td></tr>
+<tr><td>T = 1/f</td><td>2π√(m/k)</td><td><b>2π√(L/g)</b></td></tr>
+</tbody></table></div>
+<div class="eq">
+  <span class="row"><i>ω</i> = <span class="sqrt">√<span><span class="frac"><span><i>g</i></span><span><i>L</i></span></span></span></span> &nbsp;&nbsp; <i>T</i> = <span class="frac"><span>1</span><span><i>f</i></span></span> = 2π<span class="sqrt">√<span><span class="frac"><span><i>L</i></span><span><i>g</i></span></span></span></span></span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: a swinging pendulum (starts at the lecture's practice-problem values)</div>
+  <canvas id="cv11" height="270" aria-label="Animated pendulum"></canvas>
+  <div class="controls">
+    <button class="btn" type="button" id="p11">Pause</button>
+    <label for="L11">L <input id="L11" type="range" min="0.1" max="2" step="0.01" value="0.76"><output id="L11o">0.76 m</output></label>
+    <label for="g11">g (m/s²) <input id="g11" type="number" value="9.26" min="0.1" step="0.01"></label>
+  </div>
+  <div class="btnrow">
+    <button class="btn" type="button" data-g11="9.26">Lecture region (9.26)</button>
+    <button class="btn" type="button" data-g11="9.81">Earth (9.81)</button>
+    <button class="btn" type="button" data-g11="1.62">Moon (1.62)</button>
+  </div>
+  <div class="steps" id="rd11" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · the same song in a different key</span>
+<p>The spring and the pendulum sing the same melody (the same equation); only the letters change. Wherever the spring says m, the pendulum says L. Wherever it says k, the pendulum says g. Learn one and you get the other for free.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>No mass in T.</b> A heavy bob and a light bob on the same string swing with the same period. (The spring's T does depend on m; the pendulum's doesn't.)</li>
+<li><b>√L, again.</b> 4× the length gives 2× the period.</li>
+<li><b>ω is not the swinging speed.</b> Here ω = 2π/T is a fixed angular frequency. The bob's actual angular speed dθ/dt changes all the time (zero at the ends, largest at the bottom).</li>
+<li><b>Small angles only.</b> This T comes from sin θ ≈ θ. At large swings the real period is a bit longer.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q11" data-title="Check: pendulum period"></div>
+</section>
+
+<h2 class="part">Part 5 · Lecture 1b practice problems</h2>
+
+<!-- 12 -->
+<section class="sec" id="s12">
+<h3><span class="num">12</span>Practice problem 1: measuring g with a pendulum</h3>
+<p class="prob">Determine the gravitational acceleration in a region if a simple pendulum has a period of 1.8 s and length of 76 cm. Compare this region's gravitational acceleration with Earth's gravitational acceleration.</p>
+<details class="work" open><summary>Lecture solution (slide 9)</summary><div class="body">
+<div class="steps">
+<div><span class="c">Start from:</span> T = 2π√(L/g)</div>
+<div><span class="c">Square both sides:</span> T² = 4π²L/g</div>
+<div><span class="c">Solve for g:</span> g = 4π²L/T²</div>
+<div><span class="c">Plug in (L = 76 cm = 0.76 m):</span> g = 4π²(0.76)/(1.8 s)²</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <b>9.26 m/s²</b></div>
+<div><span class="c">Earth:</span> g₀ = 9.81 m/s²</div>
+<div><span class="c">Compare:</span> δ = [(9.81 − 9.26)/9.81] × 100%</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;≈ <b>5.607% weaker</b></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: g from a pendulum (loaded with the lecture's numbers)</div>
+  <div class="controls">
+    <label for="T12">T (s) <input id="T12" type="number" value="1.8" min="0.01" step="0.1"></label>
+    <label for="L12">L (cm) <input id="L12" type="number" value="76" min="0.1" step="1"></label>
+    <label for="g012">Earth g₀ (m/s²) <input id="g012" type="number" value="9.81" min="0.1" step="0.01"></label>
+  </div>
+  <div class="steps" id="rd12" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a gravity meter you can build</span>
+<p>A pendulum is a clock whose ticking speed is set by gravity. Measure its length with a ruler and its period with a stopwatch, and it tells you g. Geologists have used exactly this to map tiny changes in gravity.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Square before you rearrange.</b> T = 2π√(L/g) → T² = 4π²L/g → g = 4π²L/T². Forgetting to square T is common.</li>
+<li><b>76 cm = 0.76 m.</b> Using 76 gives g = 926 m/s².</li>
+<li><b>δ is relative to Earth's value.</b> Divide the difference by 9.81, not by 9.26.</li>
+<li><b>Rounding.</b> The lecture rounds g to 9.26 first, giving 5.607%. Carrying the unrounded g (9.2604) gives 5.603%. Either is fine; say which you did.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q12" data-title="Check: measuring g"></div>
+</section>
+
+<!-- 13 -->
+<section class="sec" id="s13">
+<h3><span class="num">13</span>Practice problem 2: a bouncing car</h3>
+<p class="prob">Bad shock absorbers cause cars to easily oscillate when going over bumps or after stopping. Determine the period and frequency of such an oscillation if an occupied car's total mass is 1 tonne and the force constant on the car's suspension system is 85 000 N/m.</p>
+<details class="work" open><summary>Lecture solution (slide 11)</summary><div class="body">
+<div class="steps">
+<div><span class="c">Model:</span> suspension = simple harmonic oscillator (analogous to a mass-spring system)</div>
+<div><span class="c">Given:</span> k = 85 000 N/m, m = 1 tonne = 1000 kg</div>
+<div><span class="c">Frequency:</span> f = (1/2π)√(k/m) = (1/2π)√(85 000/1000)</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;≈ <b>1.467 Hz</b></div>
+<div><span class="c">Period:</span> T = 1/f = <b>0.6815 s</b></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: car suspension (loaded with the lecture's numbers)</div>
+  <div class="controls">
+    <label for="m13">m (kg) <input id="m13" type="number" value="1000" min="1" step="50"></label>
+    <label for="k13">k (N/m) <input id="k13" type="number" value="85000" min="1" step="1000"></label>
+  </div>
+  <div class="steps" id="rd13" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a mattress with no dampers</span>
+<p>Sit down hard on a springy mattress and you bob up and down a few times. Shock absorbers are like friction that kills that bobbing after one bounce. Worn-out shocks leave only the springs, so the car bobs like the frictionless mass-spring from Section 9, about one and a half bounces per second.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>1 tonne = 1000 kg.</b> Not 1 kg, not 2000 lb.</li>
+<li><b>√85 = 9.22 is ω, not f.</b> You still have to divide by 2π to get 1.467 Hz.</li>
+<li><b>The model ignores damping.</b> A real car with good shocks would barely complete one cycle. The lecture's numbers describe the "bad shocks" case.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q13" data-title="Check: car suspension"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across both lectures, mostly calculations. Grab paper and a calculator (in radians mode). Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Period and frequency</h5><div>T = 1/f &nbsp;·&nbsp; f = 1/T<br>ω = 2π/T = 2πf<br>T in s → f in Hz</div></div>
+  <div class="card"><h5>Equation of motion</h5><div>x(t) = x<sub>m</sub> cos(ωt + φ)<br>x(0) = x<sub>m</sub> cos φ</div></div>
+  <div class="card"><h5>Phase φ (start point)</h5><div>+x<sub>m</sub>: φ = 0 &nbsp;·&nbsp; −x<sub>m</sub>: φ = π<br>0, moving left: φ = π/2<br>0, moving right: φ = 3π/2</div></div>
+  <div class="card"><h5>Velocity</h5><div>v(t) = −x<sub>m</sub>ω sin(ωt + φ)<br>= −x<sub>m</sub>ω cos(ωt + φ − π/2)<br>v<sub>max</sub> = ωx<sub>m</sub> (at x = 0)</div></div>
+  <div class="card"><h5>Acceleration</h5><div>a(t) = −x<sub>m</sub>ω² cos(ωt + φ)<br>a = −ω²x<br>a<sub>max</sub> = ω²x<sub>m</sub> (at x = ±x<sub>m</sub>)</div></div>
+  <div class="card"><h5>Hooke's law and mass-spring</h5><div>F = −kx &nbsp;·&nbsp; m d²x/dt² + kx = 0<br>ω = √(k/m) &nbsp;·&nbsp; T = 2π√(m/k)<br>f = (1/2π)√(k/m)</div></div>
+  <div class="card"><h5>Simple pendulum</h5><div>a = −g sin θ ≈ −gθ (θ in rad, small)<br>a = Lα = L d²θ/dt²<br>L d²θ/dt² + gθ = 0</div></div>
+  <div class="card"><h5>Pendulum period</h5><div>ω = √(g/L) &nbsp;·&nbsp; T = 2π√(L/g)<br>g = 4π²L/T²<br>m → L, k → g</div></div>
+  <div class="card"><h5>Lecture answers</h5><div>Tire: f = v/Δx = 50/0.05 = 1 kHz<br>Pendulum: g = 9.26 m/s², 5.607% weaker<br>Car: f ≈ 1.467 Hz, T = 0.6815 s</div></div>
+</div>
+</section>
+
+<footer>Built from the PHYS 365 Lecture 1a (Simple Harmonic Motion) and Lecture 1b (Hooke's Law and the Simple Pendulum) notes. All worked examples use the lecture's notation and numbers.</footer>
+</main>
+</div>
+<script>
+(function(){
+"use strict";
+/* ---------------- QUIZ DATA ---------------- */
+const QUIZ = {
+q1:[
+ {q:"A particle completes 20 full cycles in 4.0 s. What are its frequency and period?",
+  o:["f = 0.2 Hz, T = 5 s","f = 5 Hz, T = 0.2 s","f = 80 Hz, T = 0.0125 s","f = 5 Hz, T = 5 s"],a:1,
+  e:"f = cycles ÷ time = 20/4.0 = 5 Hz. T = 1/f = 1/5 = 0.2 s. Check: 20 cycles × 0.2 s = 4.0 s."},
+ {q:"T = 2.0 s and the particle starts at +xₘ at t = 0. Where is it at t = 1.0 s?",
+  o:["Back at +xₘ","At 0, moving left","At −xₘ","At 0, moving right"],a:2,
+  e:"1.0 s is T/2. In the frame-by-frame breakdown the particle reaches −xₘ at exactly t = T/2, then returns to +xₘ at t = T."},
+ {q:"Where in the cycle is the particle's speed largest, and why?",
+  o:["At ±xₘ, because it is farthest from the middle","At x = 0, because it has been speeding up the whole way in from the end","Everywhere equally; the motion is uniform","At ±xₘ/2, halfway out"],a:1,
+  e:"It stops at each end to turn around (v = 0), speeds up all the way in, and crosses 0 fastest. After 0 it slows again. That's why the velocity arrows on slide 2 are longest at the middle."},
+ {q:"A guitar string vibrates at 440 Hz. What is its period?",
+  o:["0.44 ms","22.7 ms","2.27 ms","440 s"],a:2,
+  e:"T = 1/f = 1/440 s = 0.00227 s = 2.27 ms. A high frequency always means a short period."}
+],
+q2:[
+ {q:"An oscillator has f = 50 Hz. What is its angular frequency ω?",
+  o:["50 rad/s","7.96 rad/s","157 rad/s","314 rad/s"],a:3,
+  e:"ω = 2πf = 2π(50) = 314 rad/s. 7.96 is what you get by dividing by 2π instead of multiplying."},
+ {q:"ω = 12.0 rad/s. What is the period T?",
+  o:["0.524 s","1.91 s","0.0833 s","75.4 s"],a:0,
+  e:"T = 2π/ω = 2π/12.0 = 0.524 s. (1.91 is the frequency in Hz, f = ω/2π. 0.0833 s is 1/ω, which forgets the 2π.)"},
+ {q:"x(t) = 0.04 cos(10πt) m. What are the amplitude, frequency and period?",
+  o:["xₘ = 4 cm, f = 10π Hz, T = 0.032 s","xₘ = 4 cm, f = 5 Hz, T = 0.2 s","xₘ = 4 cm, f = 10 Hz, T = 0.1 s","xₘ = 8 cm, f = 5 Hz, T = 0.2 s"],a:1,
+  e:"Match to xₘ cos(ωt + φ): xₘ = 0.04 m = 4 cm and ω = 10π rad/s. Then f = ω/2π = 5 Hz and T = 1/f = 0.2 s. The number multiplying t is ω, not f."},
+ {q:"Same oscillator, x(t) = 0.04 cos(10πt) m. Where is it at t = 0.05 s?",
+  o:["x = +0.04 m","x = +0.02 m","x = 0","x = −0.04 m"],a:2,
+  e:"ωt = 10π(0.05) = π/2, and cos(π/2) = 0. It makes sense: 0.05 s is T/4, and a quarter cycle after starting at +xₘ the particle is crossing the middle."},
+ {q:"Why is ω = 2π/T?",
+  o:["Because a full cycle sweeps the cosine's angle through 2π rad, and that takes time T","Because the particle travels a distance 2π in one period","Because ω is defined as 2π times the period","Because the amplitude is 2π"],a:0,
+  e:"ω is angle per unit time (ω = θ/T). One full wave is θ = 2π rad of the argument ωt + φ, completed in one period T. (The particle itself travels 4xₘ per cycle, which has nothing to do with 2π.)"}
+],
+q3:[
+ {q:"xₘ = 5 cm and φ = π. Where is the particle at t = 0?",
+  o:["+5 cm","0","−5 cm","−2.5 cm"],a:2,
+  e:"x(0) = xₘ cos(0 + π) = 5 cos π = 5(−1) = −5 cm. This is the lecture's position ①."},
+ {q:"At t = 0 the particle is at x = 0 moving toward +xₘ. What is φ?",
+  o:["0","π/2","π","3π/2"],a:3,
+  e:"Both π/2 and 3π/2 give x(0) = 0. Direction decides: v(0) = −xₘω sin φ. For 3π/2, sin = −1, so v(0) = +xₘω (moving right). That's position ②. π/2 is position ③, moving left."},
+ {q:"Why can't x(0) alone tell you φ when the particle starts at x = 0?",
+  o:["cos φ = 0 for two angles per cycle (π/2 and 3π/2), so you also need the direction of motion","Because x(0) is always zero","Because φ only affects the amplitude","Because φ depends on ω"],a:0,
+  e:"A cosine crosses zero twice per cycle: once heading down (π/2, particle moving left) and once heading up (3π/2, moving right). Same position, opposite velocity, different φ."},
+ {q:"xₘ = 0.10 m and φ = π/3. What is x(0)?",
+  o:["0.087 m","0.050 m","0.10 m","−0.050 m"],a:1,
+  e:"x(0) = 0.10 cos(π/3) = 0.10 × 0.5 = 0.050 m. (0.087 m is 0.10 sin(π/3). Check your calculator is in radians.)"}
+],
+q4:[
+ {q:"Oscillator A: xₘ = 3 cm, f = 2 Hz. Oscillator B: xₘ = 6 cm, f = 2 Hz. Which is true?",
+  o:["B has twice the period of A","Both have T = 0.5 s; B just swings twice as far","A has twice the frequency of B","B has T = 0.25 s"],a:1,
+  e:"Period depends only on frequency: T = 1/2 = 0.5 s for both. Amplitude sets how far it swings, not how long a cycle takes. That's the top graph on slide 8: peaks and zero crossings line up."},
+ {q:"On slide 8 (bottom), the blue curve has the longer period. Which curve has the higher frequency?",
+  o:["Blue","Purple","Neither; equal amplitudes mean equal frequencies","You can't tell without ω"],a:1,
+  e:"f = 1/T, so the longer period (blue) means the lower frequency. Purple completes more cycles in the same time."},
+ {q:"Oscillator 1 has T₁ = 0.5 s. Oscillator 2 has f₂ = 4 Hz. How many cycles does 2 finish while 1 finishes one?",
+  o:["0.5","2","4","8"],a:1,
+  e:"One cycle of oscillator 1 takes 0.5 s. In 0.5 s, oscillator 2 completes 4 × 0.5 = 2 cycles. (Equivalently f₁ = 2 Hz, so 2 is twice as fast.)"},
+ {q:"You double xₘ in x(t) = xₘ cos(ωt + φ). What else changes?",
+  o:["ω doubles","T halves","φ shifts by π","Nothing else; only the height of the curve doubles"],a:3,
+  e:"xₘ sits outside the cosine. It scales the curve vertically, but the argument ωt + φ, and so all of the timing, is untouched."}
+],
+q5:[
+ {q:"x(t) = xₘ cos(ωt + φ). Which is v(t)?",
+  o:["+xₘω sin(ωt + φ)","−xₘ sin(ωt + φ)","−xₘω sin(ωt + φ)","−xₘω² cos(ωt + φ)"],a:2,
+  e:"Chain rule: d/dt[cos(ωt + φ)] = −sin(ωt + φ) × ω, then multiply by the constant xₘ. −xₘ sin(ωt + φ) forgets the inner derivative ω; −xₘω² cos(ωt + φ) is the acceleration."},
+ {q:"xₘ = 0.04 m and f = 5 Hz. What is the maximum speed?",
+  o:["0.20 m/s","1.26 m/s","0.628 m/s","39.5 m/s"],a:1,
+  e:"ω = 2π(5) = 31.4 rad/s, so v_max = ωxₘ = 31.4 × 0.04 = 1.26 m/s. (39.5 is ω²xₘ, the max acceleration. 0.20 is f·xₘ, which forgets the 2π.)"},
+ {q:"φ = π/2. What is v(0), and what does it mean?",
+  o:["v(0) = −xₘω: at x = 0, moving left at top speed","v(0) = +xₘω: moving right at top speed","v(0) = 0: at rest at an end","v(0) = −xₘω²"],a:0,
+  e:"v(0) = −xₘω sin(π/2) = −xₘω. Negative means heading toward −xₘ, and |v| = ωxₘ is the maximum. That's position ③ from Section 3."},
+ {q:"At which positions is v = 0?",
+  o:["x = 0 only","x = ±xₘ","x = ±xₘ/2","Never"],a:1,
+  e:"v = −xₘω sin(ωt + φ) is zero when sin(ωt + φ) = 0, which is exactly when cos(ωt + φ) = ±1, i.e. x = ±xₘ. The particle stops at the ends to turn around."},
+ {q:"Why does the lecture rewrite v(t) as −xₘω cos(ωt + φ − π/2)?",
+  o:["To show velocity is the same kind of wave as x, shifted by a quarter cycle","Because sin is not allowed in SHM","To change the amplitude","To show v and x peak at the same time"],a:0,
+  e:"Using cos(x − π/2) = sin x, velocity becomes a cosine with the same ω, amplitude ωxₘ, and a phase offset of π/2 (a quarter period). That's why |v| peaks where x = 0 and vice versa."}
+],
+q6:[
+ {q:"xₘ = 0.04 m and f = 5 Hz. What is the maximum acceleration?",
+  o:["1.26 m/s²","6.28 m/s²","39.5 m/s²","197 m/s²"],a:2,
+  e:"ω = 31.4 rad/s, so a_max = ω²xₘ = (31.4)² × 0.04 = 987 × 0.04 = 39.5 m/s². Each derivative multiplies the amplitude by ω."},
+ {q:"The particle is at x = +xₘ. What is its acceleration?",
+  o:["0","−ω²xₘ (largest, pointing toward the middle)","+ω²xₘ","−ωxₘ"],a:1,
+  e:"At x = +xₘ, cos(ωt + φ) = 1, so a = −xₘω². It's the biggest acceleration in the cycle and points back toward x = 0, even though the particle is momentarily at rest."},
+ {q:"ω = 10 rad/s and the particle is at x = +0.02 m. What is a?",
+  o:["−2.0 m/s²","+2.0 m/s²","−0.2 m/s²","−20 m/s²"],a:0,
+  e:"Compare a(t) = −xₘω² cos(ωt + φ) with x(t) = xₘ cos(ωt + φ): a = −ω²x. So a = −(10)²(0.02) = −2.0 m/s². You don't even need xₘ or t."},
+ {q:"Why is the acceleration always opposite in sign to the displacement?",
+  o:["Because a = −ω²x and ω² is always positive","Because the velocity is negative","Because the amplitude is negative","It isn't; they have the same sign"],a:0,
+  e:"a = −ω²x. With ω² > 0, a positive x gives a negative a and vice versa, so the acceleration always points back toward the middle. This is the fingerprint of SHM."},
+ {q:"A particle in SHM has v_max = 3 m/s and a_max = 60 m/s². What is its amplitude?",
+  o:["0.05 m","20 m","0.15 m","180 m"],a:2,
+  e:"a_max/v_max = ω²xₘ/(ωxₘ) = ω = 60/3 = 20 rad/s. Then xₘ = v_max/ω = 3/20 = 0.15 m."}
+],
+q7:[
+ {q:"Same tire (5 cm spacing), but the car slows to 25 m/s. What is the vibration frequency?",
+  o:["500 Hz","1000 Hz","2000 Hz","5 Hz"],a:0,
+  e:"f = v/Δx = 25/0.05 = 500 Hz. f is proportional to speed: half the speed, half the frequency."},
+ {q:"A tire with 2 cm crevice spacing rolls at 30 m/s. What is f?",
+  o:["15 Hz","60 Hz","600 Hz","1500 Hz"],a:3,
+  e:"Convert first: Δx = 0.02 m. f = 30/0.02 = 1500 Hz = 1.5 kHz. (15 Hz comes from using 2 cm as '2'.)"},
+ {q:"In the lecture example (50 m/s, 5 cm), what is the period of the vibration?",
+  o:["1 s","1 ms","0.05 s","50 ms"],a:1,
+  e:"T = 1/f = 1/1000 Hz = 0.001 s = 1 ms. It's also Δt = Δx/v = 0.05/50: the time for one crevice spacing to roll past."},
+ {q:"A student gets 10 Hz for the lecture problem. What went wrong?",
+  o:["They used T instead of f","They divided 50 by 5 without converting 5 cm to 0.05 m","They multiplied by 2π","Nothing; 10 Hz is right"],a:1,
+  e:"50/5 = 10. In consistent SI units, 50 m/s ÷ 0.05 m = 1000 Hz. Always convert cm to m before dividing."}
+],
+q8:[
+ {q:"k = 200 N/m and the block is at x = +0.05 m. What force does the spring exert?",
+  o:["+10 N","−10 N","−4000 N","−0.00025 N"],a:1,
+  e:"F = −kx = −(200)(0.05) = −10 N. The minus sign means it points toward −x, back toward x = 0."},
+ {q:"What does the minus sign in F = −kx tell you?",
+  o:["The force always points back toward x = 0","The spring is compressed","k is negative","The force always points left"],a:0,
+  e:"If x > 0 the force is negative; if x < 0 it's positive. Either way it pulls the block back to equilibrium. That's a restoring force."},
+ {q:"Pulling a spring 3 cm from equilibrium takes 6 N. What is k?",
+  o:["2 N/m","18 N/m","0.18 N/m","200 N/m"],a:3,
+  e:"|F| = k|x|, so k = 6/0.03 = 200 N/m. (2 N/m comes from using 3 cm as '3'.)"},
+ {q:"Why does the lecture set the surface friction to zero?",
+  o:["So F = ma doesn't apply","Friction would drain energy, so the amplitude would shrink and the motion wouldn't be pure SHM","Because friction would change k","Because the block has no weight"],a:1,
+  e:"Without friction the only horizontal force is −kx, which gives a perfect cosine with constant amplitude. With friction the oscillation dies out (that's damping)."}
+],
+q9:[
+ {q:"m = 0.5 kg on a spring with k = 200 N/m. What is the period?",
+  o:["0.314 s","3.18 s","20 s","0.05 s"],a:0,
+  e:"ω = √(k/m) = √(200/0.5) = √400 = 20 rad/s. T = 2π/ω = 2π/20 = 0.314 s. (3.18 is f = ω/2π in Hz.)"},
+ {q:"You replace the mass with one four times heavier. What happens to T?",
+  o:["It quadruples","It doubles","It halves","It stays the same"],a:1,
+  e:"T = 2π√(m/k). Four times the mass gives √4 = 2 times the period."},
+ {q:"In the derivation, why can we cancel xₘ cos(ωt + φ) from both sides?",
+  o:["Because it equals 1","Because the equation has to hold at every instant t, so the factors multiplying it must match","Because the amplitude is zero","Because cos(ωt + φ) = sin(ωt + φ)"],a:1,
+  e:"−k(xₘ cos(ωt + φ)) = −mω²(xₘ cos(ωt + φ)) must be true for all t. The only way is −k = −mω², giving ω = √(k/m)."},
+ {q:"k = 50 N/m. Which mass gives f = 1.0 Hz?",
+  o:["50 kg","7.96 kg","0.025 kg","1.27 kg"],a:3,
+  e:"f = (1/2π)√(k/m) → m = k/(2πf)² = 50/(2π × 1)² = 50/39.5 = 1.27 kg."},
+ {q:"You pull the same mass-spring twice as far before letting go. What happens to T?",
+  o:["Doubles","Halves","Stays the same","Increases by √2"],a:2,
+  e:"xₘ cancelled in the derivation, so T = 2π√(m/k) has no amplitude in it. A bigger swing moves faster and covers more ground in the same time."}
+],
+q10:[
+ {q:"Which force component pulls the pendulum bob back toward the bottom?",
+  o:["The tension","W cos θ, along the string","W sin θ, along the arc","The full weight W"],a:2,
+  e:"Tension and W cos θ both lie along the string, at right angles to the motion. Only W sin θ points along the path (tangential), so it's what drives the swing."},
+ {q:"θ = 10°. How far apart are sin θ and θ (in radians)?",
+  o:["About 0.5%","About 5%","About 10%","They're exactly equal"],a:0,
+  e:"θ = 10° = 0.1745 rad and sin θ = 0.1736. The gap is about 0.5%, so sin θ ≈ θ is excellent here. At 30° the gap grows to about 4.7%."},
+ {q:"θ = 0.10 rad and g = 9.81 m/s². Using the small-angle approximation, what is the tangential acceleration?",
+  o:["−9.81 m/s²","−0.981 m/s²","−0.0981 m/s²","−98.1 m/s²"],a:1,
+  e:"a = −gθ = −9.81 × 0.10 = −0.981 m/s². The exact value, −g sin θ = −0.979 m/s², is only 0.2% different."},
+ {q:"Why must θ be in radians for sin θ ≈ θ?",
+  o:["The approximation only holds when θ is measured in radians; in degrees, 10° would give '10' against sin 10° = 0.17","Because degrees aren't allowed in physics","It works equally well in degrees","Because g is measured in radians"],a:0,
+  e:"sin(10°) = 0.174 and 10° = 0.1745 rad: the numbers only match in radians. Plugging θ = 10 into a = −gθ would give a nonsense 98 m/s²."},
+ {q:"Why doesn't the bob's mass appear in a = −g sin θ?",
+  o:["Because the mass is small","Because m appears on both sides (the weight mg and ma) and cancels","Because the string is light","It does, through the tension"],a:1,
+  e:"−mg sin θ = ma. The m on each side cancels. A heavier bob feels more gravity but is equally harder to accelerate."}
+],
+q11:[
+ {q:"L = 1.00 m, g = 9.81 m/s². What is the period?",
+  o:["6.28 s","2.01 s","0.319 s","0.498 s"],a:1,
+  e:"T = 2π√(L/g) = 2π√(1.00/9.81) = 2π(0.319) = 2.01 s. (0.319 forgets the 2π; 0.498 Hz is the frequency.)"},
+ {q:"You make the string four times longer. What happens to T?",
+  o:["×4","×2","×½","No change"],a:1,
+  e:"T = 2π√(L/g), so T grows with √L. √4 = 2."},
+ {q:"The same pendulum is taken to the Moon (g = 1.62 m/s²). How does its period compare to Earth's?",
+  o:["About 6.1× longer","About 2.5× longer","About 2.5× shorter","The same"],a:1,
+  e:"T ∝ 1/√g, so T_moon/T_earth = √(9.81/1.62) = √6.06 = 2.46. Weaker gravity gives a gentler restoring pull and slower swings."},
+ {q:"Comparing m d²x/dt² + kx = 0 with L d²θ/dt² + gθ = 0, which swap turns the spring result into the pendulum result?",
+  o:["m → g, k → L","m → L, k → g","m → θ, k → x","m → T, k → f"],a:1,
+  e:"Match the coefficient of the second derivative (m ↔ L) and the coefficient of the variable (k ↔ g). Then ω = √(k/m) becomes √(g/L) and T = 2π√(m/k) becomes 2π√(L/g)."},
+ {q:"For a pendulum, ω = √(g/L). Is ω the rate at which the string's angle changes (dθ/dt)?",
+  o:["Yes, always","No; ω is the angular frequency of the oscillation (2π/T). dθ/dt changes constantly and is zero at the ends","Yes, but only at the bottom","Only for small angles"],a:1,
+  e:"Same letter, different idea. ω = 2π/T is fixed for a given L and g. The bob's angular speed dθ/dt varies through the swing, from zero at the ends to a maximum at the bottom."}
+],
+q12:[
+ {q:"Using the lecture's method: L = 1.00 m and T = 2.00 s. What is g?",
+  o:["9.87 m/s²","9.81 m/s²","19.7 m/s²","3.14 m/s²"],a:0,
+  e:"g = 4π²L/T² = 4π²(1.00)/(2.00)² = 39.48/4 = 9.87 m/s²."},
+ {q:"A student plugs L = 76 (not 0.76) into the lecture problem. What do they get for g?",
+  o:["92.6 m/s²","926 m/s²","9.26 m/s²","0.0926 m/s²"],a:1,
+  e:"4π²(76)/(1.8)² = 926 m/s², 100 times too big. Centimetres must become metres: 76 cm = 0.76 m."},
+ {q:"In the lecture, δ ≈ 5.607%. What does that number mean?",
+  o:["The region's g is 5.607% smaller than Earth's 9.81 m/s²","The pendulum's period is 5.607% longer than 1.8 s","g there is 5.607 m/s²","The measurement has a 5.607% error"],a:0,
+  e:"δ = (9.81 − 9.26)/9.81 × 100% compares the difference with Earth's value. Positive δ here means the region's gravity is weaker."},
+ {q:"The same 76 cm pendulum swings on Earth (g = 9.81 m/s²). What is its period?",
+  o:["1.80 s","1.85 s","1.75 s","0.278 s"],a:2,
+  e:"T = 2π√(0.76/9.81) = 2π(0.2783) = 1.75 s. Stronger gravity makes it swing faster than the 1.8 s measured in the weaker-gravity region."}
+],
+q13:[
+ {q:"With passengers and luggage the car's mass becomes 1300 kg (same k = 85 000 N/m). What is f?",
+  o:["1.47 Hz","1.67 Hz","8.09 Hz","1.29 Hz"],a:3,
+  e:"f = (1/2π)√(85 000/1300) = (1/2π)√65.4 = 8.09/6.283 = 1.29 Hz. More mass, slower bouncing. (8.09 is ω in rad/s.)"},
+ {q:"In the lecture solution, what is ω for the car?",
+  o:["1.467 rad/s","9.22 rad/s","85 rad/s","0.6815 rad/s"],a:1,
+  e:"ω = √(k/m) = √(85 000/1000) = √85 = 9.22 rad/s. Dividing by 2π gives f = 1.467 Hz."},
+ {q:"Why can the car be modelled as a mass-spring system?",
+  o:["The body is the mass, the suspension springs give the restoring force −kx, and worn shocks add little damping, so it bounces freely","Because cars are pendulums","Because the tires are springs with k = 0","Because the car moves at constant speed"],a:0,
+  e:"The body (m) sits on springs (k). Shock absorbers normally act like friction and kill the bounce. With bad shocks there's little damping, so the lecture's frictionless model fits."},
+ {q:"Keeping m = 1000 kg, what spring constant would halve the frequency to about 0.73 Hz?",
+  o:["42 500 N/m","170 000 N/m","21 250 N/m","340 000 N/m"],a:2,
+  e:"f ∝ √k. To halve f you need k/4 = 85 000/4 = 21 250 N/m. (Halving k only divides f by √2.)"}
+],
+qf:[
+ {q:"A particle makes 300 complete oscillations per minute. What is its period?",
+  o:["0.2 s","5 s","300 s","0.0033 s"],a:0,
+  e:"f = 300/(60 s) = 5 Hz, so T = 1/5 = 0.2 s. Convert per minute to per second first. Review §1."},
+ {q:"x(t) = 0.06 cos(4πt + π) m. What are x(0) and T?",
+  o:["x(0) = +0.06 m, T = 0.5 s","x(0) = −0.06 m, T = 0.5 s","x(0) = −0.06 m, T = 2 s","x(0) = 0, T = 0.25 s"],a:1,
+  e:"x(0) = 0.06 cos π = −0.06 m. ω = 4π rad/s, so f = 4π/2π = 2 Hz and T = 0.5 s. Review §2 and §3."},
+ {q:"At t = 0 a particle is at x = 0 moving toward −xₘ. What is φ?",
+  o:["0","π/2","π","3π/2"],a:1,
+  e:"cos φ = 0 gives π/2 or 3π/2. v(0) = −xₘω sin φ must be negative (moving left), which needs sin φ = +1, so φ = π/2 (lecture position ③). Review §3."},
+ {q:"Oscillator A: T = 0.25 s, xₘ = 2 cm. Oscillator B: f = 2 Hz, xₘ = 5 cm. Which completes more cycles per second?",
+  o:["B, because its amplitude is larger","A, at 4 Hz versus B's 2 Hz","They're equal","Can't tell without φ"],a:1,
+  e:"f_A = 1/0.25 = 4 Hz and f_B = 2 Hz. Amplitude has nothing to do with how often it cycles. Review §4."},
+ {q:"x(t) = 0.05 cos(20t) m. What is the maximum speed?",
+  o:["0.05 m/s","1.0 m/s","20 m/s","0.16 m/s"],a:1,
+  e:"Here ω = 20 rad/s (the number multiplying t). v_max = ωxₘ = 20 × 0.05 = 1.0 m/s. Review §5."},
+ {q:"Same particle, x(t) = 0.05 cos(20t) m. What is the maximum acceleration, and where does it happen?",
+  o:["1.0 m/s², at x = 0","20 m/s², at x = ±0.05 m","20 m/s², at x = 0","400 m/s², at x = ±0.05 m"],a:1,
+  e:"a_max = ω²xₘ = 400 × 0.05 = 20 m/s². Since a = −ω²x it's largest where |x| is largest: at the ends. Review §6."},
+ {q:"A tire's crevices are 4 cm apart and the vibration is measured at 625 Hz. How fast is the car moving?",
+  o:["156 m/s","25 m/s","2500 m/s","0.064 m/s"],a:1,
+  e:"From f = v/Δx: v = Δx·f = 0.04 m × 625 Hz = 25 m/s. Review §7."},
+ {q:"A spring stretches 4 cm when pulled with 2 N. A 0.5 kg mass is attached. What is the oscillation frequency?",
+  o:["1.59 Hz","10 Hz","0.159 Hz","3.18 Hz"],a:0,
+  e:"k = 2/0.04 = 50 N/m. ω = √(50/0.5) = 10 rad/s, f = 10/2π = 1.59 Hz. (10 is ω, not f.) Review §8 and §9."},
+ {q:"Why does the pendulum derivation need sin θ ≈ θ?",
+  o:["To make the acceleration proportional to θ (a = −gθ), the same form as a = −ω²x for SHM","To remove the tension","To make g constant","Because θ is always small in real life"],a:0,
+  e:"a = −g sin θ is not proportional to θ, so the motion isn't exactly SHM. With sin θ ≈ θ it becomes a = −gθ, matching the SHM form and giving a cosine solution. Review §10."},
+ {q:"On Earth (g = 9.81 m/s²), what pendulum length gives a period of 1.5 s?",
+  o:["0.559 m","2.21 m","0.373 m","3.51 m"],a:0,
+  e:"T = 2π√(L/g) → L = gT²/(4π²) = 9.81(1.5)²/39.48 = 22.07/39.48 = 0.559 m. Review §11."},
+ {q:"A 50 cm pendulum has a period of 1.6 s. What is g in that region?",
+  o:["9.81 m/s²","12.3 m/s²","7.71 m/s²","3.86 m/s²"],a:2,
+  e:"g = 4π²L/T² = 4π²(0.50)/(1.6)² = 19.74/2.56 = 7.71 m/s², about 21% weaker than Earth. Review §12."},
+ {q:"The lecture's car (k = 85 000 N/m) is loaded to 2000 kg. What is the new period?",
+  o:["0.682 s","1.36 s","0.482 s","0.964 s"],a:3,
+  e:"T = 2π√(m/k) = 2π√(2000/85 000) = 2π(0.1534) = 0.964 s. That's the lecture's 0.6815 s × √2. Review §13."}
+]
+};
+
+/* Shuffle each question's options once, deterministically (same order every visit),
+   so the correct letter is spread across A to D. */
+function hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+Object.keys(QUIZ).forEach(k=>QUIZ[k].forEach(item=>{
+  let r = hash("129|"+item.q);
+  const idx = item.o.map((_,i)=>i);
+  for(let i=idx.length-1;i>0;i--){ r = (Math.imul(r,1103515245)+12345)>>>0; const j = r % (i+1); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+  item.o = idx.map(i=>item.o[i]); item.a = idx.indexOf(item.a);
+}));
+
+/* ---------------- QUIZ ENGINE + SIDEBAR SCORES ---------------- */
+const LET = "ABCD";
+const SCORE = {};
+function updateTotal(){
+  let c=0, a=0, n=0;
+  Object.keys(QUIZ).forEach(k=>{ n += QUIZ[k].length; if(SCORE[k]){ c += SCORE[k].c; a += SCORE[k].a; } });
+  document.getElementById("totBig").textContent = c+" / "+a+(a? "  ("+Math.round(100*c/a)+"%)" : "");
+  document.getElementById("totSub").textContent = a+" of "+n+" questions answered";
+  document.getElementById("totBar").style.width = (n? 100*a/n : 0)+"%";
+}
+function chip(id, correct, answered, total){
+  SCORE[id] = {c:correct, a:answered};
+  updateTotal();
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+"/"+total;
+  c.classList.toggle("done", answered===total);
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+  }
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(item.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    const btns = item.o.map((t, oi)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[oi];
+      const s = document.createElement("span"); s.textContent = t;
+      b.append(L, s);
+      b.addEventListener("click", ()=>{
+        btns.forEach(x=>x.disabled=true);
+        const ok = oi===item.a;
+        btns[item.a].classList.add("right");
+        if(!ok) b.classList.add("wrong");
+        answered++; if(ok) correct++;
+        ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[item.a]+'.</b> ';
+        ex.appendChild(document.createTextNode(item.e));
+        ex.hidden = false;
+        upd();
+      });
+      opts.appendChild(b); return b;
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+  });
+  reset.addEventListener("click", ()=>buildQuiz(box));
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- HELPERS ---------------- */
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let C = {};
+function readColors(){ C = {ink:css("--ink"), muted:css("--muted"), grid:css("--grid"), line:css("--line"), x:css("--xcol"), v:css("--vcol"), a:css("--acol"), f:css("--fcol"), surf:css("--surface"), s2:css("--surface-2"), bg:css("--bg"), good:css("--good")}; }
+readColors();
+const TAU = 2*Math.PI;
+let RM = false; try{ RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+function prep(cv){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth || 300;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size,bold){ ctx.fillStyle=col; ctx.font=(bold?"600 ":"")+(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function arrow(ctx,x1,y1,x2,y2,col,wid,dash){
+  const L = Math.hypot(x2-x1,y2-y1); if(L<2) return;
+  const ux=(x2-x1)/L, uy=(y2-y1)/L, hs=Math.min(10, L*0.5);
+  line(ctx,x1,y1,x2-ux*hs*0.6,y2-uy*hs*0.6,col,wid||2,dash);
+  ctx.beginPath(); ctx.fillStyle=col;
+  ctx.moveTo(x2,y2); ctx.lineTo(x2-ux*hs-uy*hs*0.5, y2-uy*hs+ux*hs*0.5); ctx.lineTo(x2-ux*hs+uy*hs*0.5, y2-uy*hs-ux*hs*0.5); ctx.closePath(); ctx.fill();
+}
+function dot(ctx,x,y,r,fill,stroke){ ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.fillStyle=fill; ctx.fill(); if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=1.5; ctx.stroke(); } }
+const mi = s => String(s).replace(/-/g,"−");
+const fmt = (x,d)=> mi((Math.abs(x)<0.5*Math.pow(10,-d)?0:x).toFixed(d));
+function sig(x,n){ if(!isFinite(x)) return "undefined"; if(x===0) return "0"; return mi(String(Number(x.toPrecision(n||4)))); }
+function grp(n){ const s = String(n); if(Math.abs(n)<10000 || s.indexOf("e")>=0) return mi(s); const p = s.split("."); p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g," "); return mi(p.join(".")); }
+function gcd(a,b){ return b? gcd(b,a%b) : Math.abs(a); }
+function piStr(deg){
+  const n = Math.round(deg/15); if(Math.abs(n*15-deg)>1e-6) return (deg*Math.PI/180).toFixed(3)+" rad";
+  if(n===0) return "0";
+  const g = gcd(n,12), a = n/g, b = 12/g;
+  return (a===1?"":a)+"π"+(b===1?"":"/"+b);
+}
+function setPressed(group, el){ group.forEach(b=>b.setAttribute("aria-pressed", b===el?"true":"false")); }
+function stepsHTML(rows){ return rows.map(r=>"<div>"+r+"</div>").join(""); }
+
+/* animation loop: only runs demos that are playing and on screen */
+const anims = [];
+function addAnim(cv, obj){
+  obj.visible = true; anims.push(obj);
+  if("IntersectionObserver" in window){ new IntersectionObserver(es=>es.forEach(e=>{ obj.visible = e.isIntersecting; })).observe(cv); }
+}
+let lastTs = null;
+function loop(ts){
+  const dt = lastTs===null ? 0 : Math.min(0.05,(ts-lastTs)/1000); lastTs = ts;
+  for(const a of anims){ if(a.playing && a.visible) a.tick(dt); }
+  requestAnimationFrame(loop);
+}
+function playBtn(btn, obj){
+  const sync = ()=>{ btn.textContent = obj.playing ? "Pause" : "Play"; };
+  btn.addEventListener("click", ()=>{ obj.playing = !obj.playing; sync(); });
+  sync(); return sync;
+}
+
+/* ---------------- §1 OSCILLATING PARTICLE ---------------- */
+const cv1=$("cv1"), f1=$("f1"), f1o=$("f1o"), rd1=$("rd1");
+const A1 = {t:0, playing:!RM, tick(dt){ this.t+=dt; draw1(); }};
+const sync1 = playBtn($("p1"), A1);
+let fOld1 = +f1.value;
+function draw1(){
+  const {ctx,w,h}=prep(cv1);
+  const f=+f1.value, T=1/f, pad=46, A=(w-2*pad)/2, cx=w/2, y=92;
+  line(ctx,pad-16,y,w-pad+16,y,C.ink,2);
+  line(ctx,cx,y-60,cx,y+8,C.grid,1,[4,4]);
+  [[cx-A,"−xₘ"],[cx,"0"],[cx+A,"+xₘ"]].forEach(([xx,l])=>{ line(ctx,xx,y-8,xx,y+8,C.ink,2); txt(ctx,l,xx,y+26,C.muted,"center",13); });
+  const ph = TAU*f*A1.t, xn=Math.cos(ph), vn=-Math.sin(ph), X=cx+A*xn, len=Math.min(90,A*0.6);
+  if(Math.abs(vn)>0.15){ arrow(ctx,X,y-30,X+vn*len,y-30,C.x,3); txt(ctx,"v",X+vn*len/2,y-46,C.x,"center",13,true); }
+  else txt(ctx,"v ≈ 0",X,y-34,C.x,"center",12,true);
+  dot(ctx,X,y,10,C.v);
+  const fr = ((A1.t/T)%1+1)%1;
+  let st;
+  if(Math.abs(xn)>0.995) st = "at an end: momentarily at rest";
+  else if(Math.abs(xn)<0.06) st = "crossing 0 at top speed";
+  else if(xn*vn<0) st = "speeding up toward 0";
+  else st = "slowing down toward the end";
+  rd1.innerHTML = "t = <b>"+fr.toFixed(3)+" T</b> into the cycle · T = 1/f = <b>"+T.toFixed(2)+" s</b> · x = <b>"+fmt(xn,2)+" xₘ</b> · "+st;
+}
+f1.addEventListener("input", ()=>{ const f=+f1.value; A1.t = A1.t*fOld1/f; fOld1=f; f1o.textContent=f.toFixed(2)+" Hz"; draw1(); });
+$("st1").addEventListener("click", ()=>{ A1.playing=false; sync1(); const T=1/(+f1.value); A1.t = (Math.round(A1.t/T*8)+1)*T/8; draw1(); });
+$("r1").addEventListener("click", ()=>{ A1.t=0; draw1(); });
+addAnim(cv1, A1);
+
+/* ---------------- §2 EQUATION OF MOTION ---------------- */
+const cv2=$("cv2"), xm2=$("xm2"), f2=$("f2"), ph2=$("ph2"), rd2=$("rd2");
+function draw2(){
+  const {ctx,w,h}=prep(cv2);
+  const xm=+xm2.value, f=+f2.value, deg=+ph2.value, ph=deg*Math.PI/180, om=TAU*f, T=1/f, tmax=2;
+  xm2.nextElementSibling.textContent = xm.toFixed(1)+" cm"; f2.nextElementSibling.textContent = f.toFixed(2)+" Hz"; ph2.nextElementSibling.textContent = piStr(deg);
+  const L=48, R=w-12, top=12, bot=h-30, mid=(top+bot)/2, half=(bot-top)/2, W=R-L;
+  const Y = v => mid - v/10*half, X = t => L + t/tmax*W;
+  line(ctx,L,mid,R,mid,C.muted,1);
+  line(ctx,L,top,L,bot,C.muted,1);
+  line(ctx,L,Y(xm),R,Y(xm),C.grid,1,[4,4]); line(ctx,L,Y(-xm),R,Y(-xm),C.grid,1,[4,4]);
+  txt(ctx,"+xₘ",L-6,Y(xm),C.muted,"right",11); txt(ctx,"−xₘ",L-6,Y(-xm),C.muted,"right",11); txt(ctx,"0",L-6,mid,C.muted,"right",11);
+  let lastLab=-99;
+  for(let k=1;k*T<=tmax+1e-9;k++){ const xx=X(k*T); line(ctx,xx,top,xx,bot,C.grid,1,[3,4]); if(xx-lastLab>34){ txt(ctx,(k===1?"":k)+"T",xx,bot+12,C.muted,"center",11); lastLab=xx; } }
+  txt(ctx,"t →",R,bot+12,C.muted,"right",11);
+  ctx.beginPath(); ctx.strokeStyle=C.x; ctx.lineWidth=2.5;
+  for(let i=0;i<=500;i++){ const t=i/500*tmax, y=Y(xm*Math.cos(om*t+ph)); if(i===0) ctx.moveTo(X(t),y); else ctx.lineTo(X(t),y); }
+  ctx.stroke();
+  dot(ctx,X(0),Y(xm*Math.cos(ph)),5,C.x);
+  rd2.innerHTML = "x(t) = <b>"+xm.toFixed(1)+" cos("+om.toFixed(2)+"t + "+piStr(deg)+")</b> cm · ω = 2πf = <b>"+om.toFixed(2)+" rad/s</b> · T = 1/f = <b>"+T.toFixed(2)+" s</b> · x(0) = <b>"+fmt(xm*Math.cos(ph),2)+" cm</b>";
+}
+[xm2,f2,ph2].forEach(el=>el.addEventListener("input",draw2));
+
+/* ---------------- §3 PHASE ---------------- */
+const cv3=$("cv3"), ph3=$("ph3"), rd3=$("rd3"), ph3btns=[...document.querySelectorAll("[data-ph3]")];
+function draw3(){
+  const {ctx,w,h}=prep(cv3);
+  const deg=+ph3.value, ph=deg*Math.PI/180, c=Math.cos(ph), s=Math.sin(ph);
+  ph3.nextElementSibling.textContent = piStr(deg);
+  const pad=46, A=(w-2*pad)/2, cx=w/2, y=58;
+  line(ctx,pad-16,y,w-pad+16,y,C.ink,2);
+  [[cx-A,"−xₘ","①"],[cx,"0","② ③"],[cx+A,"+xₘ","④"]].forEach(([xx,l,n])=>{ line(ctx,xx,y-7,xx,y+7,C.ink,2); txt(ctx,l,xx,y+22,C.muted,"center",12); txt(ctx,n,xx,y-42,C.muted,"center",12); });
+  const X=cx+A*c, vn=-s, len=Math.min(70,A*0.5);
+  if(Math.abs(vn)>0.03){ arrow(ctx,X,y-20,X+vn*len,y-20,C.x,3); }
+  else txt(ctx,"at rest",X,y-22,C.x,"center",11,true);
+  dot(ctx,X,y,9,C.v);
+  // one period of x(t)
+  const L=pad, R=w-pad, top=116, bot=h-16, mid=(top+bot)/2, half=(bot-top)/2-4, W=R-L;
+  line(ctx,L,mid,R,mid,C.muted,1);
+  txt(ctx,"x(t) over one period",L,top-8,C.muted,"left",11);
+  txt(ctx,"T",R,mid+12,C.muted,"right",11);
+  ctx.beginPath(); ctx.strokeStyle=C.x; ctx.lineWidth=2.5;
+  for(let i=0;i<=300;i++){ const u=i/300, yy=mid-half*Math.cos(TAU*u+ph); if(i===0) ctx.moveTo(L+u*W,yy); else ctx.lineTo(L+u*W,yy); }
+  ctx.stroke();
+  dot(ctx,L,mid-half*c,6,C.v);
+  txt(ctx,"t = 0",L+10,mid-half*c+(c>0.5?14:-14),C.v,"left",11,true);
+  const dir = Math.abs(s)<1e-9 ? "at rest at an end" : (vn<0 ? "moving left (toward −xₘ)" : "moving right (toward +xₘ)");
+  const posN = {0:"④",90:"③",180:"①",270:"②",360:"④"}[deg];
+  rd3.innerHTML = stepsHTML([
+    '<span class="c">x(0) =</span> xₘ cos(0 + φ) = xₘ cos('+piStr(deg)+') = <b>'+fmt(c,3)+' xₘ</b>',
+    '<span class="c">v(0) =</span> −xₘω sin('+piStr(deg)+') = <b>'+fmt(-s,3)+' xₘω</b> <span class="c">→ '+dir+'</span>',
+    posN ? '<span class="c">This is the lecture\'s position '+posN+'.</span>' : '<span class="c">Not one of the four lecture positions, but the same rule applies.</span>'
+  ]);
+  ph3btns.forEach(b=>b.setAttribute("aria-pressed", (+b.dataset.ph3===deg)?"true":"false"));
+}
+ph3.addEventListener("input",draw3);
+ph3btns.forEach(b=>b.addEventListener("click",()=>{ ph3.value=b.dataset.ph3; draw3(); }));
+
+/* ---------------- §4 TWO OSCILLATORS ---------------- */
+const cv4=$("cv4"), ar4=$("ar4"), fr4=$("fr4"), rd4=$("rd4");
+function draw4(){
+  const {ctx,w,h}=prep(cv4);
+  const ar=+ar4.value, fr=+fr4.value, tmax=3;
+  ar4.nextElementSibling.textContent = ar.toFixed(2); fr4.nextElementSibling.textContent = fr.toFixed(2)+" Hz";
+  const L=48, R=w-12, top=12, bot=h-24, mid=(top+bot)/2, half=(bot-top)/2, W=R-L, ymax=1.5;
+  const Y=v=>mid-v/ymax*half, X=t=>L+t/tmax*W;
+  line(ctx,L,mid,R,mid,C.muted,1); line(ctx,L,top,L,bot,C.muted,1);
+  line(ctx,L,Y(1),R,Y(1),C.grid,1,[4,4]); line(ctx,L,Y(-1),R,Y(-1),C.grid,1,[4,4]);
+  txt(ctx,"xₘ",L-6,Y(1),C.v,"right",11); txt(ctx,"−xₘ",L-6,Y(-1),C.v,"right",11);
+  if(Math.abs(ar-1)>0.04){ line(ctx,L,Y(ar),R,Y(ar),C.grid,1,[2,4]); txt(ctx,"x′ₘ",L-6,Y(ar),C.x,"right",11); }
+  [0,1,2,3].forEach(t=>txt(ctx,t+" s",X(t),bot+12,C.muted,t===0?"left":(t===3?"right":"center"),11));
+  function cur(A,f,col){ ctx.beginPath(); ctx.strokeStyle=col; ctx.lineWidth=2.5; for(let i=0;i<=600;i++){ const t=i/600*tmax, y=Y(A*Math.cos(TAU*f*t)); if(i===0) ctx.moveTo(X(t),y); else ctx.lineTo(X(t),y);} ctx.stroke(); }
+  cur(1,1,C.v); cur(ar,fr,C.x);
+  const T2=1/fr;
+  let cmp = Math.abs(fr-1)<1e-9 ? "same period: peaks and zero crossings line up" : (fr<1 ? "T₂ > T₁, so oscillator 2 is the slower one" : "T₂ < T₁, so oscillator 2 is the faster one");
+  rd4.innerHTML = "T₁ = 1/f₁ = <b>1.00 s</b> · T₂ = 1/f₂ = <b>"+T2.toFixed(2)+" s</b> → "+cmp+" · x′ₘ = <b>"+ar.toFixed(2)+" xₘ</b> (amplitude never changes the period)";
+}
+[ar4,fr4].forEach(el=>el.addEventListener("input",draw4));
+$("pre4a").addEventListener("click",()=>{ ar4.value=0.6; fr4.value=1; draw4(); });
+$("pre4b").addEventListener("click",()=>{ ar4.value=1; fr4.value=0.4; draw4(); });
+
+/* ---------------- §5/§6 STACKED x, v, a ---------------- */
+const META = {
+  x:{lab:"DISPLACEMENT", amp:"xₘ", fn:u=>Math.cos(u), key:"x"},
+  v:{lab:"VELOCITY", amp:"ωxₘ", fn:u=>-Math.sin(u), key:"v"},
+  a:{lab:"ACCELERATION", amp:"ω²xₘ", fn:u=>-Math.cos(u), key:"a"}
+};
+function stack(cv, keys, s, ph, tangent){
+  const {ctx,w,h}=prep(cv);
+  const L=60, R=w-14, W=R-L, n=keys.length, gap=12, rowH=(h-gap*(n-1)-22)/n;
+  const colOf = {x:C.x, v:C.v, a:C.a};
+  const cx = L + s*W, u0 = TAU*s+ph;
+  keys.forEach((k,i)=>{
+    const m=META[k], col=colOf[k], top=i*(rowH+gap), mid=top+rowH/2, half=rowH/2-12;
+    line(ctx,L,mid,R,mid,C.muted,1);
+    line(ctx,L,mid-half,R,mid-half,C.grid,1,[4,4]); line(ctx,L,mid+half,R,mid+half,C.grid,1,[4,4]);
+    txt(ctx,"+"+m.amp,L-6,mid-half,C.muted,"right",11); txt(ctx,"−"+m.amp,L-6,mid+half,C.muted,"right",11);
+    txt(ctx,m.lab,L+6,top+6,col,"left",11,true);
+    ctx.beginPath(); ctx.strokeStyle=col; ctx.lineWidth=2.5;
+    for(let j=0;j<=300;j++){ const u=TAU*j/300+ph, y=mid-half*m.fn(u), xx=L+j/300*W; if(j===0) ctx.moveTo(xx,y); else ctx.lineTo(xx,y); }
+    ctx.stroke();
+    const cy = mid-half*m.fn(u0);
+    if(tangent && k==="x"){ const d = half*Math.sin(u0)*TAU/W, sp=Math.min(60,W*0.15); line(ctx,cx-sp,cy-sp*d,cx+sp,cy+sp*d,C.f,2.5); }
+    dot(ctx,cx,cy,5.5,col);
+  });
+  line(ctx,cx,0,cx,h-22,C.ink,1,[3,3]);
+  [["0",0],["T/4",0.25],["T/2",0.5],["3T/4",0.75],["T",1]].forEach(([l,f])=>txt(ctx,l,L+f*W,h-9,C.muted,f===0?"left":(f===1?"right":"center"),11));
+}
+// §5
+const cv5=$("cv5"), t5=$("t5"), xm5=$("xm5"), f5=$("f5"), rd5=$("rd5");
+function draw5(){
+  const s=+t5.value; t5.nextElementSibling.textContent = s.toFixed(3);
+  stack(cv5,["x","v"],s,0,true);
+  const xm=(+xm5.value||0)/100, f=+f5.value||0, om=TAU*f, T=f>0?1/f:0, t=s*T;
+  const x=xm*Math.cos(om*t), v=-xm*om*Math.sin(om*t);
+  rd5.innerHTML = "t = <b>"+sig(t,3)+" s</b> · x = <b>"+fmt(x*100,2)+" cm</b> · slope of x(t) = v = −xₘω sin(ωt) = <b>"+fmt(v,3)+" m/s</b> · top speed ωxₘ = <b>"+fmt(om*xm,3)+" m/s</b>";
+}
+[t5,xm5,f5].forEach(el=>el.addEventListener("input",draw5));
+// §6
+const cv6=$("cv6"), t6=$("t6"), xm6=$("xm6"), f6=$("f6"), rd6=$("rd6"), ph6btns=[...document.querySelectorAll("[data-ph6]")];
+let ph6=0;
+const A6 = {playing:false, tick(dt){ t6.value = ((+t6.value + dt/4)%1).toFixed(4); draw6(); }};
+playBtn($("p6"), A6);
+function draw6(){
+  const s=+t6.value; t6.nextElementSibling.textContent = s.toFixed(3);
+  const ph=ph6*Math.PI/180;
+  stack(cv6,["x","v","a"],s,ph,false);
+  const xm=(+xm6.value||0)/100, f=+f6.value||0, om=TAU*f, T=f>0?1/f:0, t=s*T, u=om*t+ph;
+  const x=xm*Math.cos(u), v=-xm*om*Math.sin(u), a=-xm*om*om*Math.cos(u);
+  rd6.innerHTML = "ω = 2πf = <b>"+om.toFixed(2)+" rad/s</b> · amplitudes: xₘ = <b>"+xm.toFixed(3)+" m</b>, ωxₘ = <b>"+(om*xm).toFixed(3)+" m/s</b>, ω²xₘ = <b>"+(om*om*xm).toFixed(2)+" m/s²</b><br>"+
+    "at t = "+sig(t,3)+" s: x = <b>"+fmt(x*100,2)+" cm</b> · v = <b>"+fmt(v,3)+" m/s</b> · a = <b>"+fmt(a,2)+" m/s²</b> · check −ω²x = "+fmt(-om*om*x,2)+" m/s²";
+}
+[t6,xm6,f6].forEach(el=>el.addEventListener("input",draw6));
+ph6btns.forEach(b=>b.addEventListener("click",()=>{ ph6=+b.dataset.ph6; setPressed(ph6btns,b); draw6(); }));
+addAnim(cv6, A6);
+
+/* ---------------- §7 TIRE CALC ---------------- */
+const v7=$("v7"), dx7=$("dx7"), rd7=$("rd7");
+function calc7(){
+  const v=+v7.value, dxc=+dx7.value;
+  if(!(dxc>0)){ rd7.innerHTML = "<div>Enter a spacing greater than 0.</div>"; return; }
+  const dx=dxc/100, f=v/dx, T=f>0?1/f:Infinity;
+  const fk = f>=1000 ? " = <b>"+sig(f/1000,4)+" kHz</b>" : "";
+  const Tms = (T<1 && T>0) ? " = "+sig(T*1000,4)+" ms" : "";
+  const rows = [
+    '<span class="c">Δx =</span> '+sig(dxc,4)+' cm = '+sig(dx,4)+' m',
+    '<span class="c">f = v/Δx =</span> '+sig(v,4)+' / '+sig(dx,4)+' = <b>'+sig(f,4)+' Hz</b>'+fk,
+    '<span class="c">T = 1/f =</span> '+sig(T,4)+' s'+Tms
+  ];
+  if(v===50 && dxc===5) rows.push('<span class="c">✓ matches the lecture: f = 1 kHz</span>');
+  rd7.innerHTML = stepsHTML(rows);
+}
+[v7,dx7].forEach(el=>el.addEventListener("input",calc7));
+
+/* ---------------- MASS-SPRING SCENE ---------------- */
+function spring(ctx,x1,x2,y,col){
+  const n=14, amp=9, lead=10, span=x2-x1-2*lead;
+  ctx.beginPath(); ctx.strokeStyle=col; ctx.lineWidth=2; ctx.lineJoin="round";
+  ctx.moveTo(x1,y); ctx.lineTo(x1+lead,y);
+  for(let i=0;i<n;i++) ctx.lineTo(x1+lead+span*(i+0.5)/n, y+(i%2?amp:-amp));
+  ctx.lineTo(x2-lead,y); ctx.lineTo(x2,y); ctx.stroke();
+}
+function msScene(ctx,w,h,xn,labels){
+  const floorY=h-42, wallX=24, bw=56, bh=46, A=Math.min(w*0.26,150);
+  const ex = Math.max(wallX+40+bw/2+A+10, w/2-20);
+  const bx = ex + xn*A, by = floorY-bh/2;
+  line(ctx,wallX,floorY,w-10,floorY,C.ink,2);
+  line(ctx,wallX,floorY,wallX,floorY-96,C.ink,2);
+  for(let yy=floorY-90; yy<floorY; yy+=12) line(ctx,wallX,yy,wallX-8,yy+8,C.muted,1);
+  [[ex-A,labels[0]],[ex,labels[1]],[ex+A,labels[2]]].forEach(([xx,l])=>{ line(ctx,xx,floorY,xx,floorY+7,C.ink,1.5); txt(ctx,l,xx,floorY+20,C.muted,"center",11); });
+  line(ctx,ex,floorY-bh-14,ex,floorY,C.grid,1,[3,3]);
+  spring(ctx,wallX,bx-bw/2,by,C.muted);
+  ctx.fillStyle=C.s2; ctx.strokeStyle=C.ink; ctx.lineWidth=2;
+  ctx.fillRect(bx-bw/2,floorY-bh,bw,bh); ctx.strokeRect(bx-bw/2,floorY-bh,bw,bh);
+  txt(ctx,"m",bx,by,C.ink,"center",15,true);
+  return {bx,by,bw,bh,ex,A,floorY};
+}
+
+/* ---------------- §8 HOOKE ---------------- */
+const cv8=$("cv8"), x8=$("x8"), k8=$("k8"), rd8=$("rd8");
+function draw8(){
+  const {ctx,w,h}=prep(cv8);
+  const xc=+x8.value, k=+k8.value||0, x=xc/100, F=-k*x;
+  x8.nextElementSibling.textContent = (xc>0?"+":"")+mi(xc.toFixed(1))+" cm";
+  const sc = msScene(ctx,w,h,xc/10,["−10 cm","x = 0","+10 cm"]);
+  const ay = sc.floorY-sc.bh-18, len = (Math.abs(xc)/10)*Math.min(110,sc.A*0.9);
+  if(Math.abs(xc)>0.01){ const d=F<0?-1:1; arrow(ctx,sc.bx,ay,sc.bx+d*len,ay,C.f,3); txt(ctx,"F",sc.bx+d*len/2,ay-12,C.f,"center",12,true); }
+  else txt(ctx,"F = 0",sc.bx,ay,C.f,"center",12,true);
+  const dir = Math.abs(xc)<0.01 ? "no force at equilibrium" : (F<0 ? "points left, back toward x = 0" : "points right, back toward x = 0");
+  rd8.innerHTML = "F = −kx = −("+grp(k)+" N/m)("+(x>0?"+":"")+fmt(x,3)+" m) = <b>"+fmt(F,2)+" N</b> → "+dir;
+}
+[x8,k8].forEach(el=>el.addEventListener("input",draw8));
+
+/* ---------------- §9 MASS-SPRING ANIMATION ---------------- */
+const cv9=$("cv9"), k9=$("k9"), m9=$("m9"), rd9=$("rd9"), sp9a=$("sp9a"), sp9b=$("sp9b");
+const A9 = {t:0, playing:!RM, slow:false, tick(dt){ this.t += dt*(this.slow?0.25:1); draw9(false); }};
+playBtn($("p9"), A9);
+let om9Old = Math.sqrt(+k9.value/ +m9.value);
+function draw9(full){
+  const {ctx,w,h}=prep(cv9);
+  const k=+k9.value, m=+m9.value, om=Math.sqrt(k/m);
+  msScene(ctx,w,h,Math.cos(om*A9.t),["−xₘ","x = 0","+xₘ"]);
+  if(full===false) return;
+  k9.nextElementSibling.textContent = k+" N/m"; m9.nextElementSibling.textContent = m.toFixed(1)+" kg";
+  const f=om/TAU, T=TAU*Math.sqrt(m/k);
+  rd9.innerHTML = stepsHTML([
+    '<span class="c">ω = √(k/m) =</span> √('+k+'/'+sig(m,3)+') = <b>'+om.toFixed(2)+' rad/s</b>',
+    '<span class="c">f = ω/2π =</span> <b>'+f.toFixed(3)+' Hz</b>',
+    '<span class="c">T = 2π√(m/k) =</span> <b>'+T.toFixed(4)+' s</b>'+(A9.slow?' <span class="c">(shown 4× slower)</span>':'')
+  ]);
+}
+[k9,m9].forEach(el=>el.addEventListener("input",()=>{ const om=Math.sqrt(+k9.value/ +m9.value); A9.t = A9.t*om9Old/om; om9Old=om; draw9(); }));
+sp9a.addEventListener("click",()=>{ A9.slow=false; setPressed([sp9a,sp9b],sp9a); draw9(); });
+sp9b.addEventListener("click",()=>{ A9.slow=true; setPressed([sp9a,sp9b],sp9b); draw9(); });
+addAnim(cv9, A9);
+
+/* ---------------- PENDULUM SCENE ---------------- */
+function pendScene(ctx,w,h,th,lenPx,forces,Llab){
+  const px=w/2, py=24;
+  line(ctx,px-90,py,px+90,py,C.ink,2);
+  for(let xx=px-86; xx<=px+86; xx+=12) line(ctx,xx,py,xx+8,py-8,C.muted,1);
+  line(ctx,px,py,px,py+lenPx+22,C.grid,1.2,[4,4]);
+  const bx=px+lenPx*Math.sin(th), by=py+lenPx*Math.cos(th);
+  line(ctx,px,py,bx,by,C.ink,2);
+  if(Math.abs(th)>0.01){
+    ctx.beginPath(); ctx.strokeStyle=C.muted; ctx.lineWidth=1.2;
+    const a0=Math.PI/2-th, a1=Math.PI/2; ctx.arc(px,py,46,Math.min(a0,a1),Math.max(a0,a1)); ctx.stroke();
+    const am=Math.PI/2-th/2; txt(ctx,"θ",px+60*Math.cos(am),py+60*Math.sin(am),C.ink,"center",13,true);
+  }
+  const side = th>=0 ? 1 : -1;
+  if(Llab){ const lx=px+0.3*(bx-px), ly=py+0.3*(by-py); txt(ctx,Llab,lx+side*12,ly,C.muted,side>0?"left":"right",12); }
+  if(forces){
+    const W=80, s=Math.sin(th), c=Math.cos(th);
+    arrow(ctx,bx,by,bx,by+W,C.muted,2); txt(ctx,"W",bx-8,by+W-4,C.muted,"right",12,true);
+    arrow(ctx,bx,by,bx+W*c*s,by+W*c*c,C.muted,1.5,[4,3]); if(Math.abs(th)>0.05) txt(ctx,"W cos θ",bx+W*c*s+8,by+W*c*c+4,C.muted,"left",11);
+    arrow(ctx,bx,by,bx-W*c*s,by-W*c*c,C.muted,1.5); txt(ctx,"tension",bx-W*c*s+side*10,by-W*c*c+6,C.muted,side>0?"left":"right",11);
+    if(Math.abs(th)>0.02){ const rx=bx-W*s*c, ry=by+W*s*s; arrow(ctx,bx,by,rx,ry,C.f,3); txt(ctx,"W sin θ",rx+(th>=0?-6:6),ry+14,C.f,th>=0?"right":"left",12,true); }
+  }
+  dot(ctx,bx,by,13,C.s2,C.ink);
+  txt(ctx,"m",bx,by,C.ink,"center",11,true);
+}
+
+/* ---------------- §10 SMALL ANGLE ---------------- */
+const cv10=$("cv10"), th10=$("th10"), rd10=$("rd10");
+function draw10(){
+  const {ctx,w,h}=prep(cv10);
+  const deg=+th10.value, th=deg*Math.PI/180, s=Math.sin(th), g=9.81;
+  th10.nextElementSibling.textContent = deg+"°";
+  pendScene(ctx,w,h,th,150,true,"L");
+  const gap = th>0 ? (th-s)/s*100 : 0;
+  const v = gap<1 ? '<span class="verdict ok">sin θ ≈ θ is excellent</span>' : gap<5 ? '<span class="verdict mid">usable, but getting rough</span>' : '<span class="verdict no">approximation breaks down</span>';
+  rd10.innerHTML = v+"<br>θ = "+deg+"° = <b>"+th.toFixed(4)+" rad</b> · sin θ = <b>"+s.toFixed(4)+"</b> · gap = <b>"+gap.toFixed(2)+"%</b><br>exact a = −g sin θ = <b>"+fmt(-g*s,3)+" m/s²</b> · small-angle a = −gθ = <b>"+fmt(-g*th,3)+" m/s²</b> (g = 9.81 m/s²)";
+}
+th10.addEventListener("input",draw10);
+
+/* ---------------- §11 PENDULUM ANIMATION ---------------- */
+const cv11=$("cv11"), L11=$("L11"), g11=$("g11"), rd11=$("rd11");
+const A11 = {t:0, playing:!RM, tick(dt){ this.t+=dt; draw11(false); }};
+playBtn($("p11"), A11);
+const om11 = ()=> Math.sqrt(Math.max(0.01,+g11.value||0)/(+L11.value));
+let om11Old = om11();
+function draw11(full){
+  const {ctx,w,h}=prep(cv11);
+  const L=+L11.value, g=+g11.value||0, om=om11(), thm=12*Math.PI/180;
+  pendScene(ctx,w,h,thm*Math.cos(om*A11.t),40+(h-90)*(L/2),false,"L = "+L.toFixed(2)+" m");
+  if(full===false) return;
+  L11.nextElementSibling.textContent = L.toFixed(2)+" m";
+  if(!(g>0)){ rd11.innerHTML = "<div>Enter a g greater than 0.</div>"; return; }
+  const T=TAU*Math.sqrt(L/g);
+  const rows = [
+    '<span class="c">ω = √(g/L) =</span> √('+sig(g,4)+'/'+L.toFixed(2)+') = <b>'+om.toFixed(3)+' rad/s</b>',
+    '<span class="c">T = 2π√(L/g) =</span> <b>'+T.toFixed(3)+' s</b>',
+    '<span class="c">f = 1/T =</span> <b>'+(1/T).toFixed(3)+' Hz</b>'
+  ];
+  if(Math.abs(L-0.76)<1e-9 && Math.abs(g-9.26)<1e-9) rows.push('<span class="c">✓ the lecture\'s pendulum: 76 cm in a 9.26 m/s² region swings with T = 1.8 s</span>');
+  rd11.innerHTML = stepsHTML(rows);
+}
+function re11(){ const om=om11(); A11.t = A11.t*om11Old/om; om11Old=om; draw11(); }
+[L11,g11].forEach(el=>el.addEventListener("input",re11));
+document.querySelectorAll("[data-g11]").forEach(b=>b.addEventListener("click",()=>{ g11.value=b.dataset.g11; re11(); }));
+addAnim(cv11, A11);
+
+/* ---------------- §12 g CALC ---------------- */
+const T12=$("T12"), L12=$("L12"), g012=$("g012"), rd12=$("rd12");
+function calc12(){
+  const T=+T12.value, Lc=+L12.value, g0=+g012.value;
+  if(!(T>0 && Lc>0 && g0>0)){ rd12.innerHTML="<div>Enter positive values for T, L and g₀.</div>"; return; }
+  const L=Lc/100, num=4*Math.PI*Math.PI*L, g=num/(T*T), gR=Math.round(g*100)/100;
+  const d=(g0-gR)/g0*100, du=(g0-g)/g0*100;
+  const word = d>=0 ? "weaker" : "stronger";
+  const rows = [
+    '<span class="c">L =</span> '+sig(Lc,4)+' cm = '+sig(L,4)+' m',
+    '<span class="c">g = 4π²L/T² =</span> 4π²('+sig(L,4)+')/('+sig(T,4)+' s)² = '+num.toFixed(3)+'/'+(T*T).toFixed(3)+' = <b>'+gR.toFixed(2)+' m/s²</b> <span class="c">('+g.toFixed(4)+' unrounded)</span>',
+    '<span class="c">δ =</span> [('+sig(g0,4)+' − '+gR.toFixed(2)+')/'+sig(g0,4)+'] × 100% = <b>'+Math.abs(d).toFixed(3)+'% '+word+'</b>',
+    '<span class="c">With the unrounded g: δ = '+Math.abs(du).toFixed(3)+'%</span>'
+  ];
+  if(T===1.8 && Lc===76 && g0===9.81) rows.push('<span class="c">✓ matches the lecture: g = 9.26 m/s², about 5.607% weaker than Earth</span>');
+  rd12.innerHTML = stepsHTML(rows);
+}
+[T12,L12,g012].forEach(el=>el.addEventListener("input",calc12));
+
+/* ---------------- §13 CAR CALC ---------------- */
+const m13=$("m13"), k13=$("k13"), rd13=$("rd13");
+function calc13(){
+  const m=+m13.value, k=+k13.value;
+  if(!(m>0 && k>0)){ rd13.innerHTML="<div>Enter positive values for m and k.</div>"; return; }
+  const om=Math.sqrt(k/m), f=om/TAU, T=1/f;
+  const rows = [
+    '<span class="c">Given:</span> m = '+grp(m)+' kg, k = '+grp(k)+' N/m',
+    '<span class="c">ω = √(k/m) =</span> √('+grp(k)+'/'+grp(m)+') = √'+sig(k/m,5)+' = <b>'+om.toFixed(3)+' rad/s</b>',
+    '<span class="c">f = (1/2π)√(k/m) = ω/2π ≈</span> <b>'+f.toFixed(3)+' Hz</b>',
+    '<span class="c">T = 1/f =</span> <b>'+T.toFixed(4)+' s</b>'
+  ];
+  if(m===1000 && k===85000) rows.push('<span class="c">✓ matches the lecture: f ≈ 1.467 Hz, T = 0.6815 s</span>');
+  rd13.innerHTML = stepsHTML(rows);
+}
+[m13,k13].forEach(el=>el.addEventListener("input",calc13));
+
+/* ---------------- INIT + THEME ---------------- */
+function drawAll(){ readColors(); draw1(); draw2(); draw3(); draw4(); draw5(); draw6(); draw8(); draw9(); draw10(); draw11(); }
+calc7(); calc12(); calc13(); drawAll();
+requestAnimationFrame(loop);
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(drawAll,80); });
+try{ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll); }catch(e){}
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+</script>
+</body>
+</html>
+
+</body></html>

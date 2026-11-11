@@ -1,0 +1,1559 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Wave Energy and Intensity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF; --volt:#1D5FC2; --curr:#C24E12; --fund:#23804D; --grid:#DCE1DB;
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+    --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+    --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+    --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+    --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+  --accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620; --volt:#78AAFF; --curr:#F0935A; --fund:#5CC48A; --grid:#26313B;
+  --ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+  --trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+  --good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+@media (max-width:920px){ .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px} }
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc h2:first-child{margin-top:0}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400; white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+main{max-width:760px; min-width:0}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; letter-spacing:-.01em; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; letter-spacing:0; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+ul.plain, ol.plain{margin:0 0 14px; padding-left:22px}
+ul.plain li, ol.plain li{margin-bottom:6px}
+sub,sup{font-size:.72em; line-height:0}
+code, .mono{font-family:var(--mono); font-size:.86em}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.eq{font-family:var(--body); font-size:19px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin:6px 0 18px; overflow-x:auto; line-height:1.9}
+.eq .row{display:block; white-space:nowrap}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted); margin-left:10px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; line-height:1.25; margin:0 2px}
+.frac > span:first-child{border-bottom:1px solid currentColor; padding:0 3px}
+.frac > span:last-child{padding:0 3px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)}
+.analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)}
+.tricky .tag{color:var(--trk-ink)}
+.callout p{margin-bottom:10px}
+.callout ul{margin:0 0 10px; padding-left:20px}
+.callout li{margin-bottom:6px}
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num, th.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+td.nil{color:var(--muted); text-align:right}
+.hlcol{background:var(--hl)}
+tr.dim td{opacity:.38}
+.tagpill{display:inline-block; font-family:var(--display); font-size:11px; font-weight:700; letter-spacing:.04em; padding:1px 7px; border-radius:99px; margin-left:6px; vertical-align:1px}
+.tagpill.first{background:var(--accent-soft); color:var(--accent)}
+.tagpill.big{background:var(--bad-bg); color:var(--bad)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:8px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo canvas{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls input[type=number]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls label[hidden]{display:none}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px; margin-right:8px}
+.verdict.ok{background:var(--good-bg); color:var(--good)}
+.verdict.no{background:var(--bad-bg); color:var(--bad)}
+.verdict.mid{background:var(--ana-bg); color:var(--ana-ink)}
+.steps{font-family:var(--mono); font-size:13.5px; line-height:1.9; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; overflow-x:auto}
+.steps div{white-space:nowrap}
+.steps .c{color:var(--muted)}
+
+/* H-bridge svg */
+#hb{width:100%; max-width:460px; display:block; margin:0 auto}
+#hb .w{stroke:var(--muted); stroke-width:2.5; fill:none; stroke-linecap:round}
+#hb .w.hot{stroke:var(--curr); stroke-width:4}
+#hb .w.short{stroke:var(--bad); stroke-width:5}
+#hb .sw rect{fill:var(--surface-2); stroke:var(--line); stroke-width:1.5; transition:fill .15s}
+#hb .sw text{fill:var(--ink); font-family:var(--display); font-weight:700; font-size:14px; pointer-events:none}
+#hb .sw{cursor:pointer}
+#hb .sw:hover rect{stroke:var(--accent)}
+#hb .sw:focus{outline:none}
+#hb .sw:focus-visible rect{stroke:var(--accent); stroke-width:3}
+#hb .sw.on rect{fill:var(--accent); stroke:var(--accent)}
+#hb .sw.on text{fill:var(--on-accent)}
+#hb .lbl{fill:var(--muted); font-family:var(--mono); font-size:12px}
+#hb .lbl.ink{fill:var(--ink); font-weight:600}
+#hb .node{fill:var(--ink)}
+#hb .src{fill:var(--surface); stroke:var(--muted); stroke-width:2}
+#hb .load{fill:var(--surface); stroke:var(--muted); stroke-width:2}
+#hb .pot{font-family:var(--mono); font-size:12px; font-weight:600}
+.hbbar{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:8px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qlist{display:grid}
+.qitem{padding:16px; border-top:1px solid var(--line)}
+.qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)}
+.opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)}
+.opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)}
+.final .quiz-head .score{color:var(--bg)}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.sheet .card div{font-size:15.5px; line-height:1.7}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} #hb .sw rect{transition:none} }
+nav.toc .ovr{font-family:var(--mono); font-size:12px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-bottom:14px; color:var(--muted)}
+nav.toc .ovr b{color:var(--ink)}
+.preset{font-family:var(--display); font-size:12px; color:var(--muted)}
+.src-note{font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:8px}
+.badge{display:inline-block; font-family:var(--display); font-size:11px; font-weight:700; letter-spacing:.04em; padding:1px 7px; border-radius:99px; background:var(--accent-soft); color:var(--accent); vertical-align:2px; margin-left:6px}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="ovr" aria-live="polite">Quiz total<br><b id="ovr">0 / 68 answered</b></div>
+  <h2>Part 1 · Energy on a string (4a)</h2>
+  <ol>
+    <li><a href="#s1">1 Where the energy lives <span class="chip" data-chip="q1"></span></a></li>
+    <li><a href="#s2">2 Kinetic energy rate <span class="chip" data-chip="q2"></span></a></li>
+    <li><a href="#s3">3 Elastic potential energy <span class="chip" data-chip="q3"></span></a></li>
+    <li><a href="#s4">4 Total power on a string <span class="chip" data-chip="q4"></span></a></li>
+    <li><a href="#s5">5 Power of a sound wave <span class="chip" data-chip="q5"></span></a></li>
+  </ol>
+  <h2>Part 2 · Spreading out (4b)</h2>
+  <ol>
+    <li><a href="#s6">6 Wavefront shapes <span class="chip" data-chip="q6"></span></a></li>
+    <li><a href="#s7">7 Spherical waves <span class="chip" data-chip="q7"></span></a></li>
+    <li><a href="#s8">8 Cylindrical waves <span class="chip" data-chip="q8"></span></a></li>
+    <li><a href="#s9">9 Attenuation <span class="chip" data-chip="q9"></span></a></li>
+  </ol>
+  <h2>Part 3 · Decibels</h2>
+  <ol>
+    <li><a href="#s10">10 Sound level β <span class="chip" data-chip="q10"></span></a></li>
+    <li><a href="#s11">11 Level change, two points <span class="chip" data-chip="q11"></span></a></li>
+  </ol>
+  <h2>Part 4 · Impedance</h2>
+  <ol>
+    <li><a href="#s12">12 Impedance Z <span class="chip" data-chip="q12"></span></a></li>
+    <li><a href="#s13">13 Boundaries, two strings <span class="chip" data-chip="q13"></span></a></li>
+  </ol>
+  <h2>Test yourself</h2>
+  <ol>
+    <li><a href="#final">Final exam <span class="chip" data-chip="qf"></span></a></li>
+    <li><a href="#sheet">Formula sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">PHYS 365 · Lectures 4a + 4b · Study guide</div>
+  <h1>Wave energy, intensity, decibels and impedance</h1>
+  <p class="lede">A wave carries <b>energy</b>, not stuff. Lecture 4a works out how fast a wave on a string (or in air) delivers that energy. Lecture 4b follows the energy as it <b>spreads out</b> and gets <b>absorbed</b>, measures it in <b>decibels</b>, and asks what happens when it hits a <b>new medium</b>.</p>
+  <div class="chain" aria-label="Story of the two lectures">
+    <div class="blk"><b>Energy in a slice</b><span>KE + elastic PE</span><span class="secs">§1 to §3</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Power P</b><span>½μvω²y<sub>m</sub>²</span><span class="secs">§4, §5</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Intensity I</b><span>P per area</span><span class="secs">§6 to §9</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Level β</b><span>I in dB</span><span class="secs">§10, §11</span></div>
+    <div class="arrow">→</div>
+    <div class="blk"><b>Boundary</b><span>Z decides reflection</span><span class="secs">§12, §13</span></div>
+  </div>
+  <p class="src-note" style="margin-top:16px">About the numbers: these lectures are derivations, with one data point (busy street traffic, 70 dB ↔ 10<sup>−5</sup> W/m²). Every lecture derivation is here step by step. Where a calculator or worked example needs numbers the lecture doesn't give, they are marked <span class="badge">practice numbers</span>.</p>
+</header>
+
+<h2 class="part">Part 1 · Energy on a string (Lecture 4a)</h2>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+<h3><span class="num">01</span>Where the energy lives</h3>
+<p>A travelling wave moves <b>kinetic</b> and <b>potential</b> energy along the string. Each little piece of string, of mass <i>dm</i>, bobs up and down in simple harmonic motion while the wave shape slides along <i>x</i>.</p>
+<ul class="plain">
+<li><b>Kinetic energy</b> depends on how fast the piece moves vertically, <i>u<sub>y</sub></i>. At a crest (point ② in the lecture) it stops for an instant: <i>u<sub>y</sub></i> = 0, KE = 0. Crossing <i>y</i> = 0 (point ①) it moves fastest: <b>KE max</b>.</li>
+<li><b>Potential energy</b> here is <b>elastic</b>: it comes from the string being <b>stretched</b>. At a crest the string is flat, so it is barely stretched: <b>PE = 0</b> (minimum stretch). Crossing <i>y</i> = 0 the string is steepest, so it is stretched most: <b>PE max</b>.</li>
+</ul>
+<p>So KE and PE peak <b>at the same places</b> (the zero crossings) and vanish together (the crests and troughs).</p>
+<div class="eq">
+  <span class="row"><i>y</i> = <i>y<sub>m</sub></i> sin(<i>kx</i> − <i>ωt</i>)</span>
+  <span class="row">KE ∝ <i>u<sub>y</sub></i>² ∝ cos²(<i>kx</i> − <i>ωt</i>), &nbsp; PE ∝ (∂<i>y</i>/∂<i>x</i>)² ∝ cos²(<i>kx</i> − <i>ωt</i>)</span>
+</div>
+
+<div class="demo">
+  <div class="dtitle">Try it: watch the energy ride along the wave</div>
+  <canvas id="cvE" height="250" aria-label="Travelling wave with string elements coloured by kinetic and potential energy"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>string y(x, t)</span><span><i style="background:var(--curr)"></i>KE density (u<sub>y</sub>²)</span><span><i style="background:var(--fund)"></i>PE density (slope²)</span></div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Energy shown"><button type="button" id="eBoth" aria-pressed="true">KE + PE</button><button type="button" id="eKE" aria-pressed="false">KE only</button><button type="button" id="ePE" aria-pressed="false">PE only</button></div>
+    <button class="btn" type="button" id="ePlay">Pause</button>
+  </div>
+  <div class="readout">Arrows show each element's vertical velocity u<sub>y</sub>. Notice the arrows are biggest, and the string steepest, at the same spots.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a stadium wave</span>
+<p>In a stadium "wave", nobody runs around the stadium. Each person just stands up and sits down. The <b>pattern</b> travels, and so does the effort. A person in the middle of standing up is moving fastest (most KE) and is also the one tugging hardest on their neighbours' arms (most stretch, most PE). The person at the very top is momentarily still and their arms hang level with the neighbours who are also near the top.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>This is not a mass on a spring.</b> In a spring oscillator, KE is max where PE is zero. On a travelling wave both are max at <i>y</i> = 0 and both are zero at the crests. The energy of one element is not constant: it is <b>handed along</b> to the next element.</li>
+<li><b>PE is not gravitational.</b> The crest is highest but has <b>zero</b> PE. The PE is the stretch energy stored by the tension τ.</li>
+<li><b>Transverse, not longitudinal.</b> The notes write "(longitudinal)" next to the y-axis motion, but a string element moving along <i>y</i> while the wave moves along <i>x</i> is a <b>transverse</b> wave. Sound (§5) is the longitudinal case.</li>
+<li><i>u<sub>y</sub></i> (element speed, up/down) is not <i>v</i> (wave speed, along <i>x</i>).</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q1" data-title="Check: where the energy lives"></div>
+</section>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+<h3><span class="num">02</span>The rate of kinetic energy transfer</h3>
+<p>We want energy <b>per second</b> carried past a point. Start with the KE of one element, write its mass and speed using the wave function, then divide by <i>dt</i>. The trick: <i>dx</i>/<i>dt</i> is the wave speed <i>v</i>, because in time <i>dt</i> the wave pattern sweeps across a length <i>dx</i> = <i>v dt</i> of string.</p>
+<div class="eq">
+  <span class="row"><i>dK</i> = ½ <i>dm</i> <i>u<sub>y</sub></i>², &nbsp; <i>dm</i> = <i>μ dx</i>, &nbsp; <i>u<sub>y</sub></i> = ∂<i>y</i>/∂<i>t</i> = −<i>ωy<sub>m</sub></i> cos(<i>kx</i> − <i>ωt</i>)</span>
+  <span class="row"><span class="frac"><span><i>dK</i></span><span><i>dt</i></span></span> = ½ <i>μvω</i>²<i>y<sub>m</sub></i>² cos²(<i>kx</i> − <i>ωt</i>) <span class="note">rate of KE transferred</span></span>
+  <span class="row">[cos²θ]<sub>ave</sub> = ½ &nbsp; ⇒ &nbsp; <span class="frac"><span><i>dK</i></span><span><i>dt</i></span></span><sub>ave</sub> = ¼ <i>μvω</i>²<i>y<sub>m</sub></i>²</span>
+</div>
+
+<details class="work" open><summary>Lecture derivation: rate of KE transfer</summary><div class="body">
+<div class="steps">
+<div>dK = ½ dm u<sub>y</sub>²                       <span class="c">KE of the mass element</span></div>
+<div>y = y<sub>m</sub> sin(kx − ωt)  →  u<sub>y</sub> = ∂y/∂t = −ωy<sub>m</sub> cos(kx − ωt)</div>
+<div>μ = dm/dx  →  dm = μ dx                  <span class="c">linear (mass) density</span></div>
+<div>dK = ½ (μ dx)(∂y/∂t)²</div>
+<div>dK/dt = ½ μ (dx/dt)(∂y/∂t)²              <span class="c">dx/dt = v, the wave speed</span></div>
+<div>      = ½ μ v ω² y<sub>m</sub>² cos²(kx − ωt)     <span class="c">rate of KE transferred #</span></div>
+</div>
+</div></details>
+
+<details class="work" open><summary>Lecture derivation: average rate</summary><div class="body">
+<div class="steps">
+<div>(cos²θ)<sub>ave</sub> = (1/2π) ∫<sub>0</sub><sup>2π</sup> cos²θ dθ = 1/2   <span class="c">"some statistics"</span></div>
+<div>[dK/dt]<sub>ave</sub> = ½ μvω²y<sub>m</sub>² [cos²(kx − ωt)]<sub>ave</sub></div>
+<div>              = ½ μvω²y<sub>m</sub>² × ½</div>
+<div>              = ¼ μvω²y<sub>m</sub>²  #</div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: why the average of cos² is exactly ½</div>
+  <canvas id="cvC" height="200" aria-label="cos theta and cos squared theta with running average"></canvas>
+  <div class="legend"><span><i style="background:var(--muted)"></i>cos θ</span><span><i style="background:var(--curr)"></i>cos²θ</span><span><i style="background:var(--fund)"></i>average of cos² from 0 to θ<sub>max</sub></span></div>
+  <div class="controls"><label><span>θ<sub>max</sub></span> <input type="range" id="cTh" min="0.05" max="4" step="0.01" value="2"><output id="cThO"></output></label></div>
+  <div class="readout" id="cRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a flashing conveyor belt</span>
+<p>Picture energy riding past you on a conveyor belt in clumps (the cos² humps). Instantaneously the delivery rate flickers between zero and a maximum. Over a full cycle, though, the cos² humps fill exactly half of the box between 0 and 1, so the steady average is half the peak.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Where did <i>v</i> come from?</b> From <i>dx</i>/<i>dt</i>. The element itself doesn't move along <i>x</i>; it's the wave front sweeping new string into motion at speed <i>v</i>.</li>
+<li><b>Peak vs average.</b> The peak rate is ½<i>μvω</i>²<i>y<sub>m</sub></i>². The average KE rate is half of that, ¼<i>μvω</i>²<i>y<sub>m</sub></i>².</li>
+<li><b>Squares everywhere.</b> Double <i>y<sub>m</sub></i> or <i>ω</i> and the rate goes up <b>4×</b>.</li>
+<li>The minus sign in <i>u<sub>y</sub></i> disappears when you square it.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q2" data-title="Check: KE transfer rate"></div>
+</section>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+<h3><span class="num">03</span>Elastic potential energy</h3>
+<p>A piece of string that was length <i>dx</i> gets tilted into length <i>ds</i>. The tension τ does work stretching it by <i>dℓ</i> = <i>ds</i> − <i>dx</i>, and that work is stored as elastic PE, <i>dV</i>. For small slopes we use √(1 + <i>x</i>) ≈ 1 + <i>x</i>/2.</p>
+<div class="eq">
+  <span class="row"><i>ds</i> = √(<i>dx</i>² + <i>dy</i>²) ≈ <i>dx</i> [1 + ½(<i>dy</i>/<i>dx</i>)²]</span>
+  <span class="row"><i>dV</i> = τ <i>dℓ</i> = <span class="frac"><span>τ</span><span>2</span></span>(<i>dy</i>/<i>dx</i>)² <i>dx</i></span>
+  <span class="row"><span class="frac"><span><i>dV</i></span><span><i>dt</i></span></span><sub>ave</sub> = ¼ <i>μω</i>²<i>vy<sub>m</sub></i>² <span class="note">same as the KE average</span></span>
+</div>
+
+<details class="work" open><summary>Lecture derivation: math prep and work done by tension</summary><div class="body">
+<div class="steps">
+<div>ds = √(dx² + dy²) = dx √(1 + [dy/dx]²)        <span class="c">Pythagoras on the tilted piece</span></div>
+<div>   ≈ dx [1 + ½(dy/dx)²]                    <span class="c">√(1+x) ≈ 1 + x/2 for x ≪ 1</span></div>
+<div>dℓ = ds − dx = dx[1 + ½(dy/dx)²] − dx = ½(dy/dx)² dx</div>
+<div>dW<sub>τ</sub> = F·dℓ = τ dℓ = (τ/2)(dy/dx)² dx = dV    <span class="c">elastic potential energy</span></div>
+</div>
+</div></details>
+
+<details class="work" open><summary>Lecture derivation: rate and average of elastic PE</summary><div class="body">
+<div class="steps">
+<div>dV/dt = (τ/2)(dy/dx)²(dx/dt) = (τv/2)(dy/dx)²   <span class="c">dx/dt = v</span></div>
+<div>dy/dx = k y<sub>m</sub> cos(kx − ωt)</div>
+<div>(dV/dt)<sub>ave</sub> = (τv/2) k² y<sub>m</sub>² [cos²(kx − ωt)]<sub>ave</sub>   <span class="c">[cos²]<sub>ave</sub> = ½</span></div>
+<div>           = ¼ τ v k² y<sub>m</sub>²</div>
+<div>use v = √(τ/μ) → τ = μv²  and  k² = ω²/v²</div>
+<div>           = ¼ (μv²) v (ω²/v²) y<sub>m</sub>² = ¼ μω²v y<sub>m</sub>²</div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: how good is the small-slope approximation?</div>
+  <canvas id="cvS" height="190" aria-label="Right triangle dx, dy, ds"></canvas>
+  <div class="controls"><label>slope dy/dx <input type="range" id="sSl" min="0" max="1.5" step="0.01" value="0.2"><output id="sSlO"></output></label></div>
+  <div class="readout" id="sRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a rubber band on a ramp</span>
+<p>Lay a rubber band flat and it's relaxed. Pin its ends to the bottom and top of a ramp of the same horizontal length and it must stretch to cover the hypotenuse. The steeper the ramp, the more it stretches and the more energy it stores. The tension is what makes stretching "cost" energy, which is why the lecture writes "thanks to τ!!".</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Stretch depends on slope², not on height.</b> That's why the crest (slope 0) has zero PE.</li>
+<li><b>The approximation needs small slopes.</b> √(1 + <i>x</i>) ≈ 1 + <i>x</i>/2 only when <i>x</i> = (<i>dy</i>/<i>dx</i>)² ≪ 1. Slide the demo to slope 1 to see it break.</li>
+<li><b>The two identities to memorise:</b> τ = <i>μv</i>² and <i>k</i> = <i>ω</i>/<i>v</i>. They are how ¼τ<i>vk</i>²<i>y<sub>m</sub></i>² turns into ¼<i>μvω</i>²<i>y<sub>m</sub></i>².</li>
+<li>The lecture heading says "average wave acceleration", but what is being averaged is the <b>rate of PE transfer</b>, <i>dV</i>/<i>dt</i>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q3" data-title="Check: elastic PE"></div>
+</section>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+<h3><span class="num">04</span>Total power of a travelling wave on a string</h3>
+<p>Add the two equal averages. That's the average power, the energy per second the wave carries past any point.</p>
+<div class="eq">
+  <span class="row"><i>P</i><sub>ave</sub> = (<i>dK</i>/<i>dt</i>)<sub>ave</sub> + (<i>dV</i>/<i>dt</i>)<sub>ave</sub> = 2(<i>dK</i>/<i>dt</i>)<sub>ave</sub> = ½ <i>μvω</i>²<i>y<sub>m</sub></i>²</span>
+  <span class="row"><i>v</i> = √(τ/<i>μ</i>) &nbsp;⇒&nbsp; <i>P</i><sub>ave</sub> = ½ √(τ<i>μ</i>) <i>ω</i>²<i>y<sub>m</sub></i>²</span>
+</div>
+
+<details class="work" open><summary>Lecture derivation: eliminating v</summary><div class="body">
+<div class="steps">
+<div>P<sub>ave</sub> = 2[dK/dt]<sub>ave</sub> = ½ μvω²y<sub>m</sub>²</div>
+<div>v = √(τ/μ) = √(tension / linear density)</div>
+<div>P<sub>ave</sub> = ½ μ √(τ/μ) ω² y<sub>m</sub>² = ½ √(τμ) ω² y<sub>m</sub>²</div>
+</div>
+</div></details>
+
+<details class="work" open><summary>Worked example <span class="badge">practice numbers</span></summary><div class="body">
+<p>A string has <i>μ</i> = 0.05 kg/m and τ = 20 N. A wave with <i>ω</i> = 100 rad/s and <i>y<sub>m</sub></i> = 1.0 cm travels on it. Find the average power.</p>
+<ul class="plain">
+<li><i>v</i> = √(20/0.05) = √400 = <b>20 m/s</b>.</li>
+<li>(<i>dK</i>/<i>dt</i>)<sub>ave</sub> = ¼(0.05)(20)(100)²(0.010)² = ¼(1.0)(10 000)(10<sup>−4</sup>) = <b>0.25 W</b>.</li>
+<li>(<i>dV</i>/<i>dt</i>)<sub>ave</sub> = the same, <b>0.25 W</b>.</li>
+<li><i>P</i><sub>ave</sub> = 0.25 + 0.25 = <b>0.50 W</b>. Check with ½√(τ<i>μ</i>)<i>ω</i>²<i>y<sub>m</sub></i>² = ½(1.0)(10 000)(10<sup>−4</sup>) = 0.50 W. ✓</li>
+</ul>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: power on a string</div>
+  <div class="controls">
+    <label>μ (kg/m) <input type="number" id="pMu" value="0.05" step="any" min="0"></label>
+    <label>τ (N) <input type="number" id="pTau" value="20" step="any" min="0"></label>
+    <label>ω (rad/s) <input type="number" id="pW" value="100" step="any" min="0"></label>
+    <label><span>y<sub>m</sub> (m)</span> <input type="number" id="pY" value="0.01" step="any" min="0"></label>
+  </div>
+  <div class="controls">
+    <span class="preset">Presets:</span>
+    <button class="btn" type="button" id="pPre1">Worked example above</button>
+    <button class="btn" type="button" id="pPre2">Textbook: μ = 525 g/m, τ = 45 N, f = 120 Hz, y<sub>m</sub> = 8.5 mm</button>
+  </div>
+  <div class="steps" id="pSteps" aria-live="polite"></div>
+  <div class="src-note">Loads with the practice numbers from the worked example (0.50 W). The second preset is the classic Halliday string example, which gives about 100 W.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a two-lane highway</span>
+<p>Energy travels down the string in two lanes, KE and PE, carrying equal traffic on average. Total power is just both lanes added: twice one lane.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>ω, not f.</b> If you're given frequency in Hz, use <i>ω</i> = 2π<i>f</i> before squaring. Forgetting this makes you (2π)² ≈ 39 times too small.</li>
+<li><b>Units:</b> <i>y<sub>m</sub></i> in metres and <i>μ</i> in kg/m (525 g/m = 0.525 kg/m).</li>
+<li><b>Scaling:</b> <i>P</i> ∝ <i>ω</i>², ∝ <i>y<sub>m</sub></i>², but only ∝ √τ and ∝ √<i>μ</i> (once <i>v</i> is eliminated).</li>
+<li>Look ahead: √(τ<i>μ</i>) is the string's <b>impedance</b> <i>Z</i> (§12). So <i>P</i><sub>ave</sub> = ½<i>Zω</i>²<i>y<sub>m</sub></i>².</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q4" data-title="Check: power on a string"></div>
+</section>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+<h3><span class="num">05</span>Power of a sound wave</h3>
+<p>Same idea in air. Take a thin slice of air, thickness <i>dx</i> and area <i>A</i>, oscillating back and forth. Its mass is <i>dm</i> = <i>ρ dV</i> = <i>ρA dx</i>. Compare with the string's <i>dm</i> = <i>μ dx</i>: the product <i>ρA</i> plays the role of <i>μ</i>. Swap it in and the power formula is done.</p>
+<div class="eq">
+  <span class="row"><i>dm</i> = <i>ρ dV</i> = <i>ρA</i> · <i>dx</i>, &nbsp; <i>ρA</i> = <i>μ</i> <span class="note">unit check: kg/m³ × m² = kg/m</span></span>
+  <span class="row"><i>P</i><sub>ave</sub> = ½ <i>ρAvω</i>²<i>y<sub>m</sub></i>²</span>
+</div>
+
+<details class="work" open><summary>Worked example <span class="badge">practice numbers</span></summary><div class="body">
+<p>A 1000 Hz sound in air (<i>ρ</i> = 1.21 kg/m³, <i>v</i> = 343 m/s) has displacement amplitude <i>y<sub>m</sub></i> = 1.0 × 10<sup>−8</sup> m. How much power crosses an area <i>A</i> = 2.0 m²?</p>
+<ul class="plain">
+<li><i>ω</i> = 2π(1000) = 6283 rad/s, so <i>ω</i>² = 3.948 × 10<sup>7</sup> s<sup>−2</sup>.</li>
+<li><i>ρAv</i> = (1.21)(2.0)(343) = 830.1 kg/s.</li>
+<li><i>P</i><sub>ave</sub> = ½(830.1)(3.948 × 10<sup>7</sup>)(1.0 × 10<sup>−16</sup>) = <b>1.64 × 10<sup>−6</sup> W</b> (1.64 μW).</li>
+</ul>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: power of sound through area A</div>
+  <div class="controls">
+    <label>ρ (kg/m³) <input type="number" id="aRho" value="1.21" step="any" min="0"></label>
+    <label>A (m²) <input type="number" id="aA" value="2" step="any" min="0"></label>
+    <label>v (m/s) <input type="number" id="aV" value="343" step="any" min="0"></label>
+    <label>f (Hz) <input type="number" id="aF" value="1000" step="any" min="0"></label>
+    <label><span>y<sub>m</sub> (m)</span> <input type="number" id="aY" value="1e-8" step="any" min="0"></label>
+  </div>
+  <div class="steps" id="aSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a string made of air</span>
+<p>Think of the column of air in front of a speaker as a very fat "string" whose mass per metre is <i>ρA</i>. A thicker column (bigger <i>A</i>) is like a heavier string: shaking it at the same amplitude and frequency takes more power.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b><i>y<sub>m</sub></i> is the air's displacement amplitude</b>, along the direction of travel (longitudinal), and it is tiny: nanometres to micrometres.</li>
+<li><b>Divide by A and you get intensity:</b> <i>P</i>/<i>A</i> = ½<i>ρvω</i>²<i>y<sub>m</sub></i>². That's the bridge to Part 2.</li>
+<li>Remember to square both <i>ω</i> and <i>y<sub>m</sub></i>; the powers of ten add up fast.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q5" data-title="Check: sound power"></div>
+</section>
+
+<h2 class="part">Part 2 · Spreading out (Lecture 4b)</h2>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+<h3><span class="num">06</span>Circular, spherical and plane waves</h3>
+<p>A <b>wavefront</b> is a surface joining points in the same phase (say, all the crests). Neighbouring wavefronts are one wavelength <i>λ</i> apart, and the wave velocity <i>v</i> points perpendicular to them.</p>
+<ul class="plain">
+<li>From a point source on a surface (a pebble in a pond): <b>circular</b> wavefronts.</li>
+<li>From a point source in 3D (a small speaker): <b>spherical</b> wavefronts.</li>
+<li><b>Far from the source</b>, a small patch of a huge sphere looks flat: <b>plane waves</b> with straight-line or planar wavefronts.</li>
+</ul>
+
+<div class="demo">
+  <div class="dtitle">Try it: walk away from the source</div>
+  <canvas id="cvW" height="240" aria-label="Wavefronts seen through a window at increasing distance"></canvas>
+  <div class="controls"><label>distance of the window from the source <input type="range" id="wD" min="1" max="60" step="0.5" value="4"><output id="wDO"></output></label></div>
+  <div class="readout" id="wRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · the flat Earth illusion</span>
+<p>Earth is a sphere, but your backyard looks flat because it's tiny compared with Earth's radius. A microphone far from a speaker sees the same thing: its little patch of a giant spherical wavefront is effectively a plane.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li>The spacing between wavefronts stays <i>λ</i> everywhere. What changes with distance is the <b>curvature</b>, not the spacing.</li>
+<li>"Plane wave" is an approximation that depends on the size of your detector compared with the distance <i>r</i>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q6" data-title="Check: wavefronts"></div>
+</section>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+<h3><span class="num">07</span>Intensity of spherical waves and the inverse square law</h3>
+<p><b>Intensity</b> is power per unit area, in W/m². A point source emitting power <i>P</i> equally in all directions spreads it over a sphere of area 4π<i>r</i>². With no losses, every sphere gets the same total <i>P</i>, so intensity falls as 1/<i>r</i>².</p>
+<div class="eq">
+  <span class="row"><i>I</i> = <span class="frac"><span>sound wave power</span><span>area of a sphere</span></span> = <span class="frac"><span><i>P</i></span><span>4π<i>r</i>²</span></span> &nbsp; [W/m²]</span>
+  <span class="row"><span class="frac"><span><i>I<sub>a</sub></i></span><span><i>I<sub>b</sub></i></span></span> = <span class="frac"><span><i>r<sub>b</sub></i>²</span><span><i>r<sub>a</sub></i>²</span></span> <span class="note">inverse square law</span></span>
+</div>
+
+<details class="work" open><summary>Lecture derivation: inverse square law</summary><div class="body">
+<div class="steps">
+<div>I<sub>a</sub> = P/(4π r<sub>a</sub>²),   I<sub>b</sub> = P/(4π r<sub>b</sub>²)       <span class="c">same P through both spheres</span></div>
+<div>I<sub>a</sub>/I<sub>b</sub> = [P/(4π r<sub>a</sub>²)] / [P/(4π r<sub>b</sub>²)] = r<sub>b</sub>²/r<sub>a</sub>²   <span class="c">P and 4π cancel</span></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: point source</div>
+  <div class="controls">
+    <label>P (W) <input type="number" id="iP" value="10" step="any" min="0"></label>
+    <label><span>r<sub>a</sub> (m)</span> <input type="number" id="iRa" value="2" step="any" min="0"></label>
+    <label><span>r<sub>b</sub> (m)</span> <input type="number" id="iRb" value="4" step="any" min="0"></label>
+  </div>
+  <canvas id="cvI" height="200" aria-label="Intensity versus distance for a point source"></canvas>
+  <div class="steps" id="iSteps" aria-live="polite"></div>
+  <div class="src-note"><span class="badge">practice numbers</span> P = 10 W, r<sub>a</sub> = 2 m, r<sub>b</sub> = 4 m.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · spray paint</span>
+<p>Hold a spray can close to a wall and you get a small, thick spot. Step back to twice the distance and the same paint covers 4× the area, so the coat is ¼ as thick. Paint per second = power; thickness of the coat = intensity.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The ratio is upside-down.</b> <i>I<sub>a</sub></i>/<i>I<sub>b</sub></i> = <i>r<sub>b</sub></i>²/<i>r<sub>a</sub></i>². Closer point, bigger intensity. Sanity-check every answer this way.</li>
+<li><b>Don't forget to square.</b> 3× farther means 9× weaker, not 3×.</li>
+<li>Power <i>P</i> doesn't change with distance (no losses yet). Only intensity does.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q7" data-title="Check: spherical waves"></div>
+</section>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+<h3><span class="num">08</span>Intensity of cylindrical waves (line source)</h3>
+<p>A long <b>line source</b> of length <i>L</i> (a busy road, a train track) sends its power out through the <b>side</b> of a cylinder, not through a sphere. The lateral area of a cylinder of radius <i>r</i> is 2π<i>rL</i>, which grows only like <i>r</i>. So intensity falls as 1/<i>r</i>, more slowly than a point source.</p>
+<div class="eq">
+  <span class="row"><i>I</i> = <span class="frac"><span>sound wave power</span><span>area of lateral surface</span></span> = <span class="frac"><span><i>P</i></span><span>2π<i>rL</i></span></span> &nbsp; [W/m²]</span>
+  <span class="row"><span class="frac"><span><i>I<sub>a</sub></i></span><span><i>I<sub>b</sub></i></span></span> = <span class="frac"><span><i>r<sub>b</sub></i></span><span><i>r<sub>a</sub></i></span></span></span>
+</div>
+
+<details class="work" open><summary>Lecture example: train tracks as a line source</summary><div class="body">
+<p>A train's vibrating tracks act as a line source. Compare the intensity at point <i>a</i> (radius <i>r<sub>a</sub></i>) with point <i>b</i> (radius <i>r<sub>b</sub></i>), both on cylinders of the same length <i>L</i>.</p>
+<div class="steps">
+<div>I<sub>a</sub> = P/(2π r<sub>a</sub> L),   I<sub>b</sub> = P/(2π r<sub>b</sub> L)</div>
+<div>I<sub>a</sub>/I<sub>b</sub> = (r<sub>b</sub> · 2πL)/(r<sub>a</sub> · 2πL)       <span class="c">2πL cancels</span></div>
+<div>       = r<sub>b</sub>/r<sub>a</sub></div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: line source vs point source</div>
+  <canvas id="cvL" height="220" aria-label="Normalised intensity versus distance for point and line sources"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>line source, 1/r (cylindrical)</span><span><i style="background:var(--curr)"></i>point source, 1/r² (spherical)</span></div>
+  <div class="controls"><label><span>r<sub>b</sub>/r<sub>a</sub></span> <input type="range" id="lR" min="1" max="10" step="0.1" value="4"><output id="lRO"></output></label></div>
+  <div class="readout" id="lRead"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a soaker hose vs a sprinkler head</span>
+<p>A sprinkler head (point) throws water over a growing circle in every direction. A soaker hose (line) only spreads water sideways, away from its length, so the wetting thins out more gently as you walk away.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>No square for a line source.</b> 4× farther from the tracks is 4× weaker, not 16×.</li>
+<li>The notes' cylinder slide repeats the words "point source", but the source there is a <b>line</b>. Only a line source gives cylindrical waves.</li>
+<li>The ends of the cylinder are ignored; we assume <i>L</i> is long compared with <i>r</i>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q8" data-title="Check: cylindrical waves"></div>
+</section>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+<h3><span class="num">09</span>Acoustic attenuation, and combining it with spreading</h3>
+<p>Spreading only redistributes energy. Real media also <b>remove</b> it: viscosity always turns some sound energy into heat. That loss is exponential in distance, set by the <b>attenuation coefficient</b> <i>α</i> (units 1/m).</p>
+<div class="eq">
+  <span class="row"><i>I</i>(<i>r</i><sub>2</sub>) = <i>I</i>(<i>r</i><sub>1</sub>) <i>e</i><sup>−<i>α</i>Δ<i>r</i></sup>, &nbsp; Δ<i>r</i> = |<i>r</i><sub>2</sub> − <i>r</i><sub>1</sub>|</span>
+  <span class="row"><span class="frac"><span><i>I</i><sub>2</sub></span><span><i>I</i><sub>1</sub></span></span> = <span style="font-size:1.25em">[</span><span class="frac"><span><i>r</i><sub>1</sub></span><span><i>r</i><sub>2</sub></span></span><span style="font-size:1.25em">]</span><sup><i>n</i>−1</sup> <i>e</i><sup>−<i>α</i>Δ<i>r</i></sup> <span class="note">n = 2 cylindrical, n = 3 spherical</span></span>
+</div>
+<p>Read the combined formula as two factors multiplied: ① <b>spreading</b>, (<i>r</i><sub>1</sub>/<i>r</i><sub>2</sub>)<sup><i>n</i>−1</sup>, and ② <b>attenuation</b>, <i>e</i><sup>−<i>α</i>Δ<i>r</i></sup>. With <i>n</i> = 3 the spreading factor is (<i>r</i><sub>1</sub>/<i>r</i><sub>2</sub>)², the inverse square law from §7. With <i>n</i> = 2 it is <i>r</i><sub>1</sub>/<i>r</i><sub>2</sub>, the line source from §8.</p>
+
+<details class="work" open><summary>Worked example <span class="badge">practice numbers</span></summary><div class="body">
+<p>A point source (spherical, <i>n</i> = 3) in a medium with <i>α</i> = 0.01 m<sup>−1</sup>. Compare the intensity at <i>r</i><sub>2</sub> = 20 m with <i>r</i><sub>1</sub> = 10 m.</p>
+<ul class="plain">
+<li>Spreading: (10/20)<sup>3−1</sup> = (0.5)² = 0.25.</li>
+<li>Attenuation: Δ<i>r</i> = 10 m, <i>e</i><sup>−(0.01)(10)</sup> = <i>e</i><sup>−0.1</sup> = 0.905.</li>
+<li><i>I</i><sub>2</sub>/<i>I</i><sub>1</sub> = 0.25 × 0.905 = <b>0.226</b>. Spreading did most of the damage here.</li>
+</ul>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Try it: spreading vs absorption</div>
+  <canvas id="cvA" height="230" aria-label="Intensity ratio versus distance for spreading, attenuation and combined"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>spreading only</span><span><i style="background:var(--fund)"></i>attenuation only</span><span><i style="background:var(--curr)"></i>combined</span></div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Wave geometry"><button type="button" id="aN3" aria-pressed="true">Spherical, n = 3</button><button type="button" id="aN2" aria-pressed="false">Cylindrical, n = 2</button></div>
+    <label>α (1/m) <input type="range" id="aAl" min="0" max="0.1" step="0.001" value="0.01"><output id="aAlO"></output></label>
+    <label><span>r<sub>1</sub> (m)</span> <input type="number" id="aR1" value="10" step="any" min="0.01"></label>
+    <label><span>r<sub>2</sub> (m)</span> <input type="number" id="aR2" value="20" step="any" min="0.01"></label>
+  </div>
+  <div class="steps" id="atSteps" aria-live="polite"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a toll road</span>
+<p>Spreading is like a crowd dispersing into a bigger plaza: nobody leaves, they just thin out. Attenuation is a toll booth every metre that takes the same <b>percentage</b> of whatever money you still have. A fixed percentage per metre is exactly what an exponential is.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>The exponent is n − 1</b>, not <i>n</i>. Spherical (<i>n</i> = 3) uses a square; cylindrical (<i>n</i> = 2) uses power 1.</li>
+<li><b>Δ<i>r</i> is a distance difference</b>, |<i>r</i><sub>2</sub> − <i>r</i><sub>1</sub>|, not <i>r</i><sub>2</sub>.</li>
+<li>Check units: <i>α</i>Δ<i>r</i> must be dimensionless (1/m × m).</li>
+<li>Near the source spreading usually dominates; very far away, the exponential eventually wins.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q9" data-title="Check: attenuation"></div>
+</section>
+
+<h2 class="part">Part 3 · Decibels</h2>
+
+<!-- 10 -->
+<section class="sec" id="s10">
+<h3><span class="num">10</span>Sound level β</h3>
+<p>Our ears handle intensities over a range of about 10<sup>12</sup>, so we use a <b>logarithmic</b> loudness scale. The reference is the <b>hearing threshold</b>, the faintest sound we can hear, <i>I</i><sub>0</sub> = 1 × 10<sup>−12</sup> W/m². β is dimensionless and expressed in decibels (dB).</p>
+<div class="eq">
+  <span class="row">β = (10 dB) log<sub>10</sub>(<i>I</i>/<i>I</i><sub>0</sub>), &nbsp; <i>I</i><sub>0</sub> = 1 × 10<sup>−12</sup> W/m²</span>
+  <span class="row"><i>I</i> = <i>I</i><sub>0</sub> 10<sup>β/10 dB</sup> <span class="note">since log<sub>10</sub>(x) = y ⇒ 10<sup>y</sup> = x</span></span>
+</div>
+
+<details class="work" open><summary>Lecture table entry: busy street traffic</summary><div class="body">
+<div class="tbl"><table><thead><tr><th></th><th>β</th><th>I</th></tr></thead><tbody><tr><td>Busy street traffic</td><td class="num">70 dB</td><td class="num">10<sup>−5</sup> W/m²</td></tr></tbody></table></div>
+<div class="steps">
+<div>Check, dB → I:  I = I<sub>0</sub> 10<sup>70/10</sup> = (10<sup>−12</sup>)(10<sup>7</sup>) = 10<sup>−5</sup> W/m²  ✓</div>
+<div>Check, I → dB:  β = 10 log<sub>10</sub>(10<sup>−5</sup>/10<sup>−12</sup>) = 10 log<sub>10</sub>(10<sup>7</sup>) = 10 × 7 = 70 dB  ✓</div>
+</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Converter: decibels ↔ intensity</div>
+  <div class="controls">
+    <label>β (dB) <input type="range" id="dB" min="0" max="140" step="0.5" value="70"><output id="dBO"></output></label>
+    <label>or type I (W/m²) <input type="number" id="dI" value="1e-5" step="any" min="0"></label>
+  </div>
+  <canvas id="cvD" height="120" aria-label="Logarithmic intensity ladder"></canvas>
+  <div class="steps" id="dSteps" aria-live="polite"></div>
+  <div class="src-note">Loads with the lecture's busy street: 70 dB ↔ 1.0 × 10<sup>−5</sup> W/m².</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · counting zeros</span>
+<p>Every 10 dB is "one more zero" on the intensity. 70 dB means 10<sup>7</sup> times the threshold: a 1 followed by seven zeros. That's why the scale stays in friendly two-digit numbers even though the intensities span twelve powers of ten.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Ratios become additions.</b> ×10 in intensity = +10 dB. ×100 = +20 dB. ×2 ≈ +3 dB.</li>
+<li><b>Decibels don't add.</b> Two 70 dB sources give 73 dB, not 140 dB. Add the <b>intensities</b>, then convert.</li>
+<li>0 dB is not "no sound". It's <i>I</i> = <i>I</i><sub>0</sub>, the threshold. Negative dB is possible (quieter than the threshold).</li>
+<li>Use log base 10, not ln.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q10" data-title="Check: sound level"></div>
+</section>
+
+<!-- 11 -->
+<section class="sec" id="s11">
+<h3><span class="num">11</span>Change in sound level between two points</h3>
+<p>Subtract two levels and the <i>I</i><sub>0</sub> cancels: a level difference only depends on the intensity <b>ratio</b>. Plug in the spreading + attenuation ratio from §9 and split the log of a product into a sum.</p>
+<div class="eq">
+  <span class="row">Δβ = β<sub>2</sub> − β<sub>1</sub> = (10 dB) log<sub>10</sub>(<i>I</i><sub>2</sub>/<i>I</i><sub>1</sub>)</span>
+  <span class="row">Δβ = (10 dB) log<sub>10</sub>[(<i>r</i><sub>1</sub>/<i>r</i><sub>2</sub>)<sup><i>n</i>−1</sup> <i>e</i><sup>−<i>α</i>Δ<i>r</i></sup>]</span>
+  <span class="row">Δβ = (<i>n</i> − 1)(10 dB) log<sub>10</sub>(<i>r</i><sub>1</sub>/<i>r</i><sub>2</sub>) − 4.343 <i>α</i>Δ<i>r</i> <span class="note">log<sub>10</sub> e = 0.4343</span></span>
+</div>
+
+<details class="work" open><summary>Lecture derivation: splitting the log</summary><div class="body">
+<div class="steps">
+<div>β<sub>1</sub> = 10 dB log<sub>10</sub>(I<sub>1</sub>/I<sub>0</sub>),   β<sub>2</sub> = 10 dB log<sub>10</sub>(I<sub>2</sub>/I<sub>0</sub>)</div>
+<div>Δβ = β<sub>2</sub> − β<sub>1</sub> = 10 dB log<sub>10</sub>(I<sub>2</sub>/I<sub>1</sub>)          <span class="c">log a − log b = log(a/b)</span></div>
+<div>   = 10 dB log<sub>10</sub>[(r<sub>1</sub>/r<sub>2</sub>)<sup>n−1</sup> e<sup>−αΔr</sup>]           <span class="c">ratio from §9</span></div>
+<div>   = (n−1)(10 dB) log<sub>10</sub>(r<sub>1</sub>/r<sub>2</sub>) + 10 dB · log<sub>10</sub>(e<sup>−αΔr</sup>)</div>
+<div>   log<sub>10</sub>(e<sup>−αΔr</sup>) = −αΔr log<sub>10</sub>e = −0.4343 αΔr</div>
+<div>   = (n−1)(10 dB) log<sub>10</sub>(r<sub>1</sub>/r<sub>2</sub>) − 4.343 αΔr</div>
+</div>
+</div></details>
+
+<details class="work" open><summary>Worked example <span class="badge">practice numbers, lecture's 70 dB</span></summary><div class="body">
+<p>Traffic noise is 70 dB (the lecture's busy street) at <i>r</i><sub>1</sub> = 10 m. Treat it as a point source (<i>n</i> = 3) in air with <i>α</i> = 0.001 m<sup>−1</sup>. What is the level at <i>r</i><sub>2</sub> = 100 m?</p>
+<ul class="plain">
+<li>Spreading: (3 − 1)(10 dB) log<sub>10</sub>(10/100) = 20 × (−1) = <b>−20.00 dB</b>.</li>
+<li>Attenuation: Δ<i>r</i> = 90 m, 4.343 × 0.001 × 90 = <b>0.39 dB</b> lost.</li>
+<li>Δβ = −20.00 − 0.39 = <b>−20.39 dB</b>, so β<sub>2</sub> = 70 − 20.39 = <b>49.6 dB</b>.</li>
+<li>Check the long way: <i>I</i><sub>2</sub> = 10<sup>−5</sup> × (0.1)² × <i>e</i><sup>−0.09</sup> = 9.14 × 10<sup>−8</sup> W/m², and 10 log<sub>10</sub>(9.14 × 10<sup>4</sup>) = 49.6 dB ✓.</li>
+</ul>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: level at a second point</div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Wave geometry"><button type="button" id="bN3" aria-pressed="true">Spherical, n = 3</button><button type="button" id="bN2" aria-pressed="false">Cylindrical, n = 2</button></div>
+  </div>
+  <div class="controls">
+    <label><span>β<sub>1</sub> (dB)</span> <input type="number" id="bB1" value="70" step="any"></label>
+    <label><span>r<sub>1</sub> (m)</span> <input type="number" id="bR1" value="10" step="any" min="0.01"></label>
+    <label><span>r<sub>2</sub> (m)</span> <input type="number" id="bR2" value="100" step="any" min="0.01"></label>
+    <label>α (1/m) <input type="number" id="bAl" value="0.001" step="any" min="0"></label>
+  </div>
+  <div class="steps" id="bSteps" aria-live="polite"></div>
+  <div class="src-note">Loads with the worked example above (β<sub>2</sub> = 49.6 dB).</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · a bank statement in dB</span>
+<p>Logs turn multiplying into adding. Instead of "your intensity was multiplied by 0.01 and then by 0.914", the decibel statement reads "−20 dB for spreading, −0.39 dB for absorption". Each loss is its own line item, and you just add them up.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Watch the typo in the notes.</b> The second slide on this topic writes (<i>r</i><sub>2</sub>/<i>r</i><sub>1</sub>)<sup><i>n</i>−1</sup> inside the log, but the expanded line, and the slide before it, use (<i>r</i><sub>1</sub>/<i>r</i><sub>2</sub>). The correct one is <b><i>r</i><sub>1</sub>/<i>r</i><sub>2</sub></b>: moving away (<i>r</i><sub>2</sub> &gt; <i>r</i><sub>1</sub>) must make Δβ negative.</li>
+<li><b>Where 4.343 comes from:</b> 10 × log<sub>10</sub> e = 10 × 0.4343. It converts the natural exponent into decibels.</li>
+<li><b>Rules of thumb (α = 0):</b> spherical loses 6.02 dB per doubling of distance and 20 dB per ×10. Cylindrical loses 3.01 dB per doubling and 10 dB per ×10.</li>
+<li>Δβ is a <b>difference</b>; add it to β<sub>1</sub> to get β<sub>2</sub>.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q11" data-title="Check: level change"></div>
+</section>
+
+<h2 class="part">Part 4 · Impedance</h2>
+
+<!-- 12 -->
+<section class="sec" id="s12">
+<h3><span class="num">12</span>Impedance Z</h3>
+<p>When a wave reaches the boundary between two media, part of it is <b>reflected</b> and part <b>transmitted</b>. How much of each depends on a property of each medium called its <b>impedance</b> <i>Z</i>. Impedance combines how hard the medium is to accelerate (<b>inertial</b> property) with how hard it springs back (<b>elastic</b> property).</p>
+<div class="eq">
+  <span class="row"><i>Z</i> = √(inertial property × elastic property)</span>
+  <span class="row">String: <i>Z</i> = √(<i>μ</i>τ) <span class="note">linear density × tension</span></span>
+  <span class="row">Fluid: <i>Z</i> = √(<i>ρB</i>) <span class="note">density × bulk modulus</span></span>
+  <span class="row">Solid rod: <i>Z</i> = √(<i>ρY</i>) <span class="note">density × Young's modulus</span></span>
+</div>
+<p>Handy rewrite for the string: since <i>v</i> = √(τ/<i>μ</i>), √(<i>μ</i>τ) = <i>μv</i>. (Likewise √(<i>ρB</i>) = <i>ρv</i> for a fluid.) And this is the same √(τ<i>μ</i>) that appeared in the power formula of §4: <i>P</i><sub>ave</sub> = ½<i>Zω</i>²<i>y<sub>m</sub></i>².</p>
+
+<div class="demo">
+  <div class="dtitle">Calculator: impedance of a medium</div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Medium type"><button type="button" id="zStr" aria-pressed="true">String</button><button type="button" id="zFl" aria-pressed="false">Fluid</button><button type="button" id="zRod" aria-pressed="false">Solid rod</button></div>
+  </div>
+  <div class="controls">
+    <label id="zL1"><span id="zN1">μ (kg/m)</span> <input type="number" id="zA" value="0.01" step="any" min="0"></label>
+    <label id="zL2"><span id="zN2">τ (N)</span> <input type="number" id="zB" value="100" step="any" min="0"></label>
+  </div>
+  <div class="controls" id="zPresets"></div>
+  <div class="steps" id="zSteps" aria-live="polite"></div>
+  <div class="src-note"><span class="badge">practice numbers</span> Material values (water, air, steel) are typical textbook values.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · how stubborn the medium is</span>
+<p>Impedance is a medium's "stubbornness" to being shaken. A heavy, tight rope (big <i>μ</i> and τ) resists your hand far more than a light, slack thread. When a wave moves between two media of very different stubbornness, it can't hand its motion over cleanly, so much of it bounces back.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Product under the root, not a ratio.</b> Speed is √(elastic/inertial); impedance is √(elastic × inertial). Easy to swap on an exam.</li>
+<li><b>Units differ by medium.</b> String <i>Z</i>: kg/s. Fluid and rod <i>Z</i>: kg/(m²·s) (often called rayl).</li>
+<li>What matters at a boundary is whether <i>Z</i><sub>1</sub> and <i>Z</i><sub>2</sub> are <b>different</b>, not how big either one is.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q12" data-title="Check: impedance"></div>
+</section>
+
+<!-- 13 -->
+<section class="sec" id="s13">
+<h3><span class="num">13</span>Boundary conditions: two strings attached</h3>
+<p>The lecture's example joins string 1 (<i>μ</i><sub>1</sub>, τ<sub>1</sub>, <i>Z</i><sub>1</sub> = √(<i>μ</i><sub>1</sub>τ<sub>1</sub>)) to string 2 (<i>μ</i><sub>2</sub>, τ<sub>2</sub>, <i>Z</i><sub>2</sub> = √(<i>μ</i><sub>2</sub>τ<sub>2</sub>)). An incident pulse travels along string 1 toward the knot. At the knot it splits into a <b>reflected</b> pulse (back along string 1) and a <b>transmitted</b> pulse (on along string 2).</p>
+<p><b>Boundary conditions</b> are rules that must hold at the knot, applied to the displacement of the wave function there. The main one: the string doesn't break, so the displacement just left of the knot equals the displacement just right of it. These conditions are what relate the amplitude <i>y<sub>m</sub></i> of the reflected and transmitted waves to the <i>y<sub>m</sub></i> of the incident wave.</p>
+<p>In the lecture's sketch the reflected pulse comes back <b>upside down</b> and the transmitted pulse continues upright on the green string.</p>
+
+<div class="demo">
+  <div class="dtitle">Try it: send a pulse into a knot</div>
+  <canvas id="cvB" height="230" aria-label="Pulse reflecting and transmitting at a junction of two strings"></canvas>
+  <div class="legend"><span><i style="background:var(--volt)"></i>string 1 (Z<sub>1</sub>)</span><span><i style="background:var(--fund)"></i>string 2 (Z<sub>2</sub>)</span></div>
+  <div class="controls">
+    <label><span>Z<sub>2</sub>/Z<sub>1</sub></span> <input type="range" id="bZ" min="-2" max="2" step="0.01" value="1.1"><output id="bZO"></output></label>
+    <button class="btn" type="button" id="bGo">Send pulse</button>
+    <button class="btn" type="button" id="bSame">Z<sub>2</sub> = Z<sub>1</sub></button>
+    <button class="btn" type="button" id="bLect">Lecture sketch (Z<sub>2</sub> &gt; Z<sub>1</sub>)</button>
+  </div>
+  <div class="readout" id="bRead"></div>
+  <div class="src-note">The amplitudes use the standard results r = (Z<sub>1</sub> − Z<sub>2</sub>)/(Z<sub>1</sub> + Z<sub>2</sub>) and t = 2Z<sub>1</sub>/(Z<sub>1</sub> + Z<sub>2</sub>), which follow from the boundary conditions. Lecture 4b stops before deriving them, so treat them as a preview. Same tension assumed on both strings, so v ∝ 1/Z.</div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy · bumping into someone</span>
+<p>Run into someone much heavier than you (bigger <i>Z</i>) and you bounce back: reflection, inverted. Run into someone much lighter and you keep going while they fly off ahead: the reflection is upright. Run into your twin (equal <i>Z</i>) and all your motion passes on with nothing coming back.</p>
+</div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span>
+<ul>
+<li><b>Inverted vs upright.</b> Into a higher-<i>Z</i> medium (heavier string): reflected pulse inverted. Into a lower-<i>Z</i> medium: reflected pulse upright. Equal <i>Z</i>: no reflection.</li>
+<li><b>The transmitted pulse is never inverted</b>, because displacement must match on both sides of the knot.</li>
+<li><b>Amplitude isn't energy.</b> Going into a lighter string, the transmitted amplitude can be <b>bigger</b> than the incident one, yet it carries less energy, because power ∝ <i>Z</i> × amplitude² (§4).</li>
+<li>Frequency stays the same across the knot; speed and wavelength change.</li>
+</ul>
+</div>
+<div class="quiz" data-quiz="q13" data-title="Check: boundaries"></div>
+</section>
+
+<!-- FINAL -->
+<section class="sec" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across both lectures, mostly calculations. Grab paper and a calculator. Each explanation tells you which section to revisit.</p>
+<div class="quiz final" data-quiz="qf" data-title="Final exam"></div>
+</section>
+
+<!-- SHEET -->
+<section class="sec" id="sheet">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<div class="sheet">
+  <div class="card"><h5>Wave on a string</h5><div>y = y<sub>m</sub> sin(kx − ωt)<br>u<sub>y</sub> = −ωy<sub>m</sub> cos(kx − ωt)<br>dm = μ dx · v = √(τ/μ)<br>τ = μv² · k = ω/v</div></div>
+  <div class="card"><h5>Kinetic energy rate</h5><div>dK/dt = ½μvω²y<sub>m</sub>² cos²(kx − ωt)<br>[cos²]<sub>ave</sub> = ½<br>(dK/dt)<sub>ave</sub> = ¼μvω²y<sub>m</sub>²</div></div>
+  <div class="card"><h5>Elastic PE</h5><div>ds ≈ dx[1 + ½(dy/dx)²]<br>dV = (τ/2)(dy/dx)² dx<br>(dV/dt)<sub>ave</sub> = ¼μω²vy<sub>m</sub>²</div></div>
+  <div class="card"><h5>Power</h5><div>String: P<sub>ave</sub> = ½μvω²y<sub>m</sub>² = ½√(τμ)ω²y<sub>m</sub>²<br>Sound: P<sub>ave</sub> = ½ρAvω²y<sub>m</sub>² (ρA ↔ μ)<br>ω = 2πf</div></div>
+  <div class="card"><h5>Intensity and spreading</h5><div>Spherical: I = P/(4πr²), I<sub>a</sub>/I<sub>b</sub> = r<sub>b</sub>²/r<sub>a</sub>²<br>Cylindrical: I = P/(2πrL), I<sub>a</sub>/I<sub>b</sub> = r<sub>b</sub>/r<sub>a</sub></div></div>
+  <div class="card"><h5>Attenuation + spreading</h5><div>I(r<sub>2</sub>) = I(r<sub>1</sub>)e<sup>−αΔr</sup>, Δr = |r<sub>2</sub> − r<sub>1</sub>|<br>I<sub>2</sub>/I<sub>1</sub> = (r<sub>1</sub>/r<sub>2</sub>)<sup>n−1</sup>e<sup>−αΔr</sup><br>n = 2 cylindrical, n = 3 spherical</div></div>
+  <div class="card"><h5>Sound level</h5><div>β = (10 dB) log<sub>10</sub>(I/I<sub>0</sub>)<br>I = I<sub>0</sub>10<sup>β/10 dB</sup>, I<sub>0</sub> = 10<sup>−12</sup> W/m²<br>70 dB ↔ 10<sup>−5</sup> W/m² (busy street)</div></div>
+  <div class="card"><h5>Level change</h5><div>Δβ = (10 dB) log<sub>10</sub>(I<sub>2</sub>/I<sub>1</sub>)<br>= (n − 1)(10 dB) log<sub>10</sub>(r<sub>1</sub>/r<sub>2</sub>) − 4.343αΔr<br>log<sub>10</sub>e = 0.4343</div></div>
+  <div class="card"><h5>Impedance</h5><div>Z = √(inertial × elastic)<br>String √(μτ) = μv · Fluid √(ρB) · Rod √(ρY)<br>Preview: r = (Z<sub>1</sub> − Z<sub>2</sub>)/(Z<sub>1</sub> + Z<sub>2</sub>), t = 2Z<sub>1</sub>/(Z<sub>1</sub> + Z<sub>2</sub>)</div></div>
+</div>
+</section>
+
+<footer>Built from the PHYS 365 Lecture 4a notes (Energy and power of a wave travelling along a string) and Lecture 4b notes (Circular, spherical and plane waves; intensity; attenuation; sound level; impedance, reflection and transmission). Values marked "practice numbers" are not from the lectures.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------------- QUIZ DATA ---------------- */
+const QUIZ = {
+q1:[
+ {q:"An element of the string is passing through y = 0. What can you say about its kinetic and elastic potential energy?",
+  o:["KE is max, PE is zero","KE is zero, PE is max","Both are at their maximum","Both are zero"],a:2,
+  e:"At y = 0 the element moves fastest (|u_y| max, so KE max) and the string is steepest there (maximum stretch, so PE max). On a travelling wave the two peak together."},
+ {q:"An element sits exactly at a crest. Why is its potential energy zero even though it is at the highest point?",
+  o:["Because its velocity is zero there","Because the PE is elastic (stretch) energy, and the string is flat at a crest, so it isn't stretched","Because gravity only acts at the zero crossings","It isn't zero: PE is maximum at the crest"],a:1,
+  e:"The PE in this lecture is stored by tension stretching the string, and the stretch depends on the slope (dy/dx)², not the height. The slope is zero at a crest, so PE = 0 (minimum stretch)."},
+ {q:"A mass on a spring and an element of a travelling string wave both do SHM. Which statement is true?",
+  o:["Both keep a constant total energy","On the spring, KE and PE peak at different moments; on the wave element they peak together, so its energy is not constant","On the wave element, KE and PE peak at different moments","On both, KE and PE peak together"],a:1,
+  e:"On the spring, energy sloshes between KE and PE and the total stays fixed. A wave element's KE and PE are both ∝ cos²(kx − ωt), so they rise and fall together: the element keeps receiving energy from one neighbour and passing it to the other."},
+ {q:"A wave travels along +x on a string while each element moves along y. What type of wave is this?",
+  o:["Longitudinal, because each element moves along y","Transverse, because the element's motion is perpendicular to the direction the wave travels","Longitudinal, because the energy moves along x","Neither: it is a standing wave"],a:1,
+  e:"Motion perpendicular to the direction of travel is transverse. The notes write \"longitudinal\" beside the y-axis motion, but that's a slip. Sound in air (§5) is the longitudinal case."}
+],
+q2:[
+ {q:"μ = 0.02 kg/m, v = 30 m/s, ω = 200 rad/s, y_m = 5.0 mm. What is the average rate of KE transfer?",
+  o:["0.075 W","0.15 W","0.30 W","0.60 W"],a:1,
+  e:"(dK/dt)_ave = ¼μvω²y_m² = ¼(0.02)(30)(200)²(0.005)² = ¼(0.6)(40 000)(2.5 × 10⁻⁵) = 0.15 W."},
+ {q:"Same wave. What is the largest instantaneous value of dK/dt at a given point?",
+  o:["0.075 W","0.15 W","0.30 W","0.60 W"],a:2,
+  e:"The instantaneous rate is ½μvω²y_m² cos²(kx − ωt). Its peak (cos² = 1) is ½μvω²y_m², twice the average: 2 × 0.15 = 0.30 W."},
+ {q:"In the derivation, why does dx/dt become the wave speed v?",
+  o:["Each element travels along x at speed v","In time dt the wave sweeps a new length dx = v dt of string into motion, carrying its energy","Because u_y = v at the zero crossings","It's a small-amplitude approximation"],a:1,
+  e:"Elements only move up and down. What moves along x is the disturbance, at speed v, so the energy arrives on a length v dt of string per time dt."},
+ {q:"The amplitude y_m is tripled, everything else unchanged. The average KE transfer rate becomes:",
+  o:["3 times bigger","6 times bigger","9 times bigger","√3 times bigger"],a:2,
+  e:"The rate goes as y_m². 3² = 9."},
+ {q:"Why is the average of cos²θ over a cycle ½, when the average of cos θ is 0?",
+  o:["cos² is never negative, and over a cycle its humps fill exactly half the box between 0 and 1 (cos²θ = ½ + ½cos 2θ)","Because ∫cos θ dθ = ½","Because squaring halves any number between 0 and 1","It's only approximately ½ for small θ"],a:0,
+  e:"cos²θ = ½ + ½cos 2θ. The cos 2θ part averages to zero over a full cycle, leaving exactly ½. Negative lobes of cos θ cancel positive ones; cos² has no negative lobes."}
+],
+q3:[
+ {q:"τ = 10 N, local slope dy/dx = 0.1, element length dx = 0.02 m. What elastic PE dV does it store?",
+  o:["1.0 × 10⁻³ J","2.0 × 10⁻³ J","1.0 × 10⁻² J","1.0 × 10⁻⁴ J"],a:0,
+  e:"dV = (τ/2)(dy/dx)² dx = (10/2)(0.1)²(0.02) = 5 × 0.01 × 0.02 = 1.0 × 10⁻³ J."},
+ {q:"A piece of string with dx = 1.0 cm is tilted to a slope of 0.2. By how much is it stretched (dℓ)?",
+  o:["0.02 cm","0.04 cm","0.2 cm","0.01 cm"],a:0,
+  e:"dℓ = ½(dy/dx)² dx = ½(0.2)²(1.0 cm) = ½(0.04) = 0.02 cm. Slope 0.2 is small, so the approximation is fine."},
+ {q:"Which pair of identities turns ¼τvk²y_m² into ¼μvω²y_m²?",
+  o:["τ = μv² and k = ω/v","τ = μ/v² and k = ωv","v = fλ and ω = 2πf","τ = μv and k = 2π/λ"],a:0,
+  e:"From v = √(τ/μ), τ = μv². And k = ω/v so k² = ω²/v². Then ¼(μv²)(v)(ω²/v²)y_m² = ¼μvω²y_m²."},
+ {q:"Why does the average PE transfer rate come out equal to the average KE transfer rate?",
+  o:["Because the element's KE converts into PE and back, like a spring","Because both rates are proportional to cos²(kx − ωt) (u_y and dy/dx are both ∝ cos), and their prefactors match once τ = μv² and k = ω/v","Because PE is always zero on average","Only for standing waves"],a:1,
+  e:"u_y = −ωy_m cos(kx − ωt) and dy/dx = ky_m cos(kx − ωt) have the same shape, so KE and PE densities rise and fall together. With τ = μv² and k = ω/v the coefficients match too. (Option A describes a spring, which is exactly what a travelling wave isn't.)"}
+],
+q4:[
+ {q:"μ = 0.05 kg/m, τ = 80 N, ω = 200 rad/s, y_m = 5.0 mm. What is the average power?",
+  o:["0.50 W","1.0 W","2.0 W","4.0 W"],a:1,
+  e:"P_ave = ½√(τμ)ω²y_m² = ½√(80 × 0.05)(200)²(0.005)² = ½(2)(40 000)(2.5 × 10⁻⁵) = 1.0 W."},
+ {q:"On the same string, the frequency is doubled and nothing else changes. The power:",
+  o:["doubles","quadruples","stays the same","is halved"],a:1,
+  e:"P ∝ ω², so doubling ω multiplies P by 4."},
+ {q:"The tension is quadrupled (same μ, ω, y_m). The power:",
+  o:["is multiplied by 4","is multiplied by 2","is multiplied by 16","stays the same"],a:1,
+  e:"P_ave = ½√(τμ)ω²y_m², so P ∝ √τ. √4 = 2. (Physically, v doubles, and P ∝ v at fixed μ.)"},
+ {q:"A student puts f = 50 Hz straight into ω in P = ½μvω²y_m². Their answer is:",
+  o:["too small by (2π)² ≈ 39","too big by 2π","correct","too small by 2π ≈ 6.3"],a:0,
+  e:"ω = 2πf, and ω is squared, so using f instead of ω leaves out a factor (2π)² ≈ 39.5."},
+ {q:"Why is the total average power exactly twice the average KE rate?",
+  o:["Because the wave goes both ways","Because elastic PE is carried along too, with the same average as KE","Because of the ½ in ½mv²","Because cos² averages to ½"],a:1,
+  e:"P_ave = (dK/dt)_ave + (dV/dt)_ave, and §3 showed both are ¼μvω²y_m². Sum: ½μvω²y_m²."}
+],
+q5:[
+ {q:"Why can ρA replace μ when going from a string to a sound wave?",
+  o:["Both are dimensionless","A slice of air has dm = ρA dx, just as a string has dm = μ dx, so ρA is the 'mass per unit length' (kg/m³ × m² = kg/m)","Because sound has no tension","It's an empirical correction"],a:1,
+  e:"The derivation only used dm = μ dx. For a slice of air of area A, dm = ρ dV = ρA dx. Same structure, so μ → ρA, and the units check out (kg/m)."},
+ {q:"Same A, ω and y_m in water (ρ = 1000 kg/m³, v = 1480 m/s) and in air (ρ = 1.21 kg/m³, v = 343 m/s). P_water / P_air ≈ ?",
+  o:["4.3","830","3.6 × 10³","1.3 × 10⁷"],a:2,
+  e:"P ∝ ρv here. (1000 × 1480)/(1.21 × 343) = 1 480 000/415 ≈ 3566 ≈ 3.6 × 10³. (ρv is the fluid's impedance, §12.)"},
+ {q:"f = 500 Hz, ρ = 1.21 kg/m³, A = 0.50 m², v = 343 m/s, y_m = 2.0 × 10⁻⁷ m. Average power?",
+  o:["4.1 × 10⁻⁵ W","8.2 × 10⁻⁵ W","1.0 × 10⁻⁶ W","2.0 × 10⁻⁵ W"],a:0,
+  e:"ω = 2π(500) = 3142 rad/s, ω² = 9.87 × 10⁶. P = ½(1.21)(0.50)(343)(9.87 × 10⁶)(4.0 × 10⁻¹⁴) = 4.1 × 10⁻⁵ W. (8.2 forgets the ½; 1.0 × 10⁻⁶ uses f instead of ω.)"},
+ {q:"In the §5 worked example (1.64 × 10⁻⁶ W through A = 2.0 m²), what is the intensity?",
+  o:["3.3 × 10⁻⁶ W/m²","8.2 × 10⁻⁷ W/m²","1.64 × 10⁻⁶ W/m²","4.1 × 10⁻⁷ W/m²"],a:1,
+  e:"Intensity is power per area: 1.64 × 10⁻⁶ / 2.0 = 8.2 × 10⁻⁷ W/m². That's the quantity Part 2 is built on."}
+],
+q6:[
+ {q:"A microphone 0.1 m wide is 50 m from a small speaker. Why can we treat the sound at the mic as a plane wave?",
+  o:["The mic is tiny compared with the wavefront's radius, so the curvature across it is negligible","Small speakers emit plane waves","Sound in air is always a plane wave","The intensity is constant far away"],a:0,
+  e:"Far from the source, a small patch of a huge sphere looks flat. 0.1 m across a 50 m radius bows by only (0.05)²/(2 × 50) = 2.5 × 10⁻⁵ m."},
+ {q:"How is the wave velocity directed relative to a wavefront?",
+  o:["Parallel to the wavefront","Perpendicular to the wavefront","At 45°","It depends on the frequency"],a:1,
+  e:"Wavefronts join points of equal phase, and the wave moves straight outward from them: perpendicular, like the arrows in the lecture sketch."},
+ {q:"You move from 2 m to 50 m away from a point source. What happens to the spacing between neighbouring wavefronts?",
+  o:["It grows in proportion to r","It shrinks","It stays λ; only the curvature decreases","It grows as r²"],a:2,
+  e:"Neighbouring wavefronts are always one wavelength apart (the speed and frequency haven't changed). What changes is how curved they look."},
+ {q:"Which situation produces circular (rather than spherical) wavefronts?",
+  o:["A small speaker in a large room","A pebble dropped on a pond's surface","A long train track","A loudspeaker very far away"],a:1,
+  e:"Circular wavefronts come from a point source in a 2D medium, like a water surface. A speaker in 3D gives spheres; a long line source gives cylinders; far away, anything looks planar."}
+],
+q7:[
+ {q:"A point source emits P = 10 W equally in all directions. What is the intensity at r = 2.0 m?",
+  o:["0.199 W/m²","0.398 W/m²","0.796 W/m²","2.50 W/m²"],a:0,
+  e:"I = P/(4πr²) = 10/(4π × 4) = 10/50.27 = 0.199 W/m². (0.398 comes from forgetting to square r.)"},
+ {q:"Point a is 1.0 m from a point source and point b is 3.0 m away. I_a / I_b = ?",
+  o:["3","1/3","9","1/9"],a:2,
+  e:"I_a/I_b = r_b²/r_a² = 3²/1² = 9. The closer point is 9 times more intense."},
+ {q:"You measure I = 0.050 W/m² at 4.0 m from a point source. What power does it emit?",
+  o:["0.20 W","2.5 W","10 W","0.63 W"],a:2,
+  e:"P = I × 4πr² = 0.050 × 4π(16) = 0.050 × 201.1 = 10.05 ≈ 10 W."},
+ {q:"A listener moves from 6 m to 3 m from a point source. The intensity:",
+  o:["doubles","quadruples","halves","stays the same"],a:1,
+  e:"Halving r: I ∝ 1/r², so I goes up by 2² = 4."}
+],
+q8:[
+ {q:"Train tracks act as a line source. How does the intensity at 40 m compare with the intensity at 10 m?",
+  o:["1/4 as much","1/16 as much","1/2 as much","the same"],a:0,
+  e:"Line source: I_a/I_b = r_b/r_a, so I_40/I_10 = 10/40 = 1/4. No square: that's the point of a cylinder."},
+ {q:"A 100 m line source radiates P = 600 W sideways. What is the intensity at r = 5.0 m?",
+  o:["0.191 W/m²","0.955 W/m²","1.91 W/m²","0.0191 W/m²"],a:0,
+  e:"I = P/(2πrL) = 600/(2π × 5 × 100) = 600/3142 = 0.191 W/m²."},
+ {q:"In the train-track example, why does 2πL cancel in I_a/I_b?",
+  o:["Because L is very large","Both imaginary cylinders have the same length L and the same 2π, so only the radii are left","Because the train is moving","Because intensity doesn't depend on area"],a:1,
+  e:"I_a/I_b = (r_b · 2πL)/(r_a · 2πL). Same L for both cylinders, so r_b/r_a is all that's left."},
+ {q:"Going from 10 m to 100 m from a line source cuts the intensity by 10×. How much farther must you move (r₂/r₁) from a point source for the same 10× cut?",
+  o:["10","100","√10 ≈ 3.16","1/10"],a:2,
+  e:"Point source: I ∝ 1/r², so (r₂/r₁)² = 10 → r₂/r₁ = √10 ≈ 3.16. Point sources fade faster."}
+],
+q9:[
+ {q:"Attenuation only (ignore spreading): α = 0.010 m⁻¹ and Δr = 100 m. I₂/I₁ = ?",
+  o:["0.90","0.37","0.010","0.10"],a:1,
+  e:"I₂/I₁ = e^(−αΔr) = e^(−0.010 × 100) = e^(−1) = 0.368."},
+ {q:"Cylindrical wave (n = 2), r₁ = 10 m, r₂ = 20 m, α = 0.010 m⁻¹. I₂/I₁ = ?",
+  o:["0.226","0.452","0.500","0.905"],a:1,
+  e:"Spreading (r₁/r₂)^(n−1) = (0.5)¹ = 0.5. Attenuation e^(−0.01 × 10) = 0.905. Product 0.452."},
+ {q:"Spherical wave (n = 3), r₁ = 5.0 m, r₂ = 15 m, α = 0.020 m⁻¹. I₂/I₁ = ?",
+  o:["0.273","0.111","0.0910","0.0303"],a:2,
+  e:"Spreading (5/15)² = 1/9 = 0.111. Attenuation: Δr = 10 m, e^(−0.2) = 0.819. Product 0.111 × 0.819 = 0.0910. (0.273 uses power 1 instead of n − 1 = 2; 0.0303 uses power 3.)"},
+ {q:"Why is attenuation an exponential in distance?",
+  o:["Each metre of medium removes the same fraction of whatever intensity is left","Each metre removes the same number of W/m²","Because the area of a sphere grows as r²","Because the decibel scale is logarithmic"],a:0,
+  e:"A constant fractional loss per unit distance, dI/dr = −αI, integrates to I = I₁e^(−αΔr). Losing a fixed amount per metre would be linear instead."}
+],
+q10:[
+ {q:"A sound level is 85 dB. What is its intensity?",
+  o:["8.5 × 10⁻⁴ W/m²","3.2 × 10⁻⁴ W/m²","1.0 × 10⁻⁴ W/m²","3.2 × 10⁻³ W/m²"],a:1,
+  e:"I = I₀10^(β/10) = 10⁻¹² × 10^8.5 = 10^(−3.5) = 3.16 × 10⁻⁴ W/m²."},
+ {q:"A sound has I = 3.2 × 10⁻⁶ W/m². What is its level?",
+  o:["55.1 dB","65.1 dB","64.0 dB","32.0 dB"],a:1,
+  e:"β = 10 log₁₀(3.2 × 10⁻⁶/10⁻¹²) = 10 log₁₀(3.2 × 10⁶) = 10(6.505) = 65.1 dB."},
+ {q:"If you double the intensity of a sound, its level goes up by about:",
+  o:["2 dB","3 dB","6 dB","10 dB"],a:1,
+  e:"Δβ = 10 log₁₀(2) = 3.01 dB. Ratios become additions on the dB scale."},
+ {q:"What does β = 0 dB mean?",
+  o:["There is no sound","The intensity equals the hearing threshold I₀ = 10⁻¹² W/m²","The intensity is 1 W/m²","The sound is painfully loud"],a:1,
+  e:"β = 10 log₁₀(I/I₀) = 0 when I = I₀. Zero dB is the threshold of hearing, not silence."},
+ {q:"Sound A is 1000 times more intense than sound B. How many decibels louder is A?",
+  o:["3 dB","10 dB","30 dB","1000 dB"],a:2,
+  e:"Δβ = 10 log₁₀(1000) = 10 × 3 = 30 dB. Each factor of 10 is +10 dB."}
+],
+q11:[
+ {q:"Spherical spreading only (α = 0): r₁ = 10 m, r₂ = 100 m. Δβ = ?",
+  o:["−10 dB","−20 dB","−40 dB","+20 dB"],a:1,
+  e:"Δβ = (n − 1)(10 dB)log₁₀(r₁/r₂) = 2 × 10 × log₁₀(0.1) = 20 × (−1) = −20 dB."},
+ {q:"Same distances, but a line source (cylindrical, α = 0). Δβ = ?",
+  o:["−10 dB","−20 dB","−5 dB","−3 dB"],a:0,
+  e:"n − 1 = 1: Δβ = 10 log₁₀(0.1) = −10 dB. Half the spherical drop in dB."},
+ {q:"Spherical, r₁ = 10 m, r₂ = 20 m, α = 0.005 m⁻¹. Δβ = ?",
+  o:["−6.02 dB","−6.24 dB","−3.23 dB","−6.07 dB"],a:1,
+  e:"Spreading: 20 log₁₀(0.5) = −6.02 dB. Attenuation: 4.343 × 0.005 × 10 = 0.22 dB. Total −6.02 − 0.22 = −6.24 dB."},
+ {q:"Busy street traffic is 70 dB at 10 m. Treat it as a point source with α = 0.002 m⁻¹. What is the level at 40 m?",
+  o:["57.7 dB","58.0 dB","52.0 dB","63.7 dB"],a:0,
+  e:"Spreading: 20 log₁₀(10/40) = −12.04 dB. Attenuation: 4.343 × 0.002 × 30 = 0.26 dB. β₂ = 70 − 12.04 − 0.26 = 57.7 dB."},
+ {q:"One slide writes (r₂/r₁)^(n−1) inside the log. Why must it be (r₁/r₂)^(n−1)?",
+  o:["Both forms are equivalent","With r₂/r₁, moving away (r₂ > r₁) would make the spreading term positive, so sound would get louder with distance","Because log₁₀ e = 0.4343","Because n − 1 can be negative"],a:1,
+  e:"I₂/I₁ = (r₁/r₂)^(n−1)e^(−αΔr), from §9. Farther away must be quieter, so the log must be of a number less than 1. The expanded line on the same slide uses r₁/r₂."}
+],
+q12:[
+ {q:"A string has μ = 0.010 kg/m and τ = 100 N. What is its impedance?",
+  o:["1.0 kg/s","100 kg/s","0.10 kg/s","10 kg/s"],a:0,
+  e:"Z = √(μτ) = √(0.010 × 100) = √1 = 1.0 kg/s. (100 is v = √(τ/μ), the speed: a ratio, not a product.)"},
+ {q:"Water: ρ = 1000 kg/m³, B = 2.2 × 10⁹ Pa. Its impedance is about:",
+  o:["1.5 × 10⁶ kg/(m²·s)","1.5 × 10³ kg/(m²·s)","2.2 × 10¹² kg/(m²·s)","47 kg/(m²·s)"],a:0,
+  e:"Z = √(ρB) = √(2.2 × 10¹²) = 1.48 × 10⁶ kg/(m²·s). (1.5 × 10³ is the speed √(B/ρ) in m/s.)"},
+ {q:"A string has μ = 0.020 kg/m and carries waves at v = 40 m/s. Its impedance?",
+  o:["0.80 kg/s","2000 kg/s","0.0005 kg/s","5.7 kg/s"],a:0,
+  e:"Z = √(μτ) and τ = μv², so Z = √(μ²v²) = μv = 0.020 × 40 = 0.80 kg/s."},
+ {q:"Speed and impedance are both built from the same two properties. Which is which?",
+  o:["v = √(elastic/inertial), Z = √(elastic × inertial)","v = √(elastic × inertial), Z = √(elastic/inertial)","Both are ratios","Both are products"],a:0,
+  e:"String: v = √(τ/μ), Z = √(μτ). Fluid: v = √(B/ρ), Z = √(ρB). Speed is a ratio; impedance is a product. That's why Z = (inertial) × v."}
+],
+q13:[
+ {q:"In the lecture's sketch the reflected pulse comes back upside down. What does that tell you?",
+  o:["Z₂ > Z₁ (string 2 is 'heavier')","Z₂ < Z₁","Z₂ = Z₁","Nothing; reflections are always inverted"],a:0,
+  e:"An inverted reflection happens when the wave hits a higher-impedance medium, like bumping into someone heavier. Into a lower Z, the reflection is upright."},
+ {q:"Which boundary condition is applied at the knot joining the two strings?",
+  o:["The displacement just left of the knot equals the displacement just right of it (the string doesn't break)","The wave speed is the same on both sides","The amplitude is the same on both sides","The energy on each side is zero"],a:0,
+  e:"The lecture applies the boundary conditions to the displacement of the wave function at the boundary. The two strings share the knot, so they must have the same displacement there. Speeds and amplitudes generally differ."},
+ {q:"Using the preview formulas r = (Z₁ − Z₂)/(Z₁ + Z₂) and t = 2Z₁/(Z₁ + Z₂), with Z₁ = 1 kg/s and Z₂ = 3 kg/s, what are r and t?",
+  o:["r = −0.5, t = 0.5","r = 0.5, t = 1.5","r = −0.5, t = 1.5","r = 0.25, t = 0.75"],a:0,
+  e:"r = (1 − 3)/(1 + 3) = −0.5 (inverted, half height). t = 2(1)/4 = 0.5. Check: 1 + r = t at the knot. ✓"},
+ {q:"Two strings with different μ and τ happen to have equal impedance. What reflects at the knot?",
+  o:["Nothing; the whole wave is transmitted","Half the amplitude","An inverted pulse","Everything; nothing is transmitted"],a:0,
+  e:"Reflection is set by the impedance mismatch. With Z₁ = Z₂ there's no mismatch, so r = 0, even though the wave speed changes."}
+],
+qf:[
+ {q:"A string has μ = 0.040 kg/m and τ = 16 N. A 50 Hz wave of amplitude 2.0 mm travels on it. Average power?",
+  o:["0.158 W","0.0040 W","0.316 W","0.079 W"],a:0,
+  e:"v = √(16/0.04) = 20 m/s, ω = 2π(50) = 314.2 rad/s. P = ½(0.04)(20)(314.2)²(0.002)² = 0.158 W. (0.0040 W uses f instead of ω; 0.079 W is only the KE half.) Review §4."},
+ {q:"Why isn't the total energy of a single string element constant as a wave passes, unlike a mass on a spring?",
+  o:["Friction removes it","Its KE and PE are both ∝ cos²(kx − ωt), so they rise and fall together; the element takes in energy from one side and passes it on","Its mass changes","It is constant; the two cases are identical"],a:1,
+  e:"Both KE and elastic PE peak at y = 0 and vanish at the crests. The element is a relay, not a store. Review §1."},
+ {q:"A wave carries P_ave = 0.80 W along a string. What is the average rate at which kinetic energy is transferred?",
+  o:["0.20 W","0.40 W","0.80 W","1.6 W"],a:1,
+  e:"P_ave = (dK/dt)_ave + (dV/dt)_ave with the two equal, so each is half: 0.40 W. Review §2 and §4."},
+ {q:"A sound wave's displacement amplitude is halved while its frequency is doubled (same medium and area). The power:",
+  o:["is unchanged","doubles","halves","quadruples"],a:0,
+  e:"P = ½ρAvω²y_m². (2)² × (½)² = 4 × ¼ = 1. Review §5."},
+ {q:"A 50 W point source radiates equally in all directions. What is the intensity 5.0 m away?",
+  o:["0.159 W/m²","0.796 W/m²","0.318 W/m²","2.0 W/m²"],a:0,
+  e:"I = P/(4πr²) = 50/(4π × 25) = 50/314.2 = 0.159 W/m². Review §7."},
+ {q:"A line source gives 0.20 W/m² at 15 m. What is the intensity at 60 m (no absorption)?",
+  o:["0.0125 W/m²","0.050 W/m²","0.10 W/m²","0.80 W/m²"],a:1,
+  e:"Cylindrical: I ∝ 1/r. 4× farther → ¼: 0.20/4 = 0.050 W/m². (0.0125 wrongly uses 1/r².) Review §8."},
+ {q:"Ignoring spreading, a medium halves the intensity every 200 m. What is α?",
+  o:["3.47 × 10⁻³ m⁻¹","2.5 × 10⁻³ m⁻¹","5.0 × 10⁻³ m⁻¹","1.5 × 10⁻³ m⁻¹"],a:0,
+  e:"e^(−α × 200) = ½ → α = ln 2/200 = 0.693/200 = 3.47 × 10⁻³ m⁻¹. Review §9."},
+ {q:"A sound goes from 70 dB to 90 dB. Its intensity is multiplied by:",
+  o:["20","100","1.29","2"],a:1,
+  e:"+20 dB = 10^(20/10) = 10² = 100. From the lecture's 10⁻⁵ W/m² to 10⁻³ W/m². Review §10."},
+ {q:"Two busy streets, each 70 dB on its own, are heard together (intensities add). Combined level?",
+  o:["140 dB","73 dB","70 dB","76 dB"],a:1,
+  e:"Each is 10⁻⁵ W/m², so the total is 2 × 10⁻⁵ W/m². β = 10 log₁₀(2 × 10⁷) = 73.0 dB. Decibels don't add. Review §10."},
+ {q:"Line source (n = 2), r₁ = 5.0 m, r₂ = 50 m, α = 0.004 m⁻¹. Δβ = ?",
+  o:["−10.0 dB","−10.78 dB","−20.78 dB","−10.18 dB"],a:1,
+  e:"Spreading: (1)(10 dB)log₁₀(0.1) = −10 dB. Attenuation: 4.343 × 0.004 × 45 = 0.78 dB. Δβ = −10.78 dB. Review §11."},
+ {q:"A string has μ = 0.0025 kg/m and τ = 400 N. A wave with ω = 1000 rad/s and y_m = 1.0 mm travels on it. Using P_ave = ½Zω²y_m², find P.",
+  o:["0.50 W","200 W","1.0 W","0.25 W"],a:0,
+  e:"Z = √(μτ) = √(0.0025 × 400) = 1.0 kg/s. P = ½(1.0)(10⁶)(10⁻⁶) = 0.50 W. (200 W would come from using v = 400 m/s in place of Z.) Review §12 and §4."},
+ {q:"A pulse goes from a heavy string (high Z₁) into a light string (low Z₂). What does the reflected pulse look like?",
+  o:["Upright, smaller than the incident pulse","Inverted, smaller","Inverted, same size","There is no reflected pulse"],a:0,
+  e:"Into a lower impedance, the reflection is upright (r = (Z₁ − Z₂)/(Z₁ + Z₂) > 0) and smaller than the incident pulse. Only equal Z gives no reflection. Review §13."}
+]
+};
+
+/* ---------------- QUIZ ENGINE ---------------- */
+const LET = "ABCD";
+const TALLY = {};
+function chip(id, correct, answered, total){
+  TALLY[id] = {c:correct, a:answered, t:total};
+  let C=0,A=0,T=0; Object.values(TALLY).forEach(s=>{C+=s.c; A+=s.a; T+=s.t;});
+  const ov = document.getElementById("ovr");
+  if(ov) ov.textContent = A===0 ? "0 / "+T+" answered" : C+" correct · "+A+" / "+T+" answered";
+  const c = document.querySelector('[data-chip="'+id+'"]');
+  if(!c) return;
+  if(answered===0){ c.textContent=""; c.classList.remove("done"); return; }
+  c.textContent = correct+"/"+total;
+  c.classList.toggle("done", answered===total);
+}
+function buildQuiz(box){
+  const id = box.dataset.quiz, qs = QUIZ[id], title = box.dataset.title;
+  let answered = 0, correct = 0;
+  box.innerHTML = "";
+  const head = document.createElement("div"); head.className="quiz-head";
+  head.innerHTML = '<span class="qt"></span><span class="score" aria-live="polite"></span>';
+  head.querySelector(".qt").textContent = title;
+  const score = head.querySelector(".score");
+  const list = document.createElement("div"); list.className="qlist";
+  const foot = document.createElement("div"); foot.className="quiz-foot";
+  const msg = document.createElement("span");
+  const reset = document.createElement("button"); reset.type="button"; reset.className="btn"; reset.textContent="Reset quiz";
+  foot.append(msg, reset);
+  function upd(){
+    score.textContent = correct+" / "+qs.length+" correct"+(answered<qs.length? " · "+(qs.length-answered)+" left":"");
+    if(answered===qs.length){
+      const pct = correct/qs.length;
+      msg.textContent = pct===1 ? "Perfect. You've got this section." : pct>=0.7 ? "Solid. Re-read the explanations you missed." : "Worth another pass through this section, then reset and retry.";
+    } else msg.textContent = "Pick an answer to see the explanation.";
+    chip(id, correct, answered, qs.length);
+  }
+  qs.forEach((item, qi)=>{
+    const wrap = document.createElement("div"); wrap.className="qitem";
+    const qq = document.createElement("div"); qq.className="qq";
+    const qn = document.createElement("span"); qn.className="qn"; qn.textContent = "Q"+(qi+1);
+    qq.append(qn, document.createTextNode(item.q));
+    const opts = document.createElement("div"); opts.className="opts"; opts.setAttribute("role","group");
+    const ex = document.createElement("div"); ex.className="expl"; ex.hidden = true;
+    const btns = item.o.map((t, oi)=>{
+      const b = document.createElement("button"); b.type="button"; b.className="opt";
+      const L = document.createElement("span"); L.className="L"; L.textContent = LET[oi];
+      const s = document.createElement("span"); s.textContent = t;
+      b.append(L, s);
+      b.addEventListener("click", ()=>{
+        btns.forEach(x=>x.disabled=true);
+        const ok = oi===item.a;
+        btns[item.a].classList.add("right");
+        if(!ok) b.classList.add("wrong");
+        answered++; if(ok) correct++;
+        ex.innerHTML = ok ? '<b class="ok">Correct.</b> ' : '<b class="no">Not quite. The answer is '+LET[item.a]+'.</b> ';
+        ex.appendChild(document.createTextNode(item.e));
+        ex.hidden = false;
+        upd();
+      });
+      opts.appendChild(b); return b;
+    });
+    wrap.append(qq, opts, ex); list.appendChild(wrap);
+  });
+  reset.addEventListener("click", ()=>buildQuiz(box));
+  box.append(head, list, foot);
+  upd();
+}
+document.querySelectorAll(".quiz").forEach(buildQuiz);
+
+/* ---------------- HELPERS ---------------- */
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function prep(cv){
+  if(!cv.dataset.h){ cv.dataset.h = cv.getAttribute("height") || "220"; }
+  const dpr = window.devicePixelRatio||1, h = +cv.dataset.h;
+  cv.style.height = h+"px";
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  const bw = Math.round(w*dpr), bh = Math.round(h*dpr);
+  if(cv.width!==bw) cv.width = bw;
+  if(cv.height!==bh) cv.height = bh;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  return {ctx,w,h};
+}
+function line(ctx,x1,y1,x2,y2,col,wid,dash){ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=wid||1; ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); }
+function txt(ctx,s,x,y,col,align,size){ ctx.fillStyle=col; ctx.font=(size||12)+"px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function plot(ctx, N, fx, fy, f, col, wid){ ctx.beginPath(); ctx.strokeStyle=col; ctx.lineWidth=wid||2; for(let i=0;i<=N;i++){ const u=i/N, X=fx(u), Y=fy(f(u)); if(i===0) ctx.moveTo(X,Y); else ctx.lineTo(X,Y);} ctx.stroke(); }
+function setSeg(on, ...offs){ on.setAttribute("aria-pressed","true"); offs.forEach(o=>o.setAttribute("aria-pressed","false")); }
+const SUP = {"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(x, d){ // pretty number, d significant figures
+  if(!isFinite(x)) return "n/a";
+  if(x===0) return "0";
+  const ax = Math.abs(x);
+  if(ax>=1e-3 && ax<1e5){ let s = x.toPrecision(d); if(s.indexOf("e")>=0) s = (+s).toString(); return s; }
+  const e = Math.floor(Math.log10(ax)); let m = x/Math.pow(10,e);
+  let ms = m.toPrecision(d); if(Math.abs(+ms)>=10){ m/=10; ms=m.toPrecision(d); return ms+" × 10"+String(e+1).split("").map(c=>SUP[c]).join(""); }
+  return ms+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+const num = el => { const v = parseFloat(el.value); return isFinite(v) ? v : NaN; };
+const row = (s, c) => '<div>'+s+(c? '   <span class="c">'+c+'</span>':'')+'</div>';
+
+/* ---------------- §1 ENERGY ON THE WAVE ---------------- */
+let eMode = "both", ePlaying = !reduce, eT = 0, eVisible = true;
+function drawE(){
+  const cv = $("cvE"); const {ctx,w,h} = prep(cv);
+  const ink=css("--ink"), mut=css("--muted"), grid=css("--grid"), vc=css("--volt"), kc=css("--curr"), pc=css("--fund");
+  const L=24, R=w-12, mid=78, A=50, stripH=36;
+  const k = 2*Math.PI*2/(R-L); // two wavelengths across
+  const ph = eT;
+  line(ctx,L,mid,R,mid,grid,1);
+  txt(ctx,"y",L-14,mid-A,mut,"left",11); txt(ctx,"x →",R-26,mid+12,mut,"left",11);
+  // string
+  plot(ctx,400,u=>L+u*(R-L),y=>mid-y,u=>A*Math.sin(k*u*(R-L)-ph),vc,2.5);
+  // elements with velocity arrows
+  const NE=24;
+  for(let i=0;i<=NE;i++){
+    const X=L+i*(R-L)/NE, th=k*(X-L)-ph, y=mid-A*Math.sin(th);
+    const c2=Math.cos(th)**2;
+    const uy = -Math.cos(th); // dy/dt ∝ −ω y_m cos(kx−ωt): sign gives direction (screen up = +y)
+    ctx.beginPath(); ctx.fillStyle = eMode==="pe"? pc : kc; ctx.globalAlpha = 0.25+0.75*c2; ctx.arc(X,y,3+4*c2,0,7); ctx.fill(); ctx.globalAlpha=1;
+    if(eMode!=="pe" && Math.abs(uy)>0.08){
+      const len=22*uy; line(ctx,X,y,X,y-len,kc,1.5);
+      ctx.beginPath(); ctx.fillStyle=kc; const dir=Math.sign(len); ctx.moveTo(X,y-len); ctx.lineTo(X-3.5,y-len+5*dir); ctx.lineTo(X+3.5,y-len+5*dir); ctx.fill();
+    }
+  }
+  // strips
+  let top = mid+A+18;
+  function strip(label, col){
+    line(ctx,L,top+stripH,R,top+stripH,grid,1);
+    ctx.beginPath(); ctx.fillStyle=col; ctx.globalAlpha=0.35; ctx.moveTo(L,top+stripH);
+    for(let i=0;i<=300;i++){ const X=L+i*(R-L)/300, th=k*(X-L)-ph; ctx.lineTo(X, top+stripH-stripH*Math.cos(th)**2); }
+    ctx.lineTo(R,top+stripH); ctx.fill(); ctx.globalAlpha=1;
+    txt(ctx,label,L+4,top+6,ink,"left",11);
+    top += stripH+10;
+  }
+  if(eMode!=="pe") strip("KE density ∝ cos²(kx − ωt)", kc);
+  if(eMode!=="ke") strip("PE density ∝ (∂y/∂x)² ∝ cos²(kx − ωt)", pc);
+}
+$("eBoth").addEventListener("click",()=>{eMode="both"; setSeg($("eBoth"),$("eKE"),$("ePE")); drawE();});
+$("eKE").addEventListener("click",()=>{eMode="ke"; setSeg($("eKE"),$("eBoth"),$("ePE")); drawE();});
+$("ePE").addEventListener("click",()=>{eMode="pe"; setSeg($("ePE"),$("eKE"),$("eBoth")); drawE();});
+$("ePlay").textContent = ePlaying ? "Pause" : "Play";
+$("ePlay").addEventListener("click",()=>{ ePlaying=!ePlaying; $("ePlay").textContent = ePlaying?"Pause":"Play"; });
+
+/* ---------------- §2 cos² AVERAGE ---------------- */
+function drawC(){
+  const cv=$("cvC"); const {ctx,w,h}=prep(cv);
+  const mut=css("--muted"), grid=css("--grid"), kc=css("--curr"), pc=css("--fund"), ink=css("--ink");
+  const th=+$("cTh").value*Math.PI, TM=4*Math.PI, L=34, R=w-10, T=14, B=h-26;
+  const fx=u=>L+u*(R-L), fy=v=>T+(1-(v+1)/2)*(B-T);
+  line(ctx,L,fy(0),R,fy(0),grid,1); line(ctx,L,fy(1),R,fy(1),grid,1,[3,3]); line(ctx,L,fy(0.5),R,fy(0.5),grid,1,[3,3]);
+  txt(ctx,"1",L-6,fy(1),mut,"right",11); txt(ctx,"½",L-6,fy(0.5),mut,"right",11); txt(ctx,"0",L-6,fy(0),mut,"right",11); txt(ctx,"−1",L-6,fy(-1),mut,"right",11);
+  [[Math.PI,"π"],[2*Math.PI,"2π"],[3*Math.PI,"3π"],[4*Math.PI,"4π"]].forEach(([v,s])=>{ const X=fx(v/TM); line(ctx,X,B,X,B+4,mut,1); txt(ctx,s,X,B+13,mut,"center",11); });
+  // shade cos² up to th
+  ctx.beginPath(); ctx.fillStyle=kc; ctx.globalAlpha=0.18; ctx.moveTo(fx(0),fy(0));
+  for(let i=0;i<=300;i++){ const t=th*i/300; ctx.lineTo(fx(t/TM), fy(Math.cos(t)**2)); } ctx.lineTo(fx(th/TM),fy(0)); ctx.fill(); ctx.globalAlpha=1;
+  plot(ctx,400,fx,fy,u=>Math.cos(u*TM),mut,1.5);
+  plot(ctx,400,fx,fy,u=>Math.cos(u*TM)**2,kc,2.2);
+  const av=t=>t<1e-6?1:0.5+Math.sin(2*t)/(4*t);
+  plot(ctx,300,u=>fx(u*th/TM),fy,u=>av(u*th),pc,2.5);
+  line(ctx,fx(th/TM),T,fx(th/TM),B,ink,1,[4,3]);
+  const a=av(th);
+  $("cThO").textContent=(th/Math.PI).toFixed(2)+"π";
+  $("cRead").innerHTML="Average of cos²θ from 0 to "+(th/Math.PI).toFixed(2)+"π = <b>"+a.toFixed(4)+"</b>"+(Math.abs(th/Math.PI-Math.round(th/Math.PI))<0.006 && Math.round(th/Math.PI)%2===0 ? " · a whole number of cycles gives exactly ½" : " · it settles to ½ over full cycles (cos²θ = ½ + ½cos 2θ)");
+}
+$("cTh").addEventListener("input",drawC);
+
+/* ---------------- §3 SMALL SLOPE ---------------- */
+function drawS(){
+  const cv=$("cvS"); const {ctx,w,h}=prep(cv);
+  const s=+$("sSl").value, mut=css("--muted"), vc=css("--volt"), kc=css("--curr"), pc=css("--fund"), ink=css("--ink");
+  const base=Math.min(220,w*0.45), x0=30, y0=h-24;
+  const dy=Math.min(s*base, h-40);
+  const sc = s*base>h-40 ? (h-40)/(s*base) : 1;
+  const bx=base*sc;
+  line(ctx,x0,y0,x0+bx,y0,mut,2); line(ctx,x0+bx,y0,x0+bx,y0-dy,mut,2); line(ctx,x0,y0,x0+bx,y0-dy,vc,3);
+  txt(ctx,"dx",x0+bx/2,y0+12,ink,"center",12); txt(ctx,"dy",x0+bx+8,y0-dy/2,ink,"left",12); txt(ctx,"ds",x0+bx/2-14,y0-dy/2-10,vc,"right",12);
+  const ex=Math.sqrt(1+s*s), ap=1+s*s/2, err=(ap-ex)/ex*100;
+  const X=x0+bx+70; const lines=[["exact  ds/dx = √(1+s²) = "+ex.toFixed(5),ink],["approx ds/dx ≈ 1 + s²/2 = "+ap.toFixed(5),kc],["stretch dℓ/dx: exact "+(ex-1).toFixed(5)+", approx "+(s*s/2).toFixed(5),pc]];
+  if(X+200<w){ lines.forEach((L,i)=>txt(ctx,L[0],X,26+i*22,L[1],"left",12)); }
+  $("sSlO").textContent=s.toFixed(2);
+  $("sRead").innerHTML="slope s = <b>"+s.toFixed(2)+"</b> · (dy/dx)² = "+(s*s).toFixed(4)+" · exact ds/dx = "+ex.toFixed(5)+" · approx = "+ap.toFixed(5)+" · error in ds = <b>"+err.toFixed(3)+"%</b>"+(s*s>0.3?" · <span style=\"color:var(--bad)\">(dy/dx)² is no longer ≪ 1, the approximation is breaking down</span>":" · (dy/dx)² ≪ 1, the approximation holds");
+}
+$("sSl").addEventListener("input",drawS);
+
+/* ---------------- §4 POWER CALCULATOR ---------------- */
+function calcP(){
+  const mu=num($("pMu")), tau=num($("pTau")), w=num($("pW")), y=num($("pY"));
+  if(!(mu>0&&tau>0&&w>=0&&y>=0)){ $("pSteps").innerHTML=row("Enter positive values for μ and τ."); return; }
+  const v=Math.sqrt(tau/mu), K=0.25*mu*v*w*w*y*y, P=2*K, Z=Math.sqrt(tau*mu);
+  let s="";
+  s+=row("v = √(τ/μ) = √("+sci(tau,4)+"/"+sci(mu,4)+") = "+sci(v,4)+" m/s");
+  s+=row("(dK/dt)ave = ¼μvω²y<sub>m</sub>² = ¼("+sci(mu,4)+")("+sci(v,4)+")("+sci(w,4)+")²("+sci(y,3)+")² = "+sci(K,4)+" W");
+  s+=row("(dV/dt)ave = same = "+sci(K,4)+" W","PE average equals KE average");
+  s+=row("<b>P<sub>ave</sub> = "+sci(P,4)+" W</b>","sum of both");
+  s+=row("check: ½√(τμ)ω²y<sub>m</sub>² = ½("+sci(Z,4)+")("+sci(w,4)+")²("+sci(y,3)+")² = "+sci(0.5*Z*w*w*y*y,4)+" W","√(τμ) = Z, §12");
+  s+=row("peak instantaneous dK/dt = ½μvω²y<sub>m</sub>² = "+sci(2*K,4)+" W","cos² = 1");
+  $("pSteps").innerHTML=s;
+}
+["pMu","pTau","pW","pY"].forEach(i=>$(i).addEventListener("input",calcP));
+$("pPre1").addEventListener("click",()=>{ $("pMu").value=0.05; $("pTau").value=20; $("pW").value=100; $("pY").value=0.01; calcP(); });
+$("pPre2").addEventListener("click",()=>{ $("pMu").value=0.525; $("pTau").value=45; $("pW").value=(2*Math.PI*120).toFixed(2); $("pY").value=0.0085; calcP(); });
+
+/* ---------------- §5 SOUND POWER ---------------- */
+function calcA(){
+  const r=num($("aRho")), A=num($("aA")), v=num($("aV")), f=num($("aF")), y=num($("aY"));
+  if(!(r>0&&A>0&&v>0&&f>=0&&y>=0)){ $("aSteps").innerHTML=row("Enter positive values."); return; }
+  const w=2*Math.PI*f, mu=r*A, P=0.5*mu*v*w*w*y*y;
+  let s="";
+  s+=row("ω = 2πf = 2π("+sci(f,4)+") = "+sci(w,4)+" rad/s","ω² = "+sci(w*w,4)+" s⁻²");
+  s+=row("ρA = ("+sci(r,4)+")("+sci(A,4)+") = "+sci(mu,4)+" kg/m","plays the role of μ");
+  s+=row("<b>P<sub>ave</sub> = ½ρAvω²y<sub>m</sub>² = "+sci(P,3)+" W</b>");
+  s+=row("intensity P/A = "+sci(P/A,3)+" W/m²","→ Part 2");
+  $("aSteps").innerHTML=s;
+}
+["aRho","aA","aV","aF","aY"].forEach(i=>$(i).addEventListener("input",calcA));
+
+/* ---------------- §6 WAVEFRONTS ---------------- */
+function drawW(){
+  const cv=$("cvW"); const {ctx,w,h}=prep(cv);
+  const d=+$("wD").value, vc=css("--volt"), mut=css("--muted"), ink=css("--ink"), kc=css("--curr");
+  const Hl=4; // window height in wavelengths
+  const sc=(h-20)/Hl, Wl=(w-20)/sc;
+  const cx = 10 + (w-20)/2 - d*sc, cy = h/2; // source position on screen (window centred at distance d)
+  ctx.save(); ctx.beginPath(); ctx.rect(10,10,w-20,h-20); ctx.clip();
+  const rmin=Math.max(0.5,Math.floor(d-Wl/2-1)), rmax=Math.ceil(Math.hypot(d+Wl/2,Hl/2)+1);
+  for(let m=Math.max(1,rmin); m<=rmax; m++){ ctx.beginPath(); ctx.strokeStyle=vc; ctx.lineWidth=2.5; ctx.arc(cx,cy,m*sc,0,2*Math.PI); ctx.stroke(); }
+  if(cx>0){ ctx.beginPath(); ctx.fillStyle=ink; ctx.arc(cx,cy,5,0,7); ctx.fill(); txt(ctx,"source",cx+8,cy-12,ink,"left",11); }
+  // velocity arrow at window centre
+  const ax=10+(w-20)/2; line(ctx,ax-20,cy,ax+30,cy,kc,2); ctx.beginPath(); ctx.fillStyle=kc; ctx.moveTo(ax+36,cy); ctx.lineTo(ax+28,cy-5); ctx.lineTo(ax+28,cy+5); ctx.fill(); txt(ctx,"v",ax+40,cy-10,kc,"left",12);
+  ctx.restore();
+  ctx.strokeStyle=css("--line"); ctx.lineWidth=1; ctx.strokeRect(10,10,w-20,h-20);
+  txt(ctx,"window: "+Hl+"λ tall",16,22,mut,"left",11);
+  $("wDO").textContent=d.toFixed(1)+"λ";
+  const half=Hl/2;
+  const sag = d>half ? d-Math.sqrt(d*d-half*half) : NaN;
+  $("wRead").innerHTML = isFinite(sag) ? "Window centre is <b>"+d.toFixed(1)+"λ</b> from the source. Across the "+Hl+"λ-tall window a wavefront bows by <b>"+sag.toFixed(3)+"λ</b> ("+(sag/1*100).toFixed(1)+"% of the spacing λ)."+(sag<0.05?" That's effectively a plane wave.":"") : "The window is wider than the wavefronts here: clearly circular.";
+}
+$("wD").addEventListener("input",drawW);
+
+/* ---------------- §7 POINT SOURCE ---------------- */
+function calcI(){
+  const P=num($("iP")), ra=num($("iRa")), rb=num($("iRb"));
+  const cv=$("cvI"); const {ctx,w,h}=prep(cv);
+  if(!(P>0&&ra>0&&rb>0)){ $("iSteps").innerHTML=row("Enter positive values."); return; }
+  const Ia=P/(4*Math.PI*ra*ra), Ib=P/(4*Math.PI*rb*rb);
+  let s="";
+  s+=row("I<sub>a</sub> = P/(4πr<sub>a</sub>²) = "+sci(P,4)+"/(4π × "+sci(ra,4)+"²) = <b>"+sci(Ia,3)+" W/m²</b>");
+  s+=row("I<sub>b</sub> = P/(4πr<sub>b</sub>²) = "+sci(P,4)+"/(4π × "+sci(rb,4)+"²) = <b>"+sci(Ib,3)+" W/m²</b>");
+  s+=row("I<sub>a</sub>/I<sub>b</sub> = r<sub>b</sub>²/r<sub>a</sub>² = ("+sci(rb,4)+"/"+sci(ra,4)+")² = <b>"+sci(Ia/Ib,4)+"</b>");
+  $("iSteps").innerHTML=s;
+  const mut=css("--muted"), vc=css("--volt"), kc=css("--curr"), grid=css("--grid");
+  const rM=Math.max(ra,rb)*1.6, r0=Math.min(ra,rb)*0.5, L=48, R=w-12, T=12, B=h-26;
+  const Imax=P/(4*Math.PI*r0*r0);
+  const fx=r=>L+(r-r0)/(rM-r0)*(R-L), fy=I=>B-(I/Imax)*(B-T);
+  line(ctx,L,B,R,B,grid,1); line(ctx,L,T,L,B,grid,1);
+  txt(ctx,"r (m)",R,B+14,mut,"right",11); txt(ctx,"I",L-10,T+4,mut,"right",11);
+  plot(ctx,300,u=>L+u*(R-L),fy,u=>{const r=r0+u*(rM-r0); return P/(4*Math.PI*r*r);},vc,2.4);
+  [[ra,Ia,"a"],[rb,Ib,"b"]].forEach(([r,I,n])=>{ const X=fx(r),Y=fy(I); line(ctx,X,B,X,Y,kc,1,[3,3]); ctx.beginPath(); ctx.fillStyle=kc; ctx.arc(X,Y,5,0,7); ctx.fill(); txt(ctx,n+": "+sci(I,3),X+8,Y-10,kc,"left",11); txt(ctx,sci(r,3),X,B+12,mut,"center",11); });
+}
+["iP","iRa","iRb"].forEach(i=>$(i).addEventListener("input",calcI));
+
+/* ---------------- §8 LINE vs POINT ---------------- */
+function drawL(){
+  const cv=$("cvL"); const {ctx,w,h}=prep(cv);
+  const q=+$("lR").value, mut=css("--muted"), vc=css("--volt"), kc=css("--curr"), grid=css("--grid"), ink=css("--ink");
+  const L=44, R=w-12, T=12, B=h-26, fx=x=>L+(x-1)/9*(R-L), fy=v=>B-v*(B-T);
+  line(ctx,L,B,R,B,grid,1); line(ctx,L,T,L,B,grid,1);
+  for(let i=1;i<=10;i++){ txt(ctx,String(i),fx(i),B+12,mut,"center",11); }
+  txt(ctx,"1",L-6,fy(1),mut,"right",11); txt(ctx,"0",L-6,fy(0),mut,"right",11);
+  txt(ctx,"r/r_a",R,B-10,mut,"right",11); txt(ctx,"I/I_a",L+6,T+4,mut,"left",11);
+  plot(ctx,300,u=>fx(1+9*u),fy,u=>1/(1+9*u),vc,2.4);
+  plot(ctx,300,u=>fx(1+9*u),fy,u=>1/Math.pow(1+9*u,2),kc,2.4);
+  line(ctx,fx(q),T,fx(q),B,ink,1,[4,3]);
+  [[1/q,vc],[1/(q*q),kc]].forEach(([v,c])=>{ ctx.beginPath(); ctx.fillStyle=c; ctx.arc(fx(q),fy(v),5,0,7); ctx.fill(); });
+  $("lRO").textContent=q.toFixed(1);
+  $("lRead").innerHTML="At "+q.toFixed(1)+"× the distance: line source I<sub>b</sub>/I<sub>a</sub> = r<sub>a</sub>/r<sub>b</sub> = <b>"+(1/q).toFixed(4)+"</b> · point source = (r<sub>a</sub>/r<sub>b</sub>)² = <b>"+(1/(q*q)).toFixed(4)+"</b> · the line source keeps <b>"+q.toFixed(1)+"×</b> more.";
+}
+$("lR").addEventListener("input",drawL);
+
+/* ---------------- §9 ATTENUATION ---------------- */
+let aN=3;
+function drawA(){
+  const al=+$("aAl").value, r1=num($("aR1")), r2=num($("aR2"));
+  $("aAlO").textContent=al.toFixed(3);
+  const cv=$("cvA"); const {ctx,w,h}=prep(cv);
+  if(!(r1>0&&r2>0)){ $("atSteps").innerHTML=row("Enter positive distances."); return; }
+  const mut=css("--muted"), vc=css("--volt"), kc=css("--curr"), pc=css("--fund"), grid=css("--grid"), ink=css("--ink");
+  const rM=Math.max(r2,r1)*1.5, L=44, R=w-12, T=12, B=h-26, fx=r=>L+(r-r1)/(rM-r1)*(R-L), fy=v=>B-v*(B-T);
+  line(ctx,L,B,R,B,grid,1); line(ctx,L,T,L,B,grid,1);
+  txt(ctx,"1",L-6,fy(1),mut,"right",11); txt(ctx,"0",L-6,fy(0),mut,"right",11); txt(ctx,"I/I₁",L+6,T+4,mut,"left",11);
+  txt(ctx,sci(r1,3)+" m",fx(r1),B+12,mut,"left",11); txt(ctx,"r (m)",R,B+12,mut,"right",11);
+  const sp=r=>Math.pow(r1/r,aN-1), at=r=>Math.exp(-al*Math.abs(r-r1));
+  const F=u=>r1+u*(rM-r1);
+  if(rM>r1){
+    plot(ctx,300,u=>L+u*(R-L),fy,u=>sp(F(u)),vc,2);
+    plot(ctx,300,u=>L+u*(R-L),fy,u=>at(F(u)),pc,2);
+    plot(ctx,300,u=>L+u*(R-L),fy,u=>sp(F(u))*at(F(u)),kc,2.6);
+    if(r2>=r1){ const X=fx(r2); line(ctx,X,T,X,B,ink,1,[4,3]); txt(ctx,"r₂",X+4,B-8,ink,"left",11); }
+  }
+  const Sp=sp(r2), At=at(r2), dr=Math.abs(r2-r1);
+  let s="";
+  s+=row("spreading: (r₁/r₂)<sup>n−1</sup> = ("+sci(r1,4)+"/"+sci(r2,4)+")<sup>"+(aN-1)+"</sup> = "+Sp.toFixed(4), aN===3?"spherical, n = 3":"cylindrical, n = 2");
+  s+=row("attenuation: e<sup>−αΔr</sup> = e<sup>−("+al.toFixed(3)+")("+sci(dr,4)+")</sup> = "+At.toFixed(4));
+  s+=row("<b>I₂/I₁ = "+Sp.toFixed(4)+" × "+At.toFixed(4)+" = "+(Sp*At).toFixed(4)+"</b>");
+  $("atSteps").innerHTML=s;
+}
+$("aN3").addEventListener("click",()=>{aN=3; setSeg($("aN3"),$("aN2")); drawA();});
+$("aN2").addEventListener("click",()=>{aN=2; setSeg($("aN2"),$("aN3")); drawA();});
+["aAl","aR1","aR2"].forEach(i=>$(i).addEventListener("input",drawA));
+
+/* ---------------- §10 DECIBELS ---------------- */
+const I0=1e-12;
+function showD(beta, I){
+  $("dBO").textContent=beta.toFixed(1)+" dB";
+  let s="";
+  s+=row("β = (10 dB) log₁₀(I/I₀) = 10 log₁₀("+sci(I,3)+" / 10⁻¹²) = <b>"+beta.toFixed(2)+" dB</b>");
+  s+=row("I = I₀ 10<sup>β/10 dB</sup> = 10⁻¹² × 10<sup>"+(beta/10).toFixed(3)+"</sup> = <b>"+sci(I,3)+" W/m²</b>");
+  s+=row("that is "+sci(I/I0,3)+" × the hearing threshold");
+  $("dSteps").innerHTML=s;
+  const cv=$("cvD"); const {ctx,w,h}=prep(cv);
+  const mut=css("--muted"), vc=css("--volt"), kc=css("--curr"), grid=css("--grid"), ink=css("--ink");
+  const L=20, R=w-20, Y=50, fx=b=>L+(b/140)*(R-L);
+  line(ctx,L,Y,R,Y,grid,6);
+  for(let b=0;b<=140;b+=10){ const X=fx(b); line(ctx,X,Y-6,X,Y+6,mut,1); if(b%20===0||w>560){ txt(ctx,b+"",X,Y+16,mut,"center",10); txt(ctx,"10"+String(b/10-12).split("").map(c=>SUP[c]).join(""),X,Y-16,mut,"center",10);} }
+  txt(ctx,"dB",R,Y+30,mut,"right",10); txt(ctx,"W/m²",R,Y-30,mut,"right",10);
+  const bx=fx(70); ctx.beginPath(); ctx.fillStyle=vc; ctx.arc(bx,Y,4,0,7); ctx.fill(); txt(ctx,"busy street (lecture)",bx,Y+32,vc,"center",10);
+  const tx=fx(0); txt(ctx,"threshold I₀",tx,Y+32,vc,"left",10);
+  if(beta>=0&&beta<=140){ const X=fx(beta); ctx.beginPath(); ctx.fillStyle=kc; ctx.arc(X,Y,7,0,7); ctx.fill(); }
+}
+$("dB").addEventListener("input",()=>{ const b=+$("dB").value, I=I0*Math.pow(10,b/10); $("dI").value=I.toExponential(3); showD(b,I); });
+$("dI").addEventListener("input",()=>{ const I=num($("dI")); if(!(I>0)) { $("dSteps").innerHTML=row("Enter a positive intensity."); return; } const b=10*Math.log10(I/I0); $("dB").value=Math.min(140,Math.max(0,b)); showD(b,I); });
+function initD(){ const I=num($("dI")); showD(10*Math.log10(I/I0), I); }
+
+/* ---------------- §11 LEVEL CHANGE ---------------- */
+let bN=3;
+const fm=(x,d)=>x.toFixed(d).replace("-","−");
+function calcB(){
+  const b1=num($("bB1")), r1=num($("bR1")), r2=num($("bR2")), al=num($("bAl"));
+  if(!(r1>0&&r2>0&&al>=0&&isFinite(b1))){ $("bSteps").innerHTML=row("Enter valid values."); return; }
+  const dr=Math.abs(r2-r1), spr=(bN-1)*10*Math.log10(r1/r2), att=4.343*al*dr, db=spr-att;
+  let s="";
+  s+=row("spreading: (n−1)(10 dB)log₁₀(r₁/r₂) = ("+(bN-1)+")(10)log₁₀("+sci(r1,4)+"/"+sci(r2,4)+") = "+fm(spr,2)+" dB", bN===3?"spherical":"cylindrical");
+  s+=row("attenuation: 4.343αΔr = 4.343("+sci(al,3)+")("+sci(dr,4)+") = "+att.toFixed(2)+" dB","Δr = |r₂ − r₁|");
+  s+=row("<b>Δβ = "+fm(spr,2)+" − "+att.toFixed(2)+" = "+fm(db,2)+" dB</b>");
+  s+=row("<b>β₂ = β₁ + Δβ = "+b1.toFixed(2)+" + ("+fm(db,2)+") = "+fm(b1+db,2)+" dB</b>");
+  const I1=I0*Math.pow(10,b1/10), I2=I1*Math.pow(r1/r2,bN-1)*Math.exp(-al*dr);
+  s+=row("check: I₁ = "+sci(I1,3)+" W/m² → I₂ = "+sci(I2,3)+" W/m² → β₂ = "+(10*Math.log10(I2/I0)).toFixed(2)+" dB","long way, agrees");
+  $("bSteps").innerHTML=s;
+}
+$("bN3").addEventListener("click",()=>{bN=3; setSeg($("bN3"),$("bN2")); calcB();});
+$("bN2").addEventListener("click",()=>{bN=2; setSeg($("bN2"),$("bN3")); calcB();});
+["bB1","bR1","bR2","bAl"].forEach(i=>$(i).addEventListener("input",calcB));
+
+/* ---------------- §12 IMPEDANCE ---------------- */
+const ZM = {
+  str:{n1:"μ (kg/m)", n2:"τ (N)", in:"μ", el:"τ", unit:"kg/s", pre:[["Practice string: μ = 0.01, τ = 100",0.01,100],["Halliday string: μ = 0.525, τ = 45",0.525,45]]},
+  fl:{n1:"ρ (kg/m³)", n2:"B (Pa)", in:"ρ", el:"B", unit:"kg/(m²·s)", pre:[["Water: ρ = 1000, B = 2.2 × 10⁹",1000,2.2e9],["Air: ρ = 1.21, B = 1.42 × 10⁵",1.21,1.42e5]]},
+  rod:{n1:"ρ (kg/m³)", n2:"Y (Pa)", in:"ρ", el:"Y", unit:"kg/(m²·s)", pre:[["Steel: ρ = 7850, Y = 2.0 × 10¹¹",7850,2.0e11]]}
+};
+let zMode="str";
+function setZ(m){
+  zMode=m; const M=ZM[m];
+  $("zN1").textContent=M.n1; $("zN2").textContent=M.n2;
+  $("zA").value=M.pre[0][1]; $("zB").value=M.pre[0][2];
+  const box=$("zPresets"); box.innerHTML='<span class="preset">Presets:</span>';
+  M.pre.forEach(p=>{ const b=document.createElement("button"); b.type="button"; b.className="btn"; b.textContent=p[0]; b.addEventListener("click",()=>{ $("zA").value=p[1]; $("zB").value=p[2]; calcZ(); }); box.appendChild(b); });
+  calcZ();
+}
+function calcZ(){
+  const M=ZM[zMode], a=num($("zA")), b=num($("zB"));
+  if(!(a>0&&b>0)){ $("zSteps").innerHTML=row("Enter positive values."); return; }
+  const Z=Math.sqrt(a*b), v=Math.sqrt(b/a);
+  let s="";
+  s+=row("<b>Z = √("+M.in+" × "+M.el+") = √("+sci(a,4)+" × "+sci(b,4)+") = "+sci(Z,4)+" "+M.unit+"</b>","inertial × elastic");
+  s+=row("v = √("+M.el+"/"+M.in+") = "+sci(v,4)+" m/s","ratio, not product");
+  s+=row("check: Z = "+M.in+" × v = "+sci(a,4)+" × "+sci(v,4)+" = "+sci(a*v,4)+" "+M.unit);
+  $("zSteps").innerHTML=s;
+}
+$("zStr").addEventListener("click",()=>{setSeg($("zStr"),$("zFl"),$("zRod")); setZ("str");});
+$("zFl").addEventListener("click",()=>{setSeg($("zFl"),$("zStr"),$("zRod")); setZ("fl");});
+$("zRod").addEventListener("click",()=>{setSeg($("zRod"),$("zStr"),$("zFl")); setZ("rod");});
+["zA","zB"].forEach(i=>$(i).addEventListener("input",calcZ));
+
+/* ---------------- §13 TWO STRINGS ---------------- */
+let bT=0, bRun=!reduce, bVisible=true, zq=3;
+function zr(){ return zq; }
+function drawB(){
+  const cv=$("cvB"); const {ctx,w,h}=prep(cv);
+  const q=zr(), r=(1-q)/(1+q), t=2/(1+q), v1=0.45, v2=v1/q; // same tension: v ∝ 1/Z
+  const vc=css("--volt"), pc=css("--fund"), mut=css("--muted"), grid=css("--grid"), ink=css("--ink");
+  const L=14, R=w-14, mid=h/2+6, Amp=(h/2-30)/2, J=(L+R)/2;
+  const X=x=>J+x*(R-L)/2, g=u=>Math.exp(-(u*u)/(2*0.06*0.06)), x0=-0.6;
+  line(ctx,J,14,J,h-10,mut,1,[4,4]); txt(ctx,"knot",J+4,18,mut,"left",11);
+  txt(ctx,"Z₁",L+4,18,vc,"left",12); txt(ctx,"Z₂ = "+q.toFixed(2)+" Z₁",R-4,18,pc,"right",12);
+  line(ctx,L,mid,R,mid,grid,1);
+  const yL=x=>Amp*(g(x-x0-v1*bT)+r*g(-x-x0-v1*bT)), yR=x=>Amp*t*g(x*v1/v2 - x0 - v1*bT);
+  ctx.beginPath(); ctx.strokeStyle=vc; ctx.lineWidth=2.5; for(let i=0;i<=300;i++){ const x=-1+i/300; const P=[X(x),mid-yL(x)]; i?ctx.lineTo(...P):ctx.moveTo(...P);} ctx.stroke();
+  ctx.beginPath(); ctx.strokeStyle=pc; ctx.lineWidth=Math.min(7,Math.max(1.2,2.5*Math.sqrt(q))); for(let i=0;i<=300;i++){ const x=i/300; const P=[X(x),mid-yR(x)]; i?ctx.lineTo(...P):ctx.moveTo(...P);} ctx.stroke();
+  ctx.beginPath(); ctx.fillStyle=ink; ctx.arc(J,mid-yL(0),3.5,0,7); ctx.fill();
+  $("bZO").textContent=q.toFixed(2);
+  const Rr=r*r, Tt=q*t*t;
+  $("bRead").innerHTML="Z₂/Z₁ = <b>"+q.toFixed(2)+"</b> · r = (Z₁ − Z₂)/(Z₁ + Z₂) = <b>"+r.toFixed(3).replace("-","−")+"</b> ("+(Math.abs(r)<0.005?"no reflection":r<0?"reflected pulse inverted":"reflected pulse upright")+") · t = 2Z₁/(Z₁ + Z₂) = <b>"+t.toFixed(3)+"</b> · energy split: reflected r² = "+Rr.toFixed(3)+", transmitted (Z₂/Z₁)t² = "+Tt.toFixed(3)+", sum = "+(Rr+Tt).toFixed(3);
+}
+$("bZ").addEventListener("input",()=>{ zq=Math.exp(+$("bZ").value); if(!bRun) drawB(); });
+$("bGo").addEventListener("click",()=>{ bT=0; if(reduce){ bRun=true; } drawB(); });
+$("bSame").addEventListener("click",()=>{ $("bZ").value=0; zq=1; bT=0; drawB(); });
+$("bLect").addEventListener("click",()=>{ $("bZ").value=Math.log(3); zq=3; bT=0; drawB(); });
+
+/* ---------------- ANIMATION LOOP ---------------- */
+if("IntersectionObserver" in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.target.id==="cvE") eVisible=e.isIntersecting; if(e.target.id==="cvB") bVisible=e.isIntersecting; }));
+  io.observe($("cvE")); io.observe($("cvB"));
+}
+let last=performance.now();
+function tick(now){
+  const dt=Math.min(0.05,(now-last)/1000); last=now;
+  if(ePlaying && eVisible){ eT+=dt*2.2; drawE(); }
+  if(bRun && bVisible){
+    bT+=dt; const tEnd = (0.6+1)/0.45 + 0.8;
+    if(bT>tEnd){ if(reduce){ bRun=false; bT=tEnd; } else bT=0; }
+    drawB();
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ---------------- INIT + THEME ---------------- */
+function drawAll(){ drawE(); drawC(); drawS(); drawW(); calcI(); drawL(); drawA(); initD(); drawB(); }
+calcP(); calcA(); calcB(); setZ("str");
+if(reduce) bT=1.6;
+drawAll();
+requestAnimationFrame(tick);
+let rz; window.addEventListener("resize", ()=>{ clearTimeout(rz); rz=setTimeout(drawAll,80); });
+try{ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll); }catch(e){}
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true, attributeFilter:["data-theme"]});
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+</script>
+
+</body></html>
