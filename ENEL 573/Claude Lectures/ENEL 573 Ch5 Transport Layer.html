@@ -1,0 +1,1564 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENEL 573 Ch5 Transport Layer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF;
+  --c1:#1D5FC2; --c2:#C24E12; --c3:#23804D; --grid:#DCE1DB;   /* plot series 1, 2, 3 and grid */
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --fill-bg:#E9F0FB; --fill-line:#5B7DB8; --fill-ink:#2A4677;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+main{max-width:760px; min-width:0}
+nav.toc{position:sticky; top:24px; align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc a.active{background:var(--accent-soft); color:var(--accent)}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px}
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+sub,sup{font-size:.72em; line-height:0}
+code,.mono{font-family:var(--mono); font-size:.86em}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+
+.eq{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 18px; margin:6px 0 18px}
+.math{margin:8px 0 14px; overflow-x:auto; overflow-y:hidden}
+.katex{font-size:1.12em; color:var(--ink)}
+.katex-display{margin:.6em 0}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted)}
+.eq .defs{font-size:15px; line-height:1.7; color:var(--muted); border-top:1px dashed var(--line); margin-top:10px; padding-top:8px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.callout p{margin-bottom:10px} .callout ul{margin:0 0 10px; padding-left:20px} .callout li{margin-bottom:6px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)} .analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)} .tricky .tag{color:var(--trk-ink)}
+.filled{background:var(--fill-bg); border-color:var(--fill-line); font-size:15.5px} .filled .tag{color:var(--fill-ink)}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px; margin:12px 0 18px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+.hlcol{background:var(--hl)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work.practice summary{color:var(--muted)}
+.givens{font-size:15.5px; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-bottom:10px}
+.answer{font-family:var(--display); font-weight:700; background:var(--good-bg); color:var(--good); border-radius:6px; padding:6px 10px; display:inline-block; margin:6px 0 12px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .src{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+.demo canvas, .demo svg{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px}
+.verdict.ok{background:var(--good-bg); color:var(--good)} .verdict.no{background:var(--bad-bg); color:var(--bad)}
+*:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qitem{padding:16px; border-top:1px solid var(--line)} .qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)} .opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)} .opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)} .final .quiz-head .score{color:var(--bg)}
+.review{margin-top:16px} .review li{margin-bottom:10px}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 16px; break-inside:avoid}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+.sheet .f{padding:8px 0; border-top:1px solid var(--line); line-height:2.1} .sheet .f:first-of-type{border-top:none}
+.sheet .f .expr{display:block; overflow-x:auto}
+.sheet .f .d{font-size:13.5px; color:var(--muted); line-height:1.5; display:block}
+.sheet .f .s{font-family:var(--mono); font-size:11px; color:var(--accent)}
+@media print{
+  body{background:#fff; color:#000; padding:0; font-size:12pt}
+  nav.toc, .demo, .quiz, .btn, details.practice, header.hero .lede{display:none!important}
+  .wrap{display:block; padding:0} main{max-width:none}
+  .sheet .card{border:1px solid #999; background:#fff}
+  .sheet .f .d, .sheet .f .s, .sheet .card h5{color:#333}
+  body.print-sheet main > *:not(#formulas){display:none!important}
+}
+
+nav.toc #resetAll{width:100%; margin-bottom:14px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important} }
+
+</style>
+</head><body>
+<div class="wrap"><nav class="toc" aria-label="Contents">
+<button class="btn" id="resetAll" type="button">Reset all progress</button>
+<h2>Start</h2><ol><li><a href="#big">Big picture</a></li></ol>
+<h2>Part 1 · Services and demultiplexing</h2><ol>
+<li><a href="#s1">1 Transport layer services <span class="chip" data-chip="q1"></span></a></li>
+<li><a href="#s2">2 Multiplexing and demultiplexing <span class="chip" data-chip="q2"></span></a></li>
+<li><a href="#s3">3 Connectionless demux (UDP) <span class="chip" data-chip="q3"></span></a></li>
+<li><a href="#s4">4 Connection-oriented demux (TCP) <span class="chip" data-chip="q4"></span></a></li>
+</ol>
+<h2>Part 2 · UDP</h2><ol>
+<li><a href="#s5">5 UDP segments <span class="chip" data-chip="q5"></span></a></li>
+<li><a href="#s6">6 Internet checksum <span class="chip" data-chip="q6"></span></a></li>
+</ol>
+<h2>Part 3 · TCP reliable transfer</h2><ol>
+<li><a href="#s7">7 TCP overview and segment <span class="chip" data-chip="q7"></span></a></li>
+<li><a href="#s8">8 Sequence numbers and ACKs <span class="chip" data-chip="q8"></span></a></li>
+<li><a href="#s9">9 Retransmission scenarios <span class="chip" data-chip="q9"></span></a></li>
+<li><a href="#s10">10 Fast retransmit <span class="chip" data-chip="q10"></span></a></li>
+</ol>
+<h2>Part 4 · Flow control and connections</h2><ol>
+<li><a href="#s11">11 Flow control <span class="chip" data-chip="q11"></span></a></li>
+<li><a href="#s12">12 Handshake and SYN flood <span class="chip" data-chip="q12"></span></a></li>
+<li><a href="#s13">13 Closing and TCP states <span class="chip" data-chip="q13"></span></a></li>
+</ol>
+<h2>Part 5 · Congestion control</h2><ol>
+<li><a href="#s14">14 Congestion and the windows <span class="chip" data-chip="q14"></span></a></li>
+<li><a href="#s15">15 AIMD <span class="chip" data-chip="q15"></span></a></li>
+<li><a href="#s16">16 Slow start and avoidance <span class="chip" data-chip="q16"></span></a></li>
+<li><a href="#s17">17 Reacting to loss <span class="chip" data-chip="q17"></span></a></li>
+</ol>
+<h2>Finish</h2><ol><li><a href="#final">Final exam <span class="chip" data-chip="final"></span></a></li>
+<li><a href="#formulas">Formula sheet</a></li></ol></nav><main><header class="hero"><div class="eyebrow">ENEL 573 Computer Networks · Chapter 5 · Study guide</div><h1>ENEL 573 Ch5 Transport Layer</h1><p class="lede">How data gets from one process to another across the Internet: steering segments to the right socket with port numbers, UDP and its checksum, TCP's byte-numbered sequence numbers, ACKs and retransmissions, flow control, opening and closing connections, and TCP congestion control with slow start, AIMD and the reaction to loss. Every lecture example is worked step by step.</p></header><style>.readout > div{overflow-x:auto; overflow-y:hidden}</style>
+<section class="sec" id="big">
+<h3><span class="num">Start here</span>Big picture</h3>
+<p>The network layer (IP) moves datagrams from one <em>host</em> to another, and it makes no promises: packets can be lost, reordered or corrupted. But the things that actually talk are <em>processes</em> (a browser tab, a mail client, a DNS resolver), and several of them run on each host. The transport layer closes both gaps. It runs only on the end systems, delivers each segment to the right process using port numbers, and (in TCP's case) builds a reliable, ordered byte stream that does not swamp the receiver or the routers in between.</p>
+<p>The chapter moves from the simplest service to the most complete one. First, how a host decides which socket gets a segment. Then UDP, which adds almost nothing beyond that plus a checksum. Then TCP: numbering bytes, acknowledging them, retransmitting what is lost, keeping the receiver's buffer from overflowing, and setting up and tearing down connections. Finally, how TCP senses congestion in the network and adjusts its sending window.</p>
+<div class="chain">
+  <div class="blk"><b>Services and demux</b><span>process-to-process delivery with ports</span><span class="secs">§1 to §4</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>UDP</b><span>bare-bones transport and the checksum</span><span class="secs">§5 to §6</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>TCP reliable transfer</b><span>sequence numbers, ACKs, retransmission</span><span class="secs">§7 to §10</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>Flow control and connections</b><span>receive window, handshake, teardown</span><span class="secs">§11 to §13</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>Congestion control</b><span>cwnd, AIMD, slow start, loss reaction</span><span class="secs">§14 to §17</span></div>
+</div>
+<p>Each section has the key equations, the lecture's examples worked step by step, an analogy, the exam traps, practice problems and a short quiz. A 12-question final exam and a printable formula sheet close the guide.</p>
+</section>
+
+<h2 class="part">Part 1 · Services and demultiplexing</h2>
+
+<section class="sec" id="s1">
+<h3><span class="num">Section 1</span>Transport layer services</h3>
+<p>The transport layer gives <b>logical communication between application processes</b> running on different hosts. "Logical" means each process acts as if it had a direct pipe to the other one, even though the data actually crosses many routers. Transport protocols run <b>only on the end systems</b>; routers in the middle look at the network-layer header and never at the transport header.</p>
+<p>On the sending side, the transport layer breaks each application message into <b>segments</b> (adding its own header to each) and passes them down to the network layer. On the receiving side, it reassembles segments into messages and passes them up to the application.</p>
+<p>The network layer gives logical communication between <b>hosts</b>; the transport layer gives logical communication between <b>processes</b>. The transport layer relies on the network layer's service and enhances it. The Internet offers applications two transport protocols:</p>
+<div class="tbl"><table>
+<tr><th>Protocol</th><th>Delivery</th><th>Extra services</th></tr>
+<tr><td>TCP</td><td>reliable, in-order</td><td>congestion control, flow control, connection setup</td></tr>
+<tr><td>UDP</td><td>unreliable, unordered</td><td>none: a simple extension of "best-effort" IP</td></tr>
+</table></div>
+<p>Two services are available from <b>neither</b> protocol: <b>delay guarantees</b> and <b>bandwidth guarantees</b>. IP underneath is best effort, so no transport protocol running only on the end systems can promise them.</p>
+<div class="eq">
+  <div class="math">\[ \text{segment} = \text{transport header} + \text{chunk of the application message} \]</div>
+  <span class="note">what the transport layer hands to the network layer</span>
+  <div class="defs">segment = the transport-layer packet, in bytes (B) · transport header = port numbers and other control fields added by TCP or UDP, in bytes (B) · application message = the data a process writes into its socket, in bytes (B)</div>
+</div>
+
+<details class="work"><summary>Example 1 (lecture): the household analogy</summary><div class="body">
+<div class="givens">Two houses, each with 12 kids. Every kid in one house writes a letter to every kid in the other house. In each house one sibling collects and hands out the mail: Ann in one house, Bill in the other.</div>
+<p>Map each piece of the story onto the network:</p>
+<div class="tbl"><table>
+<tr><th>Story</th><th>Network</th></tr>
+<tr><td>kids</td><td>processes</td></tr>
+<tr><td>letters in envelopes</td><td>application messages</td></tr>
+<tr><td>houses</td><td>hosts</td></tr>
+<tr><td>Ann and Bill, who hand letters to their in-house siblings</td><td>transport protocol (demultiplexing to processes)</td></tr>
+<tr><td>postal service</td><td>network-layer protocol</td></tr>
+</table></div>
+<p>The postal service only gets the letter from house to house (host to host). Ann and Bill finish the job by handing it to the right sibling (process). They cannot make the postal service faster or more reliable; they can only work with what it delivers.</p>
+<div class="answer">Transport protocol = Ann and Bill; network layer = postal service</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>TCP is like a phone call: you dial first (connection setup), the other person confirms what they heard, and if a sentence is garbled you repeat it. UDP is like dropping postcards in a mailbox: no setup, no confirmation, and a lost card is simply lost. The analogy breaks down on ordering: a phone call is naturally in order, while TCP has to rebuild order from segments that may arrive scrambled.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Host to host is the <b>network</b> layer; process to process is the <b>transport</b> layer. Exams like to swap these.</li>
+<li>Routers do not run TCP or UDP. Transport protocols run on end systems only.</li>
+<li>TCP gives reliability and ordering, but <b>not</b> guaranteed delay or bandwidth. Neither does UDP.</li>
+<li>UDP is "unreliable", but it still has a checksum to detect errors (Section 6). Unreliable means no recovery, not no checking.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 1.1 (not from the lecture): a video call that needs 5 Mb/s</summary><div class="body">
+<p>A video-call app needs a guaranteed 5 Mb/s path and a guaranteed one-way delay below 100 ms. Which Internet transport protocol provides this?</p>
+<p>Neither. TCP adds reliability, ordering, flow control and congestion control; UDP adds only port-based delivery and a checksum. Both run on top of best-effort IP, which makes no promise about bandwidth or delay.</p>
+<div class="answer">Neither TCP nor UDP guarantees bandwidth or delay</div>
+</div></details>
+<details class="work practice"><summary>Practice 1.2 (not from the lecture): which layer does the job?</summary><div class="body">
+<p>A mail server host receives a datagram addressed to its IP address. Which layer gets it to the host, and which layer gets it to the mail server process rather than the web server process on the same machine?</p>
+<p>The network layer (IP) delivers the datagram to the host using the destination IP address. The transport layer then reads the port number in the segment header and hands the data to the mail server's socket.</p>
+<div class="answer">Host: network layer · process: transport layer</div>
+</div></details>
+
+<div class="quiz" data-quiz="q1"></div>
+</section>
+
+<section class="sec" id="s2">
+<h3><span class="num">Section 2</span>Multiplexing and demultiplexing</h3>
+<p>A host may run many processes that use the network at once, and each process talks to the network through one or more <b>sockets</b> (the "door" between the process and the transport layer). Two jobs follow:</p>
+<ul>
+<li><b>Multiplexing</b> (at the sending host): gather data from multiple sockets, wrap each chunk with a header that will later be used for demultiplexing, and pass the segments to the network layer.</li>
+<li><b>Demultiplexing</b> (at the receiving host): deliver each received segment to the correct socket.</li>
+</ul>
+<p>How does the receiver know which socket? Each IP datagram carries a source IP address and a destination IP address, and carries exactly one transport-layer segment. Each segment carries a <b>source port number</b> and a <b>destination port number</b> in the first 32-bit row of its header. The host uses the IP addresses and port numbers together to direct the segment to the right socket. Both TCP and UDP segments start with this same pair of port fields.</p>
+<div class="eq">
+  <div class="math">\[ \text{ports per host} = 2^{16} = 65\,536, \qquad 0 \le \text{port} \le 65\,535 \]</div>
+  <span class="note">each port field is 16 bits</span>
+  <div class="defs">port = a 16-bit number that identifies a socket on a host (no unit) · \(2^{16}\) = number of distinct values a 16-bit field can hold (no unit)</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture's segment format shows the source and destination port fields side by side in a row labelled "32 bits" but does not state their individual size. Two equal fields in a 32-bit row are 16 bits each, which gives the 0 to 65 535 range above.</p></div>
+
+<details class="work"><summary>Example 2 (lecture): three hosts, four processes</summary><div class="body">
+<div class="givens">Host 1 runs process P3, host 2 runs P1 and P2, host 3 runs P4. Each process has one socket. P3 talks to one process on host 2 and P4 talks to the other.</div>
+<p>Host 1 and host 3 each <b>multiplex</b>: the transport layer takes data from the socket, adds a header with source and destination port numbers, and hands the segment to the network layer.</p>
+<p>Host 2 receives both streams through one network interface. Its transport layer reads the port numbers in each segment and <b>demultiplexes</b>: segments from P3 go up to one socket, segments from P4 go up to the other, so P1 and P2 each get only their own data.</p>
+<p>When P1 and P2 reply, host 2 multiplexes their two sockets back into its single network layer.</p>
+<div class="answer">Multiplex on send (many sockets in), demultiplex on receive (one stream out to the right socket)</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>An apartment building's mailroom. Outgoing letters from every flat go into one mailbag (multiplexing); incoming letters all arrive in one bag, and the clerk sorts them into flat mailboxes by flat number (demultiplexing). The street address is the IP address and the flat number is the port. The analogy breaks for TCP, where the clerk also looks at who sent the letter (Section 4).</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Multiplexing is at the <b>sender</b>, demultiplexing at the <b>receiver</b>.</li>
+<li>The row is 32 bits wide, but each port is <b>16</b> bits. The largest port number is 65 535, not 65 536 (counting starts at 0).</li>
+<li>One IP datagram carries one transport segment; demultiplexing uses fields from <b>both</b> headers (IP addresses from the IP header, ports from the segment header).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 2.1 (not from the lecture): header bytes used by ports</summary><div class="body">
+<p>How many bytes of every TCP or UDP header are taken by the two port fields?</p>
+<div class="math">\[ 2 \times 16\ \text{bits} = 32\ \text{bits} = \frac{32}{8}\ \text{B} = 4\ \text{B} \]</div>
+<div class="answer">4 B</div>
+</div></details>
+<details class="work practice"><summary>Practice 2.2 (not from the lecture): how many ports are left?</summary><div class="body">
+<p>A host has 1024 port numbers reserved (0 to 1023). How many port numbers remain for other uses?</p>
+<div class="math">\[ 65\,536 - 1024 = 64\,512 \]</div>
+<div class="answer">64 512 port numbers (1024 to 65 535)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q2"></div>
+</section>
+
+<section class="sec" id="s3">
+<h3><span class="num">Section 3</span>Connectionless demux (UDP)</h3>
+<p>A UDP socket is created with a host-local port number, for example in Java:</p>
+<p>DatagramSocket mySocket1 = new DatagramSocket(12534);</p>
+<p>When a process sends a datagram into a UDP socket, it must specify the destination IP address and destination port number. When a host receives a UDP segment, it checks only the <b>destination port number</b> in the segment and directs the segment to the socket with that port number. So a UDP socket is identified by a <b>2-tuple</b>:</p>
+<div class="eq">
+  <div class="math">\[ \text{UDP socket} \;\leftrightarrow\; (\text{dest IP address},\ \text{dest port}) \]</div>
+  <span class="note">all segments with the same destination IP and port reach the same socket</span>
+  <div class="defs">dest IP address = 32-bit address of the receiving host (no unit) · dest port = 16-bit port number of the receiving socket (no unit)</div>
+</div>
+<p>Consequence: UDP segments with <b>different source IP addresses or source ports</b> but the same destination IP and port are delivered to <b>the same socket</b>. The source port is still carried, because it is the "return address" the receiver uses when it replies.</p>
+
+<details class="work"><summary>Example 3 (lecture): one UDP server, two clients</summary><div class="body">
+<div class="givens">Server host C runs process P3 with DatagramSocket serverSocket = new DatagramSocket(6428). Client host A runs P2 on port 9157. Client host B runs P1 on port 5775.</div>
+<p>Requests to the server (SP = source port, DP = destination port):</p>
+<div class="tbl"><table>
+<tr><th>From</th><th>SP</th><th>DP</th><th>Delivered to</th></tr>
+<tr><td>A (P2)</td><td class="num">9157</td><td class="num">6428</td><td>P3 (socket 6428)</td></tr>
+<tr><td>B (P1)</td><td class="num">5775</td><td class="num">6428</td><td>P3 (socket 6428)</td></tr>
+</table></div>
+<p>Both requests carry DP = 6428 to host C, so both land in the single socket of P3, even though they come from different hosts and ports.</p>
+<p>Replies from the server swap the ports: the old source port becomes the new destination port.</p>
+<div class="tbl"><table>
+<tr><th>To</th><th>SP</th><th>DP</th><th>Delivered to</th></tr>
+<tr><td>A</td><td class="num">6428</td><td class="num">9157</td><td>P2 (socket 9157 on A)</td></tr>
+<tr><td>B</td><td class="num">6428</td><td class="num">5775</td><td>P1 (socket 5775 on B)</td></tr>
+</table></div>
+<div class="answer">One server socket (port 6428) receives from both clients; SP provides the return address</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A single public suggestion box: anyone can drop a note in it, and all notes land in the same box. If a writer wants an answer, they write their own address on the note (the source port). The analogy breaks a little because the box owner here does not need to know who wrote the note to accept it; UDP never checks the sender before delivery.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>UDP demux uses only the destination IP and destination port. Source fields do not change which socket receives the segment.</li>
+<li>In a reply, the ports swap: reply SP = request DP, reply DP = request SP.</li>
+<li>"Connectionless" means no handshaking; it does not mean the segment has no source port.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 3.1 (not from the lecture): a third client</summary><div class="body">
+<p>A new client on host D, port 40 000, sends a UDP request to host C, port 6428 (same server as Example 3). Which socket receives it, and what ports does the reply carry?</p>
+<p>Destination is (C, 6428), so it reaches the same socket of P3. The reply swaps ports.</p>
+<div class="math">\[ \text{reply: } \text{SP} = 6428,\quad \text{DP} = 40\,000 \]</div>
+<div class="answer">Socket 6428 of P3; reply SP 6428, DP 40 000</div>
+</div></details>
+<details class="work practice"><summary>Practice 3.2 (not from the lecture): how many sockets?</summary><div class="body">
+<p>Fifty clients on different hosts each send UDP queries to a DNS server at port 53. How many sockets does the server need to receive them all?</p>
+<p>All queries have the same destination IP and destination port 53, so one UDP socket receives every one of them.</p>
+<div class="answer">1 socket</div>
+</div></details>
+
+<div class="quiz" data-quiz="q3"></div>
+</section>
+
+<section class="sec" id="s4">
+<h3><span class="num">Section 4</span>Connection-oriented demux (TCP)</h3>
+<p>A TCP socket is identified by a <b>4-tuple</b>. The receiving host uses <b>all four</b> values to direct a segment to the right socket:</p>
+<div class="eq">
+  <div class="math">\[ \text{TCP socket} \;\leftrightarrow\; (\text{source IP},\ \text{source port},\ \text{dest IP},\ \text{dest port}) \]</div>
+  <span class="note">each connection gets its own socket</span>
+  <div class="defs">source IP = address of the sending host (no unit) · source port = port of the sending socket (no unit) · dest IP = address of the receiving host (no unit) · dest port = port of the receiving socket (no unit)</div>
+</div>
+<p>A server host may support many simultaneous TCP sockets, each identified by its own 4-tuple. A web server, for instance, has a <b>different socket for each connecting client</b>, even though every client sends to the same destination port 80. Two segments that differ in <em>any</em> of the four values go to different sockets.</p>
+<p>A non-threaded server creates a new process per connection (P4, P5, P6 in the lecture figure). A <b>threaded web server</b> uses one process with a thread per connection socket; the sockets are still separate and still identified by their 4-tuples.</p>
+
+<details class="work"><summary>Example 4 (lecture): three TCP connections to port 80</summary><div class="body">
+<div class="givens">Server host C, port 80. Client A runs P1; client B runs P2 and P3.</div>
+<div class="tbl"><table>
+<tr><th>Segment</th><th>S-IP</th><th>SP</th><th>D-IP</th><th>DP</th><th>Socket on C</th></tr>
+<tr><td>from A (P1)</td><td>A</td><td class="num">9157</td><td>C</td><td class="num">80</td><td>P4</td></tr>
+<tr><td>from B (P3)</td><td>B</td><td class="num">9157</td><td>C</td><td class="num">80</td><td>P5</td></tr>
+<tr><td>from B (P2)</td><td>B</td><td class="num">5775</td><td>C</td><td class="num">80</td><td>P6</td></tr>
+</table></div>
+<p>Rows 1 and 2 have the same source port (9157) and the same destination (C, 80), but different source IPs, so they are different 4-tuples and reach different sockets. Rows 2 and 3 share the source IP B but differ in source port, so they also reach different sockets.</p>
+<p>In the threaded version of the same server (lecture slide 14), one process P4 handles all three connections with three threads, each attached to its own socket.</p>
+<div class="answer">3 distinct 4-tuples → 3 sockets on server C</div>
+</div></details>
+
+<div class="demo" id="demuxDemo">
+  <div class="dtitle">Demultiplexing: which socket gets the segment?</div>
+  <div class="src">Defaults: Examples 3 and 4 from the lecture (UDP server port 6428, TCP server port 80). UDP segment 3 is the new client D from Practice 3.1.</div>
+  <div class="controls">
+    <span class="seg" id="dmProto"><button type="button" aria-pressed="true" data-v="udp">UDP</button><button type="button" aria-pressed="false" data-v="tcp">TCP</button></span>
+    <span class="seg" id="dmSeg"><button type="button" aria-pressed="true" data-v="0">Segment 1</button><button type="button" aria-pressed="false" data-v="1">Segment 2</button><button type="button" aria-pressed="false" data-v="2">Segment 3</button></span>
+    <button class="btn" type="button" id="dmReset">Reset to lecture values</button>
+  </div>
+  <div class="tbl" style="margin-top:12px"><table id="dmTable"></table></div>
+  <div class="readout" id="dmOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A help desk with a separate case file for every caller. Two callers asking the same department (port 80) still get different case files, because the desk files by "who is calling, from which extension, to which department". UDP's suggestion box (Section 3) has only one file for everyone. The analogy is loose on cost: a TCP socket also holds buffers and state, which is why too many of them can exhaust a server (Section 12).</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Same source port, same destination port, different source IP: <b>different</b> TCP sockets, but the <b>same</b> UDP socket.</li>
+<li>A threaded server still has one socket per connection. Threads change the number of processes, not the number of sockets.</li>
+<li>Count TCP sockets by counting distinct 4-tuples, not distinct clients: one client can open several connections.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 4.1 (not from the lecture): counting sockets</summary><div class="body">
+<p>Three client hosts each open 2 TCP connections to a web server's port 80 (each connection from a different client port). How many connection sockets does the server use? How many would one UDP server need if those were UDP flows to port 80?</p>
+<div class="math">\[ \text{TCP: } 3 \times 2 = 6\ \text{sockets}, \qquad \text{UDP: } 1\ \text{socket} \]</div>
+<div class="answer">6 TCP connection sockets; 1 UDP socket</div>
+</div></details>
+<details class="work practice"><summary>Practice 4.2 (not from the lecture): same ports, different hosts</summary><div class="body">
+<p>Hosts X and Y both send TCP segments with source port 33 000 to server S, port 443. Do they reach the same socket?</p>
+<p>The 4-tuples are (X, 33 000, S, 443) and (Y, 33 000, S, 443). They differ in source IP, so they are different sockets.</p>
+<div class="answer">No: two different sockets</div>
+</div></details>
+
+<div class="quiz" data-quiz="q4"></div>
+</section>
+
+<h2 class="part">Part 2 · UDP</h2>
+
+<section class="sec" id="s5">
+<h3><span class="num">Section 5</span>UDP segments</h3>
+<p>UDP (User Datagram Protocol, RFC 768) is the "no frills", "bare bones" Internet transport protocol. It offers <b>best-effort</b> service: UDP segments may be lost or delivered out of order to the application. It is <b>connectionless</b>: there is no handshaking between UDP sender and receiver, and each UDP segment is handled independently of the others.</p>
+<p>Why use it at all? The lecture gives four reasons:</p>
+<ul>
+<li><b>No connection establishment</b>, which would add delay.</li>
+<li><b>Simple</b>: no connection state at the sender or receiver.</li>
+<li><b>Small segment header</b>.</li>
+<li><b>No congestion control</b>: UDP can blast away as fast as desired.</li>
+</ul>
+<p>UDP is often used for streaming multimedia apps, which are <b>loss tolerant</b> and <b>rate sensitive</b>, and also for DNS and SNMP. If an application needs reliable transfer over UDP, it must add the reliability itself at the application layer (application-specific error recovery).</p>
+<p>The UDP segment format has four 16-bit header fields followed by the application data:</p>
+<div class="tbl"><table>
+<tr><th>Field</th><th>Size</th><th>Meaning</th></tr>
+<tr><td>source port #</td><td class="num">16 bits</td><td>return address for replies</td></tr>
+<tr><td>dest port #</td><td class="num">16 bits</td><td>used for demultiplexing</td></tr>
+<tr><td>length</td><td class="num">16 bits</td><td>length in bytes of the UDP segment, <b>including the header</b></td></tr>
+<tr><td>checksum</td><td class="num">16 bits</td><td>error detection (Section 6)</td></tr>
+<tr><td>application data (message)</td><td>variable</td><td>the payload</td></tr>
+</table></div>
+<div class="eq">
+  <div class="math">\[ L_{\text{UDP}} = 8\ \text{B} + L_{\text{data}} \]</div>
+  <span class="note">value carried in the UDP length field</span>
+  <div class="defs">\(L_{\text{UDP}}\) = UDP segment length, header included, in bytes (B) · \(L_{\text{data}}\) = application data length, in bytes (B) · 8 B = UDP header size, four 16-bit fields</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture shows the four header fields in two 32-bit rows but does not state the header size. Two rows of 32 bits are 64 bits, so the UDP header is 8 bytes.</p></div>
+
+<details class="work"><summary>Example 5 (lecture): applications and their transport protocols</summary><div class="body">
+<div class="tbl"><table>
+<tr><th>Application</th><th>Application-layer protocol</th><th>Transport</th></tr>
+<tr><td>Electronic mail</td><td>SMTP</td><td>TCP</td></tr>
+<tr><td>Remote terminal access</td><td>Telnet</td><td>TCP</td></tr>
+<tr><td>Web</td><td>HTTP</td><td>TCP</td></tr>
+<tr><td>File transfer</td><td>FTP</td><td>TCP</td></tr>
+<tr><td>Remote file server</td><td>NFS</td><td>typically UDP</td></tr>
+<tr><td>Streaming multimedia</td><td>typically proprietary</td><td>UDP or TCP</td></tr>
+<tr><td>Internet telephony</td><td>typically proprietary</td><td>UDP or TCP</td></tr>
+<tr><td>Network management</td><td>SNMP</td><td>typically UDP</td></tr>
+</table></div>
+<p>The pattern: applications that must receive every byte exactly (mail, web pages, files, terminal sessions) use TCP. Applications that care more about speed or low overhead than about the odd lost packet (network management queries, media) often use UDP.</p>
+<div class="answer">Mail, Telnet, web, FTP: TCP · NFS, SNMP: typically UDP · media and telephony: either</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>UDP is a postcard: a short "from" and "to" line, a note of how long the card is, a quick smudge check, and the message. Nobody confirms it arrived. That is exactly why it is cheap and fast. The analogy breaks on size: the length field lets a UDP "postcard" carry tens of kilobytes.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>The length field <b>includes the 8-byte header</b>. 100 data bytes give a length of 108, not 100.</li>
+<li>UDP's header is 8 bytes; TCP's minimum header is 20 bytes (Section 7). Do not mix them up.</li>
+<li>"No congestion control" is listed as a reason <em>for</em> UDP (the app can send as fast as it wants), not as a defect in this lecture.</li>
+<li>Reliable transfer over UDP is possible, but the application has to do it.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 5.1 (not from the lecture): a DNS query</summary><div class="body">
+<div class="givens">A DNS query message is \(L_{\text{data}} = 32\ \text{B}\).</div>
+<div class="math">\[ L_{\text{UDP}} = 8\ \text{B} + 32\ \text{B} = 40\ \text{B} \]</div>
+<div class="answer">Length field = 40 B</div>
+</div></details>
+<details class="work practice"><summary>Practice 5.2 (not from the lecture): largest payload the length field allows</summary><div class="body">
+<p>The length field is 16 bits, so its largest value is \(2^{16}-1\) bytes. What is the largest data size it can describe?</p>
+<div class="math">\[ \begin{aligned} L_{\text{UDP,max}} &= 2^{16}-1 = 65\,535\ \text{B}\\ L_{\text{data,max}} &= 65\,535\ \text{B} - 8\ \text{B} = 65\,527\ \text{B} \end{aligned} \]</div>
+<div class="answer">65 527 B of data</div>
+</div></details>
+
+<div class="quiz" data-quiz="q5"></div>
+</section>
+
+<section class="sec" id="s6">
+<h3><span class="num">Section 6</span>Internet checksum</h3>
+<p>The checksum's goal is to <b>detect errors</b> (for example, flipped bits) in a transmitted segment. It detects; it does not correct.</p>
+<p><b>Sender:</b> treat the segment contents as a sequence of 16-bit integers; add them using <b>1's complement</b> addition; put the 1's complement of the sum into the checksum field.</p>
+<p><b>Receiver:</b> compute the checksum of the received segment and check whether it equals the checksum field value. If not, an error is detected. If yes, no error is detected (which is not the same as "no error": some combinations of flips cancel out).</p>
+<p>The one rule that makes it 1's complement arithmetic: when adding, a <b>carry out of the most significant bit is wrapped around</b> and added back into the least significant bit.</p>
+<div class="eq">
+  <div class="math">\[ \begin{aligned} s &= a + b \quad (\text{17-bit result possible})\\ s' &= (s \bmod 2^{16}) + c \\ \text{checksum} &= \overline{s'} \end{aligned} \]</div>
+  <span class="note">1's complement sum with wraparound, then invert every bit</span>
+  <div class="defs">\(a, b\) = 16-bit words of the segment (no unit) · \(s\) = ordinary binary sum (no unit) · \(c\) = carry out of bit 15, either 0 or 1 (no unit) · \(s'\) = wrapped 16-bit sum (no unit) · \(\overline{s'}\) = \(s'\) with every bit flipped (no unit)</div>
+</div>
+
+<details class="work"><summary>Example 6 (lecture): adding two 16-bit integers</summary><div class="body">
+<div class="givens">\(a = 1110\,0110\,0110\,0110\), \(b = 1101\,0101\,0101\,0101\) (16-bit words)</div>
+<p>Add them as ordinary binary numbers. The result needs 17 bits; the leading 1 is the carry out of the most significant bit:</p>
+<div class="math">\[ \begin{aligned} &\phantom{+}\ \ 1110\,0110\,0110\,0110\\ &+\ \ 1101\,0101\,0101\,0101\\ &= 1\ 1011\,1011\,1011\,1011 \end{aligned} \]</div>
+<p>Wrap the carry around: drop it from the left and add 1 to the right end.</p>
+<div class="math">\[ \begin{aligned} s' &= 1011\,1011\,1011\,1011 + 1\\ &= 1011\,1011\,1011\,1100 \quad (\text{sum}) \end{aligned} \]</div>
+<p>Invert every bit to get the checksum:</p>
+<div class="math">\[ \text{checksum} = \overline{1011\,1011\,1011\,1100} = 0100\,0100\,0100\,0011 \]</div>
+<div class="answer">sum = 1011 1011 1011 1100 · checksum = 0100 0100 0100 0011</div>
+<p>Check at the receiver: adding the sum and the checksum gives all ones, \(1011\,1011\,1011\,1100 + 0100\,0100\,0100\,0011 = 1111\,1111\,1111\,1111\), which is what an error-free segment produces.</p>
+</div></details>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture's receiver rule is "compute the checksum and compare it with the checksum field". The all-ones check above is an equivalent way to do the same test, added here because many exam solutions use it.</p></div>
+
+<div class="demo" id="csDemo">
+  <div class="dtitle">Internet checksum calculator</div>
+  <div class="src">Defaults: Example 6 from the lecture</div>
+  <div class="controls">
+    <label>word \(a\) (16 bits) <input type="text" id="csA" value="1110011001100110" maxlength="19" style="width:190px;font-family:var(--mono);font-size:13.5px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)"></label>
+    <label>word \(b\) (16 bits) <input type="text" id="csB" value="1101010101010101" maxlength="19" style="width:190px;font-family:var(--mono);font-size:13.5px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)"></label>
+    <button class="btn" type="button" id="csReset">Reset to lecture values</button>
+  </div>
+  <div class="readout"><div id="csOut"></div><div id="csMsg"></div></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A shopkeeper totals a receipt on an old 4-digit adding machine; when the total overflows, the overflow digit is added back to the units instead of being thrown away. The customer re-adds the receipt on arrival; if the totals disagree, something was changed in transit. The analogy breaks because a matching total does not prove the receipt is correct: two errors can cancel.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Forgetting the <b>wraparound</b> (dropping the carry) gives a checksum that is off by one in the last bits. In the lecture example it would give 0100 0100 0100 0100 instead of 0100 0100 0100 0011.</li>
+<li>The checksum is the <b>complement</b> of the sum. Writing down the sum itself is a common slip.</li>
+<li>"No error detected" does not guarantee "no error".</li>
+<li>Line up the bits carefully; most exam mistakes are column slips. Group bits in fours.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 6.1 (not from the lecture): no carry</summary><div class="body">
+<div class="givens">\(a = 0110\,0110\,0110\,0000\), \(b = 0101\,0101\,0101\,0101\)</div>
+<div class="math">\[ \begin{aligned} a + b &= 1011\,1011\,1011\,0101 \quad (\text{no carry out})\\ \text{checksum} &= \overline{1011\,1011\,1011\,0101} = 0100\,0100\,0100\,1010 \end{aligned} \]</div>
+<div class="answer">checksum = 0100 0100 0100 1010</div>
+</div></details>
+<details class="work practice"><summary>Practice 6.2 (not from the lecture): with wraparound</summary><div class="body">
+<div class="givens">\(a = 1000\,0110\,0101\,1110\), \(b = 1010\,1100\,0110\,0000\)</div>
+<div class="math">\[ \begin{aligned} a + b &= 1\ 0011\,0010\,1011\,1110\\ s' &= 0011\,0010\,1011\,1110 + 1 = 0011\,0010\,1011\,1111\\ \text{checksum} &= \overline{s'} = 1100\,1101\,0100\,0000 \end{aligned} \]</div>
+<div class="answer">checksum = 1100 1101 0100 0000</div>
+</div></details>
+
+<div class="quiz" data-quiz="q6"></div>
+</section>
+
+<h2 class="part">Part 3 · TCP reliable transfer</h2>
+
+<section class="sec" id="s7">
+<h3><span class="num">Section 7</span>TCP overview and segment</h3>
+<p>TCP (RFCs 793, 1122, 1323, 2018, 2581) gives each pair of processes a connection with these properties:</p>
+<ul>
+<li><b>Point-to-point</b>: one sender, one receiver.</li>
+<li><b>Reliable, in-order byte stream</b>: the application sees a stream of bytes, not separate messages.</li>
+<li><b>Pipelined</b>: several segments can be in flight; TCP congestion and flow control set the window size.</li>
+<li><b>Send and receive buffers</b>: the application writes into the send buffer and reads from the receive buffer through its socket.</li>
+<li><b>Full duplex</b>: data flows in both directions in the same connection. <b>MSS</b> (maximum segment size) is the largest amount of application data in one segment.</li>
+<li><b>Connection-oriented</b>: handshaking (exchange of control messages) initializes sender and receiver state before data exchange.</li>
+<li><b>Flow controlled</b>: the sender will not overwhelm the receiver.</li>
+</ul>
+<p>The segment header is laid out in 32-bit rows:</p>
+<div class="tbl"><table>
+<tr><th>Row</th><th>Fields</th><th>Notes</th></tr>
+<tr><td>1</td><td>source port # (16 bits) · dest port # (16 bits)</td><td>demultiplexing, as in UDP</td></tr>
+<tr><td>2</td><td>sequence number (32 bits)</td><td>counts <b>bytes</b> of data, not segments</td></tr>
+<tr><td>3</td><td>acknowledgement number (32 bits)</td><td>valid when the ACK flag is set</td></tr>
+<tr><td>4</td><td>head len · not used · flags U A P R S F · receive window (16 bits)</td><td>receive window = number of bytes the receiver is willing to accept</td></tr>
+<tr><td>5</td><td>checksum (16 bits) · urgent data pointer (16 bits)</td><td>Internet checksum as in UDP</td></tr>
+<tr><td>6+</td><td>options (variable length)</td><td>may be absent</td></tr>
+<tr><td></td><td>application data (variable length)</td><td></td></tr>
+</table></div>
+<p>The six flags: <b>URG</b> urgent data (generally not used), <b>ACK</b> the ACK number is valid, <b>PSH</b> push data now (generally not used), and <b>RST, SYN, FIN</b> for connection establishment (setup and teardown commands).</p>
+<div class="eq">
+  <div class="math">\[ H = 5 \times 4\ \text{B} + L_{\text{opt}} = 20\ \text{B} + L_{\text{opt}}, \qquad L_{\text{seg}} = H + L_{\text{data}} \]</div>
+  <span class="note">TCP header and segment size</span>
+  <div class="defs">\(H\) = TCP header size, in bytes (B) · \(L_{\text{opt}}\) = options length, in bytes (B), a multiple of 4 · \(L_{\text{seg}}\) = whole segment size, in bytes (B) · \(L_{\text{data}}\) = application data in the segment, in bytes (B), at most MSS</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture's diagram shows five fixed 32-bit rows before the options but does not state the header size or the unit of "head len". Five rows of 4 bytes give the 20-byte minimum header, and the header length field counts 32-bit words (so 5 means 20 bytes).</p></div>
+
+<details class="work"><summary>Example 7 (lecture): reading the segment diagram</summary><div class="body">
+<p>From the lecture's diagram, the fixed part of the header is the five rows in the table above. Counting:</p>
+<div class="math">\[ \begin{aligned} \text{fixed header} &= 5\ \text{rows} \times 32\ \frac{\text{bits}}{\text{row}} = 160\ \text{bits}\\ &= \frac{160}{8}\ \text{B} = 20\ \text{B} \end{aligned} \]</div>
+<p>Compare UDP's 8-byte header (Section 5): TCP spends 12 more bytes on sequence and ACK numbers, the header length, flags, receive window and urgent pointer.</p>
+<div class="answer">Minimum TCP header = 20 B (UDP: 8 B)</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A TCP segment is a page from a numbered manuscript sent by courier: the cover sheet says who it is from and to (ports), which character the page starts at (sequence number), which character the sender expects next from you (ACK number), and how much room you have left on your desk (receive window). The analogy breaks because TCP numbers individual bytes, not pages.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Sequence numbers count <b>bytes</b>, not segments.</li>
+<li>The receive window field is for <b>flow control</b> (receiver's buffer), not congestion control.</li>
+<li>Minimum TCP header is 20 B; with options it grows in steps of 4 B.</li>
+<li>Setup and teardown flags are SYN, FIN and RST. URG and PSH are generally not used.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 7.1 (not from the lecture): header with options</summary><div class="body">
+<div class="givens">\(L_{\text{opt}} = 12\ \text{B}\), \(L_{\text{data}} = 1000\ \text{B}\)</div>
+<div class="math">\[ \begin{aligned} H &= 20\ \text{B} + 12\ \text{B} = 32\ \text{B}\\ \text{head len field} &= \frac{32\ \text{B}}{4\ \text{B per word}} = 8\ \text{words}\\ L_{\text{seg}} &= 32\ \text{B} + 1000\ \text{B} = 1032\ \text{B} \end{aligned} \]</div>
+<div class="answer">H = 32 B, head len = 8, segment = 1032 B</div>
+</div></details>
+<details class="work practice"><summary>Practice 7.2 (not from the lecture): how many byte numbers?</summary><div class="body">
+<p>The sequence number field is 32 bits. How many different byte numbers can it express before it wraps around?</p>
+<div class="math">\[ 2^{32} = 4\,294\,967\,296\ \text{byte numbers} \]</div>
+<div class="answer">4 294 967 296 (about 4.3 GB of data before wraparound)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q7"></div>
+</section>
+
+<section class="sec" id="s8">
+<h3><span class="num">Section 8</span>Sequence numbers and ACKs</h3>
+<p>TCP views the data as a numbered stream of bytes.</p>
+<ul>
+<li><b>Sequence number</b> of a segment: the byte-stream number of the <b>first byte</b> in the segment's data.</li>
+<li><b>Acknowledgement number</b>: the sequence number of the <b>next byte expected</b> from the other side.</li>
+<li>ACKs are <b>cumulative</b>: ACK = 120 says "I have every byte before 120".</li>
+</ul>
+<p>How does a receiver handle out-of-order segments? The TCP specification does not say; it is up to the implementor.</p>
+<div class="eq">
+  <div class="math">\[ \text{ACK} = \text{seq} + L, \qquad \text{seq}_{\text{next}} = \text{seq} + L, \qquad \text{last byte} = \text{seq} + L - 1 \]</div>
+  <span class="note">for a segment received in order</span>
+  <div class="defs">seq = sequence number of the segment, the number of its first data byte (no unit) · \(L\) = bytes of data in the segment, in bytes (B) · ACK = acknowledgement number the receiver sends back (no unit) · \(\text{seq}_{\text{next}}\) = sequence number of the sender's next segment (no unit)</div>
+</div>
+
+<details class="work"><summary>Example 8 (lecture): simple telnet scenario</summary><div class="body">
+<div class="givens">The user on host A types the character 'C' (1 byte). A's next byte to send is number 42; B's next byte to send is number 79.</div>
+<p>Step 1: A sends 'C'. Its sequence number is 42, and it expects byte 79 from B next:</p>
+<div class="math">\[ \text{A} \to \text{B}: \quad \text{Seq} = 42,\ \ \text{ACK} = 79,\ \ \text{data} = \text{'C'} \]</div>
+<p>Step 2: B acknowledges receipt of 'C' and echoes 'C' back. B has received byte 42, so it expects byte 43 next. B's own data starts at 79:</p>
+<div class="math">\[ \begin{aligned} \text{ACK} &= 42 + 1 = 43\\ \text{B} \to \text{A}: \quad &\text{Seq} = 79,\ \ \text{ACK} = 43,\ \ \text{data} = \text{'C'} \end{aligned} \]</div>
+<p>Step 3: A acknowledges receipt of the echoed 'C'. A's next byte is 43, and it now expects byte 80 from B:</p>
+<div class="math">\[ \begin{aligned} \text{ACK} &= 79 + 1 = 80\\ \text{A} \to \text{B}: \quad &\text{Seq} = 43,\ \ \text{ACK} = 80 \end{aligned} \]</div>
+<div class="answer">Seq 42 ACK 79 → Seq 79 ACK 43 → Seq 43 ACK 80</div>
+</div></details>
+
+<div class="demo" id="saDemo">
+  <div class="dtitle">Sequence and ACK numbers for back-to-back segments</div>
+  <div class="src">Defaults: Seq = 92 with 8 bytes, then 20 bytes (lecture slides 27 and 28)</div>
+  <div class="controls">
+    <label>first seq <input type="number" id="saSeq" value="92" min="0" step="1"></label>
+    <label>segment sizes, bytes (comma separated) <input type="text" id="saLens" value="8, 20" style="width:130px;font-family:var(--mono);font-size:13.5px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)"></label>
+    <button class="btn" type="button" id="saReset">Reset to lecture values</button>
+  </div>
+  <div class="tbl" style="margin-top:12px"><table id="saTable"></table></div>
+  <div class="readout" id="saOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Reading a book aloud over the phone to a friend who is typing it up. You say "starting at character 42: C". They reply "got it, ready for character 43". Their reply names the next thing they want, not the last thing they got. The analogy fits cumulative ACKs too: "ready for 120" means everything before 120 is already typed.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>ACK is the <b>next</b> byte expected, not the last byte received. Seq 1000 with 500 bytes is ACKed with 1500, not 1499.</li>
+<li>Sequence numbers count bytes: the next segment starts at seq + L, not seq + 1.</li>
+<li>Each direction has its own numbering. In the telnet example A's bytes start at 42 and B's at 79; do not mix the two streams.</li>
+<li>An ACK can ride on a data segment (B's echo carries both data and ACK = 43).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 8.1 (not from the lecture): two full segments</summary><div class="body">
+<div class="givens">Host A sends seq = 500 with \(L = 1460\ \text{B}\), then a second segment with \(L = 540\ \text{B}\).</div>
+<div class="math">\[ \begin{aligned} \text{ACK}_1 &= 500 + 1460 = 1960\\ \text{seq}_2 &= 1960\\ \text{ACK}_2 &= 1960 + 540 = 2500 \end{aligned} \]</div>
+<div class="answer">ACKs 1960 and 2500; second segment seq = 1960</div>
+</div></details>
+<details class="work practice"><summary>Practice 8.2 (not from the lecture): what does an ACK say?</summary><div class="body">
+<p>Host B sends ACK = 7001 to host A, whose first byte was numbered 5001. How many bytes of A's data has B received in order?</p>
+<div class="math">\[ 7001 - 5001 = 2000\ \text{B} \]</div>
+<div class="answer">2000 B (bytes 5001 to 7000)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q8"></div>
+</section>
+
+<section class="sec" id="s9">
+<h3><span class="num">Section 9</span>Retransmission scenarios</h3>
+<p>TCP builds a reliable data transfer service on top of IP's unreliable service, using <b>pipelined segments</b>, <b>cumulative ACKs</b>, and retransmissions triggered by <b>timeout events</b> and <b>duplicate ACKs</b>.</p>
+<p>The sender reacts to three events:</p>
+<div class="tbl"><table>
+<tr><th>Event</th><th>Sender action</th></tr>
+<tr><td>Data received from the application</td><td>Create a segment with seq = byte-stream number of its first data byte. Start the timer if it is not already running.</td></tr>
+<tr><td>Timeout</td><td>Retransmit the segment that caused the timeout (the oldest unACKed one). Restart the timer.</td></tr>
+<tr><td>ACK received</td><td>If it acknowledges previously unACKed segments: update what is known to be ACKed, and start the timer if there are still outstanding segments.</td></tr>
+</table></div>
+<div class="eq">
+  <div class="math">\[ \text{if } y > \text{SendBase}: \quad \text{SendBase} \leftarrow y \]</div>
+  <span class="note">what an arriving ACK does at the sender</span>
+  <div class="defs">SendBase = sequence number of the oldest unACKed byte (no unit) · \(y\) = acknowledgement number in the arriving ACK (no unit)</div>
+</div>
+
+<details class="work"><summary>Example 9a (lecture): lost ACK scenario</summary><div class="body">
+<div class="givens">A sends Seq = 92 with 8 bytes of data.</div>
+<p>B receives it and sends ACK = 92 + 8 = 100, but the ACK is lost. A's timer expires, so A retransmits Seq = 92, 8 bytes. B already has those bytes, discards the duplicate data, and sends ACK = 100 again. This time it arrives:</p>
+<div class="math">\[ y = 100 > 92 \;\Rightarrow\; \text{SendBase} = 100 \]</div>
+<div class="answer">One retransmission of Seq 92; SendBase = 100</div>
+</div></details>
+<details class="work"><summary>Example 9b (lecture): premature timeout</summary><div class="body">
+<div class="givens">A sends Seq = 92 (8 bytes) and Seq = 100 (20 bytes) back to back.</div>
+<p>B sends ACK = 100 and ACK = 120, but both are delayed. A's Seq = 92 timer expires before they arrive, so A retransmits <b>only</b> Seq = 92 (the segment that caused the timeout) and restarts the timer.</p>
+<p>Then the delayed ACKs arrive:</p>
+<div class="math">\[ \begin{aligned} \text{ACK } 100 &: \ \text{SendBase} = 100\\ \text{ACK } 120 &: \ \text{SendBase} = 120 \end{aligned} \]</div>
+<p>B receives the retransmitted Seq = 92 as a duplicate and replies with ACK = 120 (cumulative: it already has everything up to byte 119). SendBase stays 120. Segment Seq = 100 is never resent.</p>
+<div class="answer">Only Seq 92 is retransmitted; SendBase = 120</div>
+</div></details>
+<details class="work"><summary>Example 9c (lecture): cumulative ACK scenario</summary><div class="body">
+<div class="givens">A sends Seq = 92 (8 bytes) and Seq = 100 (20 bytes).</div>
+<p>B sends ACK = 100, which is lost, then ACK = 120, which arrives before A's timer expires. Because ACKs are cumulative, ACK = 120 also covers bytes 92 to 99:</p>
+<div class="math">\[ y = 120 > 92 \;\Rightarrow\; \text{SendBase} = 120 \]</div>
+<div class="answer">No retransmission; SendBase = 120</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A teacher collecting numbered homework pages says "I have everything up to page 12" rather than listing pages one by one. If one of those announcements is missed, the next one still covers it. If the student gets impatient and resends page 9 too early, it is just ignored. The analogy breaks on timing: a student does not run a countdown timer per page.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>On timeout TCP retransmits <b>only the oldest unACKed segment</b>, not the whole window.</li>
+<li>A lost ACK does not always cause a retransmission: a later cumulative ACK can cover it (Example 9c).</li>
+<li>A premature timeout causes an unnecessary retransmission; the receiver answers it with the latest cumulative ACK (120), not with 100.</li>
+<li>SendBase only moves forward. An ACK with \(y \le\) SendBase does not change it.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 9.1 (not from the lecture): one lost ACK, one good one</summary><div class="body">
+<div class="givens">A sends Seq = 200 (50 B) and Seq = 250 (30 B). The first ACK is lost; the second arrives before the timer expires.</div>
+<div class="math">\[ \begin{aligned} \text{ACK}_1 &= 200 + 50 = 250 \ (\text{lost})\\ \text{ACK}_2 &= 250 + 30 = 280 \ \Rightarrow\ \text{SendBase} = 280 \end{aligned} \]</div>
+<div class="answer">No retransmission; SendBase = 280</div>
+</div></details>
+<details class="work practice"><summary>Practice 9.2 (not from the lecture): premature timeout</summary><div class="body">
+<div class="givens">A sends Seq = 300 (40 B) and Seq = 340 (60 B). Both ACKs are delayed past the timeout.</div>
+<p>A retransmits only Seq = 300. The delayed ACKs are 340 and 400:</p>
+<div class="math">\[ \text{ACK} = 300 + 40 = 340, \qquad \text{ACK} = 340 + 60 = 400 \;\Rightarrow\; \text{SendBase} = 400 \]</div>
+<p>The duplicate Seq = 300 is answered with ACK = 400.</p>
+<div class="answer">Retransmit Seq 300 only; final SendBase = 400</div>
+</div></details>
+
+<div class="quiz" data-quiz="q9"></div>
+</section>
+
+<section class="sec" id="s10">
+<h3><span class="num">Section 10</span>Fast retransmit</h3>
+<p>The timeout period is often relatively long, so a lost segment can sit unresent for a long time. TCP can detect lost segments sooner through <b>duplicate ACKs</b>. A sender often sends many segments back to back; if one is lost, each later segment that arrives makes the receiver repeat its last ACK (it is still waiting for the missing byte). So there will likely be many duplicate ACKs.</p>
+<p><b>Fast retransmit</b>: if the sender receives <b>3 duplicate ACKs</b> for the same data, it resends the missing segment before its timer expires.</p>
+<div class="eq">
+  <div class="math">\[ n_{\text{dup}} = 3 \;\Rightarrow\; \text{resend segment with seq} = \text{ACK value} \]</div>
+  <span class="note">fast retransmit trigger</span>
+  <div class="defs">\(n_{\text{dup}}\) = number of duplicate ACKs, ACKs carrying the same number as an earlier ACK (no unit) · ACK value = the repeated acknowledgement number, which is the first missing byte (no unit)</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide text says "3 ACKs for the same data"; its figure (Figure 3.37) shows the first ACK plus <b>three duplicates</b> of it, four ACKs with the same number in total, before the resend. This guide follows the figure: the trigger is three <em>duplicate</em> ACKs.</p></div>
+
+<details class="work"><summary>Example 10 (lecture): resending after a triple duplicate ACK</summary><div class="body">
+<div class="givens">Host A sends 5 segments back to back. Segment 2 is lost.</div>
+<p>Segment 1 arrives: B ACKs it, asking for segment 2's first byte. Segments 3, 4 and 5 arrive out of order (2 is missing), so B sends the same ACK three more times.</p>
+<div class="tbl"><table>
+<tr><th>B receives</th><th>B sends</th><th>Count at A</th></tr>
+<tr><td>segment 1</td><td>ACK for start of segment 2</td><td>first ACK</td></tr>
+<tr><td>segment 3</td><td>same ACK</td><td>duplicate 1</td></tr>
+<tr><td>segment 4</td><td>same ACK</td><td>duplicate 2</td></tr>
+<tr><td>segment 5</td><td>same ACK</td><td>duplicate 3 → resend segment 2</td></tr>
+</table></div>
+<p>A resends the 2nd segment right away, well before its timeout would have expired.</p>
+<div class="answer">Third duplicate ACK triggers the resend of segment 2</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>You are dictating numbered items. Your friend keeps saying "still waiting for item 2" while you read items 3, 4 and 5. After the third "still waiting", you do not wait for a full minute of silence; you just repeat item 2. The analogy breaks because TCP's receiver does not know the item is lost; it only knows a gap exists.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Count <b>duplicates</b>: the original ACK is not one of the three. Four ACKs with the same number have arrived when fast retransmit fires.</li>
+<li>Duplicate ACKs carry the number of the <b>first missing byte</b>, which is exactly the seq of the segment to resend.</li>
+<li>After the missing segment arrives, the cumulative ACK jumps past all the buffered segments.</li>
+<li>3 duplicate ACKs are also a loss signal for congestion control (Section 17).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 10.1 (not from the lecture): numbers on the figure</summary><div class="body">
+<div class="givens">Five 100-byte segments with seq 1000, 1100, 1200, 1300, 1400. Segment 1100 is lost; B keeps the out-of-order ones.</div>
+<div class="math">\[ \begin{aligned} \text{after 1000:}\quad &\text{ACK} = 1000 + 100 = 1100\\ \text{after 1200, 1300, 1400:}\quad &\text{ACK} = 1100,\ 1100,\ 1100 \ (\text{3 duplicates}) \end{aligned} \]</div>
+<p>A resends seq = 1100. When it arrives, B has bytes 1000 to 1499:</p>
+<div class="math">\[ \text{ACK} = 1400 + 100 = 1500 \]</div>
+<div class="answer">Resend seq 1100; next ACK = 1500</div>
+</div></details>
+<details class="work practice"><summary>Practice 10.2 (not from the lecture): not enough duplicates</summary><div class="body">
+<p>Same as Practice 10.1, but A sends only segments 1000, 1100 and 1200 before waiting, and 1100 is lost. How many duplicate ACKs arrive, and how is 1100 recovered?</p>
+<p>Only segment 1200 arrives after the gap, giving 1 duplicate ACK (1100). That is fewer than 3, so fast retransmit does not fire; segment 1100 is resent when its timer expires.</p>
+<div class="answer">1 duplicate ACK; recovery by timeout</div>
+</div></details>
+
+<div class="quiz" data-quiz="q10"></div>
+</section>
+
+<h2 class="part">Part 4 · Flow control and connections</h2>
+
+<section class="sec" id="s11">
+<h3><span class="num">Section 11</span>Flow control</h3>
+<p>The receive side of a TCP connection has a <b>receive buffer</b>. Data from IP lands in the buffer, and the application process drains it by reading. The application may be slow at reading. <b>Flow control</b> makes sure the sender won't overflow the receiver's buffer by transmitting too much, too fast. It is a <b>speed-matching service</b>: it matches the send rate to the receiving application's drain rate.</p>
+<p>How it works (assuming the receiver discards out-of-order segments):</p>
+<ul>
+<li>The spare room in the buffer is the <b>RcvWindow</b>.</li>
+<li>The receiver advertises the spare room by including the value of RcvWindow in the segments it sends (the receive window field).</li>
+<li>The sender limits its unACKed data to RcvWindow. This guarantees the receive buffer doesn't overflow.</li>
+<li>The receiver can temporarily shut the window: <b>window size = 0</b> asks the sender to stop transmitting data.</li>
+</ul>
+<div class="eq">
+  <div class="math">\[ \text{RcvWindow} = \text{RcvBuffer} - B_{\text{buf}} \]</div>
+  <div class="math">\[ \text{LastByteSent} - \text{LastByteAcked} \le \text{RcvWindow} \]</div>
+  <span class="note">spare room advertised by the receiver, and the limit it puts on the sender</span>
+  <div class="defs">RcvWindow = spare room in the receive buffer, in bytes (B) · RcvBuffer = total size of the receive buffer, in bytes (B) · \(B_{\text{buf}}\) = data sitting in the buffer, received but not yet read by the application, in bytes (B) · LastByteSent − LastByteAcked = unACKed data in flight, in bytes (B)</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture draws RcvWindow as the spare room next to the "TCP data in buffer" block but gives no formula. The first equation above writes that picture down, with \(B_{\text{buf}}\) naming the buffered data. The sender-side inequality is the lecture's "sender limits unACKed data to RcvWindow" written in the same notation it uses for cwnd (Section 14).</p></div>
+
+<details class="work"><summary>Example 11 (lecture): a 4K receive buffer</summary><div class="body">
+<div class="givens">Receiver buffer \(\text{RcvBuffer} = 4\text{K} = 4096\ \text{B}\), initially empty. 2K = 2048 B.</div>
+<p>Step 1: the application does a 2K write. The sender sends 2K with SEQ = 0. The buffer holds 2048 B:</p>
+<div class="math">\[ \begin{aligned} \text{ACK} &= 0 + 2048 = 2048\\ \text{WIN} &= 4096 - 2048 = 2048\ \text{B} \end{aligned} \]</div>
+<p>Step 2: the application does another 2K write. The sender sends 2K with SEQ = 2048. The buffer is full:</p>
+<div class="math">\[ \begin{aligned} \text{ACK} &= 2048 + 2048 = 4096\\ \text{WIN} &= 4096 - 4096 = 0\ \text{B} \end{aligned} \]</div>
+<p>WIN = 0: the sender is blocked.</p>
+<p>Step 3: the receiving application reads 2K. Buffered data drops to 2048 B, and the receiver sends a window update:</p>
+<div class="math">\[ \text{ACK} = 4096, \qquad \text{WIN} = 4096 - 2048 = 2048\ \text{B} \]</div>
+<p>Step 4: the sender may send up to 2K. It sends 1K with SEQ = 4096. The buffer now holds 2K + 1K = 3072 B, leaving 1024 B free.</p>
+<div class="answer">ACK 2048 WIN 2048 → ACK 4096 WIN 0 → ACK 4096 WIN 2048 → 1K at SEQ 4096</div>
+</div></details>
+
+<div class="demo" id="fcDemo">
+  <div class="dtitle">Receive window calculator</div>
+  <div class="src">Defaults: Example 11, step 3 (4K buffer filled, then the application reads 2K)</div>
+  <div class="controls">
+    <label>RcvBuffer (B) <input type="number" id="fcBuf" value="4096" min="0" step="1"></label>
+    <label>received in order (B) <input type="number" id="fcRcv" value="4096" min="0" step="1"></label>
+    <label>read by app (B) <input type="number" id="fcRead" value="2048" min="0" step="1"></label>
+    <button class="btn" type="button" id="fcReset">Reset to lecture values</button>
+  </div>
+  <svg id="fcSvg" viewBox="0 0 600 70" role="img" aria-label="receive buffer fill"></svg>
+  <div class="readout"><div id="fcOut"></div><div id="fcMsg"></div></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Filling a sink while the drain is half blocked. The person at the sink calls out how much room is left; the person with the jug never pours more than that. When the sink is full they shout "stop" (window 0) and later "room for two litres again" (window update). The analogy breaks because TCP's "shout" only travels on a segment, so the sender learns about free space one round trip late.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>RcvWindow is the <b>free</b> space, not the data in the buffer. In step 1, 2048 B are buffered and the window is also 2048 B only because the buffer is 4096 B.</li>
+<li>Flow control protects the <b>receiver's buffer</b>; congestion control protects the <b>routers</b> (Section 14).</li>
+<li>WIN = 0 does not close the connection; it pauses the sender until a window update arrives.</li>
+<li>The ACK number and the window are separate: in steps 2 and 3 the ACK stays 4096 while the window changes from 0 to 2048.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 11.1 (not from the lecture): how much more may the sender send?</summary><div class="body">
+<div class="givens">\(\text{RcvBuffer} = 8192\ \text{B}\), \(B_{\text{buf}} = 5000\ \text{B}\). The sender already has 1000 B unACKed.</div>
+<div class="math">\[ \begin{aligned} \text{RcvWindow} &= 8192 - 5000 = 3192\ \text{B}\\ \text{more allowed} &= 3192 - 1000 = 2192\ \text{B} \end{aligned} \]</div>
+<div class="answer">RcvWindow = 3192 B; 2192 B more may be sent</div>
+</div></details>
+<details class="work practice"><summary>Practice 11.2 (not from the lecture): reopening the window</summary><div class="body">
+<div class="givens">A 6000 B buffer is full (window 0). The application reads 3500 B.</div>
+<div class="math">\[ \text{RcvWindow} = 6000 - (6000 - 3500) = 3500\ \text{B} \]</div>
+<div class="answer">Window update advertises 3500 B</div>
+</div></details>
+
+<div class="quiz" data-quiz="q11"></div>
+</section>
+
+<section class="sec" id="s12">
+<h3><span class="num">Section 12</span>Handshake and SYN flood</h3>
+<p>TCP sender and receiver establish a "connection" before exchanging data segments, initializing TCP variables: sequence numbers, buffers and flow control info (for example RcvWindow). The <b>client</b> is the connection initiator (in Java, <span class="mono">new Socket("hostname", port)</span>); the <b>server</b> is contacted by the client (<span class="mono">welcomeSocket.accept()</span>).</p>
+<p><b>Three-way handshake:</b></p>
+<ol>
+<li>The client sends a <b>SYN</b> segment to the server. It specifies the client's initial sequence number and carries no data.</li>
+<li>The server receives the SYN and replies with a <b>SYNACK</b> segment. The server allocates buffers and specifies its own initial sequence number.</li>
+<li>The client receives the SYNACK and replies with an <b>ACK</b> segment, which may contain data.</li>
+</ol>
+<div class="eq">
+  <div class="math">\[ \begin{aligned} \text{SYN:}\quad & \text{SYN}=1,\ \ \text{seq} = \text{client\_isn}\\ \text{SYNACK:}\quad & \text{SYN}=1,\ \ \text{seq} = \text{server\_isn},\ \ \text{ack} = \text{client\_isn}+1\\ \text{ACK:}\quad & \text{SYN}=0,\ \ \text{seq} = \text{client\_isn}+1,\ \ \text{ack} = \text{server\_isn}+1 \end{aligned} \]</div>
+  <span class="note">the three segments of the handshake</span>
+  <div class="defs">client_isn = client's initial sequence number (no unit) · server_isn = server's initial sequence number (no unit) · SYN = the SYN flag bit, 1 or 0 · ack = acknowledgement number field (no unit)</div>
+</div>
+
+<details class="work"><summary>Example 12a (lecture): the three-way handshake</summary><div class="body">
+<p>Connection request: the client sends SYN = 1, seq = client_isn. The SYN consumes one sequence number even though it has no data.</p>
+<p>Connection granted: the server answers with SYN = 1, seq = server_isn, ack = client_isn + 1 (the next byte it expects from the client).</p>
+<p>ACK: the client sends SYN = 0, seq = client_isn + 1, ack = server_isn + 1. From here on, data flows in both directions.</p>
+<div class="answer">SYN → SYNACK (ack = client_isn + 1) → ACK (ack = server_isn + 1)</div>
+</div></details>
+
+<p><b>SYN flood attack</b> (a denial of service attack): the attacker sends a large number of TCP SYN segments without completing the third handshake step. The server allocates connection resources for every SYN, so its resources become exhausted and legitimate clients are denied service. Sending SYNs from many sources makes it a <b>DDoS</b> (distributed denial of service) SYN flood.</p>
+<p><b>SYN cookies</b> (RFC 4987) are an effective defense. On receiving a SYN, the server allocates nothing. Instead it creates its initial sequence number (the "cookie") from a hash:</p>
+<div class="eq">
+  <div class="math">\[ \text{server\_isn} = h(\text{IP}_S,\ \text{IP}_D,\ \text{ports},\ K) \]</div>
+  <div class="math">\[ \text{ACK valid} \iff h(\ldots) + 1 = \text{ack field of the ACK} \]</div>
+  <span class="note">SYN cookie: state is kept in the sequence number, not in memory</span>
+  <div class="defs">\(h\) = hash function known to the server · \(\text{IP}_S, \text{IP}_D\) = source and destination IP addresses of the SYN (no unit) · ports = source and destination port numbers of the SYN (no unit) · \(K\) = secret number known only to the server</div>
+</div>
+
+<details class="work"><summary>Example 12b (lecture): checking a returning ACK with no stored state</summary><div class="body">
+<p>A legitimate client returns an ACK segment. The server must check that it matches an earlier SYN, but it kept no memory of SYNs. So it runs the same hash on the same fields (the IP addresses and ports, now read from the ACK) with the same secret key.</p>
+<p>The client's ACK carries ack = server_isn + 1. If the hash result plus one equals that acknowledgement number, the ACK corresponds to an earlier SYN and is valid. Only then does the server allocate resources.</p>
+<p>An attacker who never completes step 3 costs the server nothing but one hash per SYN.</p>
+<div class="answer">Valid if hash + 1 = ack; resources allocated only after a valid ACK</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A restaurant that sets a table for everyone who phones for a reservation can be ruined by prank callers who never show up (SYN flood). A SYN cookie is like giving each caller a code computed from their name and a secret; no table is set until someone walks in and quotes a valid code. The analogy breaks because a real restaurant would remember the bookings; the point of the cookie is that the server remembers nothing.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>SYNACK's ack is client_isn <b>+ 1</b>, even though the SYN carried no data: the SYN uses up one sequence number.</li>
+<li>The third segment's ack is server_isn + 1, and its seq is client_isn + 1.</li>
+<li>Only the third segment may carry data; SYN carries none.</li>
+<li>The SYN flood works because resources are allocated at step 2, before the client proves it exists.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 12.1 (not from the lecture): numbers in the handshake</summary><div class="body">
+<div class="givens">client_isn = 3000, server_isn = 7000</div>
+<div class="math">\[ \begin{aligned} \text{SYN:}\quad & \text{seq} = 3000\\ \text{SYNACK:}\quad & \text{seq} = 7000,\ \ \text{ack} = 3001\\ \text{ACK:}\quad & \text{seq} = 3001,\ \ \text{ack} = 7001 \end{aligned} \]</div>
+<div class="answer">SYNACK ack 3001; final ACK seq 3001, ack 7001</div>
+</div></details>
+<details class="work practice"><summary>Practice 12.2 (not from the lecture): is this ACK valid?</summary><div class="body">
+<p>For a given client, the server's hash gives 51 234. Two ACKs arrive claiming to be from that client, with ack = 51 235 and ack = 51 234. Which is valid?</p>
+<div class="math">\[ 51\,234 + 1 = 51\,235 \]</div>
+<div class="answer">ack = 51 235 is valid; ack = 51 234 is rejected</div>
+</div></details>
+
+<div class="quiz" data-quiz="q12"></div>
+</section>
+
+<section class="sec" id="s13">
+<h3><span class="num">Section 13</span>Closing and TCP states</h3>
+<p>Closing a connection (the client closes its socket with <span class="mono">clientSocket.close()</span>) takes four steps:</p>
+<ol>
+<li>The client end system sends a TCP <b>FIN</b> control segment to the server.</li>
+<li>The server receives the FIN and replies with an <b>ACK</b>. It then closes the connection and sends its own <b>FIN</b>.</li>
+<li>The client receives the FIN and replies with an <b>ACK</b>. It enters a <b>timed wait</b>, during which it will respond with an ACK to any FIN it receives.</li>
+<li>The server receives the ACK. The connection is closed.</li>
+</ol>
+<div class="eq">
+  <div class="math">\[ \text{segments} = \underbrace{3}_{\text{open}} + \underbrace{4}_{\text{close: FIN, ACK, FIN, ACK}} = 7 \]</div>
+  <span class="note">control segments for one connection's life, when no data rides on them</span>
+  <div class="defs">open = the three handshake segments of Section 12 · close = the four teardown segments above (counts, no unit)</div>
+</div>
+
+<details class="work"><summary>Example 13 (lecture): TCP client and server lifecycles</summary><div class="body">
+<p>The lecture's state diagrams. Each arrow is labelled with what triggers it and what is sent.</p>
+<div class="tbl"><table>
+<tr><th>Client state</th><th>Leaves when</th><th>Next</th></tr>
+<tr><td>CLOSED</td><td>application initiates a connection; send SYN</td><td>SYN_SENT</td></tr>
+<tr><td>SYN_SENT</td><td>receive SYN and ACK; send ACK</td><td>ESTABLISHED</td></tr>
+<tr><td>ESTABLISHED</td><td>application initiates close; send FIN</td><td>FIN_WAIT_1</td></tr>
+<tr><td>FIN_WAIT_1</td><td>receive ACK; send nothing</td><td>FIN_WAIT_2</td></tr>
+<tr><td>FIN_WAIT_2</td><td>receive FIN; send ACK</td><td>TIME_WAIT</td></tr>
+<tr><td>TIME_WAIT</td><td>wait 30 seconds</td><td>CLOSED</td></tr>
+</table></div>
+<div class="tbl"><table>
+<tr><th>Server state</th><th>Leaves when</th><th>Next</th></tr>
+<tr><td>CLOSED</td><td>application creates a listen socket</td><td>LISTEN</td></tr>
+<tr><td>LISTEN</td><td>receive SYN; send SYN and ACK</td><td>SYN_RCVD</td></tr>
+<tr><td>SYN_RCVD</td><td>receive ACK; send nothing</td><td>ESTABLISHED</td></tr>
+<tr><td>ESTABLISHED</td><td>receive FIN; send ACK</td><td>CLOSE_WAIT</td></tr>
+<tr><td>CLOSE_WAIT</td><td>send FIN</td><td>LAST_ACK</td></tr>
+<tr><td>LAST_ACK</td><td>receive ACK; send nothing</td><td>CLOSED</td></tr>
+</table></div>
+<div class="answer">Client: CLOSED → SYN_SENT → ESTABLISHED → FIN_WAIT_1 → FIN_WAIT_2 → TIME_WAIT → CLOSED</div>
+<div class="answer">Server: CLOSED → LISTEN → SYN_RCVD → ESTABLISHED → CLOSE_WAIT → LAST_ACK → CLOSED</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Ending a phone call politely: "I'm done" (FIN), "OK" (ACK), "I'm done too" (FIN), "OK, bye" (ACK). Then you hold the line a moment in case they say "pardon?", meaning your last "bye" was lost (timed wait). The analogy breaks because TCP holds the line for a fixed time, 30 seconds in the lecture's diagram, rather than until it hears silence.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Closing takes <b>four</b> segments, opening takes <b>three</b>.</li>
+<li>The side that closes first (here the client) goes through FIN_WAIT_1, FIN_WAIT_2 and TIME_WAIT. The other side goes through CLOSE_WAIT and LAST_ACK.</li>
+<li>FIN_WAIT_1 → FIN_WAIT_2 happens on receiving the ACK of the client's FIN; FIN_WAIT_2 → TIME_WAIT on receiving the server's FIN.</li>
+<li>Timed wait exists so the client can re-ACK a FIN if its last ACK was lost.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 13.1 (not from the lecture): where is the client?</summary><div class="body">
+<p>The client has sent its FIN and received the server's ACK, but no FIN from the server yet. Which state is it in, and what happens when the server's FIN arrives?</p>
+<p>Receiving the ACK moved it from FIN_WAIT_1 to FIN_WAIT_2. When the FIN arrives it sends an ACK and enters TIME_WAIT, then returns to CLOSED after 30 s.</p>
+<div class="answer">FIN_WAIT_2; then ACK and TIME_WAIT (30 s)</div>
+</div></details>
+<details class="work practice"><summary>Practice 13.2 (not from the lecture): two connections</summary><div class="body">
+<p>A client opens a connection, fetches a page, closes it, and repeats once more. If no data rides on the control segments, how many handshake and teardown segments are exchanged?</p>
+<div class="math">\[ 2 \times (3 + 4) = 14\ \text{segments} \]</div>
+<div class="answer">14 control segments</div>
+</div></details>
+
+<div class="quiz" data-quiz="q13"></div>
+</section>
+
+<h2 class="part">Part 5 · Congestion control</h2>
+
+<section class="sec" id="s14">
+<h3><span class="num">Section 14</span>Congestion and the windows</h3>
+<p>Informally, congestion is "too many sources sending too much data too fast for the network to handle". More precisely, <b>congestion occurs when the total arrival rate from all flows exceeds a router's output link capacity</b>. It shows up as:</p>
+<ul>
+<li><b>lost packets</b> (buffer overflow at routers), and</li>
+<li><b>long delays</b> (queueing in router buffers).</li>
+</ul>
+<p>This is different from flow control: flow control protects one receiver, congestion control protects the network. To relieve congestion, the sending nodes should slow down, and TCP does that by <b>reducing its window</b>. The window size is the number of bytes allowed to be in flight simultaneously.</p>
+<p>There are two broad approaches:</p>
+<ol>
+<li><b>End-end congestion control</b>: no explicit feedback from the network; congestion is inferred from loss and delay observed at the end systems. This is the approach taken by <b>TCP</b>.</li>
+<li><b>Network-assisted congestion control</b>: routers provide feedback to end systems indicating congestion, as used in Asynchronous Transfer Mode (<b>ATM</b>).</li>
+</ol>
+<p>A TCP sender keeps two windows. The <b>receiver window</b> (rwnd) keeps the receiver's buffer from overflowing (flow control, Section 11). The <b>congestion window</b> (cwnd) keeps the sender from overflowing the intermediate routers' buffers (congestion control). The sender obeys the smaller one.</p>
+<div class="eq">
+  <div class="math">\[ W = \min(\text{rwnd},\ \text{cwnd}), \qquad \text{LastByteSent} - \text{LastByteAcked} \le W \]</div>
+  <div class="math">\[ \text{rate} \approx \frac{\text{cwnd}}{\text{RTT}}\ \ \frac{\text{bytes}}{\text{s}} \]</div>
+  <span class="note">actual window and the resulting sending rate</span>
+  <div class="defs">\(W\) = actual window, the most bytes that may be in flight, in bytes (B) · rwnd = receiver window, in bytes (B) · cwnd = congestion window, in bytes (B) or segments (MSS) · RTT = round-trip time, in seconds (s) · rate = sending rate, in bytes per second (B/s)</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture writes rate \(\approx \frac{\text{cwnd}}{\text{RTT}}\), which assumes cwnd is the smaller window. When rwnd is smaller, the sender is limited by \(W = \text{rwnd}\), so the general form is \(\text{rate} \approx \frac{W}{\text{RTT}}\). The practice problems use this.</p></div>
+<p>How does the sender perceive congestion? A <b>loss event</b> is a timeout or 3 duplicate ACKs. After a loss event the sender reduces its rate (cwnd). cwnd is dynamic, a function of perceived network congestion, governed by three mechanisms: <b>AIMD</b> (Section 15), <b>slow start</b> (Section 16) and <b>being conservative after timeout events</b> (Section 17).</p>
+
+<details class="work"><summary>Example 14 (lecture): which window limits the sender?</summary><div class="body">
+<p>The lecture's rule is that max-in-flight bytes \(\le \min(\text{rwnd}, \text{cwnd})\), so that the sender overflows neither the receiver nor the routers. Two cases:</p>
+<div class="math">\[ \begin{aligned} \text{rwnd} < \text{cwnd}:&\quad W = \text{rwnd} \ \ (\text{receiver is the bottleneck})\\ \text{cwnd} < \text{rwnd}:&\quad W = \text{cwnd} \ \ (\text{network is the bottleneck}) \end{aligned} \]</div>
+<div class="answer">The smaller window wins</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Driving deliveries to a warehouse. The warehouse tells you how much space it has (rwnd); the traffic report tells you how many trucks the roads can take (cwnd). You send only as many trucks as the tighter limit allows. The analogy breaks because TCP has no traffic report: it guesses cwnd from losses (end-end control).</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>rwnd = flow control (receiver buffer); cwnd = congestion control (router buffers). Exams love swapping them.</li>
+<li>The actual window is the <b>minimum</b>, not the sum and not the maximum.</li>
+<li>Rate divides by RTT: convert ms to s first. 18 000 B over 60 ms is 300 000 B/s, not 300 B/s.</li>
+<li>TCP is end-end; network-assisted control (ATM) needs routers to send feedback.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 14.1 (not from the lecture): network-limited</summary><div class="body">
+<div class="givens">rwnd = 20 000 B, cwnd = 12 000 B, RTT = 50 ms = 0.05 s</div>
+<div class="math">\[ \begin{aligned} W &= \min(20\,000,\ 12\,000) = 12\,000\ \text{B}\\ \text{rate} &\approx \frac{12\,000\ \text{B}}{0.05\ \text{s}} = 240\,000\ \text{B/s} = 1.92\ \text{Mb/s} \end{aligned} \]</div>
+<div class="answer">W = 12 000 B, rate ≈ 240 000 B/s (1.92 Mb/s)</div>
+</div></details>
+<details class="work practice"><summary>Practice 14.2 (not from the lecture): receiver-limited</summary><div class="body">
+<div class="givens">rwnd = 8000 B, cwnd = 30 000 B, RTT = 100 ms = 0.1 s</div>
+<div class="math">\[ \begin{aligned} W &= \min(8000,\ 30\,000) = 8000\ \text{B}\\ \text{rate} &\approx \frac{8000\ \text{B}}{0.1\ \text{s}} = 80\,000\ \text{B/s} \end{aligned} \]</div>
+<div class="answer">W = 8000 B, rate ≈ 80 000 B/s</div>
+</div></details>
+
+<div class="quiz" data-quiz="q14"></div>
+</section>
+
+<section class="sec" id="s15">
+<h3><span class="num">Section 15</span>AIMD</h3>
+<p><b>Additive increase, multiplicative decrease (AIMD)</b>: increase the transmission rate (window size), probing for usable bandwidth, until loss occurs.</p>
+<ul>
+<li><b>Additive increase</b>: increase cwnd by 1 maximum segment size (MSS) every RTT until loss is detected.</li>
+<li><b>Multiplicative decrease</b>: cut cwnd in half after loss.</li>
+</ul>
+<p>Repeating this gives the <b>saw tooth</b> behavior: TCP keeps probing for bandwidth, backs off by half when it finds the limit, and probes again.</p>
+<div class="eq">
+  <div class="math">\[ \text{no loss in an RTT: } \text{cwnd} \leftarrow \text{cwnd} + 1\ \text{MSS}, \qquad \text{loss: } \text{cwnd} \leftarrow \frac{\text{cwnd}}{2} \]</div>
+  <span class="note">AIMD update rules</span>
+  <div class="defs">cwnd = congestion window, in bytes (B) or segments (MSS) · MSS = maximum segment size, in bytes (B) · RTT = round-trip time, in seconds (s)</div>
+</div>
+
+<details class="work"><summary>Example 15 (lecture): the saw tooth</summary><div class="body">
+<p>The lecture's plot of cwnd against time (axis marks at 8, 16 and 24 Kbytes) shows straight rising lines (additive increase, 1 MSS per RTT) broken by vertical drops (multiplicative decrease, cwnd halved at each loss). The first peak, at 16 KB, drops to 8 KB. By the same rule, a peak of 24 KB drops to 12 KB:</p>
+<div class="math">\[ \frac{16\ \text{KB}}{2} = 8\ \text{KB}, \qquad \frac{24\ \text{KB}}{2} = 12\ \text{KB} \]</div>
+<div class="answer">Linear climb, halve on loss, repeat: the saw tooth</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Turning up the volume one notch at a time until the neighbour bangs on the wall, then halving it and starting to creep up again. Slow, careful increases and a sharp backoff keep everyone mostly happy. The analogy breaks because many TCP senders share one link, and AIMD is also what lets them settle on fair shares.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Additive increase is <b>+1 MSS per RTT</b>, not per ACK and not doubling (that is slow start).</li>
+<li>Multiplicative decrease halves cwnd; it does not subtract 1 MSS.</li>
+<li>Apply events in order: grow first for each loss-free RTT, then halve at the loss.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 15.1 (not from the lecture): after a loss</summary><div class="body">
+<div class="givens">cwnd = 10 MSS when a loss is detected; then 4 RTTs without loss.</div>
+<div class="math">\[ \begin{aligned} \text{after loss:}\quad &\frac{10}{2} = 5\ \text{MSS}\\ \text{after 4 RTTs:}\quad & 5 + 4 = 9\ \text{MSS} \end{aligned} \]</div>
+<div class="answer">9 MSS</div>
+</div></details>
+<details class="work practice"><summary>Practice 15.2 (not from the lecture): length of one tooth</summary><div class="body">
+<div class="givens">The saw tooth swings between 8 KB and 16 KB; MSS = 1 KB.</div>
+<div class="math">\[ \frac{16\ \text{KB} - 8\ \text{KB}}{1\ \text{KB per RTT}} = 8\ \text{RTTs} \]</div>
+<div class="answer">8 RTTs per tooth</div>
+</div></details>
+
+<div class="quiz" data-quiz="q15"></div>
+</section>
+
+<section class="sec" id="s16">
+<h3><span class="num">Section 16</span>Slow start and avoidance</h3>
+<p><b>Slow start.</b> When a connection begins, TCP increases its rate exponentially until the first loss event:</p>
+<ul>
+<li>initially cwnd = 1 MSS;</li>
+<li>cwnd doubles every RTT;</li>
+<li>this is done by incrementing cwnd by 1 MSS for every ACK received.</li>
+</ul>
+<p>The point is to discover the available bandwidth fast: it is desirable to ramp up quickly to a respectable rate. When cwnd passes a <b>threshold</b> (ssthresh), TCP moves to the congestion avoidance phase to slow down the growth.</p>
+<p><b>Congestion avoidance.</b> Once cwnd is above the threshold, cwnd is incremented by one segment every RTT (that is, for every window of ACKs received): a <b>linear increase</b>. cwnd keeps increasing linearly until loss is detected. TCP spends most of its time in this phase.</p>
+<div class="eq">
+  <div class="math">\[ \text{slow start: } \text{cwnd}_n = 2^{n}\ \text{MSS}, \qquad n_{\text{ss}} = \log_2\!\left(\frac{\text{ssthresh}}{1\ \text{MSS}}\right) \]</div>
+  <div class="math">\[ \text{congestion avoidance: } \text{cwnd} = \text{ssthresh} + k\ \text{MSS} \]</div>
+  <span class="note">window size by round, starting from 1 MSS</span>
+  <div class="defs">\(\text{cwnd}_n\) = congestion window after \(n\) RTTs of slow start, in MSS · \(n\) = number of RTTs since the start (no unit) · ssthresh = slow start threshold, in MSS · \(n_{\text{ss}}\) = RTTs needed to reach ssthresh when it is a power of 2 (no unit) · \(k\) = RTTs spent in congestion avoidance (no unit)</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide says "when cwnd &gt; threshold, move to congestion avoidance". Both of the lecture's plots (slide 48 and slide 51) switch as soon as cwnd <b>reaches</b> the threshold, and slow start never overshoots it: after a timeout in the slide 51 plot, cwnd goes 16 → 20 (the threshold) rather than 16 → 32. This guide uses that rule: double, but stop at ssthresh; then add 1 per RTT.</p></div>
+
+<details class="work"><summary>Example 16 (lecture): slow start up to a threshold of 8</summary><div class="body">
+<div class="givens">cwnd starts at 1 segment; threshold = 8 segments (lecture slide 48). Slide 47 shows the first rounds: one segment, then two, then four.</div>
+<p>Each RTT, every segment in the window is ACKed and each ACK adds 1 segment, so the window doubles:</p>
+<div class="math">\[ \begin{aligned} \text{RTT }0:&\ \ \text{cwnd} = 1\\ \text{RTT }1:&\ \ 1 + 1 = 2\\ \text{RTT }2:&\ \ 2 + 2 = 4\\ \text{RTT }3:&\ \ 4 + 4 = 8 = \text{threshold} \end{aligned} \]</div>
+<p>From here, congestion avoidance adds 1 segment per RTT:</p>
+<div class="math">\[ \text{RTT }4: 9,\quad \text{RTT }5: 10,\quad \text{RTT }6: 11,\ \ldots \]</div>
+<div class="answer">1, 2, 4, 8 (threshold reached after 3 RTTs), then 9, 10, 11, ...</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Searching for a word in a dictionary by leaping a page, then two, then four, then eight pages until you get close, then turning one page at a time. The leaps (slow start) find the neighbourhood fast; single pages (congestion avoidance) avoid overshooting. The analogy breaks because TCP does not know where the target is; it learns only when a loss tells it that it went too far.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>"Slow" start is the <b>exponential</b> phase. The name refers to starting from 1 MSS, not to slow growth.</li>
+<li>Slow start: +1 MSS per <b>ACK</b> (doubles per RTT). Congestion avoidance: +1 MSS per <b>RTT</b>.</li>
+<li>Do not overshoot the threshold: if doubling would pass ssthresh, cwnd stops at ssthresh.</li>
+<li>Count rounds carefully: after \(n\) RTTs of slow start, cwnd = \(2^{n}\), so 1 at round 0, 32 at round 5.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 16.1 (not from the lecture): threshold 16</summary><div class="body">
+<div class="givens">cwnd starts at 1 MSS, ssthresh = 16 MSS, no loss.</div>
+<div class="math">\[ \begin{aligned} n_{\text{ss}} &= \log_2 16 = 4\ \text{RTTs}\\ \text{after 7 RTTs:}\quad \text{cwnd} &= 16 + (7 - 4) = 19\ \text{MSS} \end{aligned} \]</div>
+<div class="answer">16 MSS after 4 RTTs; 19 MSS after 7 RTTs</div>
+</div></details>
+<details class="work practice"><summary>Practice 16.2 (not from the lecture): in bytes</summary><div class="body">
+<div class="givens">MSS = 1460 B, ssthresh = 64 MSS, cwnd starts at 1 MSS.</div>
+<div class="math">\[ \text{after 3 RTTs:}\quad \text{cwnd} = 2^{3} = 8\ \text{MSS} = 8 \times 1460\ \text{B} = 11\,680\ \text{B} \]</div>
+<div class="answer">11 680 B</div>
+</div></details>
+
+<div class="quiz" data-quiz="q16"></div>
+</section>
+
+<section class="sec" id="s17">
+<h3><span class="num">Section 17</span>Reacting to loss</h3>
+<p>At any time, when congestion occurs, TCP decreases the window. It recognizes congestion by two signals, and treats them differently:</p>
+<p><b>1. Three duplicate ACKs.</b> The receiver got all packets up to the gap and is still receiving packets, so the network is at least capable of delivering some segments. This could be temporary congestion, so TCP reduces cwnd, but not aggressively, and stays in congestion avoidance.</p>
+<p><b>2. Timeout.</b> No response from the receiver at all: more likely significant congestion. TCP reduces cwnd aggressively to 1 MSS and goes back to slow start.</p>
+<div class="eq">
+  <div class="math">\[ \text{3 dup ACKs:}\quad \text{ssthresh} = \frac{\text{cwnd}}{2},\quad \text{cwnd} = \text{ssthresh},\quad \text{stay in congestion avoidance} \]</div>
+  <div class="math">\[ \text{timeout:}\quad \text{ssthresh} = \frac{\text{cwnd}}{2},\quad \text{cwnd} = 1\ \text{MSS},\quad \text{back to slow start} \]</div>
+  <span class="note">use cwnd at the moment the loss is detected</span>
+  <div class="defs">cwnd = congestion window, in MSS (or bytes) · ssthresh = threshold between slow start and congestion avoidance, same unit as cwnd · MSS = maximum segment size, in bytes (B)</div>
+</div>
+<p>Most of the time the window looks like a saw tooth: cwnd increases by 1 every RTT and is halved at each loss, and the cycle repeats (AIMD, Section 15).</p>
+
+<details class="work"><summary>Example 17a (lecture): cwnd in kilobytes against transmission number</summary><div class="body">
+<div class="givens">MSS = 1 KB (cwnd starts at 1 KB). Initial threshold = 32 KB. A timeout occurs at transmission 13. Values read from the lecture's lower plot on slide 51.</div>
+<p>Slow start, doubling each transmission round until the threshold:</p>
+<div class="math">\[ 1,\ 2,\ 4,\ 8,\ 16,\ 32\ \text{KB} \quad (\text{transmissions } 0 \text{ to } 5) \]</div>
+<p>Congestion avoidance, +1 KB per round from 32 KB:</p>
+<div class="math">\[ 33,\ 34,\ \ldots,\ 40\ \text{KB} \quad (\text{transmissions } 6 \text{ to } 13) \]</div>
+<p>Timeout at transmission 13 with cwnd = 40 KB:</p>
+<div class="math">\[ \begin{aligned} \text{ssthresh} &= \frac{40\ \text{KB}}{2} = 20\ \text{KB}\\ \text{cwnd} &= 1\ \text{KB} \quad (\text{transmission } 14) \end{aligned} \]</div>
+<p>Slow start again, stopping at the new threshold of 20 KB:</p>
+<div class="math">\[ 1,\ 2,\ 4,\ 8,\ 16,\ 20\ \text{KB} \quad (\text{transmissions } 14 \text{ to } 19) \]</div>
+<p>Then congestion avoidance:</p>
+<div class="math">\[ 21,\ 22,\ 23,\ 24,\ 25\ \text{KB} \quad (\text{transmissions } 20 \text{ to } 24) \]</div>
+<div class="answer">Peak 40 KB at transmission 13; new threshold 20 KB; cwnd = 25 KB at transmission 24</div>
+</div></details>
+
+<details class="work"><summary>Example 17b (lecture): both loss signals on one plot</summary><div class="body">
+<div class="givens">The lecture's upper plot on slide 51 (cwnd in segments against time in RTTs). Reading each tick mark on the cwnd axis as 1 segment: initial window 1, initial ssthresh 8.</div>
+<p>Slow start: 1, 2, 4, 8. Congestion avoidance: 9, 10, 11, 12.</p>
+<p>Third duplicate ACK at cwnd = 12:</p>
+<div class="math">\[ \text{ssthresh} = \frac{12}{2} = 6 \]</div>
+<p>After a short "fast recovery" stretch, cwnd continues from the threshold, 6, and congestion avoidance grows it linearly: 6, 7, 8, ..., 16.</p>
+<p>Retransmission timeout at cwnd = 16:</p>
+<div class="math">\[ \text{ssthresh} = \frac{16}{2} = 8, \qquad \text{cwnd} = 1 \]</div>
+<p>Slow start 1, 2, 4, 8, then congestion avoidance 9, 10, 11, 12.</p>
+<div class="answer">3 dup ACKs: halve and continue linearly · timeout: halve ssthresh, restart from 1</div>
+</div></details>
+<div class="callout filled"><span class="tag">Filled in</span><p>The upper plot on slide 51 has no numbers on its axis; the values above count tick marks. During the stretch labelled "Fast Recovery", the plot shows cwnd at about 9 (= 6 + 3) and climbing before it settles at the threshold of 6. That window inflation is a refinement the slides do not explain. The lecture's rule (slide 49) is simply \(\text{cwnd} = \text{ssthresh} = \frac{\text{cwnd}}{2}\) after 3 duplicate ACKs, which matches where the plot ends up; use that rule on exams unless told otherwise.</p></div>
+
+<div class="demo" id="cwDemo">
+  <div class="dtitle">cwnd simulator: slow start, congestion avoidance and loss</div>
+  <div class="src">Defaults: Example 17a from the lecture (threshold 32, timeout at transmission 13). Halving rounds down to a whole MSS.</div>
+  <canvas id="cwCanvas" height="260"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>cwnd (MSS)</span><span><i style="background:var(--c2)"></i>ssthresh</span></div>
+  <div class="controls">
+    <label>initial ssthresh (MSS) <input type="number" id="cwTh" value="32" min="1" max="64" step="1"></label>
+    <label>loss 1 at round <input type="number" id="cwR1" value="13" min="0" max="23" step="1"></label>
+    <span class="seg" id="cwT1"><button type="button" aria-pressed="true" data-v="to">Timeout</button><button type="button" aria-pressed="false" data-v="dup">3 dup ACKs</button><button type="button" aria-pressed="false" data-v="none">None</button></span>
+  </div>
+  <div class="controls">
+    <label>loss 2 at round <input type="number" id="cwR2" value="20" min="0" max="23" step="1"></label>
+    <span class="seg" id="cwT2"><button type="button" aria-pressed="false" data-v="to">Timeout</button><button type="button" aria-pressed="false" data-v="dup">3 dup ACKs</button><button type="button" aria-pressed="true" data-v="none">None</button></span>
+    <button class="btn" type="button" id="cwReset">Reset to lecture values</button>
+  </div>
+  <div class="readout"><div id="cwOut"></div><div id="cwList"></div></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Talking to someone across a noisy room. If they say "I missed that last word" (duplicate ACKs), you lower your pace a bit and carry on. If they stop answering entirely (timeout), you start over slowly, word by word, and only speed up again once they respond. The analogy breaks because TCP also remembers half of the pace that failed (ssthresh) and stops speeding up quickly when it gets there.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Both signals set \(\text{ssthresh} = \frac{\text{cwnd}}{2}\). They differ in the new cwnd: <b>ssthresh</b> for 3 dup ACKs, <b>1 MSS</b> for a timeout.</li>
+<li>Use cwnd <b>at the moment of loss</b> (40 KB in Example 17a), not the old threshold (32 KB).</li>
+<li>After a timeout, slow start stops at the <b>new</b> threshold (20 KB), not the old one.</li>
+<li>Timeout is the more severe signal: nothing is getting through.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 17.1 (not from the lecture): a timeout at round 10</summary><div class="body">
+<div class="givens">MSS = 1 KB, initial ssthresh = 16 KB, cwnd starts at 1 KB, timeout detected at round 10.</div>
+<div class="math">\[ \begin{aligned} \text{rounds 0 to 4:}\quad & 1,\ 2,\ 4,\ 8,\ 16\\ \text{rounds 5 to 10:}\quad & 17,\ 18,\ 19,\ 20,\ 21,\ 22\\ \text{timeout:}\quad & \text{ssthresh} = \frac{22}{2} = 11,\ \ \text{cwnd} = 1\\ \text{rounds 11 to 16:}\quad & 1,\ 2,\ 4,\ 8,\ 11,\ 12 \end{aligned} \]</div>
+<div class="answer">ssthresh = 11 KB; cwnd = 12 KB at round 16</div>
+</div></details>
+<details class="work practice"><summary>Practice 17.2 (not from the lecture): three duplicate ACKs</summary><div class="body">
+<div class="givens">cwnd = 20 MSS in congestion avoidance when 3 duplicate ACKs arrive; no more losses for 2 RTTs.</div>
+<div class="math">\[ \begin{aligned} \text{ssthresh} &= \frac{20}{2} = 10,\quad \text{cwnd} = 10\ \text{MSS}\\ \text{next RTTs:}\quad & 11,\ 12\ \text{MSS} \end{aligned} \]</div>
+<div class="answer">cwnd = 10 MSS, then 11 and 12 MSS</div>
+</div></details>
+
+<div class="quiz" data-quiz="q17"></div>
+</section>
+
+<section class="sec final" id="final">
+<h3><span class="num">Finish</span>Final exam</h3>
+<p>Twelve questions mixing every part of the chapter. Each explanation ends with the section to review. When all twelve are answered, a list of the ones you missed appears below the exam.</p>
+<div class="quiz" data-quiz="final"></div>
+</section>
+
+<section class="sec" id="formulas">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<button class="btn" id="printSheet" type="button">Print formula sheet</button>
+<p style="margin-top:12px">One card per part. Each formula lists its variables and the section it comes from.</p>
+<div class="sheet">
+  <div class="card"><h5>Part 1 · Services and demultiplexing</h5>
+    <div class="f"><span class="expr">\[ 0 \le \text{port} \le 2^{16}-1 = 65\,535 \]</span><span class="d">port = 16-bit port number (no unit)</span><span class="s">Section 2</span></div>
+    <div class="f"><span class="expr">\[ \text{UDP socket} \leftrightarrow (\text{dest IP},\ \text{dest port}) \]</span><span class="d">2-tuple; source fields do not change the socket</span><span class="s">Section 3</span></div>
+    <div class="f"><span class="expr">\[ \text{TCP socket} \leftrightarrow (\text{src IP},\ \text{src port},\ \text{dest IP},\ \text{dest port}) \]</span><span class="d">4-tuple; any difference means a different socket</span><span class="s">Section 4</span></div>
+  </div>
+  <div class="card"><h5>Part 2 · UDP</h5>
+    <div class="f"><span class="expr">\[ L_{\text{UDP}} = 8\ \text{B} + L_{\text{data}} \]</span><span class="d">\(L_{\text{UDP}}\) = length field, header included (B) · \(L_{\text{data}}\) = data bytes (B)</span><span class="s">Section 5</span></div>
+    <div class="f"><span class="expr">\[ s' = \big((a+b) \bmod 2^{16}\big) + c \]</span><span class="d">\(a, b\) = 16-bit words · \(c\) = carry out of bit 15 (0 or 1), wrapped around</span><span class="s">Section 6</span></div>
+    <div class="f"><span class="expr">\[ \text{checksum} = \overline{s'} \]</span><span class="d">flip every bit of the wrapped sum; receiver: sum + checksum = all ones</span><span class="s">Section 6</span></div>
+  </div>
+  <div class="card"><h5>Part 3 · TCP reliable transfer</h5>
+    <div class="f"><span class="expr">\[ H = 20\ \text{B} + L_{\text{opt}}, \qquad L_{\text{seg}} = H + L_{\text{data}} \]</span><span class="d">\(H\) = TCP header (B) · \(L_{\text{opt}}\) = options (B) · head len field = \(\frac{H}{4}\) words</span><span class="s">Section 7</span></div>
+    <div class="f"><span class="expr">\[ \text{ACK} = \text{seq} + L = \text{seq}_{\text{next}} \]</span><span class="d">seq = number of first data byte · \(L\) = data bytes (B) · ACK = next byte expected, cumulative</span><span class="s">Section 8</span></div>
+    <div class="f"><span class="expr">\[ y > \text{SendBase} \Rightarrow \text{SendBase} \leftarrow y \]</span><span class="d">SendBase = oldest unACKed byte · \(y\) = arriving ACK number; timeout resends only the oldest unACKed segment</span><span class="s">Section 9</span></div>
+    <div class="f"><span class="expr">\[ n_{\text{dup}} = 3 \Rightarrow \text{resend seq} = \text{ACK value} \]</span><span class="d">\(n_{\text{dup}}\) = duplicate ACKs (original not counted)</span><span class="s">Section 10</span></div>
+  </div>
+  <div class="card"><h5>Part 4 · Flow control and connections</h5>
+    <div class="f"><span class="expr">\[ \text{RcvWindow} = \text{RcvBuffer} - B_{\text{buf}} \]</span><span class="d">RcvBuffer = buffer size (B) · \(B_{\text{buf}}\) = received but unread data (B)</span><span class="s">Section 11</span></div>
+    <div class="f"><span class="expr">\[ \text{LastByteSent} - \text{LastByteAcked} \le \text{RcvWindow} \]</span><span class="d">unACKed data in flight (B); WIN = 0 stops the sender</span><span class="s">Section 11</span></div>
+    <div class="f"><span class="expr">\[ \begin{aligned} &\text{SYN: seq} = x\\ &\text{SYNACK: seq} = y,\ \text{ack} = x+1\\ &\text{ACK: seq} = x+1,\ \text{ack} = y+1 \end{aligned} \]</span><span class="d">\(x\) = client_isn · \(y\) = server_isn (initial sequence numbers)</span><span class="s">Section 12</span></div>
+    <div class="f"><span class="expr">\[ \text{valid ACK} \iff h(\text{IPs},\ \text{ports},\ K) + 1 = \text{ack} \]</span><span class="d">SYN cookie: \(h\) = server's hash · \(K\) = server secret</span><span class="s">Section 12</span></div>
+    <div class="f"><span class="expr">\[ 3\ \text{(open)} + 4\ \text{(close)} = 7\ \text{segments} \]</span><span class="d">client: FIN_WAIT_1 → FIN_WAIT_2 → TIME_WAIT (30 s) · server: CLOSE_WAIT → LAST_ACK</span><span class="s">Section 13</span></div>
+  </div>
+  <div class="card"><h5>Part 5 · Congestion control</h5>
+    <div class="f"><span class="expr">\[ W = \min(\text{rwnd},\ \text{cwnd}) \]</span><span class="d">\(W\) = bytes allowed in flight · rwnd = receiver window (B) · cwnd = congestion window (B)</span><span class="s">Section 14</span></div>
+    <div class="f"><span class="expr">\[ \text{rate} \approx \frac{W}{\text{RTT}} \]</span><span class="d">rate in B/s · RTT = round-trip time (s); lecture form uses cwnd for \(W\)</span><span class="s">Section 14</span></div>
+    <div class="f"><span class="expr">\[ \text{AIMD: } \text{cwnd} + 1\ \text{MSS per RTT};\ \ \frac{\text{cwnd}}{2} \text{ on loss} \]</span><span class="d">MSS = maximum segment size (B)</span><span class="s">Section 15</span></div>
+    <div class="f"><span class="expr">\[ \text{slow start: } \text{cwnd}_n = 2^{n}\ \text{MSS} \ (\le \text{ssthresh}) \]</span><span class="d">\(n\) = RTTs since start; +1 MSS per ACK; switch to +1 MSS per RTT at ssthresh</span><span class="s">Section 16</span></div>
+    <div class="f"><span class="expr">\[ \text{3 dup ACKs: ssthresh} = \frac{\text{cwnd}}{2},\ \text{cwnd} = \text{ssthresh} \]</span><span class="d">stay in congestion avoidance</span><span class="s">Section 17</span></div>
+    <div class="f"><span class="expr">\[ \text{timeout: ssthresh} = \frac{\text{cwnd}}{2},\ \text{cwnd} = 1\ \text{MSS} \]</span><span class="d">back to slow start</span><span class="s">Section 17</span></div>
+  </div>
+</div>
+</section>
+<footer>Study guide generated from the lecture. Check flagged notes against your class materials.</footer></main></div>
+<script>window.GUIDE={"title": "ENEL 573 Ch5 Transport Layer", "quizzes": {"q1": {"title": "Section 1 quiz", "questions": [{"q": "In the lecture's household analogy (12 kids writing to 12 kids), what plays the role of the transport protocol?", "options": ["The postal service", "Ann and Bill, who hand letters to their siblings", "The houses", "The letters in envelopes"], "answer": 1, "explain": "The transport layer delivers to the right process inside a host, just as Ann and Bill hand each letter to the right sibling. The postal service is the network layer, houses are hosts and letters are application messages.", "mistakes": ["mixing up the network layer (house to house) with the transport layer", null, "confusing hosts with the protocol that runs on them", "confusing application messages with the protocol that carries them"], "review": "s1"}, {"q": "Which service is provided by neither TCP nor UDP?", "options": ["Congestion control", "In-order delivery", "Bandwidth guarantees", "Error detection with a checksum"], "answer": 2, "explain": "Both run over best-effort IP, so neither can promise delay or bandwidth. TCP provides congestion control and in-order delivery; both TCP and UDP carry a checksum.", "mistakes": ["forgetting that TCP provides congestion control", "forgetting that TCP provides reliable, in-order delivery", null, "thinking 'unreliable' UDP has no error checking"], "review": "s1"}, {"q": "Where do transport-layer protocols run?", "options": ["Only on the end systems", "On every router along the path", "Only on routers at the network edge", "On the end systems and on every router"], "answer": 0, "explain": "Transport protocols run on end systems only. Routers process up to the network layer and never read the TCP or UDP header.", "mistakes": [null, "thinking routers must run TCP to forward segments", "thinking edge routers terminate transport connections", "thinking routers must run TCP to forward segments"], "review": "s1"}, {"q": "What does the receiving side of the transport layer do?", "options": ["Breaks messages into segments and passes them to the network layer", "Reassembles segments into messages and passes them to the application", "Routes datagrams toward the destination host", "Adds IP addresses to each segment"], "answer": 1, "explain": "On receive, the transport layer reassembles segments into messages and passes them up to the application layer. Breaking messages into segments is the send side; routing and IP addressing belong to the network layer.", "mistakes": ["describing the send side instead of the receive side", null, "giving the network layer's job", "giving the network layer's job"], "review": "s1"}]}, "q2": {"title": "Section 2 quiz", "questions": [{"q": "How many bits is a TCP or UDP port number?", "options": ["8", "16", "32", "48"], "answer": 1, "explain": "The two port fields share one 32-bit row, so each is 16 bits.", "mistakes": ["guessing one byte per field", null, "reading the 32-bit row width as the size of one field", "confusing ports with 48-bit MAC addresses"], "review": "s2"}, {"q": "What is the largest possible port number?", "options": ["65 535", "65 536", "32 767", "4 294 967 295"], "answer": 0, "explain": "A 16-bit field holds \\(2^{16} = 65\\,536\\) values, numbered 0 to \\(65\\,535\\).", "mistakes": [null, "counting the values instead of the largest value (forgot that numbering starts at 0)", "treating the field as a signed 16-bit number", "using a 32-bit field"], "review": "s2"}, {"q": "Where does demultiplexing happen?", "options": ["At the sending host, when data from several sockets is wrapped with headers", "At the receiving host, when segments are delivered to the right socket", "At every router along the path", "At the link layer of the sending host"], "answer": 1, "explain": "Demultiplexing is at the receiver: delivering received segments to the correct socket. Gathering data from several sockets and adding headers is multiplexing at the sender.", "mistakes": ["swapping multiplexing and demultiplexing", null, "thinking routers read port numbers", "confusing it with link-layer framing"], "review": "s2"}, {"q": "Which fields does a host use to direct an arriving segment to a socket?", "options": ["IP addresses and port numbers", "MAC addresses only", "The checksum and length fields", "The sequence number only"], "answer": 0, "explain": "Each datagram carries source and destination IP addresses and each segment carries source and destination ports; the host uses these together.", "mistakes": [null, "using link-layer addressing for a transport-layer job", "confusing error-detection fields with addressing", "confusing TCP byte numbering with addressing"], "review": "s2"}]}, "q3": {"title": "Section 3 quiz", "questions": [{"q": "In Example 3, client A (port 9157) and client B (port 5775) both send UDP segments to host C port 6428. How many server sockets receive them?", "options": ["1", "2", "3", "0, because UDP has no sockets"], "answer": 0, "explain": "UDP demultiplexes on (dest IP, dest port) only. Both segments have (C, 6428), so they reach the same socket of P3.", "mistakes": [null, "applying TCP's 4-tuple rule to UDP", "counting one socket per client plus a listening socket", "confusing 'connectionless' with 'socketless'"], "review": "s3"}, {"q": "The UDP server in Example 3 replies to client A. Which ports does the reply carry?", "options": ["SP = 6428, DP = 9157", "SP = 9157, DP = 6428", "SP = 6428, DP = 6428", "SP = 5775, DP = 9157"], "answer": 0, "explain": "A reply swaps the ports: the request's source port 9157 is the return address and becomes the reply's destination port; the server's own port 6428 is the source.", "mistakes": [null, "copying the request's ports without swapping them", "using the server's port for both fields", "using client B's port as the source"], "review": "s3"}, {"q": "What identifies a UDP socket for demultiplexing?", "options": ["(dest IP, dest port)", "(source IP, source port, dest IP, dest port)", "(source port, dest port)", "dest port only, ignoring the IP address"], "answer": 0, "explain": "A UDP socket is identified by the 2-tuple of destination IP address and destination port number.", "mistakes": [null, "using TCP's 4-tuple", "including the source port, which UDP does not use to choose the socket", "forgetting that the destination host is part of the identity"], "review": "s3"}]}, "q4": {"title": "Section 4 quiz", "questions": [{"q": "Segments A:9157 → C:80 and B:9157 → C:80 arrive over TCP. What happens?", "options": ["They go to different sockets because the source IPs differ", "They go to the same socket because the ports match", "They go to the same socket because both are for port 80", "The second is dropped as a duplicate"], "answer": 0, "explain": "TCP uses all four values. The source IPs (A and B) differ, so the 4-tuples differ and so do the sockets (P4 and P5 in Example 4).", "mistakes": [null, "ignoring the source IP in the 4-tuple", "applying UDP's 2-tuple rule to TCP", "thinking equal port numbers mean a duplicate segment"], "review": "s4"}, {"q": "In Example 4, how many sockets on server C handle the three connections? How many would a UDP server on port 80 need for the same three flows?", "options": ["TCP 3, UDP 1", "TCP 1, UDP 3", "TCP 2, UDP 1", "TCP 3, UDP 3"], "answer": 0, "explain": "Three distinct 4-tuples give three TCP sockets. UDP would deliver all three to the single socket at (C, 80).", "mistakes": [null, "swapping the TCP and UDP rules", "counting client hosts (A and B) instead of 4-tuples", "applying the 4-tuple rule to UDP as well"], "review": "s4"}, {"q": "A threaded web server (lecture slide 14) handles three TCP connections. Which statement is right?", "options": ["One process, three threads, three sockets", "One process, one socket shared by all clients", "Three processes and one socket", "One thread and three processes"], "answer": 0, "explain": "Threads replace the per-connection processes, but every connection still has its own socket identified by its 4-tuple.", "mistakes": [null, "thinking threads let connections share a socket", "mixing up processes and sockets", "reversing the roles of threads and processes"], "review": "s4"}]}, "q5": {"title": "Section 5 quiz", "questions": [{"q": "A UDP segment carries 100 bytes of application data. What is in the length field?", "options": ["108 B", "100 B", "104 B", "120 B"], "answer": 0, "explain": "The length includes the 8-byte header: \\(8 + 100 = 108\\ \\text{B}\\).", "mistakes": [null, "forgetting that the length includes the header", "counting only the 4 bytes of port fields as the header", "using TCP's 20-byte header"], "review": "s5"}, {"q": "Why are streaming multimedia apps often run over UDP?", "options": ["They are loss tolerant and rate sensitive", "UDP guarantees in-order delivery", "UDP retransmits lost frames faster than TCP", "UDP reserves bandwidth for the stream"], "answer": 0, "explain": "Media can tolerate the odd lost packet but cares about rate, and UDP has no connection setup and no congestion control slowing it down.", "mistakes": [null, "giving UDP a TCP property", "thinking UDP retransmits at all", "thinking any transport protocol reserves bandwidth"], "review": "s5"}, {"q": "According to the lecture's table, which application typically uses UDP?", "options": ["Network management (SNMP)", "Electronic mail (SMTP)", "Web (HTTP)", "File transfer (FTP)"], "answer": 0, "explain": "SNMP and NFS typically use UDP. SMTP, HTTP, FTP and Telnet use TCP.", "mistakes": [null, "forgetting that mail needs every byte delivered", "forgetting that web pages need reliable transfer", "forgetting that files need reliable transfer"], "review": "s5"}, {"q": "An application needs reliable transfer but wants to use UDP. What does the lecture say?", "options": ["Add reliability at the application layer", "It is impossible over UDP", "Turn on UDP's retransmission flag", "UDP becomes reliable when the checksum is enabled"], "answer": 0, "explain": "Reliable transfer over UDP is done by adding application-specific error recovery in the application.", "mistakes": [null, "missing that the app can add reliability itself", "inventing a UDP feature that does not exist", "confusing error detection with error recovery"], "review": "s5"}]}, "q6": {"title": "Section 6 quiz", "questions": [{"q": "Find the Internet checksum of the two 16-bit words 1111 0000 1111 0000 and 1111 0000 0000 1111.", "options": ["0001 1110 1111 1111", "0001 1111 0000 0000", "1110 0001 0000 0000", "1110 0000 1111 1111"], "answer": 0, "explain": "The sum is 1 1110 0000 1111 1111 with a carry out. Wrap it around: 1110 0001 0000 0000. Invert every bit: 0001 1110 1111 1111.", "mistakes": [null, "dropping the carry instead of wrapping it around", "forgetting to invert the sum", "dropping the carry and not inverting"], "review": "s6"}, {"q": "In the lecture example the sum is 1011 1011 1011 1100. What does the receiver get if it adds this sum to the checksum 0100 0100 0100 0011 with no errors?", "options": ["1111 1111 1111 1111", "0000 0000 0000 0000", "1011 1011 1011 1100", "0100 0100 0100 0011"], "answer": 0, "explain": "A word plus its bitwise complement is all ones. Any other result means an error was detected.", "mistakes": [null, "thinking the result should be zero, as in two's complement subtraction", "returning the sum unchanged", "returning the checksum unchanged"], "review": "s6"}, {"q": "The receiver's check passes (no error detected). What can it conclude?", "options": ["Probably no error, but some errors cancel and go undetected", "The segment is certainly error-free", "The segment had exactly one error that was corrected", "The sender must retransmit"], "answer": 0, "explain": "The checksum only detects errors; some combinations of bit flips leave the sum unchanged, so 'no error detected' is not a guarantee.", "mistakes": [null, "treating detection as proof of correctness", "thinking the checksum corrects errors", "confusing a pass with a failure"], "review": "s6"}, {"q": "Why is the carry out of the most significant bit added back to the result?", "options": ["Because the checksum uses 1's complement addition", "To make the sum fit in 17 bits", "To correct single-bit errors", "Because the length field requires it"], "answer": 0, "explain": "In 1's complement arithmetic a carry out of the top bit wraps around into the lowest bit. That is the rule in the lecture's note.", "mistakes": [null, "the wraparound keeps the sum at 16 bits, not 17", "confusing detection with correction", "mixing up the length and checksum fields"], "review": "s6"}]}, "q7": {"title": "Section 7 quiz", "questions": [{"q": "What is the minimum TCP header size?", "options": ["20 B", "8 B", "16 B", "24 B"], "answer": 0, "explain": "Five fixed 32-bit rows: \\(5 \\times 4\\ \\text{B} = 20\\ \\text{B}\\). Options add more.", "mistakes": [null, "using UDP's header size", "counting only four rows", "treating the options row as mandatory"], "review": "s7"}, {"q": "Which flags are the connection setup and teardown commands?", "options": ["RST, SYN, FIN", "URG, PSH, ACK", "ACK, SYN, PSH", "URG, RST, FIN"], "answer": 0, "explain": "The lecture lists RST, SYN and FIN as connection establishment (setup, teardown) commands. URG and PSH are generally not used; ACK marks the ACK number as valid.", "mistakes": [null, "picking the flags that are not setup commands", "mixing in PSH, which means push data now", "mixing in URG, which marks urgent data"], "review": "s7"}, {"q": "What does the receive window field tell the other side?", "options": ["The number of bytes the receiver is willing to accept", "The congestion window of the sender", "The number of segments in flight", "The size of the header"], "answer": 0, "explain": "Receive window = number of bytes the receiver is willing to accept; it is TCP's flow control field.", "mistakes": [null, "confusing flow control with congestion control", "counting segments instead of bytes", "confusing it with the header length field"], "review": "s7"}, {"q": "A TCP segment has 12 B of options and 1000 B of data. What is the value of the header length field?", "options": ["8", "32", "5", "1032"], "answer": 0, "explain": "\\(H = 20 + 12 = 32\\ \\text{B}\\), and head len counts 32-bit words: \\(\\frac{32}{4} = 8\\).", "mistakes": [null, "giving the header size in bytes instead of 32-bit words", "ignoring the options", "giving the whole segment size"], "review": "s7"}]}, "q8": {"title": "Section 8 quiz", "questions": [{"q": "Host A sends 'C' (1 byte) with Seq = 42. What ACK number does host B send back?", "options": ["43", "42", "44", "79"], "answer": 0, "explain": "ACK = next byte expected = \\(42 + 1 = 43\\).", "mistakes": [null, "acknowledging the byte received rather than the next byte expected", "adding 2 instead of the 1 data byte", "using B's own sequence number"], "review": "s8"}, {"q": "A segment has Seq = 1000 and carries 500 bytes. What ACK will the receiver send if it arrives in order?", "options": ["1500", "1499", "1001", "1501"], "answer": 0, "explain": "\\(1000 + 500 = 1500\\): the next byte expected.", "mistakes": [null, "giving the last byte received instead of the next one expected", "counting segments instead of bytes", "adding one extra to the next byte"], "review": "s8"}, {"q": "In the telnet example, B's echo segment has Seq = 79. What is the ACK in A's third segment?", "options": ["80", "79", "43", "44"], "answer": 0, "explain": "A received B's 1-byte echo starting at 79, so it expects \\(79 + 1 = 80\\).", "mistakes": [null, "acknowledging the byte received rather than the next expected", "using A's own sequence number", "adding 1 to A's own sequence number"], "review": "s8"}, {"q": "How must a TCP receiver handle out-of-order segments?", "options": ["The TCP spec does not say; it is up to the implementor", "It must always discard them", "It must always buffer them", "It must close the connection"], "answer": 0, "explain": "The lecture's answer: the TCP specification leaves it to the implementor.", "mistakes": [null, "assuming a fixed rule (the flow control example only supposes discarding)", "assuming a fixed rule", "treating reordering as a fatal error"], "review": "s8"}]}, "q9": {"title": "Section 9 quiz", "questions": [{"q": "A sends Seq = 92 (8 B) and Seq = 100 (20 B). ACK = 100 is lost but ACK = 120 arrives before the timeout. What does A do?", "options": ["Nothing; SendBase becomes 120", "Retransmits Seq = 92", "Retransmits both segments", "Retransmits Seq = 100"], "answer": 0, "explain": "ACKs are cumulative: 120 covers bytes 92 to 119, so the lost ACK = 100 does not matter.", "mistakes": [null, "ignoring cumulative ACKs", "treating TCP as go-back-N on a lost ACK", "resending the segment whose ACK was received"], "review": "s9"}, {"q": "In the premature timeout scenario, which segment does A retransmit?", "options": ["Only Seq = 92", "Seq = 92 and Seq = 100", "Only Seq = 100", "Nothing, because the ACKs are on their way"], "answer": 0, "explain": "On timeout, TCP retransmits only the segment that caused the timeout, the oldest unACKed one.", "mistakes": [null, "resending the whole window", "resending the newest segment", "assuming the sender knows ACKs are delayed"], "review": "s9"}, {"q": "Which events trigger retransmission in TCP?", "options": ["Timeouts and duplicate ACKs", "Timeouts only", "Duplicate ACKs only", "Negative acknowledgements (NAKs)"], "answer": 0, "explain": "The lecture lists both timeout events and duplicate ACKs.", "mistakes": [null, "forgetting fast retransmit", "forgetting timeouts", "TCP does not use NAKs"], "review": "s9"}, {"q": "In the lost ACK scenario, B receives the retransmitted Seq = 92 a second time. What does it send?", "options": ["ACK = 100", "ACK = 92", "ACK = 108", "Nothing"], "answer": 0, "explain": "B already has bytes 92 to 99, discards the duplicate, and again sends the next byte expected: \\(92 + 8 = 100\\).", "mistakes": [null, "acknowledging the first byte of the duplicate", "adding the 8 bytes twice", "thinking duplicates are ignored silently"], "review": "s9"}]}, "q10": {"title": "Section 10 quiz", "questions": [{"q": "Segments seq 1000, 1100, 1200, 1300, 1400 (100 B each); 1100 is lost and B keeps the rest. After A fast-retransmits 1100 and it arrives, what ACK does B send?", "options": ["1500", "1200", "1100", "1600"], "answer": 0, "explain": "B now has bytes 1000 to 1499 in order, so the cumulative ACK is \\(1400 + 100 = 1500\\).", "mistakes": [null, "acknowledging only the retransmitted segment", "repeating the duplicate ACK", "adding one segment too many"], "review": "s10"}, {"q": "When fast retransmit fires, how many ACKs carrying the same number has the sender received in total?", "options": ["4", "3", "2", "5"], "answer": 0, "explain": "The original ACK plus three duplicates, as in the lecture's Figure 3.37.", "mistakes": [null, "counting the three duplicates but not the original ACK", "stopping at the first duplicate", "counting one more duplicate than needed"], "review": "s10"}, {"q": "Why does TCP use fast retransmit?", "options": ["The timeout period is often relatively long", "Duplicate ACKs mean the receiver's buffer is full", "It reduces the header size", "It avoids the three-way handshake"], "answer": 0, "explain": "A long timeout means a long delay before resending a lost packet; duplicate ACKs reveal the loss sooner.", "mistakes": [null, "confusing duplicate ACKs with a zero window", "unrelated to header size", "unrelated to connection setup"], "review": "s10"}]}, "q11": {"title": "Section 11 quiz", "questions": [{"q": "RcvBuffer = 6144 B and 4096 B of received data are waiting to be read. What is RcvWindow?", "options": ["2048 B", "4096 B", "6144 B", "10 240 B"], "answer": 0, "explain": "Spare room: \\(6144 - 4096 = 2048\\ \\text{B}\\).", "mistakes": [null, "reporting the buffered data instead of the free space", "reporting the whole buffer", "adding instead of subtracting"], "review": "s11"}, {"q": "The receiver advertises WIN = 0. What does the sender do?", "options": ["Stops sending data until the window opens", "Closes the connection", "Halves its congestion window", "Retransmits the last segment"], "answer": 0, "explain": "Window size 0 asks the sender to stop transmitting; it resumes after a window update (WIN = 2048 in Example 11).", "mistakes": [null, "confusing a zero window with FIN", "confusing flow control with congestion control", "confusing a window update with a loss"], "review": "s11"}, {"q": "In Example 11, after ACK = 4096 WIN = 2048, the sender sends 1K. What is its sequence number?", "options": ["4096", "2048", "0", "5120"], "answer": 0, "explain": "The next byte to send is 4096 (bytes 0 to 4095 are already sent and ACKed).", "mistakes": [null, "reusing the previous segment's sequence number", "restarting the numbering", "adding the 1K to the sequence number"], "review": "s11"}, {"q": "What is flow control matching?", "options": ["The send rate to the receiving application's drain rate", "The send rate to the router's link capacity", "The segment size to the MSS", "The sequence numbers of the two directions"], "answer": 0, "explain": "Flow control is a speed-matching service so the receiver's buffer does not overflow.", "mistakes": [null, "describing congestion control", "confusing it with segmentation", "unrelated to flow control"], "review": "s11"}]}, "q12": {"title": "Section 12 quiz", "questions": [{"q": "client_isn = 5000 and server_isn = 9000. What is the ack field of the SYNACK?", "options": ["5001", "9001", "5000", "9000"], "answer": 0, "explain": "SYNACK acknowledges the client's SYN: ack = client_isn + 1 = 5001.", "mistakes": [null, "using the server's own number", "forgetting that SYN consumes one sequence number", "echoing the server's own number"], "review": "s12"}, {"q": "With the same numbers, what are the seq and ack of the client's final ACK?", "options": ["seq = 5001, ack = 9001", "seq = 5000, ack = 9000", "seq = 9001, ack = 5001", "seq = 5001, ack = 9000"], "answer": 0, "explain": "ACK: seq = client_isn + 1 = 5001, ack = server_isn + 1 = 9001.", "mistakes": [null, "forgetting both +1s", "swapping the client and server numbers", "forgetting that SYNACK's SYN also consumes a number"], "review": "s12"}, {"q": "Why does a SYN flood exhaust a server?", "options": ["The server allocates connection resources for each SYN, and the attacker never completes step 3", "Each SYN carries a large amount of data", "SYN segments disable the checksum", "The server must send FIN for every SYN"], "answer": 0, "explain": "Resources are allocated at step 2; half-open connections pile up until legitimate clients are refused.", "mistakes": [null, "SYN carries no data", "unrelated to checksums", "confusing setup with teardown"], "review": "s12"}, {"q": "With SYN cookies, when does the server allocate resources?", "options": ["After a returning ACK passes the hash + 1 check", "When the SYN arrives", "When it sends the SYNACK", "Never; SYN cookies replace connections"], "answer": 0, "explain": "The server stores nothing on a SYN; it allocates resources only after the ACK's acknowledgement number equals hash + 1.", "mistakes": [null, "describing the vulnerable behaviour", "describing the vulnerable behaviour", "thinking the cookie removes the connection itself"], "review": "s12"}]}, "q13": {"title": "Section 13 quiz", "questions": [{"q": "The client is in FIN_WAIT_2 and receives the server's FIN. What does it do?", "options": ["Sends ACK and enters TIME_WAIT", "Sends FIN and enters LAST_ACK", "Sends nothing and enters CLOSED", "Sends SYN and enters SYN_SENT"], "answer": 0, "explain": "Client lifecycle: FIN_WAIT_2, receive FIN, send ACK, TIME_WAIT.", "mistakes": [null, "using the server's closing path", "skipping the timed wait", "confusing teardown with setup"], "review": "s13"}, {"q": "Which state does the server enter after it receives the client's FIN and sends an ACK?", "options": ["CLOSE_WAIT", "FIN_WAIT_1", "TIME_WAIT", "LAST_ACK"], "answer": 0, "explain": "Server: ESTABLISHED, receive FIN, send ACK, CLOSE_WAIT. It moves to LAST_ACK only after sending its own FIN.", "mistakes": [null, "using the closing initiator's state", "using the client's final state", "skipping the step before the server sends its FIN"], "review": "s13"}, {"q": "How long does the client wait in TIME_WAIT in the lecture's diagram?", "options": ["30 seconds", "1 RTT", "Until it receives a SYN", "No time; it closes immediately"], "answer": 0, "explain": "The diagram labels the TIME_WAIT to CLOSED arrow 'wait 30 seconds'.", "mistakes": [null, "confusing it with a retransmission timer", "confusing teardown with setup", "forgetting the timed wait"], "review": "s13"}, {"q": "How many control segments does a full open and close take if no data rides on them?", "options": ["7", "6", "4", "8"], "answer": 0, "explain": "3 for the handshake plus 4 for the teardown (FIN, ACK, FIN, ACK) = 7.", "mistakes": [null, "counting the teardown as 3 segments", "counting only the teardown", "counting the handshake as 4 segments"], "review": "s13"}]}, "q14": {"title": "Section 14 quiz", "questions": [{"q": "rwnd = 30 000 B, cwnd = 18 000 B, RTT = 60 ms. Approximately what rate can the sender achieve?", "options": ["300 000 B/s", "500 000 B/s", "800 000 B/s", "1080 B/s"], "answer": 0, "explain": "\\(W = \\min(30\\,000, 18\\,000) = 18\\,000\\ \\text{B}\\), so rate \\(\\approx \\frac{18\\,000\\ \\text{B}}{0.06\\ \\text{s}} = 300\\,000\\ \\text{B/s}\\).", "mistakes": [null, "using the larger window (rwnd) instead of the minimum", "adding the two windows", "multiplying by RTT instead of dividing"], "review": "s14"}, {"q": "Which window protects the routers' buffers between source and destination?", "options": ["cwnd", "rwnd", "RcvBuffer", "The header length field"], "answer": 0, "explain": "cwnd is for congestion control (routers); rwnd is for flow control (receiver buffer).", "mistakes": [null, "swapping flow control and congestion control", "naming the receiver's buffer", "unrelated field"], "review": "s14"}, {"q": "Which congestion control approach does TCP use?", "options": ["End-end: congestion inferred from loss and delay", "Network-assisted: routers send explicit feedback", "Receiver-assisted: rwnd signals congestion", "None; TCP only does flow control"], "answer": 0, "explain": "TCP uses end-end congestion control. Network-assisted control is the ATM approach.", "mistakes": [null, "describing ATM's approach", "confusing rwnd with congestion feedback", "forgetting that TCP has cwnd"], "review": "s14"}, {"q": "Which two events does the TCP sender treat as a loss event?", "options": ["A timeout or 3 duplicate ACKs", "A zero receive window or a FIN", "A checksum error at the sender or a SYN", "Any ACK or any timeout"], "answer": 0, "explain": "Loss event = timeout or (roughly) 3 duplicate ACKs.", "mistakes": [null, "confusing flow control and teardown with loss", "mixing in unrelated events", "treating normal ACKs as loss"], "review": "s14"}]}, "q15": {"title": "Section 15 quiz", "questions": [{"q": "Under AIMD, cwnd = 24 MSS when a loss is detected. What is cwnd after 3 more loss-free RTTs?", "options": ["15 MSS", "27 MSS", "13.5 MSS", "96 MSS"], "answer": 0, "explain": "Halve at the loss: 12. Add 1 per RTT for 3 RTTs: \\(12 + 3 = 15\\) MSS.", "mistakes": [null, "forgetting the multiplicative decrease", "growing first and halving afterwards", "doubling each RTT as in slow start"], "review": "s15"}, {"q": "A saw tooth swings between 8 KB and 16 KB with MSS = 1 KB. How many RTTs does one climb take?", "options": ["8", "16", "1", "4"], "answer": 0, "explain": "Additive increase adds 1 KB per RTT: \\(\\frac{16 - 8}{1} = 8\\) RTTs.", "mistakes": [null, "using the peak value instead of the climb", "doubling (slow start) instead of adding", "halving the climb"], "review": "s15"}, {"q": "What does the additive increase rule add?", "options": ["1 MSS to cwnd every RTT", "1 MSS to cwnd every ACK", "cwnd to itself every RTT", "1 byte every RTT"], "answer": 0, "explain": "Additive increase: +1 MSS per RTT until loss is detected.", "mistakes": [null, "describing slow start's per-ACK increment", "describing slow start's doubling", "using bytes instead of segments"], "review": "s15"}]}, "q16": {"title": "Section 16 quiz", "questions": [{"q": "cwnd starts at 1 MSS with ssthresh = 32 MSS and no loss. What is cwnd after 7 RTTs?", "options": ["34 MSS", "128 MSS", "64 MSS", "39 MSS"], "answer": 0, "explain": "Slow start 1, 2, 4, 8, 16, 32 (32 after 5 RTTs), then +1 per RTT: 33, 34.", "mistakes": [null, "doubling all the way, ignoring the threshold", "doubling one round past the threshold", "adding 7 to the threshold"], "review": "s16"}, {"q": "How does slow start double cwnd every RTT?", "options": ["By adding 1 MSS for every ACK received", "By doubling cwnd once per timeout", "By adding 1 MSS every RTT", "By halving ssthresh each RTT"], "answer": 0, "explain": "Each segment in the window returns an ACK, and each ACK adds 1 MSS, so the window doubles per RTT.", "mistakes": [null, "confusing growth with the loss reaction", "describing congestion avoidance", "confusing growth with the loss reaction"], "review": "s16"}, {"q": "In which phase does TCP spend most of its time?", "options": ["Congestion avoidance", "Slow start", "Three-way handshake", "TIME_WAIT"], "answer": 0, "explain": "The lecture: TCP spends most of its time in congestion avoidance.", "mistakes": [null, "slow start only lasts until the threshold", "setup is a one-off", "teardown is a one-off"], "review": "s16"}, {"q": "During slow start, cwnd = 4 MSS. All 4 segments are ACKed in this RTT. What is cwnd at the end of the RTT?", "options": ["8 MSS", "5 MSS", "16 MSS", "4 MSS"], "answer": 0, "explain": "Four ACKs, +1 MSS each: \\(4 + 4 = 8\\) MSS.", "mistakes": [null, "adding 1 per RTT (congestion avoidance)", "squaring instead of doubling", "forgetting to grow"], "review": "s16"}]}, "q17": {"title": "Section 17 quiz", "questions": [{"q": "In Example 17a (timeout at 40 KB), what is cwnd at transmission 19?", "options": ["20 KB", "32 KB", "17 KB", "21 KB"], "answer": 0, "explain": "After the timeout ssthresh = 20 KB and cwnd restarts at 1: 1, 2, 4, 8, 16 at transmissions 14 to 18, then doubling stops at the threshold, 20 KB.", "mistakes": [null, "doubling past the new threshold", "switching to linear growth at 16 instead of at the threshold", "adding one more round of linear growth"], "review": "s17"}, {"q": "cwnd = 24 MSS when 3 duplicate ACKs arrive. What are the new ssthresh and cwnd?", "options": ["ssthresh = 12, cwnd = 12", "ssthresh = 12, cwnd = 1", "ssthresh = 24, cwnd = 12", "ssthresh = 12, cwnd = 23"], "answer": 0, "explain": "3 dup ACKs: ssthresh = \\(\\frac{24}{2} = 12\\) and cwnd = ssthresh = 12; stay in congestion avoidance.", "mistakes": [null, "applying the timeout rule", "forgetting to update ssthresh", "subtracting 1 MSS instead of halving"], "review": "s17"}, {"q": "Why is the reaction to 3 duplicate ACKs milder than to a timeout?", "options": ["Duplicate ACKs show the network is still delivering some segments", "Duplicate ACKs mean the receiver's buffer is full", "Timeouts happen only at connection setup", "Duplicate ACKs are always caused by bit errors"], "answer": 0, "explain": "The receiver is still getting packets beyond the gap, so congestion is likely temporary. A timeout means nothing is getting through.", "mistakes": [null, "confusing duplicate ACKs with a zero window", "misunderstanding the timer", "assuming corruption rather than congestion"], "review": "s17"}, {"q": "A timeout occurs at cwnd = 18 KB (MSS = 1 KB). What is cwnd 4 RTTs after cwnd is reset to 1 KB?", "options": ["9 KB", "16 KB", "8 KB", "13 KB"], "answer": 0, "explain": "ssthresh = \\(\\frac{18}{2} = 9\\) KB. From 1: 2, 4, 8, then doubling stops at 9 KB.", "mistakes": [null, "ignoring the new threshold", "stopping one round early", "adding 4 to the threshold"], "review": "s17"}]}, "final": {"title": "Final exam", "questions": [{"q": "Compute the Internet checksum of 1001 1010 0011 1100 and 1000 1111 0101 0001.", "options": ["1101 0110 0111 0001", "1101 0110 0111 0010", "0010 1001 1000 1110", "0101 0110 0111 0010"], "answer": 0, "explain": "Sum = 1 0010 1001 1000 1101. Wrap the carry: 0010 1001 1000 1110. Invert: 1101 0110 0111 0001.", "mistakes": [null, "dropping the carry instead of wrapping it around", "forgetting to invert", "adding the carry to the most significant bit instead of the least"], "review": "s6"}, {"q": "A TCP segment carries 8 B of options and 1000 B of data. How long is the segment?", "options": ["1028 B", "1008 B", "1020 B", "1016 B"], "answer": 0, "explain": "\\(H = 20 + 8 = 28\\ \\text{B}\\); segment = \\(28 + 1000 = 1028\\ \\text{B}\\).", "mistakes": [null, "forgetting the 20-byte fixed header", "forgetting the options", "using UDP's 8-byte header plus options"], "review": "s7"}, {"q": "Host A sends Seq = 3000 with 1200 B, then a second segment with 800 B, both received in order. What ACK follows the second segment?", "options": ["5000", "4200", "3002", "4999"], "answer": 0, "explain": "\\(3000 + 1200 = 4200\\) is the second segment's seq; \\(4200 + 800 = 5000\\).", "mistakes": [null, "acknowledging only the first segment", "counting segments instead of bytes", "giving the last byte instead of the next expected"], "review": "s8"}, {"q": "The client is in FIN_WAIT_1 and receives an ACK of its FIN. Which state does it enter?", "options": ["FIN_WAIT_2", "TIME_WAIT", "CLOSE_WAIT", "CLOSED"], "answer": 0, "explain": "FIN_WAIT_1, receive ACK, send nothing, FIN_WAIT_2. TIME_WAIT comes after the server's FIN.", "mistakes": [null, "skipping FIN_WAIT_2", "using the server's state", "skipping the rest of the teardown"], "review": "s13"}, {"q": "Over TCP, segments arrive at server C port 80 from (A, 9157), (B, 9157) and (B, 5775). How many sockets receive them?", "options": ["3", "1", "2", "4"], "answer": 0, "explain": "Three distinct 4-tuples, three sockets (Example 4).", "mistakes": [null, "applying UDP's rule", "grouping by source port 9157", "adding a welcome socket the lecture does not count"], "review": "s4"}, {"q": "A sends Seq = 92 (8 B) and Seq = 100 (20 B); both ACKs are delayed past the Seq = 92 timeout. What is retransmitted, and what is SendBase after all ACKs arrive?", "options": ["Only Seq = 92; SendBase = 120", "Both segments; SendBase = 120", "Only Seq = 92; SendBase = 100", "Nothing; SendBase = 92"], "answer": 0, "explain": "Timeout resends the oldest unACKed segment only. ACKs 100 and 120 then move SendBase to 120.", "mistakes": [null, "resending the whole window", "stopping at the first ACK", "assuming the sender waits for delayed ACKs"], "review": "s9"}, {"q": "Under AIMD, cwnd = 30 MSS at a loss; then 5 loss-free RTTs. What is cwnd?", "options": ["20 MSS", "35 MSS", "17.5 MSS", "480 MSS"], "answer": 0, "explain": "Halve: 15. Add 5: \\(20\\) MSS.", "mistakes": [null, "forgetting the halving", "growing first and halving afterwards", "doubling each RTT"], "review": "s15"}, {"q": "RcvBuffer = 8192 B, 5000 B are buffered and unread, and the sender has 1000 B unACKed. How many more bytes may it send?", "options": ["2192 B", "3192 B", "5000 B", "7192 B"], "answer": 0, "explain": "RcvWindow = \\(8192 - 5000 = 3192\\ \\text{B}\\); minus the 1000 B already in flight leaves 2192 B.", "mistakes": [null, "forgetting the unACKed data", "using the buffered data as the window", "subtracting only the unACKed data from the buffer"], "review": "s11"}, {"q": "client_isn = 700, server_isn = 4100. What are the SYNACK's ack and the final ACK's ack?", "options": ["701 and 4101", "700 and 4100", "4101 and 701", "701 and 4100"], "answer": 0, "explain": "SYNACK ack = 700 + 1; final ACK ack = 4100 + 1.", "mistakes": [null, "forgetting both +1s", "swapping client and server numbers", "forgetting the +1 for the server's SYN"], "review": "s12"}, {"q": "rwnd = 12 000 B, cwnd = 20 000 B, RTT = 40 ms. Approximately what rate can the sender achieve?", "options": ["300 000 B/s", "500 000 B/s", "800 000 B/s", "480 B/s"], "answer": 0, "explain": "\\(W = \\min(12\\,000, 20\\,000) = 12\\,000\\ \\text{B}\\); rate \\(\\approx \\frac{12\\,000\\ \\text{B}}{0.04\\ \\text{s}} = 300\\,000\\ \\text{B/s}\\).", "mistakes": [null, "using cwnd although rwnd is smaller", "adding the windows", "multiplying by RTT"], "review": "s14"}, {"q": "In Example 17a (threshold 32 KB, cwnd starts at 1 KB), what is cwnd at transmission 8?", "options": ["35 KB", "256 KB", "40 KB", "36 KB"], "answer": 0, "explain": "32 KB at transmission 5, then +1 KB per round: 33, 34, 35 at transmissions 6, 7, 8.", "mistakes": [null, "doubling all the way, ignoring the threshold", "giving the peak at transmission 13", "starting the linear count one round early"], "review": "s16"}, {"q": "Start: cwnd = 1 MSS, ssthresh = 16 MSS. 3 duplicate ACKs are detected at round 8, then a timeout at round 11. What are ssthresh and cwnd right after the timeout?", "options": ["ssthresh = 6, cwnd = 1", "ssthresh = 10, cwnd = 1", "ssthresh = 6, cwnd = 6", "ssthresh = 12, cwnd = 1"], "answer": 0, "explain": "Rounds 0 to 8: 1, 2, 4, 8, 16, 17, 18, 19, 20. 3 dup ACKs at 20: ssthresh = \\(\\frac{20}{2} = 10\\), cwnd = 10 at round 9. Rounds 10 and 11: 11, 12. Timeout at 12: ssthresh = \\(\\frac{12}{2} = 6\\), cwnd = 1.", "mistakes": [null, "keeping the old threshold", "applying the 3 dup ACK rule to the timeout", "forgetting to halve cwnd for the threshold"], "review": "s17"}]}}};</script>
+<script>
+window.initDemos = function(){
+  function $(id){ return document.getElementById(id); }
+  function tex(el, s){ if(!el) return; try{ katex.render(s, el, {displayMode:true, throwOnError:false}); }catch(e){ el.textContent = s; } }
+  function css(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+  function seg(id, cb){
+    var box=$(id); if(!box) return {get:function(){return null;}, set:function(){}};
+    var btns=[].slice.call(box.querySelectorAll("button"));
+    function set(v){ btns.forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.v===v ? "true" : "false"); }); }
+    btns.forEach(function(b){ b.addEventListener("click", function(){ set(b.dataset.v); cb(); }); });
+    return {get:function(){ var p=box.querySelector('[aria-pressed="true"]'); return p ? p.dataset.v : null; }, set:set};
+  }
+  function grp(n){ var s=String(Math.round(n)); if(Math.abs(n)<10000) return s; return s.replace(/\B(?=(\d{3})+(?!\d))/g, "\\,"); }
+
+  /* ---------- demux (Section 4) ---------- */
+  (function(){
+    if(!$("demuxDemo")) return;
+    var S = {
+      udp: {segs:[["A","9157","C","6428"],["B","5775","C","6428"],["D","40000","C","6428"]],
+            socks:[{key:["C","6428"], name:"P3 (UDP socket 6428)"}]},
+      tcp: {segs:[["A","9157","C","80"],["B","9157","C","80"],["B","5775","C","80"]],
+            socks:[{key:["A","9157","C","80"], name:"P4"},{key:["B","9157","C","80"], name:"P5"},{key:["B","5775","C","80"], name:"P6"}]}
+    };
+    var proto, sg;
+    function draw(){
+      var p=proto.get(), k=+sg.get(), s=S[p].segs[k], hit=-1;
+      S[p].socks.forEach(function(so,i){
+        var ok = p==="udp" ? (so.key[0]===s[2] && so.key[1]===s[3]) : so.key.join()===s.join();
+        if(ok) hit=i; });
+      var h = p==="udp" ? "<tr><th>Server socket</th><th>D-IP</th><th>DP</th></tr>" : "<tr><th>Server socket</th><th>S-IP</th><th>SP</th><th>D-IP</th><th>DP</th></tr>";
+      S[p].socks.forEach(function(so,i){
+        h += '<tr'+(i===hit?' class="hlcol"':'')+'><td>'+so.name+(i===hit?' ← receives':'')+'</td><td>'+so.key.join("</td><td>")+'</td></tr>'; });
+      $("dmTable").innerHTML = h;
+      var t = p==="udp"
+        ? "\\text{segment: S-IP } "+s[0]+",\\ \\text{SP } "+s[1]+",\\ \\text{D-IP } "+s[2]+",\\ \\text{DP } "+s[3]+"\\\\ \\text{UDP key} = (\\text{"+s[2]+"},\\ "+s[3]+") \\Rightarrow \\text{"+S[p].socks[hit].name+"}"
+        : "\\text{segment: S-IP } "+s[0]+",\\ \\text{SP } "+s[1]+",\\ \\text{D-IP } "+s[2]+",\\ \\text{DP } "+s[3]+"\\\\ \\text{TCP key} = (\\text{"+s[0]+"},\\ "+s[1]+",\\ \\text{"+s[2]+"},\\ "+s[3]+") \\Rightarrow \\text{"+S[p].socks[hit].name+"}";
+      tex($("dmOut"), "\\begin{gathered}"+t+"\\end{gathered}");
+    }
+    proto = seg("dmProto", draw); sg = seg("dmSeg", draw);
+    $("dmReset").addEventListener("click", function(){ proto.set("udp"); sg.set("0"); draw(); });
+    draw();
+  })();
+
+  /* ---------- checksum (Section 6) ---------- */
+  (function(){
+    if(!$("csDemo")) return;
+    function g4(n){ var b=n.toString(2).padStart(16,"0"); return b.slice(0,4)+"\\,"+b.slice(4,8)+"\\,"+b.slice(8,12)+"\\,"+b.slice(12); }
+    function rd(id){ var v=$(id).value.replace(/\s/g,""); return /^[01]{16}$/.test(v) ? parseInt(v,2) : null; }
+    function draw(){
+      var a=rd("csA"), b=rd("csB");
+      if(a===null || b===null){ $("csOut").textContent=""; $("csMsg").innerHTML='<span class="verdict no">Enter exactly 16 bits (0 and 1) in each word</span>'; return; }
+      var raw=a+b, c=raw>>16, w=(raw&0xFFFF)+c, ck=(~w)&0xFFFF;
+      tex($("csOut"), "\\begin{aligned} a+b &= "+(c?"1\\ ":"")+g4(raw&0xFFFF)+"\\\\ s' &= "+g4(raw&0xFFFF)+" + "+c+"\\\\ &= "+g4(w)+"\\\\ \\text{checksum} &= \\overline{s'}\\\\ &= \\mathbf{"+g4(ck)+"} \\end{aligned}");
+      $("csMsg").innerHTML = c ? '<span class="verdict ok">Carry out of bit 15: wrapped around</span>' : '<span class="verdict ok">No carry out: nothing to wrap</span>';
+    }
+    ["csA","csB"].forEach(function(id){ $(id).addEventListener("input", draw); });
+    $("csReset").addEventListener("click", function(){ $("csA").value="1110011001100110"; $("csB").value="1101010101010101"; draw(); });
+    draw();
+  })();
+
+  /* ---------- seq and ACK (Section 8) ---------- */
+  (function(){
+    if(!$("saDemo")) return;
+    function draw(){
+      var s0=Math.max(0, Math.round(+$("saSeq").value||0));
+      var L=$("saLens").value.split(",").map(function(x){ return Math.round(+x); }).filter(function(x){ return x>0; }).slice(0,8);
+      if(!L.length){ $("saTable").innerHTML=""; $("saOut").textContent="Enter at least one positive segment size."; return; }
+      var h="<tr><th>Segment</th><th>Seq</th><th>Bytes</th><th>Last byte</th><th>ACK sent back</th></tr>", seq=s0, lines=[];
+      L.forEach(function(len,i){
+        h+="<tr><td>"+(i+1)+'</td><td class="num">'+seq+'</td><td class="num">'+len+' B</td><td class="num">'+(seq+len-1)+'</td><td class="num">'+(seq+len)+"</td></tr>";
+        lines.push("\\text{ACK}_{"+(i+1)+"} &= "+seq+" + "+len+" = "+(seq+len));
+        seq+=len; });
+      $("saTable").innerHTML=h;
+      tex($("saOut"), "\\begin{aligned}"+lines.join("\\\\")+"\\end{aligned}");
+    }
+    ["saSeq","saLens"].forEach(function(id){ $(id).addEventListener("input", draw); });
+    $("saReset").addEventListener("click", function(){ $("saSeq").value=92; $("saLens").value="8, 20"; draw(); });
+    draw();
+  })();
+
+  /* ---------- flow control (Section 11) ---------- */
+  (function(){
+    if(!$("fcDemo")) return;
+    function draw(){
+      var buf=Math.max(1, Math.round(+$("fcBuf").value||0)), rcv=Math.max(0, Math.round(+$("fcRcv").value||0)), rd=Math.max(0, Math.round(+$("fcRead").value||0));
+      var msg="";
+      if(rd>rcv){ rd=rcv; msg="The application cannot read more than was received; read capped at "+rcv+" B. "; }
+      var held=rcv-rd;
+      if(held>buf){ held=buf; msg+="Buffered data cannot exceed the buffer; flow control would have stopped the sender. "; }
+      var win=buf-held;
+      tex($("fcOut"), "\\begin{aligned} B_{\\text{buf}} &= "+grp(rcv)+" - "+grp(rd)+" = "+grp(held)+"\\ \\text{B}\\\\ \\text{RcvWindow} &= "+grp(buf)+" - "+grp(held)+" = \\mathbf{"+grp(win)+"}\\ \\text{B} \\end{aligned}");
+      $("fcMsg").innerHTML = (msg?msg+" ":"") + (win===0 ? '<span class="verdict no">WIN = 0: sender must stop</span>' : '<span class="verdict ok">Sender may have up to '+win+' B unACKed</span>');
+      var W=600, fw=Math.round(W*held/buf), svg=$("fcSvg");
+      svg.innerHTML='<rect x="0" y="10" width="'+W+'" height="40" rx="6" fill="'+css("--surface-2")+'" stroke="'+css("--line")+'"/>'+
+        '<rect x="'+(W-fw)+'" y="10" width="'+fw+'" height="40" rx="6" fill="'+css("--c2")+'" opacity="0.75"/>'+
+        '<rect x="0" y="10" width="'+(W-fw)+'" height="40" rx="6" fill="'+css("--c1")+'" opacity="0.35"/>'+
+        '<text x="8" y="66" font-size="12" fill="'+css("--muted")+'" font-family="Archivo,sans-serif">spare room (RcvWindow) = '+win+' B</text>'+
+        '<text x="'+(W-8)+'" y="66" text-anchor="end" font-size="12" fill="'+css("--muted")+'" font-family="Archivo,sans-serif">buffered, unread = '+held+' B</text>';
+    }
+    ["fcBuf","fcRcv","fcRead"].forEach(function(id){ $(id).addEventListener("input", draw); });
+    $("fcReset").addEventListener("click", function(){ $("fcBuf").value=4096; $("fcRcv").value=4096; $("fcRead").value=2048; draw(); });
+    draw();
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+  })();
+
+  /* ---------- cwnd simulator (Section 17) ---------- */
+  (function(){
+    if(!$("cwDemo")) return;
+    var N=25, t1, t2, cv=$("cwCanvas");
+    function sim(th, ev){
+      var out=[], cw=1;
+      for(var r=0;r<N;r++){
+        out.push([cw,th]);
+        var t=ev[r];
+        if(t==="to"){ th=Math.max(Math.floor(cw/2),1); cw=1; }
+        else if(t==="dup"){ th=Math.max(Math.floor(cw/2),1); cw=th; }
+        else if(cw<th){ cw=Math.min(2*cw,th); }
+        else cw+=1;
+      }
+      return out;
+    }
+    function read(){
+      var th=Math.min(64,Math.max(1,Math.round(+$("cwTh").value||1)));
+      var ev={}, notes=[];
+      [[ "cwR1", t1 ],[ "cwR2", t2 ]].forEach(function(p){
+        var r=Math.min(N-2,Math.max(0,Math.round(+$(p[0]).value||0))), t=p[1].get();
+        if(t!=="none" && !(r in ev)) ev[r]=t; });
+      return {th:th, ev:ev};
+    }
+    function draw(){
+      var p=read(), d=sim(p.th,p.ev);
+      var dpr=window.devicePixelRatio||1, w=cv.clientWidth||600, h=260;
+      cv.width=w*dpr; cv.height=h*dpr; cv.style.height=h+"px";
+      var c=cv.getContext("2d"); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,w,h);
+      var L=40,R=10,T=10,B=30, ymax=4;
+      d.forEach(function(x){ ymax=Math.max(ymax,x[0],x[1]); }); ymax=Math.ceil(ymax/4)*4+4;
+      function X(r){ return L+(w-L-R)*r/(N-1); } function Y(v){ return T+(h-T-B)*(1-v/ymax); }
+      c.strokeStyle=css("--grid"); c.lineWidth=1; c.fillStyle=css("--muted"); c.font="11px Archivo, sans-serif";
+      var step=ymax>40?8:4;
+      for(var v=0;v<=ymax;v+=step){ c.beginPath(); c.moveTo(L,Y(v)); c.lineTo(w-R,Y(v)); c.stroke(); c.fillText(v,8,Y(v)+4); }
+      for(var r=0;r<N;r+=4){ c.fillText(r,X(r)-4,h-12); }
+      c.fillText("transmission round",w/2-50,h-1);
+      c.strokeStyle=css("--c2"); c.setLineDash([5,4]); c.lineWidth=1.5; c.beginPath();
+      d.forEach(function(x,r){ if(r===0) c.moveTo(X(r),Y(x[1])); else { c.lineTo(X(r),Y(d[r-1][1])); c.lineTo(X(r),Y(x[1])); } }); c.stroke(); c.setLineDash([]);
+      c.strokeStyle=css("--c1"); c.lineWidth=2; c.beginPath();
+      d.forEach(function(x,r){ if(r===0) c.moveTo(X(r),Y(x[0])); else c.lineTo(X(r),Y(x[0])); }); c.stroke();
+      c.fillStyle=css("--c1"); d.forEach(function(x,r){ c.beginPath(); c.arc(X(r),Y(x[0]),2.6,0,7); c.fill(); });
+      var lines=[];
+      Object.keys(p.ev).map(Number).sort(function(a,b){return a-b;}).forEach(function(r){
+        var cw=d[r][0], th=Math.max(Math.floor(cw/2),1);
+        if(p.ev[r]==="to") lines.push("\\text{timeout at round "+r+":}\\ \\text{ssthresh} &= \\left\\lfloor\\frac{"+cw+"}{2}\\right\\rfloor = "+th+",\\quad \\text{cwnd} = 1");
+        else lines.push("\\text{3 dup ACKs at round "+r+":}\\ \\text{ssthresh} &= \\left\\lfloor\\frac{"+cw+"}{2}\\right\\rfloor = "+th+",\\quad \\text{cwnd} = "+th);
+      });
+      lines.push("\\text{cwnd at round "+(N-1)+"} &= \\mathbf{"+d[N-1][0]+"}\\ \\text{MSS}");
+      tex($("cwOut"), "\\begin{aligned}"+lines.join("\\\\")+"\\end{aligned}");
+      $("cwList").innerHTML="<b>cwnd by round (MSS):</b> "+d.map(function(x){return x[0];}).join(", ");
+    }
+    t1=seg("cwT1",draw); t2=seg("cwT2",draw);
+    ["cwTh","cwR1","cwR2"].forEach(function(id){ $(id).addEventListener("input", draw); });
+    $("cwReset").addEventListener("click", function(){ $("cwTh").value=32; $("cwR1").value=13; $("cwR2").value=20; t1.set("to"); t2.set("none"); draw(); });
+    draw();
+    window.addEventListener("resize", draw);
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+  })();
+};
+
+</script>
+<script>
+/* Study guide engine: quizzes, saved progress, sidebar scores, final exam review,
+   math typesetting, active section highlight, print formula sheet.
+   Reads window.GUIDE = {title, quizzes:{id:{title, questions:[{q, options[4], answer, explain, mistakes[4], review}]}}}
+   Tested once; guides should not modify this file. */
+(function(){
+  "use strict";
+  var G = window.GUIDE || {quizzes:{}};
+  var KEY = "guide:" + String(G.title||document.title).toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  var L = ["A","B","C","D","E"];
+  var state = load();
+
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  function typeset(root){
+    if (window.renderMathInElement){
+      try{ renderMathInElement(root||document.body,{
+        delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],
+        throwOnError:false }); }catch(e){}
+    }
+  }
+  window.typeset = typeset;
+
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+
+  function score(id){
+    var qs=G.quizzes[id].questions, a=state[id]||[], n=0, right=0;
+    qs.forEach(function(q,i){ if(a[i]!=null){ n++; if(a[i]===q.answer) right++; } });
+    return {n:n, right:right, total:qs.length};
+  }
+
+  function updateChip(id){
+    var s=score(id);
+    document.querySelectorAll('[data-chip="'+id+'"]').forEach(function(c){
+      c.textContent = s.n ? (s.right+"/"+s.total) : "";
+      c.classList.toggle("done", s.n===s.total);
+    });
+    var box=document.querySelector('.quiz[data-quiz="'+id+'"] .score');
+    if (box) box.textContent = "Score: "+s.right+"/"+s.total + (s.n<s.total ? "  ("+s.n+" answered)" : "");
+  }
+
+  function explanation(id, q, chosen){
+    var html = chosen===q.answer
+      ? '<b class="ok">Correct.</b> '
+      : '<b class="no">Not quite.</b> You chose '+L[chosen]+((q.mistakes&&q.mistakes[chosen])?', which comes from '+q.mistakes[chosen]+'.':'.')+' The answer is '+L[q.answer]+'. ';
+    html += q.explain || "";
+    if (q.review){ var t=document.getElementById(q.review); var name=t?(t.querySelector("h3 .num")||{}).textContent||q.review:q.review;
+      html += ' <a href="#'+q.review+'">Review: '+name+'</a>'; }
+    return html;
+  }
+
+  function renderQuestion(id, i, item){
+    var q=G.quizzes[id].questions[i], chosen=(state[id]||[])[i];
+    item.innerHTML="";
+    item.appendChild(el("div","qq",'<span class="qn">'+(i+1)+'.</span>'+q.q));
+    var opts=el("div","opts");
+    q.options.forEach(function(o,k){
+      var b=el("button","opt",'<span class="L">'+L[k]+'</span><span>'+o+'</span>');
+      b.type="button";
+      if (chosen!=null){ b.disabled=true; if(k===q.answer) b.classList.add("right"); else if(k===chosen) b.classList.add("wrong"); }
+      else b.addEventListener("click",function(){ (state[id]=state[id]||[])[i]=k; save(); renderQuestion(id,i,item); updateChip(id); if(id==="final") renderReview(); });
+      opts.appendChild(b);
+    });
+    item.appendChild(opts);
+    if (chosen!=null) item.appendChild(el("div","expl",explanation(id,q,chosen)));
+    typeset(item);
+  }
+
+  function renderReview(){
+    var box=document.getElementById("finalReview"); if(!box||!G.quizzes.final) return;
+    var s=score("final"); box.innerHTML="";
+    if (s.n<s.total) return;
+    var qs=G.quizzes.final.questions, a=state.final, wrong=[];
+    qs.forEach(function(q,i){ if(a[i]!==q.answer) wrong.push(i); });
+    var h='<h4>Review my wrong answers</h4>';
+    if(!wrong.length) h+='<p>All '+s.total+' correct. Nothing to review.</p>';
+    else { h+='<ol class="plain review">'; wrong.forEach(function(i){ var q=qs[i];
+      h+='<li><b>Q'+(i+1)+'.</b> '+q.q+'<br>You chose '+L[a[i]]+': '+q.options[a[i]]+'<br>Correct: '+L[q.answer]+': '+q.options[q.answer]+(q.review?'<br><a href="#'+q.review+'">Review this section</a>':'')+'</li>'; });
+      h+='</ol>'; }
+    box.innerHTML=h; typeset(box);
+  }
+
+  function renderQuiz(box){
+    var id=box.getAttribute("data-quiz"), Q=G.quizzes[id];
+    if(!Q){ box.innerHTML='<div class="quiz-head"><span class="qt">Missing quiz data: '+id+'</span></div>'; return; }
+    box.innerHTML="";
+    var head=el("div","quiz-head",'<span class="qt">'+(Q.title||"Quiz")+'</span><span class="score"></span>');
+    var list=el("div","qlist");
+    Q.questions.forEach(function(_,i){ var it=el("div","qitem"); list.appendChild(it); renderQuestion(id,i,it); });
+    var foot=el("div","quiz-foot",'<span>'+Q.questions.length+' questions</span>');
+    var reset=el("button","btn","Reset"); reset.type="button";
+    reset.addEventListener("click",function(){ delete state[id]; save(); renderQuiz(box); if(id==="final") renderReview(); });
+    foot.appendChild(reset);
+    box.appendChild(head); box.appendChild(list); box.appendChild(foot);
+    if(id==="final"){ var r=el("div",""); r.id="finalReview"; r.style.padding="0 16px 8px"; box.appendChild(r); renderReview(); }
+    updateChip(id);
+  }
+
+  function init(){
+    document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz);
+    Object.keys(G.quizzes).forEach(updateChip);
+    var ra=document.getElementById("resetAll");
+    if(ra) ra.addEventListener("click",function(){ if(confirm("Clear all quiz answers and scores for this guide?")){ state={}; save(); document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz); } });
+    var pb=document.getElementById("printSheet");
+    if(pb) pb.addEventListener("click",function(){ document.body.classList.add("print-sheet"); window.print(); });
+    window.addEventListener("afterprint",function(){ document.body.classList.remove("print-sheet"); });
+    if("IntersectionObserver" in window){
+      var links={}; document.querySelectorAll('nav.toc a[href^="#"]').forEach(function(a){ links[a.getAttribute("href").slice(1)]=a; });
+      var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&links[e.target.id]){
+        Object.keys(links).forEach(function(k){ links[k].classList.remove("active"); }); links[e.target.id].classList.add("active"); } }); },{rootMargin:"-20% 0px -70% 0px"});
+      document.querySelectorAll("section.sec[id]").forEach(function(s){ io.observe(s); });
+    }
+    typeset();
+    if (typeof window.initDemos==="function"){ try{ window.initDemos(); }catch(e){ console.error(e); } }
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",function(){ waitKatex(init); }); else waitKatex(init);
+  function waitKatex(fn){ var t=0; (function w(){ if(window.renderMathInElement||t++>40) fn(); else setTimeout(w,50); })(); }
+})();
+
+</script>
+</body></html>
