@@ -1,0 +1,1589 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENEL 573 Ch4 Network Layer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF;
+  --c1:#1D5FC2; --c2:#C24E12; --c3:#23804D; --grid:#DCE1DB;   /* plot series 1, 2, 3 and grid */
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --fill-bg:#E9F0FB; --fill-line:#5B7DB8; --fill-ink:#2A4677;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+main{max-width:760px; min-width:0}
+nav.toc{position:sticky; top:24px; align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc a.active{background:var(--accent-soft); color:var(--accent)}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px}
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+sub,sup{font-size:.72em; line-height:0}
+code,.mono{font-family:var(--mono); font-size:.86em}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+
+.eq{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 18px; margin:6px 0 18px}
+.math{margin:8px 0 14px; overflow-x:auto; overflow-y:hidden}
+.katex{font-size:1.12em; color:var(--ink)}
+.katex-display{margin:.6em 0}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted)}
+.eq .defs{font-size:15px; line-height:1.7; color:var(--muted); border-top:1px dashed var(--line); margin-top:10px; padding-top:8px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.callout p{margin-bottom:10px} .callout ul{margin:0 0 10px; padding-left:20px} .callout li{margin-bottom:6px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)} .analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)} .tricky .tag{color:var(--trk-ink)}
+.filled{background:var(--fill-bg); border-color:var(--fill-line); font-size:15.5px} .filled .tag{color:var(--fill-ink)}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px; margin:12px 0 18px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+.hlcol{background:var(--hl)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work.practice summary{color:var(--muted)}
+.givens{font-size:15.5px; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-bottom:10px}
+.answer{font-family:var(--display); font-weight:700; background:var(--good-bg); color:var(--good); border-radius:6px; padding:6px 10px; display:inline-block; margin:6px 0 12px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .src{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+.demo canvas, .demo svg{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px}
+.verdict.ok{background:var(--good-bg); color:var(--good)} .verdict.no{background:var(--bad-bg); color:var(--bad)}
+*:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qitem{padding:16px; border-top:1px solid var(--line)} .qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)} .opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)} .opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)} .final .quiz-head .score{color:var(--bg)}
+.review{margin-top:16px} .review li{margin-bottom:10px}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 16px; break-inside:avoid}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+.sheet .f{padding:8px 0; border-top:1px solid var(--line); line-height:2.1} .sheet .f:first-of-type{border-top:none}
+.sheet .f .expr{display:block; overflow-x:auto}
+.sheet .f .d{font-size:13.5px; color:var(--muted); line-height:1.5; display:block}
+.sheet .f .s{font-family:var(--mono); font-size:11px; color:var(--accent)}
+@media print{
+  body{background:#fff; color:#000; padding:0; font-size:12pt}
+  nav.toc, .demo, .quiz, .btn, details.practice, header.hero .lede{display:none!important}
+  .wrap{display:block; padding:0} main{max-width:none}
+  .sheet .card{border:1px solid #999; background:#fff}
+  .sheet .f .d, .sheet .f .s, .sheet .card h5{color:#333}
+  body.print-sheet main > *:not(#formulas){display:none!important}
+}
+
+nav.toc #resetAll{width:100%; margin-bottom:14px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important} }
+
+</style>
+</head><body>
+<div class="wrap"><nav class="toc" aria-label="Contents">
+<button class="btn" id="resetAll" type="button">Reset all progress</button>
+<h2>Start</h2><ol><li><a href="#big">Big picture</a></li></ol>
+<h2>Part 1 · The network layer and IP datagrams</h2><ol>
+<li><a href="#s1">1 What the network layer does <span class="chip" data-chip="q1"></span></a></li>
+<li><a href="#s2">2 The IPv4 datagram header <span class="chip" data-chip="q2"></span></a></li>
+<li><a href="#s3">3 Fragmentation and reassembly <span class="chip" data-chip="q3"></span></a></li>
+</ol>
+<h2>Part 2 · IPv4 addresses and classes</h2><ol>
+<li><a href="#s4">4 IPv4 addresses in binary and dotted decimal <span class="chip" data-chip="q4"></span></a></li>
+<li><a href="#s5">5 Classful addressing and its problems <span class="chip" data-chip="q5"></span></a></li>
+</ol>
+<h2>Part 3 · Subnets, supernets and prefixes</h2><ol>
+<li><a href="#s6">6 Subnet masks and the AND operation <span class="chip" data-chip="q6"></span></a></li>
+<li><a href="#s7">7 Designing subnets <span class="chip" data-chip="q7"></span></a></li>
+<li><a href="#s8">8 Supernetting <span class="chip" data-chip="q8"></span></a></li>
+<li><a href="#s9">9 Address blocks with a prefix length <span class="chip" data-chip="q9"></span></a></li>
+</ol>
+<h2>Part 4 · Forwarding and routing</h2><ol>
+<li><a href="#s10">10 Forwarding tables and longest prefix match <span class="chip" data-chip="q10"></span></a></li>
+<li><a href="#s11">11 Routing and the Bellman-Ford algorithm <span class="chip" data-chip="q11"></span></a></li>
+<li><a href="#s12">12 Bellman-Ford strengths, weaknesses and oscillation <span class="chip" data-chip="q12"></span></a></li>
+</ol>
+<h2>Finish</h2><ol><li><a href="#final">Final exam <span class="chip" data-chip="final"></span></a></li>
+<li><a href="#formulas">Formula sheet</a></li></ol></nav><main><header class="hero"><div class="eyebrow">ENEL 573 Computer Networks · Chapter 4 · Study guide</div><h1>ENEL 573 Ch4 Network Layer</h1><p class="lede">How a packet crosses many different networks to reach the right host: what the network layer does, the IPv4 header and fragmentation, classful addresses, subnet and supernet masks, prefix blocks, longest prefix matching and Bellman-Ford routing. Every lecture example is worked step by step.</p></header><section class="sec" id="big">
+<h3><span class="num">Start here</span>Big picture</h3>
+<p>The link layer (Chapter 3) moves a frame across one hop, between two nodes on the same network. Real traffic has to cross many different networks (Ethernet, Wi-Fi, satellite links, telephone networks) to reach a host on the other side of the world. The <b>network layer</b> makes that possible. It gives every connection a globally unique address, wraps transport-layer segments into <b>IP datagrams</b>, chops datagrams into fragments when a link cannot carry them whole, and lets every router decide which output link moves the datagram one step closer to its destination.</p>
+<p>The chapter builds up in four steps. First, what the layer does and what an IP datagram looks like. Then how IPv4 addresses are written and split into classes. Then how masks carve address space into subnets, merge it into supernets and describe any block with a prefix length. Finally, how routers use those prefixes to forward packets, and how a routing algorithm (Bellman-Ford) fills in the tables.</p>
+<div class="chain">
+  <div class="blk"><b>Part 1</b><span>Network layer and IP datagrams</span><a class="secs" href="#s1">Sections 1 to 3</a></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>Part 2</b><span>IPv4 addresses and classes</span><a class="secs" href="#s4">Sections 4 and 5</a></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>Part 3</b><span>Subnets, supernets and prefixes</span><a class="secs" href="#s6">Sections 6 to 9</a></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>Part 4</b><span>Forwarding and routing</span><a class="secs" href="#s10">Sections 10 to 12</a></div>
+</div>
+<p>Most exam problems in this chapter are address arithmetic in binary: AND an address with a mask, count host bits, add a block size, or find a fragment offset. Every one of those is worked out step by step below, and the demos let you check your own answers.</p>
+</section>
+
+<h2 class="part">Part 1 · The network layer and IP datagrams</h2>
+
+<section class="sec" id="s1">
+<h3><span class="num">Section 1</span>What the network layer does</h3>
+<p>Each layer delivers data over a different distance:</p>
+<ul>
+<li>The <b>transport layer</b> delivers data <b>process to process</b> (from one program to another).</li>
+<li>The <b>network layer</b> delivers packets <b>host to host</b>, even when the two hosts sit on several different physical networks.</li>
+<li>The <b>data link layer</b> delivers frames <b>node to node</b> (hop to hop), only between physically adjacent nodes on the same network.</li>
+</ul>
+<p>So the link layer gets a packet across one hop, and the network layer strings those hops together into an end-to-end path. That is why network layer protocols run in <b>every host and every router</b>. On the sending host the network layer encapsulates transport segments into datagrams. Each router on the way examines the header fields of every IP datagram passing through it. On the receiving host the network layer pulls the segment out and hands it up to the transport layer.</p>
+
+<h4>The duties of the network layer</h4>
+<div class="tbl"><table>
+<tr><th>Duty</th><th>What it means</th></tr>
+<tr><td>Internetworking</td><td>Interconnect different network technologies (LANs, telephone networks, satellite links, ATM) and make them look the same to the layers above. The details of each physical network are hidden from users and applications, so datagrams can move between any two hosts on the internetwork.</td></tr>
+<tr><td>Addressing</td><td>Identify hosts on a global scale. Addresses must be <b>unique</b> (no two devices share one) and <b>universal</b> (accepted everywhere). There is one address per connection to the network.</td></tr>
+<tr><td>Routing and forwarding</td><td>A packet can reach its destination by several routes. A <b>routing algorithm</b> finds a good route, and each router keeps a local <b>forwarding table</b> that maps a destination address range to an output link.</td></tr>
+<tr><td>Packetizing</td><td>At the sender, encapsulate segments from the upper layer into datagrams. At the receiver, decapsulate them and deliver the segment to the transport layer.</td></tr>
+<tr><td>Fragmenting and reassembly</td><td>A datagram may cross networks with different maximum frame sizes, so the network layer must be able to split it into smaller units (Section 3).</td></tr>
+</table></div>
+
+<p>The forwarding table in the lecture looks like this. The router reads the IP destination address in the arriving packet's header, finds the range it falls in and sends the packet out of the matching link.</p>
+<div class="tbl"><table>
+<tr><th>Destination address</th><th>Output link</th></tr>
+<tr><td>address range 1</td><td class="num">3</td></tr>
+<tr><td>address range 2</td><td class="num">2</td></tr>
+<tr><td>address range 3</td><td class="num">2</td></tr>
+<tr><td>address range 4</td><td class="num">1</td></tr>
+</table></div>
+
+<div class="eq">
+<div class="math">\[ \text{output link} = \text{forwarding table}\big[\,\text{destination IP address}\,\big] \]</div>
+<span class="note">what a router does with every datagram (forwarding); routing is what builds the table</span>
+<div class="defs">forwarding = the local, per-packet lookup inside one router · routing = the network-wide process (an algorithm such as Bellman-Ford, Section 11) that decides which path is best and fills in the tables</div>
+</div>
+
+<h4>Service models</h4>
+<p>A service model says what the network promises a stream of datagrams. The Internet's network layer protocol is <b>IP</b>, and it offers only <b>best effort</b>: no guarantee on bandwidth, loss, order or timing. Congestion is never signalled directly; senders infer it from lost packets. ATM networks offered stronger service classes:</p>
+<div class="tbl"><table>
+<tr><th>Architecture</th><th>Service model</th><th>Bandwidth</th><th>Loss</th><th>Order</th><th>Timing</th><th>Congestion feedback</th></tr>
+<tr><td>Internet</td><td>best effort</td><td>none</td><td>no</td><td>no</td><td>no</td><td>no (inferred via loss)</td></tr>
+<tr><td>ATM</td><td>CBR</td><td>constant rate</td><td>yes</td><td>yes</td><td>yes</td><td>no congestion</td></tr>
+<tr><td>ATM</td><td>VBR</td><td>guaranteed rate</td><td>yes</td><td>yes</td><td>yes</td><td>no congestion</td></tr>
+<tr><td>ATM</td><td>ABR</td><td>guaranteed minimum</td><td>no</td><td>yes</td><td>no</td><td>yes</td></tr>
+<tr><td>ATM</td><td>UBR</td><td>none</td><td>no</td><td>yes</td><td>no</td><td>no</td></tr>
+</table></div>
+<p>"Yes" in the Loss column means the service guarantees no loss. CBR is constant bit rate, VBR variable bit rate, ABR available bit rate and UBR unspecified bit rate.</p>
+
+<details class="work"><summary>Example 1 (lecture): how S1 forwards a datagram from A to D</summary><div class="body">
+<div class="givens">Host A sits on a LAN attached to interface f1 of router S1. S1 also has a second LAN on f2 and a link to a WAN on f3. Across the WAN, router S2 (interfaces f1 and f2) leads to one LAN and router S3 (interfaces f1 and f2) leads to the LAN of host D.</div>
+<p>The datagram's header carries D's IP address. S1 looks that address up in its forwarding table. D is not on either of S1's LANs, so the entry for D's network points to the WAN side:</p>
+<div class="math">\[ \text{S1: } \text{forwarding table}\big[\,\text{address of D}\,\big] = \text{f3} \]</div>
+<p>The datagram crosses the WAN and arrives at S3 on f1. S3's table says D's network is on its f2 LAN:</p>
+<div class="math">\[ \text{S3: } \text{forwarding table}\big[\,\text{address of D}\,\big] = \text{f2} \]</div>
+<p>Along this host-to-host path the network layer runs in A, S1, S3 (and any routers inside the WAN) and D, while the transport layer runs only in A and D. Separately, the lecture's figure of one "Network" box sitting over Link1 to Link4 and PHY1 to PHY4 makes the internetworking point: one network layer runs over many different link and physical technologies.</p>
+<div class="answer">S1 forwards on f3; S3 forwards on f2</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Sending a parcel across the country. The transport layer is the person who addresses the parcel to a named recipient inside a building. The network layer is the postal system that gets it to the right building using a street address. The link layer is each individual truck ride between two depots. Each depot (router) only looks at the address and picks the next truck; it never opens the parcel.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Host to host (network) versus process to process (transport) versus node to node (link). Exams ask this directly.</li>
+<li>Routers run the network layer but not the transport layer. Hosts run all five layers.</li>
+<li>Routing and forwarding are different: forwarding is a table lookup in one router; routing is the algorithm that computes the tables.</li>
+<li>"Best effort" means no guarantees at all, not "tries hard and usually guarantees delivery".</li>
+<li>An address belongs to a <b>connection</b> (an interface), not to a machine. A router with three interfaces has three IP addresses.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 1.1 (not from the lecture): a longer path</summary><div class="body">
+<p>A datagram travels from host A to host B through 6 routers. How many link-layer hops are there, and in how many devices does the network layer process the datagram?</p>
+<div class="math">\[ \begin{aligned} \text{links} &= \text{routers} + 1 = 6 + 1 = 7\ \text{hops}\\ \text{network-layer devices} &= 2\ \text{hosts} + 6\ \text{routers} = 8 \end{aligned} \]</div>
+<div class="answer">7 hops; network layer in 8 devices</div>
+</div></details>
+<details class="work practice"><summary>Practice 1.2 (not from the lecture): pick the service</summary><div class="body">
+<p>An application needs a guaranteed minimum bandwidth and wants the network to tell it when congestion builds up, but can tolerate loss and timing variation. Which service model from the table fits?</p>
+<p>Only ABR has "guaranteed minimum" bandwidth and "yes" for congestion feedback. CBR and VBR guarantee more (and give no feedback), UBR and best effort guarantee no bandwidth.</p>
+<div class="answer">ATM ABR</div>
+</div></details>
+
+<div class="quiz" data-quiz="q1"></div>
+</section>
+
+<section class="sec" id="s2">
+<h3><span class="num">Section 2</span>The IPv4 datagram header</h3>
+<p>An IP datagram is a header followed by data. The header is drawn as rows 32 bits wide. With no options it is <b>20 bytes</b> long. Every router reads it, so knowing what each field does explains how forwarding, fragmentation and loop protection work.</p>
+<div class="tbl"><table>
+<tr><th>Field</th><th>Size</th><th>What it holds</th></tr>
+<tr><td>Version (ver)</td><td>4 bits</td><td>IP protocol version number (4 for IPv4)</td></tr>
+<tr><td>Header length (head. len)</td><td>4 bits</td><td>Header length counted in units of 4 bytes</td></tr>
+<tr><td>DSCP</td><td>8 bits</td><td>Differentiated Services Code Point: the "type" of data, for priority handling</td></tr>
+<tr><td>Length</td><td>16 bits</td><td>Total datagram length in bytes (header plus data)</td></tr>
+<tr><td>16-bit identifier</td><td>16 bits</td><td>Identifies the datagram, copied into every fragment</td></tr>
+<tr><td>Flags</td><td>3 bits</td><td>Not used, Don't fragment, More fragments to follow</td></tr>
+<tr><td>Fragment offset</td><td>13 bits</td><td>Position of a fragment's data, in units of 8 bytes</td></tr>
+<tr><td>Time to live (TTL)</td><td>8 bits</td><td>Maximum number of remaining hops, decremented at each router</td></tr>
+<tr><td>Upper layer</td><td>8 bits</td><td>Upper layer protocol to deliver the payload to (TCP = 6)</td></tr>
+<tr><td>Header checksum</td><td>16 bits</td><td>Error check over the header only</td></tr>
+<tr><td>Source IP address</td><td>32 bits</td><td>Address of the sending interface</td></tr>
+<tr><td>Destination IP address</td><td>32 bits</td><td>Address of the receiving interface</td></tr>
+<tr><td>Options (if any)</td><td>variable</td><td>For example timestamp, record route taken, or a list of routers to visit</td></tr>
+<tr><td>Data</td><td>variable</td><td>Typically a TCP or UDP segment</td></tr>
+</table></div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide's header diagram labels the fields but gives bit widths only for the identifier (16), flags (3), the two addresses (32 each) and the row width (32). The other widths in the table (version 4, header length 4, DSCP 8, length 16, offset 13, TTL 8, upper layer 8, checksum 16 bits) are the standard IPv4 values; they add up to five 32-bit rows, which is the 20-byte header the slide states.</p></div>
+
+<div class="eq">
+<div class="math">\[ H = 4 \times \text{HLEN} \]</div>
+<div class="math">\[ \text{data bytes} = L - H \]</div>
+<div class="math">\[ \text{TTL}_{\text{after } k \text{ routers}} = \text{TTL}_0 - k \]</div>
+<span class="note">header size, payload size and time to live</span>
+<div class="defs">\(H\) = header length, in bytes · \(\text{HLEN}\) = value of the 4-bit header length field (no unit, counts 4-byte words) · \(L\) = value of the total length field, in bytes · \(\text{TTL}_0\) = TTL set by the sender, in hops · \(k\) = number of routers crossed (no unit)</div>
+</div>
+<p>With no options, \(\text{HLEN} = 5\), so \(H = 20\) bytes. The largest HLEN value a 4-bit field can hold is 15, so a header is at most \(4\times 15 = 60\) bytes. When TTL reaches 0, the router discards the datagram, so a packet caught in a routing loop cannot circulate forever.</p>
+
+<details class="work"><summary>Example 2 (lecture): how much overhead with TCP?</summary><div class="body">
+<div class="givens">TCP header \(= 20\) bytes, IPv4 header \(= 20\) bytes (40 bytes for IPv6).</div>
+<p>Every TCP segment carried in IPv4 pays both headers:</p>
+<div class="math">\[ \text{overhead} = 20\ \text{bytes (TCP)} + 20\ \text{bytes (IP)} = 40\ \text{bytes} \]</div>
+<p>plus whatever overhead the application layer adds. Over IPv6 the IP header alone is 40 bytes, so the total would be \(20 + 40 = 60\) bytes.</p>
+<div class="answer">40 bytes per segment + application overhead</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>The header is the shipping label on a box. It shows sender and receiver addresses, a "this side up" priority sticker (DSCP), "box 2 of 3" markings for split shipments (identifier, flags, offset), and a "return if not delivered within 64 transfers" stamp (TTL). The label analogy breaks down for the checksum: a real label has nothing that lets each depot detect a smudged address.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Header length counts <b>4-byte</b> words; fragment offset counts <b>8-byte</b> units; total length counts <b>bytes</b>. Three different units in one header.</li>
+<li>Total length includes the header. Payload \(= L - H\), not \(L\).</li>
+<li>The IP payload includes the TCP header. If a question asks for application data, subtract the 20-byte TCP header too.</li>
+<li>TTL is a hop count here, decremented once per router, not a time in seconds.</li>
+<li>The checksum covers the header only, not the data.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 2.1 (not from the lecture): a header with options</summary><div class="body">
+<div class="givens">HLEN field \(= 6\), total length field \(L = 576\) bytes.</div>
+<div class="math">\[ \begin{aligned} H &= 4 \times 6 = 24\ \text{bytes}\\ \text{options} &= 24 - 20 = 4\ \text{bytes}\\ \text{data} &= 576 - 24 = 552\ \text{bytes} \end{aligned} \]</div>
+<div class="answer">24-byte header (4 bytes of options), 552 bytes of data</div>
+</div></details>
+<details class="work practice"><summary>Practice 2.2 (not from the lecture): overhead share</summary><div class="body">
+<p>An application sends 100 bytes of data per segment over TCP and IPv4 (no options). What fraction of each datagram is header?</p>
+<div class="math">\[ \frac{40\ \text{bytes}}{100\ \text{bytes} + 40\ \text{bytes}} = \frac{40}{140} = 0.286 \]</div>
+<div class="answer">0.286 (28.6%) of the datagram is header</div>
+</div></details>
+
+<div class="quiz" data-quiz="q2"></div>
+</section>
+
+<section class="sec" id="s3">
+<h3><span class="num">Section 3</span>Fragmentation and reassembly</h3>
+<p>Every link has an <b>MTU</b> (maximum transmission unit): the largest datagram its link-level frame can carry. Different link types have different MTUs. When a datagram is larger than the next link's MTU, the router <b>fragments</b> it: one large datagram becomes several smaller datagrams, each with its own IP header. The fragments travel independently and are <b>reassembled only at the final destination</b>, never at intermediate routers. Three header fields make this work:</p>
+<ul>
+<li><b>Identification</b> (16 bits): uniquely identifies a datagram from the source host, incremented by one for each datagram. It is copied into all fragments, so the destination knows that fragments with the same identification from the same source belong to one datagram.</li>
+<li><b>Flags</b> (3 bits): the first bit is reserved. The second is <b>do not fragment</b>: if it is 1, the datagram must not be fragmented. The third is <b>more fragments</b>: 1 means more fragments follow this one, 0 means this is the last (or only) fragment.</li>
+<li><b>Offset</b> (13 bits): the position of this fragment's data within the original datagram's data, measured in <b>units of 8 bytes</b>.</li>
+</ul>
+<p>Because offsets count 8-byte units, every fragment except the last must carry a number of data bytes that is a multiple of 8.</p>
+<div class="eq">
+<div class="math">\[ D_f = 8\left\lfloor \frac{\text{MTU} - H}{8} \right\rfloor \]</div>
+<div class="math">\[ n = \left\lceil \frac{L - H}{D_f} \right\rceil \]</div>
+<div class="math">\[ \text{offset}_k = \frac{k\,D_f}{8}, \qquad k = 0, 1, \dots, n-1 \]</div>
+<div class="math">\[ L_{\text{last}} = (L - H) - (n-1)\,D_f + H \]</div>
+<span class="note">data per fragment, number of fragments, offsets and the last fragment's length</span>
+<div class="defs">\(D_f\) = data bytes carried by each full fragment, in bytes · \(\text{MTU}\) = maximum transmission unit of the outgoing link, in bytes · \(H\) = IP header length, in bytes (20 with no options) · \(L\) = total length of the original datagram, in bytes · \(n\) = number of fragments (no unit) · \(k\) = fragment index, starting at 0 (no unit) · \(\text{offset}_k\) = offset field of fragment \(k\), in 8-byte units · \(L_{\text{last}}\) = total length of the last fragment, in bytes · \(\lfloor\ \rfloor\) rounds down, \(\lceil\ \rceil\) rounds up</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture works the example numerically (1480 bytes per fragment, offset \(= \frac{1480}{8}\), last length \(3980 - 2\times1480 + 20\)). The general formulas above are those same steps written with symbols; the round-down to a multiple of 8 comes from the slide's rule that offsets count 8-byte chunks.</p></div>
+
+<details class="work" open><summary>Example 3 (lecture): a 4000-byte datagram over a 1500-byte MTU</summary><div class="body">
+<div class="givens">Total length \(L = 4000\) bytes, header \(H = 20\) bytes, so \(L - H = 3980\) data bytes. \(\text{MTU} = 1500\) bytes. Identification \(= X\).</div>
+<p>Data that fits in one fragment:</p>
+<div class="math">\[ D_f = 1500 - 20 = 1480\ \text{bytes}, \qquad \frac{1480}{8} = 185 \ \text{(a whole number, so no rounding)} \]</div>
+<p>Number of fragments:</p>
+<div class="math">\[ n = \left\lceil \frac{3980}{1480} \right\rceil = \lceil 2.69 \rceil = 3 \]</div>
+<p>The first two fragments are full. The last one carries what is left:</p>
+<div class="math">\[ \begin{aligned} \text{last data} &= 3980 - 2\times 1480 = 1020\ \text{bytes}\\ L_{\text{last}} &= 1020 + 20 = 1040\ \text{bytes} \end{aligned} \]</div>
+<p>Offsets: the first fragment's data starts at byte 0, the second at byte 1480, the third at byte 2960:</p>
+<div class="math">\[ \begin{aligned} \text{offset}_0 &= \frac{0}{8} = 0\\ \text{offset}_1 &= \frac{1480}{8} = 185\\ \text{offset}_2 &= \frac{2960}{8} = 185 + 185 = 370 \end{aligned} \]</div>
+<div class="tbl"><table>
+<tr><th>Fragment</th><th>Length (bytes)</th><th>ID</th><th>Flag (more fragments)</th><th>Offset (8-byte units)</th><th>Data bytes</th></tr>
+<tr><td>original</td><td class="num">4000</td><td class="num">X</td><td class="num">0</td><td class="num">0</td><td>0 to 3979</td></tr>
+<tr><td>1</td><td class="num">1500</td><td class="num">X</td><td class="num">1</td><td class="num">0</td><td>0 to 1479</td></tr>
+<tr><td>2</td><td class="num">1500</td><td class="num">X</td><td class="num">1</td><td class="num">185</td><td>1480 to 2959</td></tr>
+<tr><td>3</td><td class="num">1040</td><td class="num">X</td><td class="num">0</td><td class="num">370</td><td>2960 to 3979</td></tr>
+</table></div>
+<div class="answer">3 fragments: 1500, 1500, 1040 bytes; offsets 0, 185, 370</div>
+</div></details>
+
+<div class="demo" id="fragDemo">
+<div class="dtitle">Fragmentation calculator</div>
+<div class="src">Defaults: Example 3 from the lecture (4000-byte datagram, 1500-byte MTU)</div>
+<div class="controls">
+<label>Datagram length \(L\) (bytes) <input type="number" id="frL" min="21" max="65535" value="4000"></label>
+<label>MTU (bytes) <input type="number" id="frM" min="68" max="65535" value="1500"></label>
+<label>Header \(H\) (bytes) <input type="number" id="frH" min="20" max="60" step="4" value="20"></label>
+<button class="btn" type="button" id="frReset">Reset to lecture values</button>
+</div>
+<div class="readout" id="frMath"></div>
+<div class="tbl" id="frOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Moving a long bookshelf through a narrow door. You take it apart, number every piece with the same order number (identification), write where each piece goes in the assembled shelf (offset), and mark every box except the last "more to come" (flag). Only the customer's house (the destination) puts it back together; the delivery depots never reassemble it.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Every fragment gets its own 20-byte header. Subtract the header from the MTU before splitting the data, and add it back to get each fragment's length.</li>
+<li>Split the <b>data</b> (\(L - H\)), not the total length. Dividing 4000 by 1500 gives the wrong count.</li>
+<li>The offset is a byte position divided by 8. Writing 1480 instead of 185 is the most common slip.</li>
+<li>If \(\text{MTU} - H\) is not a multiple of 8, round it <b>down</b> to the nearest multiple of 8. Rounding up would exceed the MTU.</li>
+<li>The more-fragments flag is 1 on every fragment except the last. The original unfragmented datagram has flag 0 and offset 0.</li>
+<li>Reassembly happens only at the final destination.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 3.1 (not from the lecture): an MTU that is not a multiple of 8</summary><div class="body">
+<div class="givens">\(L = 2400\) bytes, \(H = 20\) bytes, \(\text{MTU} = 1000\) bytes.</div>
+<div class="math">\[ \begin{aligned} L - H &= 2380\ \text{bytes of data}\\ \text{MTU} - H &= 980\ \text{bytes, but } \frac{980}{8} = 122.5\\ D_f &= 8\times 122 = 976\ \text{bytes}\\ n &= \left\lceil \frac{2380}{976} \right\rceil = \lceil 2.44\rceil = 3\\ \text{last data} &= 2380 - 2\times 976 = 428\ \text{bytes} \end{aligned} \]</div>
+<p>Lengths are \(976 + 20 = 996\), \(996\) and \(428 + 20 = 448\) bytes. Offsets are \(0\), \(\frac{976}{8} = 122\) and \(\frac{1952}{8} = 244\).</p>
+<div class="answer">3 fragments: 996, 996, 448 bytes; offsets 0, 122, 244; flags 1, 1, 0</div>
+</div></details>
+<details class="work practice"><summary>Practice 3.2 (not from the lecture): four fragments</summary><div class="body">
+<div class="givens">\(L = 5000\) bytes, \(H = 20\) bytes, \(\text{MTU} = 1500\) bytes.</div>
+<div class="math">\[ \begin{aligned} L - H &= 4980\ \text{bytes}, \qquad D_f = 1480\ \text{bytes}\\ n &= \left\lceil \frac{4980}{1480}\right\rceil = \lceil 3.36 \rceil = 4\\ \text{last data} &= 4980 - 3\times1480 = 540\ \text{bytes}\\ L_{\text{last}} &= 540 + 20 = 560\ \text{bytes} \end{aligned} \]</div>
+<div class="answer">Lengths 1500, 1500, 1500, 560 bytes; offsets 0, 185, 370, 555</div>
+</div></details>
+
+<div class="quiz" data-quiz="q3"></div>
+</section>
+
+<h2 class="part">Part 2 · IPv4 addresses and classes</h2>
+
+<section class="sec" id="s4">
+<h3><span class="num">Section 4</span>IPv4 addresses in binary and dotted decimal</h3>
+<p>The address used at the network layer of the TCP/IP model is the <b>Internet address</b> or <b>IP address</b>. An IPv4 address is a <b>32-bit (4-byte)</b> identifier that uniquely and universally defines a <b>connection</b> between a host or router and the network. Two consequences follow:</p>
+<ul>
+<li>A router connects several networks, so it has one IP address per interface. In the lecture's figure, one router has interfaces 223.1.1.4, 223.1.2.9 and 223.1.3.27, one on each of three networks.</li>
+<li>A host with two interfaces (for example wired Ethernet and 802.11 wireless) has two IP addresses.</li>
+</ul>
+<p>Addresses are <b>unique</b> (each connection has a different address) and <b>universal</b> (any host that wants to connect to the Internet must accept the same addressing system).</p>
+<p>People write the 32 bits as four decimal numbers separated by dots, X.Y.W.Z, called <b>dotted decimal</b> notation. Each number stands for one byte, so it is between 0 and 255.</p>
+<div class="eq">
+<div class="math">\[ \text{byte value} = \sum_{i=0}^{7} b_i\,2^{i} \]</div>
+<div class="math">\[ \text{address space} = 2^{32} = 4\,294\,967\,296 \ \text{addresses} \]</div>
+<span class="note">converting one byte, and the size of the IPv4 address space</span>
+<div class="defs">\(b_i\) = bit \(i\) of the byte, 0 or 1, counted from the right (bit 0 has weight 1, bit 7 has weight 128) · \(i\) = bit position (no unit) · the bit weights from left to right are 128, 64, 32, 16, 8, 4, 2, 1</div>
+</div>
+
+<details class="work" open><summary>Example 4 (lecture): binary to dotted decimal</summary><div class="body">
+<div class="givens">Address in binary: 10000001 00001011 00001011 11101111</div>
+<p>Convert each byte separately by adding the weights of its 1 bits:</p>
+<div class="math">\[ \begin{aligned} 10000001 &= 128 + 1 = 129\\ 00001011 &= 8 + 2 + 1 = 11\\ 00001011 &= 11\\ 11101111 &= 128 + 64 + 32 + 8 + 4 + 2 + 1 = 239 \end{aligned} \]</div>
+<div class="answer">129.11.11.239</div>
+<p>The address space has \(2^{32}\) addresses, more than 4 billion, as the lecture says.</p>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>An IP address is like a phone number assigned to a phone line, not to a person. A house with two lines has two numbers, and a switchboard (router) that connects to three exchanges has a number on each one. Dotted decimal is just a friendlier way of reading a long string of digits, the way a phone number is split into groups.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Each dotted-decimal number is one byte: 0 to 255. A value like 256 or 300 cannot appear in an IPv4 address.</li>
+<li>Read the bits of a byte left to right with weights 128 down to 1. Reading them in reverse gives a completely different number.</li>
+<li>Always write all 8 bits of each byte, leading zeros included (11 is 00001011, not 1011). Masks and prefixes count bits from the left, so missing zeros shift everything.</li>
+<li>Each byte has 256 possible values (0 to 255), so the space is \(256^4 = 2^{32}\), not \(255^4\).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 4.1 (not from the lecture): dotted decimal to binary</summary><div class="body">
+<p>Write 192.168.5.130 in binary.</p>
+<div class="math">\[ \begin{aligned} 192 &= 128 + 64 \;\Rightarrow\; 11000000\\ 168 &= 128 + 32 + 8 \;\Rightarrow\; 10101000\\ 5 &= 4 + 1 \;\Rightarrow\; 00000101\\ 130 &= 128 + 2 \;\Rightarrow\; 10000010 \end{aligned} \]</div>
+<div class="answer">11000000 10101000 00000101 10000010</div>
+</div></details>
+<details class="work practice"><summary>Practice 4.2 (not from the lecture): binary to dotted decimal</summary><div class="body">
+<p>Convert 01111111 00000000 11111110 00010001.</p>
+<div class="math">\[ \begin{aligned} 01111111 &= 64+32+16+8+4+2+1 = 127\\ 00000000 &= 0\\ 11111110 &= 255 - 1 = 254\\ 00010001 &= 16 + 1 = 17 \end{aligned} \]</div>
+<div class="answer">127.0.254.17</div>
+</div></details>
+
+<div class="quiz" data-quiz="q4"></div>
+</section>
+
+<section class="sec" id="s5">
+<h3><span class="num">Section 5</span>Classful addressing and its problems</h3>
+<p>IP addresses are <b>hierarchical</b>: each one has a <b>network id</b> (netid) part and a <b>host id</b> part. Routers only need the network part, so routing tables hold network addresses rather than every individual host. In the original <b>classful</b> scheme, the first few bits of an address decide its class, and the class fixes where the split between netid and hostid falls.</p>
+<div class="tbl"><table>
+<tr><th>Class</th><th>Leading bits</th><th>First byte</th><th>Network bits</th><th>Host bits</th><th>Use</th></tr>
+<tr><td>A</td><td class="num">0</td><td>0 to 127</td><td class="num">7</td><td class="num">24</td><td>Unicast, very large networks</td></tr>
+<tr><td>B</td><td class="num">10</td><td>128 to 191</td><td class="num">14</td><td class="num">16</td><td>Unicast, medium networks</td></tr>
+<tr><td>C</td><td class="num">110</td><td>192 to 223</td><td class="num">21</td><td class="num">8</td><td>Unicast, small networks</td></tr>
+<tr><td>D</td><td class="num">1110</td><td>224 to 239</td><td colspan="2">no netid or hostid</td><td>Multicast addresses</td></tr>
+<tr><td>E</td><td class="num">1111</td><td>240 to 255</td><td colspan="2">no netid or hostid</td><td>Reserved for future use</td></tr>
+</table></div>
+<p>Classes D and E are reserved for special purposes and are not given to organizations. Only A, B and C are assigned, and in classful addressing the organization is given a whole network address (a whole block).</p>
+<div class="eq">
+<div class="math">\[ \text{networks in a class} = 2^{\,n_{\text{net}}}, \qquad \text{addresses per network} = 2^{\,n_{\text{host}}} \]</div>
+<span class="note">sizes of the classful blocks</span>
+<div class="defs">\(n_{\text{net}}\) = number of netid bits after the leading class bits (7, 14 or 21; no unit) · \(n_{\text{host}}\) = number of hostid bits (24, 16 or 8; no unit)</div>
+</div>
+<div class="tbl"><table>
+<tr><th>Class</th><th>Networks</th><th>Addresses per network</th><th>Default mask</th><th>Slash form</th></tr>
+<tr><td>A</td><td>\(2^{7} = 128\)</td><td>\(2^{24} = 16\,777\,216\) (more than 16 million)</td><td>255.0.0.0</td><td>/8</td></tr>
+<tr><td>B</td><td>\(2^{14} = 16\,384\)</td><td>\(2^{16} = 65\,536\)</td><td>255.255.0.0</td><td>/16</td></tr>
+<tr><td>C</td><td>\(2^{21} = 2\,097\,152\)</td><td>\(2^{8} = 256\)</td><td>255.255.255.0</td><td>/24</td></tr>
+</table></div>
+<p>To find a classful network address, keep the netid bytes and replace the hostid bytes with 0s. Classful routing protocols include RIP version 1 and IGRP.</p>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture gives the class B and C counts as \(2^{14}\) and \(2^{21}\) but does not evaluate \(2^{21}\); it is \(2\,097\,152\) class C networks. The default masks come from slide 27 (Section 6).</p></div>
+
+<details class="work" open><summary>Example 5 (lecture): three classful network addresses</summary><div class="body">
+<p><b>1. Address 23.56.7.91.</b> The first byte, 23, is between 0 and 127, so the class is A and only the first byte is the netid. Replace the hostid bytes (56.7.91) with 0s:</p>
+<div class="answer">Class A, network address 23.0.0.0</div>
+<p><b>2. Address 132.6.17.85.</b> 132 is between 128 and 191, so the class is B and the first 2 bytes are the netid. Replace the hostid bytes (17.85) with 0s:</p>
+<div class="answer">Class B, network address 132.6.0.0</div>
+<p><b>3. Network address 220.34.76.0.</b> 220 is between 192 and 223, so the class is C. The block has netid 220.34.76 and the last byte runs through all \(2^8 = 256\) values:</p>
+<div class="answer">Class C, addresses 220.34.76.0 to 220.34.76.255</div>
+</div></details>
+
+<div class="demo" id="classDemo">
+<div class="dtitle">Classful address inspector</div>
+<div class="src">Defaults: Example 5 part 1 from the lecture (23.56.7.91). Try 132.6.17.85 and 220.34.76.0.</div>
+<div class="controls">
+<label>IP address <input type="text" id="clIp" value="23.56.7.91" size="16" style="font-family:var(--mono);font-size:13.5px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)"></label>
+<button class="btn" type="button" id="clReset">Reset to lecture values</button>
+</div>
+<div class="bits" id="clBits"></div>
+<div class="readout" id="clOut"></div>
+</div>
+
+<h4>Why classful addressing failed</h4>
+<ul>
+<li><b>Bad utilization.</b> About 4 billion addresses should be enough for everybody, but handing them out in fixed-size sets wastes most of them. Class A blocks are too big and too few; millions of class A addresses are wasted. Class B blocks are larger than most organizations need, so many are wasted too, and class B ran out. Class C blocks (256 addresses) are too small for most organizations, and there are too many of them.</li>
+<li><b>Routing tables grow very large</b>, because every new network adds a table entry.</li>
+</ul>
+<p>The short-term fixes are <b>subnetting</b> (Sections 6 and 7) and <b>supernetting</b> (Section 8), which let an addressing scheme meet the users' needs more exactly. The long-term fix is <b>IPv6</b>, with a much larger address space; the IPv4 shortage was one of the reasons behind it.</p>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Classful addressing is a car park that only sells parking in three sizes: a single space, a whole floor or the entire building. A company with 300 cars must buy the whole building and leave most of it empty, while a company with 2 cars wastes most of a floor. Subnetting and supernetting are the operator finally agreeing to sell blocks of any power-of-2 size.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Decide the class from the <b>first byte</b> only: 0 to 127 A, 128 to 191 B, 192 to 223 C, 224 to 239 D, 240 to 255 E.</li>
+<li>Class A has 7 netid bits, not 8: the leading 0 is fixed. Likewise B has 14 and C has 21.</li>
+<li>Network address: hostid bits set to 0. Setting them to 1 gives the last address in the block (the broadcast address), not the network address.</li>
+<li>Number of networks in a class and number of addresses in one network are different counts. Class B: 16 384 networks, each with 65 536 addresses.</li>
+<li>Class D addresses are multicast; they have no netid and hostid split.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 5.1 (not from the lecture): class and network address</summary><div class="body">
+<p>Find the class and network address of 191.255.4.3 and of 10.200.3.4.</p>
+<p>191 is between 128 and 191, so 191.255.4.3 is class B and its netid is 2 bytes. 10 is between 0 and 127, so 10.200.3.4 is class A and its netid is 1 byte.</p>
+<div class="answer">191.255.0.0 (class B); 10.0.0.0 (class A)</div>
+</div></details>
+<details class="work practice"><summary>Practice 5.2 (not from the lecture): wasted addresses</summary><div class="body">
+<p>An organization with 2000 hosts gets a class B block. How many addresses are left unused?</p>
+<div class="math">\[ 2^{16} - 2000 = 65\,536 - 2000 = 63\,536\ \text{addresses} \]</div>
+<div class="answer">63 536 addresses unused (about 97% of the block)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q5"></div>
+</section>
+
+<h2 class="part">Part 3 · Subnets, supernets and prefixes</h2>
+
+<section class="sec" id="s6">
+<h3><span class="num">Section 6</span>Subnet masks and the AND operation</h3>
+<p>In <b>subnetting</b>, one network is divided into several smaller groups (<b>subnets</b>). Each subnet has its own subnet address, but the whole set still appears as a single network to the rest of the Internet. The address now has <b>3 levels</b>: main network, subnet and host. The bits that used to be the host id are partitioned into a <b>subnet id</b> and a smaller host id. For a class B address with an \(n\)-bit subnet id: 14-bit net id, \(n\)-bit subnet id, \((16-n)\)-bit host id. The net id plus subnet id is called the <b>extended network prefix</b>.</p>
+<p>A <b>subnet mask</b> is a 32-bit pattern of 1s followed by 0s that marks where the split is: 1s over the network and subnet bits, 0s over the host bits. ANDing the mask with an IP address keeps the network and subnet bits and clears the host bits, which gives the network or subnet address.</p>
+<div class="eq">
+<div class="math">\[ \text{subnet address} = \text{IP address} \;\text{AND}\; \text{mask} \]</div>
+<div class="math">\[ \text{mask byte with } m \text{ ones} = 256 - 2^{\,8-m} \]</div>
+<span class="note">finding the subnet address, and the decimal value of a partly filled mask byte</span>
+<div class="defs">AND = bitwise AND: \(1\ \text{AND}\ 1 = 1\), anything AND 0 \(= 0\) · \(m\) = number of 1 bits in that byte of the mask, 0 to 8 (no unit) · prefix length \(n\) = total number of 1s in the mask, written after a slash (for example 255.255.248.0 is /21) · the possible mask bytes are 0, 128, 192, 224, 240, 248, 252, 254, 255</div>
+</div>
+<div class="tbl"><table>
+<tr><th>Class</th><th>Default mask in binary</th><th>Dotted decimal</th><th>Slash</th></tr>
+<tr><td>A</td><td>11111111 00000000 00000000 00000000</td><td>255.0.0.0</td><td>/8</td></tr>
+<tr><td>B</td><td>11111111 11111111 00000000 00000000</td><td>255.255.0.0</td><td>/16</td></tr>
+<tr><td>C</td><td>11111111 11111111 11111111 00000000</td><td>255.255.255.0</td><td>/24</td></tr>
+</table></div>
+<div class="callout filled"><span class="tag">Possible lecture error</span><p>Slide 27's table writes the class C default mask as "11111111 111111111 11111111 00000000", with nine 1s in the second byte. A byte has 8 bits, so it should be 11111111 11111111 11111111 00000000 (255.255.255.0, /24), as in the table above.</p></div>
+<p>In the original two-level address, AND with the class <b>default mask</b> gives the network address. In a subnetted address, AND with the longer <b>subnet mask</b> gives the subnet address. The lecture's figure shows a class B network with mask 255.255.224.0: the default 16 ones plus 3 subnet bits (224 = 11100000), leaving 13 host bits.</p>
+
+<details class="work" open><summary>Example 6 (lecture): subnet address of 159.100.9.18</summary><div class="body">
+<div class="givens">Host IP address 159.100.9.18, class B. The organization uses a 5-bit subnet id.</div>
+<p>Network address with the class B default mask 255.255.0.0: keep the first two bytes, clear the rest.</p>
+<div class="answer">Network address 159.100.0.0</div>
+<p>The subnet mask is longer than the natural class mask: 16 network bits plus 5 subnet bits gives a /21 prefix. The third byte holds \(m = 5\) ones:</p>
+<div class="math">\[ 256 - 2^{\,8-5} = 256 - 8 = 248 \quad\Longrightarrow\quad \text{mask} = 255.255.248.0 \]</div>
+<p>The first two mask bytes are 255, so bytes 1 and 2 of the address pass through unchanged. AND bytes 3 and 4:</p>
+<div class="math">\[ \begin{array}{lr} \text{IP (bytes 3, 4)} & 00001001.00010010\\ \text{mask (bytes 3, 4)} & 11111000.00000000\\ \hline \text{AND} & 00001000.00000000 \end{array} \]</div>
+<p>00001000 is 8, so</p>
+<div class="answer">Subnet address 159.100.8.0, written 159.100.8.0/21 to avoid ambiguity</div>
+<p>The bits that the mask cleared, 001.00010010, are this host's id inside the subnet (0.0.1.18).</p>
+</div></details>
+
+<details class="work"><summary>Example 7 (lecture): which computers share a subnet?</summary><div class="body">
+<div class="givens">IP address 129.118.49.189, subnet mask 255.255.255.0.</div>
+<p>The mask has 1s over the first three bytes, so the subnet address is</p>
+<div class="math">\[ 129.118.49.189 \;\text{AND}\; 255.255.255.0 = 129.118.49.0 \]</div>
+<p>Any address of the form 129.118.49.x gives the same result, so all computers with addresses 129.118.49.x are on the same subnet. This is how a computer decides whether to deliver a packet directly or hand it to a router.</p>
+<div class="answer">Same subnet: every 129.118.49.x</div>
+<p>Routers use the same idea at two levels. An <b>external</b> router (outside the organization) keeps a routing table based on network addresses, here the class B network 129.118.0.0. An <b>internal</b> router keeps a table based on subnetwork addresses such as 129.118.49.0.</p>
+</div></details>
+
+<div class="demo maskDemo" id="maskDemo1" data-ip="159.100.9.18" data-p="21" data-src="Example 6 from the lecture (159.100.9.18 with a /21 subnet mask)">
+<div class="dtitle">Mask and AND calculator</div>
+<div class="src"></div>
+<div class="controls">
+<label>IP address <input type="text" class="mIp" size="16"></label>
+<label>Prefix length \(n\) (bits) <input type="range" class="mP" min="1" max="31" step="1"><output class="mPo"></output></label>
+<button class="btn mReset" type="button">Reset to lecture values</button>
+</div>
+<div class="bits mBits"></div>
+<div class="readout mOut"></div>
+<div class="legend"><span><i style="background:var(--c1)"></i>network and subnet bits (mask 1s)</span><span><i style="background:var(--c2)"></i>host bits (mask 0s)</span></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A mask is a stencil laid over the address. The holes (1s) let the network and subnet digits show through; the solid part (0s) blanks out the host digits. What you can still read through the stencil is the subnet address. A longer prefix is a stencil with more holes, so it reveals a more specific (smaller) group.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>AND only changes the bytes where the mask is neither 255 nor 0. With 255 the byte passes through; with 0 it becomes 0. Do the binary work only on the partial byte.</li>
+<li>Mask bytes can only be 0, 128, 192, 224, 240, 248, 252, 254 or 255. A mask like 255.255.250.0 is invalid (its 1s are not contiguous).</li>
+<li>Count the slash length over the whole mask: 255.255.224.0 is \(8+8+3 = 19\), not 3 and not 27.</li>
+<li>The default mask gives the <b>network</b> address; the subnet mask gives the <b>subnet</b> address. Use the one the question asks for.</li>
+<li>Write the prefix with the address (159.100.8.0/21). The same dotted address can be the start of blocks of different sizes.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 6.1 (not from the lecture): a /20 subnet</summary><div class="body">
+<p>Find the subnet address of 172.20.77.200 with mask 255.255.240.0.</p>
+<div class="math">\[ \begin{array}{lr} \text{IP (byte 3)} & 01001101\\ \text{mask (byte 3)} & 11110000\\ \hline \text{AND} & 01000000 \end{array} \]</div>
+<p>01000000 is 64, and the fourth mask byte is 0, so the last byte becomes 0. The mask has \(8+8+4 = 20\) ones.</p>
+<div class="answer">172.20.64.0/20</div>
+</div></details>
+<details class="work practice"><summary>Practice 6.2 (not from the lecture): same subnet or not?</summary><div class="body">
+<p>With a /22 mask (255.255.252.0), are 10.1.5.9 and 10.1.6.20 on the same subnet?</p>
+<div class="math">\[ \begin{aligned} 5 \;\text{AND}\; 252 &= 00000101 \;\text{AND}\; 11111100 = 00000100 = 4\\ 6 \;\text{AND}\; 252 &= 00000110 \;\text{AND}\; 11111100 = 00000100 = 4 \end{aligned} \]</div>
+<p>Both give subnet 10.1.4.0, so yes.</p>
+<div class="answer">Yes, both are on 10.1.4.0/22</div>
+</div></details>
+
+<div class="quiz" data-quiz="q6"></div>
+</section>
+
+<section class="sec" id="s7">
+<h3><span class="num">Section 7</span>Designing subnets</h3>
+<p>Designing subnets means deciding how many of the host bits to lend to the subnet id. More subnet bits give more subnets but fewer addresses in each. Two rules decide the split: there must be enough subnet bits for the number of subnets, and enough host bits for the largest subnet.</p>
+<div class="eq">
+<div class="math">\[ s = \left\lceil \log_2 N_{\text{sub}} \right\rceil, \qquad s + h = h_0, \qquad n' = n + s \]</div>
+<div class="math">\[ \text{subnets} = 2^{s}, \qquad \text{addresses per subnet} = 2^{h}, \qquad \text{max hosts} = 2^{h} - 2 \]</div>
+<div class="math">\[ \text{address of subnet } k = \text{base} + k \cdot 2^{h}, \qquad k = 0, 1, \dots, 2^{s}-1 \]</div>
+<span class="note">subnet bits, host bits, new prefix, and where each subnet starts</span>
+<div class="defs">\(s\) = subnet id bits (no unit) · \(N_{\text{sub}}\) = number of subnets needed (no unit) · \(h\) = host bits left in each subnet (no unit) · \(h_0\) = host bits of the original block (8 for class C, 16 for class B) · \(n\) = original prefix length, in bits · \(n'\) = subnet prefix length, in bits · base = address of the original block · \(k\) = subnet number, starting at 0 (no unit)</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>Slide 25 says "maximum 30 (\(2^5-2\)) hosts attachable to each subnet" without saying why 2 is subtracted. In each subnet the host id of all 0s is the subnet address itself and the host id of all 1s is the subnet's broadcast address, so neither can be given to a host. That is the \(-2\).</p></div>
+
+<details class="work" open><summary>Example 8 (lecture): eight subnets of 193.1.1.0/24</summary><div class="body">
+<div class="givens">Base network 193.1.1.0/24 (class C, \(h_0 = 8\)). Subnet id \(s = 3\) bits.</div>
+<div class="math">\[ \begin{aligned} h &= 8 - 3 = 5\ \text{host bits}\\ n' &= 24 + 3 = 27\\ \text{mask byte 4} &= 256 - 2^{5} = 224 \;\Rightarrow\; 255.255.255.224\\ \text{subnets} &= 2^{3} = 8, \qquad \text{addresses each} = 2^{5} = 32 \end{aligned} \]</div>
+<p>The 3 subnet bits are the top 3 bits of the last byte, so subnet \(k\) starts at \(32k\):</p>
+<div class="tbl"><table>
+<tr><th>Subnet</th><th>Last byte in binary</th><th>Subnet address</th><th>Addresses</th></tr>
+<tr><td>#0</td><td>000 00000</td><td>193.1.1.0/27</td><td>193.1.1.0 to 193.1.1.31</td></tr>
+<tr><td>#1</td><td>001 00000</td><td>193.1.1.32/27</td><td>193.1.1.32 to 193.1.1.63</td></tr>
+<tr><td>#2</td><td>010 00000</td><td>193.1.1.64/27</td><td>193.1.1.64 to 193.1.1.95</td></tr>
+<tr><td>#3</td><td>011 00000</td><td>193.1.1.96/27</td><td>193.1.1.96 to 193.1.1.127</td></tr>
+<tr><td>#4</td><td>100 00000</td><td>193.1.1.128/27</td><td>193.1.1.128 to 193.1.1.159</td></tr>
+<tr><td>#5</td><td>101 00000</td><td>193.1.1.160/27</td><td>193.1.1.160 to 193.1.1.191</td></tr>
+<tr><td>#6</td><td>110 00000</td><td>193.1.1.192/27</td><td>193.1.1.192 to 193.1.1.223</td></tr>
+<tr><td>#7</td><td>111 00000</td><td>193.1.1.224/27</td><td>193.1.1.224 to 193.1.1.255</td></tr>
+</table></div>
+<div class="math">\[ \text{max hosts per subnet} = 2^{5} - 2 = 30 \]</div>
+<div class="answer">8 subnets of 32 addresses (/27, mask 255.255.255.224), 30 hosts each</div>
+</div></details>
+
+<details class="work"><summary>Example 9 (lecture): class B 150.100.0.0 with 100 addresses per subnet</summary><div class="body">
+<div class="givens">Network address 150.100.0.0, class B (\(h_0 = 16\) host bits). Each subnet needs 100 addresses.</div>
+<p>Find the fewest host bits that give at least 100 addresses:</p>
+<div class="math">\[ 2^{6} = 64 \lt  100 \le 2^{7} = 128 \quad\Longrightarrow\quad h = 7 \]</div>
+<div class="math">\[ \begin{aligned} s &= 16 - 7 = 9\ \text{subnet bits}\\ \text{subnets} &= 2^{9} = 512, \qquad \text{addresses each} = 2^{7} = 128\\ n' &= 16 + 9 = 25 \end{aligned} \]</div>
+<p>For subnet X (X is the 9-bit subnet id, from 000000000 to 111111111) the range is</p>
+<div class="math">\[ \begin{aligned} \text{start} &= 10010110\;01100100\;\text{X}\;0000000 \quad(\text{start address} = \text{subnet address})\\ \text{last} &= 10010110\;01100100\;\text{X}\;1111111 \end{aligned} \]</div>
+<p>where 10010110 is 150 and 01100100 is 100. For example X = 000000001 gives 150.100.0.128 to 150.100.0.255, and X = 000000010 gives 150.100.1.0 to 150.100.1.127.</p>
+<div class="answer">Mask 11111111 11111111 11111111 10000000 = 255.255.255.128 (/25); 512 subnets of 128 addresses</div>
+</div></details>
+<div class="callout filled"><span class="tag">Possible lecture error</span><p>Slide 30 writes the second byte as "1100100" (7 bits) and notes "1100100 = 100". The value is right, but as a byte it must be written with its leading zero, 01100100; otherwise the address shown has only \(8+7+9+7 = 31\) bits instead of 32. The guide uses 01100100.</p></div>
+
+<div class="demo splitDemo" id="splitDemo1" data-ip="193.1.1.0" data-p="24" data-s="3" data-src="Example 8 from the lecture (193.1.1.0/24 with a 3-bit subnet id)">
+<div class="dtitle">Subnet splitter</div>
+<div class="src"></div>
+<div class="controls">
+<label>Block address <input type="text" class="sIp" size="16"></label>
+<label>Block prefix \(n\) (bits) <input type="number" class="sP" min="8" max="30"></label>
+<label>Subnet bits \(s\) <input type="range" class="sS" min="0" max="8" step="1"><output class="sSo"></output></label>
+<button class="btn sReset" type="button">Reset to lecture values</button>
+</div>
+<div class="readout sMath"></div>
+<div class="tbl sOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A school gets one long corridor of 256 lockers (a class C block). The principal paints dividing lines every 32 lockers to give each of 8 classes its own section (subnets). Within each section the first locker holds the section's label and the last one the "everyone" notice board, so 30 are left for students. The analogy breaks down in one way: real subnets must be a power-of-2 size and start on a multiple of that size, while a principal could paint lines anywhere.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Round <b>up</b> to the next power of 2. 6 subnets need 3 bits (8 subnets); 100 addresses need 7 bits (128).</li>
+<li>Read the question: "addresses per subnet" uses \(2^h\); "hosts per subnet" uses \(2^h - 2\). For 100 hosts, \(2^7 - 2 = 126\) still works, but for 127 hosts you would need \(h = 8\).</li>
+<li>Subnet numbering starts at #0. Subnet #5 of a /27 split starts at \(5 \times 32 = 160\), not 128.</li>
+<li>The subnet mask grows by exactly \(s\) bits from the original prefix: /24 plus 3 is /27.</li>
+<li>Subnet bits always come from the <b>left</b> (most significant) end of the host field.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 7.1 (not from the lecture): six subnets from a class C</summary><div class="body">
+<p>Split 200.10.20.0/24 into at least 6 subnets. Give the mask, the host limit and the address of subnet #5.</p>
+<div class="math">\[ \begin{aligned} s &= \lceil \log_2 6 \rceil = 3, \qquad h = 8 - 3 = 5\\ \text{mask} &= 255.255.255.224\ (n' = 27)\\ \text{max hosts} &= 2^{5} - 2 = 30\\ \text{subnet \#5} &= 5 \times 32 = 160 \end{aligned} \]</div>
+<div class="answer">255.255.255.224, 30 hosts each, subnet #5 = 200.10.20.160</div>
+</div></details>
+<details class="work practice"><summary>Practice 7.2 (not from the lecture): subnets sized by hosts</summary><div class="body">
+<p>A class B network 160.50.0.0 needs subnets of up to 500 hosts each. How many host bits, how many subnets, and what mask?</p>
+<div class="math">\[ \begin{aligned} 2^{8} - 2 &= 254 \lt  500 \le 2^{9} - 2 = 510 \;\Rightarrow\; h = 9\\ s &= 16 - 9 = 7 \;\Rightarrow\; 2^{7} = 128\ \text{subnets}\\ n' &= 16 + 7 = 23 \end{aligned} \]</div>
+<p>The third mask byte has \(7\) ones: \(256 - 2^{1} = 254\).</p>
+<div class="answer">9 host bits, 128 subnets, mask 255.255.254.0 (/23)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q7"></div>
+</section>
+
+<section class="sec" id="s8">
+<h3><span class="num">Section 8</span>Supernetting</h3>
+<p>Class C has many networks, but a block of at most 256 addresses may not be enough for an organization. <b>Supernetting</b> is the opposite of subnetting: the organization combines several class C blocks into one <b>supernetwork</b> with a larger range of addresses, which the rest of the Internet sees as a single network (one routing table entry). Two rules apply:</p>
+<ul>
+<li>The number of blocks must be a <b>power of 2</b> (2, 4, 8, ...).</li>
+<li>The blocks must be <b>contiguous</b> in the address space, with no gaps between them.</li>
+</ul>
+<p>The lecture's picture shows four class C networks X.Y.32, X.Y.33, X.Y.34 and X.Y.35 joined into the supernetwork X.Y.32.0 behind one router to the rest of the Internet.</p>
+<p>A <b>supernet mask</b> is the class C default mask with some 1s removed. Removing \(k\) ones from /24 merges \(2^k\) class C networks; adding \(k\) ones to it (subnetting) splits one network into \(2^k\) subnets. The lecture's comparison uses \(k = 3\): /27 divides 1 network into 8 subnets, /21 combines 8 networks into 1 supernet.</p>
+<div class="eq">
+<div class="math">\[ \text{blocks} = 2^{k}, \qquad n_{\text{super}} = 24 - k, \qquad \text{mask byte 3} = 256 - 2^{k} \]</div>
+<div class="math">\[ \text{D belongs} \iff \big(\text{D} \;\text{AND}\; \text{supernet mask}\big) = \text{first address} \]</div>
+<span class="note">supernet size and mask, and the membership test a router applies</span>
+<div class="defs">\(k\) = number of 1s removed from the class C default mask (no unit) · \(n_{\text{super}}\) = supernet prefix length, in bits · D = destination address being tested · first address = the supernet address (lowest address of the first block)</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slides list "power of 2" and "contiguous" as the rules. A third rule is implied by the mask: the first block must start on a multiple of the block count (its third byte divisible by \(2^k\)), otherwise ANDing with the mask does not return the first address. Both lecture examples satisfy it (96 is a multiple of 4; 32 is a multiple of 8).</p></div>
+
+<details class="work" open><summary>Example 10 (lecture): supernet of four class C networks</summary><div class="body">
+<div class="givens">Four address-contiguous class C networks 213.2.96.0, 213.2.97.0, 213.2.98.0 and 213.2.99.0.</div>
+<p>Write the third bytes in binary:</p>
+<div class="math">\[ \begin{aligned} 96 &= 011000\,00\\ 97 &= 011000\,01\\ 98 &= 011000\,10\\ 99 &= 011000\,11 \end{aligned} \]</div>
+<p>The first 6 bits of the third byte are the same in all four; only the last 2 differ. Four blocks means \(k = 2\):</p>
+<div class="math">\[ n_{\text{super}} = 24 - 2 = 22, \qquad \text{mask byte 3} = 256 - 2^{2} = 252 \]</div>
+<div class="answer">Supernet mask 255.255.252.0; supernet address 213.2.96.0/22</div>
+</div></details>
+
+<details class="work" open><summary>Example 11 (lecture): which packets belong to the supernet?</summary><div class="body">
+<div class="givens">Supernet first address 205.16.32.0, supernet mask 255.255.248.0 (/21, so \(k = 3\) and 8 class C blocks, 205.16.32.0 to 205.16.39.255). Packets arrive for 205.16.37.44, 205.16.42.56 and 205.17.33.76.</div>
+<p>Apply the mask to each destination. Only the third byte needs binary work (248 = 11111000):</p>
+<div class="math">\[ \begin{aligned} 37 \;\text{AND}\; 248 &= 00100101 \;\text{AND}\; 11111000 = 00100000 = 32\\ 42 \;\text{AND}\; 248 &= 00101010 \;\text{AND}\; 11111000 = 00101000 = 40\\ 33 \;\text{AND}\; 248 &= 00100001 \;\text{AND}\; 11111000 = 00100000 = 32 \end{aligned} \]</div>
+<div class="tbl"><table>
+<tr><th>Destination</th><th>AND 255.255.248.0</th><th>Belongs?</th></tr>
+<tr><td>205.16.37.44</td><td>205.16.32.0</td><td>yes</td></tr>
+<tr><td>205.16.42.56</td><td>205.16.40.0</td><td>no</td></tr>
+<tr><td>205.17.33.76</td><td>205.17.32.0</td><td>no (second byte is 17, not 16)</td></tr>
+</table></div>
+<div class="answer">Only 205.16.37.44 belongs to this supernet</div>
+</div></details>
+
+<div class="demo" id="superDemo">
+<div class="dtitle">Supernet membership checker</div>
+<div class="src">Defaults: Example 11 from the lecture (205.16.32.0 with mask 255.255.248.0)</div>
+<div class="controls">
+<label>First address <input type="text" id="spFirst" size="16"></label>
+<label>Prefix \(n_{\text{super}}\) (bits) <input type="range" id="spP" min="16" max="24" step="1"><output id="spPo"></output></label>
+</div>
+<div class="controls">
+<label>D1 <input type="text" class="spD" size="15"></label>
+<label>D2 <input type="text" class="spD" size="15"></label>
+<label>D3 <input type="text" class="spD" size="15"></label>
+<button class="btn" type="button" id="spReset">Reset to lecture values</button>
+</div>
+<div class="readout" id="spMath"></div>
+<div class="tbl" id="spOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Four neighbours on the same street, numbers 96 to 99, agree to receive all their mail at one shared mailroom. The post office now needs a single rule ("anything for 96 to 99 goes to the mailroom") instead of four. It only works because the houses are next to each other and the group is a tidy size; houses 96, 97 and 140 could not share one rule.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Supernetting <b>removes</b> 1s from the default mask (/24 to /21); subnetting <b>adds</b> 1s (/24 to /27). Mixing up the direction is a common slip.</li>
+<li>\(2^k\) blocks need \(k\) fewer 1s: 4 blocks /22, 8 blocks /21, 16 blocks /20.</li>
+<li>When testing membership, compare the <b>whole</b> AND result with the first address. 205.17.33.76 fails because of the second byte even though its third byte passes.</li>
+<li>The last address of a supernet of \(2^k\) blocks has third byte \(\text{first} + 2^k - 1\) and fourth byte 255.</li>
+<li>The first block's third byte must be a multiple of \(2^k\).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 8.1 (not from the lecture): sixteen blocks</summary><div class="body">
+<p>An organization combines 16 contiguous class C blocks starting at 198.47.32.0. Find the mask and the address range.</p>
+<div class="math">\[ \begin{aligned} 2^{k} &= 16 \;\Rightarrow\; k = 4\\ n_{\text{super}} &= 24 - 4 = 20, \qquad \text{mask byte 3} = 256 - 16 = 240\\ \text{last third byte} &= 32 + 16 - 1 = 47 \end{aligned} \]</div>
+<div class="answer">Mask 255.255.240.0 (/20); 198.47.32.0 to 198.47.47.255</div>
+</div></details>
+<details class="work practice"><summary>Practice 8.2 (not from the lecture): a misaligned group</summary><div class="body">
+<p>Can the four blocks 201.5.6.0, 201.5.7.0, 201.5.8.0 and 201.5.9.0 form one supernet?</p>
+<p>They are contiguous and 4 is a power of 2, so the mask would be /22 (255.255.252.0). But</p>
+<div class="math">\[ 6 \;\text{AND}\; 252 = 00000110 \;\text{AND}\; 11111100 = 00000100 = 4 \neq 6 \]</div>
+<p>A /22 containing 201.5.6.0 runs from 201.5.4.0 to 201.5.7.255, and 201.5.8.0 falls in a different /22. The group straddles two supernets.</p>
+<div class="answer">No: the first block's third byte (6) is not a multiple of 4</div>
+</div></details>
+
+<div class="quiz" data-quiz="q8"></div>
+</section>
+
+<section class="sec" id="s9">
+<h3><span class="num">Section 9</span>Address blocks with a prefix length</h3>
+<p>Writing an address as <b>a.b.c.d/n</b> (prefix length notation) describes a block of addresses without any reference to classes: the first \(n\) bits are fixed (the prefix) and the remaining \(32-n\) bits (the suffix) range over all values. Three operations answer almost every block question.</p>
+<div class="eq">
+<div class="math">\[ N = 2^{\,32-n} \]</div>
+<div class="math">\[ \text{first address} = \text{any address in the block} \;\text{AND}\; \text{mask} \]</div>
+<div class="math">\[ \text{last address} = \text{first address} + N - 1 \]</div>
+<span class="note">block size, first address (suffix bits set to 0) and last address (suffix bits set to 1)</span>
+<div class="defs">\(N\) = number of addresses in the block (no unit) · \(n\) = prefix length, in bits · \(32-n\) = suffix length, in bits · mask = \(n\) ones followed by \(32-n\) zeros</div>
+</div>
+
+<details class="work" open><summary>Example 12 (lecture): range of 205.16.37.24/29</summary><div class="body">
+<div class="givens">A small organization is given the block with beginning address and prefix 205.16.37.24/29.</div>
+<p>Keep the first 29 bits and set the last 3 bits to 1s:</p>
+<div class="math">\[ \begin{aligned} \text{beginning} &= 11001101\;00010000\;00100101\;00011\,000\\ \text{ending} &= 11001101\;00010000\;00100101\;00011\,111 \end{aligned} \]</div>
+<p>Alternatively, the suffix length is \(32 - 29 = 3\), so</p>
+<div class="math">\[ N = 2^{3} = 8, \qquad \text{last} = 24 + 8 - 1 = 31 \]</div>
+<div class="answer">8 addresses: 205.16.37.24 to 205.16.37.31</div>
+</div></details>
+<div class="callout filled"><span class="tag">Possible lecture error</span><p>Slide 36 writes the first byte of 205.16.37.24 as 11001111. That pattern is 207. The correct binary for 205 is 11001101 (\(128+64+8+4+1\)), used above. The range 205.16.37.24 to 205.16.37.31 on the slide is unaffected.</p></div>
+
+<details class="work" open><summary>Example 13 (lecture): network address of 167.199.170.82/27</summary><div class="body">
+<div class="givens">One address of the block is 167.199.170.82/27.</div>
+<p>Keep the first 27 bits and set the remaining \(32 - 27 = 5\) bits to 0. Those 5 bits are all in the last byte:</p>
+<div class="math">\[ \begin{array}{lr} 82 & 010\,10010\\ \text{mask byte } 224 & 111\,00000\\ \hline \text{AND} & 010\,00000 = 64 \end{array} \]</div>
+<p>This is the same as ANDing the address with the mask 255.255.255.224 to get the base (first) address of the subnet.</p>
+<div class="answer">Network address 167.199.170.64/27</div>
+</div></details>
+
+<details class="work" open><summary>Example 14 (lecture): four subnets of 130.34.12.64/26</summary><div class="body">
+<div class="givens">An organization is granted the block 130.34.12.64/26 and needs four subnets.</div>
+<div class="math">\[ \begin{aligned} \text{suffix} &= 32 - 26 = 6\ \text{bits}, \qquad N = 2^{6} = 64\ \text{addresses}\\ \text{four subnets} &\Rightarrow s = 2\ \text{more 1s}, \qquad n' = 26 + 2 = 28\\ \text{addresses per subnet} &= \frac{64}{4} = 2^{\,32-28} = 16 \end{aligned} \]</div>
+<div class="tbl"><table>
+<tr><th>Subnet</th><th>First address</th><th>Last address</th></tr>
+<tr><td>1</td><td>130.34.12.64/28</td><td>130.34.12.79/28</td></tr>
+<tr><td>2</td><td>130.34.12.80/28</td><td>130.34.12.95/28</td></tr>
+<tr><td>3</td><td>130.34.12.96/28</td><td>130.34.12.111/28</td></tr>
+<tr><td>4</td><td>130.34.12.112/28</td><td>130.34.12.127/28</td></tr>
+</table></div>
+<div class="answer">Subnet prefix /28, 16 addresses each, starting at .64, .80, .96, .112</div>
+</div></details>
+
+<div class="demo maskDemo" id="maskDemo2" data-ip="167.199.170.82" data-p="27" data-src="Example 13 from the lecture (167.199.170.82/27). Set the address to 205.16.37.24 and n to 29 for Example 12.">
+<div class="dtitle">Block calculator</div>
+<div class="src"></div>
+<div class="controls">
+<label>IP address <input type="text" class="mIp" size="16"></label>
+<label>Prefix length \(n\) (bits) <input type="range" class="mP" min="1" max="31" step="1"><output class="mPo"></output></label>
+<button class="btn mReset" type="button">Reset to lecture values</button>
+</div>
+<div class="bits mBits"></div>
+<div class="readout mOut"></div>
+<div class="legend"><span><i style="background:var(--c1)"></i>prefix bits</span><span><i style="background:var(--c2)"></i>suffix bits</span></div>
+</div>
+
+<div class="demo splitDemo" id="splitDemo2" data-ip="130.34.12.64" data-p="26" data-s="2" data-src="Example 14 from the lecture (130.34.12.64/26 into four subnets)">
+<div class="dtitle">Subnet splitter for a prefix block</div>
+<div class="src"></div>
+<div class="controls">
+<label>Block address <input type="text" class="sIp" size="16"></label>
+<label>Block prefix \(n\) (bits) <input type="number" class="sP" min="8" max="30"></label>
+<label>Subnet bits \(s\) <input type="range" class="sS" min="0" max="8" step="1"><output class="sSo"></output></label>
+<button class="btn sReset" type="button">Reset to lecture values</button>
+</div>
+<div class="readout sMath"></div>
+<div class="tbl sOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A prefix is like the first digits of a postal code. "T2N" fixes a district and leaves the rest open; a longer prefix such as "T2N 1N4" pins down a single block of houses. The fewer digits you fix, the more addresses the code covers, which is why a smaller \(n\) means a bigger block.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>\(N = 2^{32-n}\), not \(2^{n}\). A /20 block has \(2^{12} = 4096\) addresses.</li>
+<li>Last address = first \(+ N - 1\). The block 205.16.37.24/29 ends at .31, not .32.</li>
+<li>When the suffix spans more than one byte, adding \(N-1\) carries into the next byte. Setting suffix bits to 1 in binary avoids that mistake.</li>
+<li>Splitting a block into \(2^s\) subnets adds \(s\) to the prefix, so four subnets of a /26 are /28, not /30.</li>
+<li>A block's first address must have all suffix bits 0. 130.34.12.64/26 is valid because \(64 = 01\,000000\).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 9.1 (not from the lecture): block of 180.40.12.150/26</summary><div class="body">
+<div class="math">\[ \begin{array}{lr} 150 & 10\,010110\\ \text{mask byte } 192 & 11\,000000\\ \hline \text{AND} & 10\,000000 = 128 \end{array} \]</div>
+<div class="math">\[ N = 2^{\,32-26} = 64, \qquad \text{last} = 128 + 64 - 1 = 191 \]</div>
+<div class="answer">180.40.12.128 to 180.40.12.191 (64 addresses)</div>
+</div></details>
+<details class="work practice"><summary>Practice 9.2 (not from the lecture): eight subnets of 72.16.8.0/22</summary><div class="body">
+<div class="math">\[ \begin{aligned} N &= 2^{\,32-22} = 1024, \qquad s = 3, \qquad n' = 22 + 3 = 25\\ \text{addresses per subnet} &= 2^{\,32-25} = 128 \end{aligned} \]</div>
+<p>Adding 128 each time (carrying into the third byte every 256):</p>
+<div class="answer">72.16.8.0, 72.16.8.128, 72.16.9.0, 72.16.9.128, 72.16.10.0, 72.16.10.128, 72.16.11.0, 72.16.11.128 (all /25)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q9"></div>
+</section>
+
+<h2 class="part">Part 4 · Forwarding and routing</h2>
+
+<section class="sec" id="s10">
+<h3><span class="num">Section 10</span>Forwarding tables and longest prefix match</h3>
+<p>A router's forwarding table maps <b>ranges</b> of destination addresses to link interfaces, because listing every one of 4 billion addresses is impossible. Ranges that start and end on block boundaries can be written as prefixes, so each table entry is really "this prefix goes out of that interface". Ranges can overlap (a small block inside a bigger one), so the router needs a rule to choose between several matching entries.</p>
+<p><b>Longest prefix matching:</b> when looking for the forwarding table entry for a given destination address, use the <b>longest</b> address prefix that matches the destination address. The longest prefix is the most specific entry, the smallest network that contains the destination.</p>
+<div class="eq">
+<div class="math">\[ \text{entry } (P, n) \text{ matches D} \iff \big(\text{D} \;\text{AND}\; \text{mask}_n\big) = P \]</div>
+<div class="math">\[ \text{chosen entry} = \text{the matching entry with the largest } n \]</div>
+<span class="note">the match test and the longest prefix rule</span>
+<div class="defs">D = destination IP address in the arriving datagram's header · \(P\) = prefix stored in the table entry · \(n\) = prefix length of the entry, in bits · \(\text{mask}_n\) = \(n\) ones followed by \(32 - n\) zeros · "otherwise" (default) = the entry used when nothing else matches, like a /0 prefix</div>
+</div>
+
+<details class="work" open><summary>Example 15 (lecture): reading the datagram forwarding table</summary><div class="body">
+<div class="givens">Slide 39's table, with destination address ranges in binary.</div>
+<div class="tbl"><table>
+<tr><th>Destination address range (slide)</th><th>As a prefix</th><th>Link interface</th></tr>
+<tr><td>11001000 00010111 00010000 00000000 through 11001000 00010111 00010111 11111111</td><td>200.23.16.0/21</td><td class="num">0</td></tr>
+<tr><td>11001000 00010111 00011000 00000000 through 11001000 00010111 00011000 11111111</td><td>200.23.24.0/24</td><td class="num">1</td></tr>
+<tr><td>11001000 00010111 00011001 00000000 through 11001000 00010111 00011111 11111111</td><td>200.23.24.0/21 (with the /24 above taking 200.23.24.x)</td><td class="num">2</td></tr>
+<tr><td>otherwise</td><td>default</td><td class="num">3</td></tr>
+</table></div>
+<p>Convert the fixed bits to decimal: 11001000 = 200 and 00010111 = 23. In row 1 the first 5 bits of the third byte, 00010, are fixed, so the prefix length is \(8 + 8 + 5 = 21\) and the range is 200.23.16.0 to 200.23.23.255. Row 2 fixes the whole third byte (00011000 = 24): /24. Row 3 covers 200.23.25.0 to 200.23.31.255; that is not a single block, but it is the /21 block 200.23.24.0/21 minus the 200.23.24.x addresses that row 2 already claims. With longest prefix matching the router can store row 3 as the single prefix 200.23.24.0/21.</p>
+<div class="answer">Four entries: 200.23.16.0/21 → 0, 200.23.24.0/24 → 1, 200.23.24.0/21 → 2, otherwise → 3</div>
+</div></details>
+<div class="callout filled"><span class="tag">Filled in</span><p>Slide 39's first row shows only the starting address 11001000 00010111 00010000 00000000, with the last 11 bits highlighted. The end of that range (through 11001000 00010111 00010111 11111111, that is 200.23.23.255) and the prefix forms in the middle column are added here so the table can be used for lookups.</p></div>
+
+<details class="work" open><summary>Example 16 (lecture): longest prefix match for 203.22.66.5</summary><div class="body">
+<div class="givens">Destination 203.22.66.5 = 11001011.00010110.01000010.00000101. Routing table: 203.0.0.0/11 → Route 1, 203.20.0.0/14 → Route 2, 203.22.64.0/20 → Route 3.</div>
+<p>Compare the first \(n\) bits of the destination with each prefix:</p>
+<div class="math">\[ \begin{aligned} \text{R1 } (n = 11)&: \ 11001011\;000 \ \text{ vs }\ 11001011\;000 \quad \text{match}\\ \text{R2 } (n = 14)&: \ 11001011\;000101 \ \text{ vs }\ 11001011\;000101 \quad \text{match}\\ \text{R3 } (n = 20)&: \ 11001011\;00010110\;0100 \ \text{ vs }\ 11001011\;00010110\;0100 \quad \text{match} \end{aligned} \]</div>
+<p>All three entries match (203.22 has 00010110 in the second byte, whose first 6 bits 000101 equal those of 20 = 00010100; and 66 = 01000010 starts with 0100, like 64 = 01000000). The longest is /20.</p>
+<div class="answer">Three matches; the router uses Route 3 (the /20, the smallest network)</div>
+<p>The three blocks nest: 203.22.64.0/20 (203.22.64.0 to 203.22.79.255) sits inside 203.20.0.0/14 (203.20.0.0 to 203.23.255.255), which sits inside 203.0.0.0/11 (203.0.0.0 to 203.31.255.255).</p>
+</div></details>
+
+<div class="demo" id="lpmDemo">
+<div class="dtitle">Longest prefix match lookup</div>
+<div class="src">Defaults: Example 16 from the lecture (destination 203.22.66.5). The slide 39 table opens with destination 200.23.24.170, chosen by the guide.</div>
+<div class="controls">
+<div class="seg" role="group" aria-label="Forwarding table"><button type="button" data-t="40" aria-pressed="true">Slide 40 table</button><button type="button" data-t="39" aria-pressed="false">Slide 39 table</button></div>
+<label>Destination D <input type="text" id="lpmD" size="16"></label>
+<button class="btn" type="button" id="lpmReset">Reset to lecture values</button>
+</div>
+<div class="tbl" id="lpmOut"></div>
+<div class="readout" id="lpmMath"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Sorting mail with a set of rules: "anything for Canada goes to bin 1", "anything for Alberta goes to bin 2", "anything for Calgary goes to bin 3". A letter to Calgary matches all three rules, and the clerk uses the most specific one. A general rule is a fallback, never an override.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Compare only the first \(n\) bits of the destination. The rest of the address is irrelevant to that entry.</li>
+<li>Several entries usually match. The answer is the <b>longest</b> match, not the first one in the table and not the shortest.</li>
+<li>A /20 entry on 203.22.64.0 covers 203.22.64.0 to 203.22.79.255 (16 values of the third byte), not 64 to 80 and not up to 127.</li>
+<li>The "otherwise" entry is used only when nothing else matches.</li>
+<li>Longest match = smallest network, because more fixed bits leave fewer free bits.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 10.1 (not from the lecture): lookups in the slide 39 table</summary><div class="body">
+<p>Which interface gets 200.23.30.7, and which gets 200.23.15.9?</p>
+<div class="math">\[ \begin{aligned} 30 &= 00011\,110: \ \text{matches } 00011 \ (\text{the /21 on interface 2}),\ \text{not } 00011000 \ (\text{the /24})\\ 15 &= 00001\,111: \ \text{matches neither } 00010 \ \text{nor } 00011 \end{aligned} \]</div>
+<div class="answer">200.23.30.7 → interface 2; 200.23.15.9 → interface 3 (otherwise)</div>
+</div></details>
+<details class="work practice"><summary>Practice 10.2 (not from the lecture): lookups in the slide 40 table</summary><div class="body">
+<p>Route 203.21.5.5 and 203.10.0.1.</p>
+<div class="math">\[ \begin{aligned} 21 &= 000101\,01: \ \text{matches /11 and /14, but /20 needs } 203.22 \;\Rightarrow\; \text{Route 2}\\ 10 &= 000\,01010: \ \text{matches /11 } (000), \ \text{not /14 } (000101) \;\Rightarrow\; \text{Route 1} \end{aligned} \]</div>
+<div class="answer">203.21.5.5 → Route 2; 203.10.0.1 → Route 1</div>
+</div></details>
+
+<div class="quiz" data-quiz="q10"></div>
+</section>
+
+<section class="sec" id="s11">
+<h3><span class="num">Section 11</span>Routing and the Bellman-Ford algorithm</h3>
+<p>The network layer guides packets from source to destination along a path that may cross many links. Its major function is <b>routing</b>: finding the best path for a particular transmission. Routers then forward packets according to the routing table that routing produces. A router is a box with input and output links, access to the routing table, and software that decides which of the possible paths is best.</p>
+<p>A routing problem is modelled as a set \(S\) of \(N\) nodes (routers) and a set of link lengths \(\{d_{i,j},\ i, j \in S\}\), with \(d_{i,j} = \infty\) if there is no link from \(i\) to \(j\). A "good" routing algorithm has:</p>
+<ol>
+<li>simplicity;</li>
+<li>robustness to node and link failures;</li>
+<li>stability (fast adaptation to topology and traffic changes);</li>
+<li>optimality (low delay and high throughput);</li>
+<li>fairness.</li>
+</ol>
+<p>Most routing algorithms are <b>distributed</b>: each node makes its own routing decisions, cooperating by exchanging information with its neighbours. Bellman-Ford is one of them.</p>
+
+<h4>The idea</h4>
+<p>The shortest path length from node \(i\) to the destination is the length of the arc to the node following \(i\) plus the shortest path length from that node to the destination. So each node only needs its neighbours' current estimates. At step \(h = 0\) the destination knows its distance is 0 and every other node's estimate is \(\infty\). At each step every node \(j\) advertises its estimate \(d_j^h\) to its neighbours. Node \(i\) then knows that sending a packet first to neighbour \(j\) costs about \(d(i,j) + d_j^h\), and picks the best neighbour.</p>
+<div class="eq">
+<div class="math">\[ d_1^{h} = 0 \quad \text{for all } h \]</div>
+<div class="math">\[ d_i^{0} = \infty \quad \text{for all } i \neq 1 \]</div>
+<div class="math">\[ d_i^{h+1} = \min_{j}\big[\, d(i,j) + d_j^{h} \,\big] \quad \text{for all } i \neq 1 \]</div>
+<span class="note">Bellman-Ford with node 1 as the destination; stop when no \(d_i\) changes</span>
+<div class="defs">\(d_i^{h}\) = estimated shortest distance from node \(i\) to node 1 after \(h\) iterations, in the link-length unit (for example delay) · \(h\) = iteration number (no unit) · \(d(i,j)\) = length of the arc from node \(i\) to node \(j\), \(\infty\) if there is no arc · \(j\) = a neighbour of \(i\) · label \((d_i, j)\) = distance and the next node \(j\) on the best path</div>
+</div>
+<p>The procedure in the lecture: label each node \(i\) with \((d_i, j)\); initialize with \((0, \cdot)\) at node 1 and \((\infty, \cdot)\) elsewhere; at each step \(h \gt  0\) find the \(j\) that minimizes \(d(i,j) + d_j^{h-1}\) and update the label to \((d_i^h, j)\); repeat until no \(d_i\) changes.</p>
+<div class="callout filled"><span class="tag">Filled in</span><p>Two facts the slides use without stating: \(d_i^h\) is the length of the shortest path from \(i\) to node 1 that uses <b>at most \(h\) arcs</b>, and since a shortest path never needs more than \(N-1\) arcs, the estimates stop changing after at most \(N-1\) iterations (positive link lengths assumed). The extra iteration in the lecture's table is the check that nothing changed.</p></div>
+
+<details class="work"><summary>Example 17 (lecture, solved here): shortest paths to node 1 on the five-node digraph</summary><div class="body">
+<div class="givens">Slide 45 digraph. Arcs and lengths: \(d(2,1) = 1\), \(d(3,1) = 4\), \(d(3,2) = 1\), \(d(2,3) = 2\), \(d(4,2) = 8\), \(d(5,3) = 2\), \(d(4,5) = 4\), \(d(5,4) = 2\). Destination node 1.</div>
+<p>Step \(h = 1\): only nodes with an arc into node 1 get a finite distance.</p>
+<div class="math">\[ \begin{aligned} d_2^1 &= \min\{1 + 0,\ 2 + \infty\} = 1 \ \text{via } 1\\ d_3^1 &= \min\{4 + 0,\ 1 + \infty\} = 4 \ \text{via } 1 \end{aligned} \]</div>
+<p>Step \(h = 2\):</p>
+<div class="math">\[ \begin{aligned} d_3^2 &= \min\{4 + 0,\ 1 + 1\} = 2 \ \text{via } 2\\ d_4^2 &= \min\{8 + 1,\ 4 + \infty\} = 9 \ \text{via } 2\\ d_5^2 &= \min\{2 + 4,\ 2 + \infty\} = 6 \ \text{via } 3 \end{aligned} \]</div>
+<p>Step \(h = 3\):</p>
+<div class="math">\[ \begin{aligned} d_4^3 &= \min\{8 + 1,\ 4 + 6\} = 9 \ \text{via } 2\\ d_5^3 &= \min\{2 + 2,\ 2 + 9\} = 4 \ \text{via } 3 \end{aligned} \]</div>
+<p>Step \(h = 4\):</p>
+<div class="math">\[ d_4^4 = \min\{8 + 1,\ 4 + 4\} = 8 \ \text{via } 5 \]</div>
+<p>Step \(h = 5\) changes nothing (\(d_5^5 = \min\{2+2,\ 2+8\} = 4\)), so the algorithm stops.</p>
+<div class="tbl"><table>
+<tr><th>\(h\)</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+<tr><td>0</td><td>(0, .)</td><td>(∞, .)</td><td>(∞, .)</td><td>(∞, .)</td><td>(∞, .)</td></tr>
+<tr><td>1</td><td>(0, .)</td><td>(1, 1)</td><td>(4, 1)</td><td>(∞, .)</td><td>(∞, .)</td></tr>
+<tr><td>2</td><td>(0, .)</td><td>(1, 1)</td><td>(2, 2)</td><td>(9, 2)</td><td>(6, 3)</td></tr>
+<tr><td>3</td><td>(0, .)</td><td>(1, 1)</td><td>(2, 2)</td><td>(9, 2)</td><td>(4, 3)</td></tr>
+<tr><td>4</td><td>(0, .)</td><td>(1, 1)</td><td>(2, 2)</td><td>(8, 5)</td><td>(4, 3)</td></tr>
+<tr><td>5</td><td>(0, .)</td><td>(1, 1)</td><td>(2, 2)</td><td>(8, 5)</td><td>(4, 3)</td></tr>
+</table></div>
+<div class="answer">2 → 1 (1); 3 → 2 → 1 (2); 5 → 3 → 2 → 1 (4); 4 → 5 → 3 → 2 → 1 (8)</div>
+</div></details>
+<div class="callout filled"><span class="tag">Filled in</span><p>Slide 45 poses this problem but gives no solution. The arc lengths above are read from the slide's figure and the full solution is worked out here.</p></div>
+
+<details class="work" open><summary>Example 18 (lecture): Bellman-Ford on the six-node digraph</summary><div class="body">
+<div class="givens">\(N = \{1,2,3,4,5,6\}\). Arcs: \((2,1)=1\), \((2,3)=2\), \((3,1)=5\), \((3,2)=1\), \((4,2)=6\), \((4,5)=2\), \((5,3)=2\), \((5,4)=3\), \((6,4)=1\), \((6,5)=2\). Destination node 1.</div>
+<p>(a) The digraph has these arcs (the demo below draws it). (b) The algorithm is applied with the labels \((d_i, j)\) described above. (c) The steps:</p>
+<div class="math">\[ \begin{aligned} h=1:\quad d_2 &= \min\{1+0,\ 2+\infty\} = 1 \ (\text{via } 1), \quad d_3 = \min\{5+0,\ 1+\infty\} = 5 \ (\text{via } 1)\\ h=2:\quad d_3 &= \min\{5+0,\ 1+1\} = 2 \ (\text{via } 2), \quad d_4 = \min\{6+1,\ 2+\infty\} = 7 \ (\text{via } 2)\\ d_5 &= \min\{2+5,\ 3+\infty\} = 7 \ (\text{via } 3), \quad d_6 = \min\{1+\infty,\ 2+\infty\} = \infty\\ h=3:\quad d_5 &= \min\{2+2,\ 3+7\} = 4 \ (\text{via } 3), \quad d_6 = \min\{1+7,\ 2+7\} = 8 \ (\text{via } 4)\\ h=4:\quad d_4 &= \min\{6+1,\ 2+4\} = 6 \ (\text{via } 5), \quad d_6 = \min\{1+7,\ 2+4\} = 6 \ (\text{via } 5)\\ h=5:\quad d_6 &= \min\{1+6,\ 2+4\} = 6, \quad \text{no change anywhere: stop} \end{aligned} \]</div>
+<div class="tbl"><table>
+<tr><th>\(h\)</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+<tr><td>0</td><td>(0, .)</td><td>(∞, .)</td><td>(∞, .)</td><td>(∞, .)</td><td>(∞, .)</td><td>(∞, .)</td></tr>
+<tr><td>1</td><td>(0, .)</td><td>(1, 1)</td><td>(5, 1)</td><td>(∞, .)</td><td>(∞, .)</td><td>(∞, .)</td></tr>
+<tr><td>2</td><td>(0, .)</td><td>(1, 1)</td><td>(2, 2)</td><td>(7, 2)</td><td>(7, 3)</td><td>(∞, .)</td></tr>
+<tr><td>3</td><td>(0, .)</td><td>(1, 1)</td><td>(2, 2)</td><td>(7, 2)</td><td>(4, 3)</td><td>(8, 4)</td></tr>
+<tr><td>4</td><td>(0, .)</td><td>(1, 1)</td><td>(2, 2)</td><td>(6, 5)</td><td>(4, 3)</td><td>(6, 5)</td></tr>
+<tr><td>5</td><td>(0, .)</td><td>(1, 1)</td><td>(2, 2)</td><td>(6, 5)</td><td>(4, 3)</td><td>(6, 5)</td></tr>
+</table></div>
+<p>Follow the next-node labels from each node to node 1:</p>
+<div class="answer">2 → 1; 3 → 2 → 1; 4 → 5 → 3 → 2 → 1; 5 → 3 → 2 → 1; 6 → 5 → 3 → 2 → 1</div>
+</div></details>
+<div class="callout filled"><span class="tag">Possible lecture error</span><p>The labelled digraph drawn on slide 47 does not match the arc list on slide 46 for five arcs: it shows \((6,4) = 2\) (list: 1), \((4,2) = 5\) (list: 6), \((4,5) = 1\) (list: 2), \((5,3) = 1\) (list: 2) and \((3,2) = 2\) (list: 1). The table on slide 49 agrees with the arc list (for example \(d_4 = 7\) via node 2 at \(h = 2\) needs \(d(4,2) = 6\)), so this guide uses the list. With the drawn lengths the final distances would differ (node 3: 3, node 4: 5, node 6: 6 via 5).</p></div>
+
+<div class="demo" id="bfDemo">
+<div class="dtitle">Bellman-Ford step by step</div>
+<div class="src">Defaults: Example 18 from the lecture (slides 46 to 49). Switch to Example 17 (slide 45).</div>
+<div class="controls">
+<div class="seg" role="group" aria-label="Graph"><button type="button" data-g="B" aria-pressed="true">Example 18</button><button type="button" data-g="A" aria-pressed="false">Example 17</button></div>
+<button class="btn" type="button" id="bfBack">Back</button>
+<button class="btn" type="button" id="bfStep">Step</button>
+<button class="btn" type="button" id="bfReset">Reset to lecture values</button>
+<output id="bfH" style="font-family:var(--mono);font-size:13px"></output>
+</div>
+<svg id="bfSvg" viewBox="0 0 520 260" role="img" aria-label="Directed graph with arc lengths"></svg>
+<div class="legend"><span><i style="background:var(--c1)"></i>current next hop toward node 1</span><span><i style="background:var(--muted)"></i>other arcs</span></div>
+<div class="readout" id="bfMath"></div>
+<div class="tbl" id="bfOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Asking for directions in a town where nobody has a map. Each hour, everyone tells their neighbours "I can get to the station in X minutes". You add the walk to each neighbour's door to what they said and remember the best. In the first hour only the station's neighbours know anything; each hour the knowledge spreads one street further. The analogy breaks down if walking times change with crowds, which is exactly the oscillation problem in Section 12.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Use the neighbours' values from the <b>previous</b> step (\(d_j^{h}\)) to compute \(d_i^{h+1}\). Using values already updated in the same row can give a different table from the lecture's.</li>
+<li>Arcs are directed. \(d(i,j)\) is the arc <b>from</b> \(i\) <b>to</b> \(j\); the reverse arc may have a different length or not exist.</li>
+<li>A node's estimate can only go down (or stay) from step to step, and it stays \(\infty\) until some neighbour has a finite estimate.</li>
+<li>The label's second entry is the <b>next</b> node, not the last node before the destination. Read the path by following labels.</li>
+<li>Stop only when a whole row repeats, not when one node stops changing.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 11.1 (not from the lecture): a four-node network</summary><div class="body">
+<div class="givens">Arcs: \(d(2,1) = 3\), \(d(3,1) = 7\), \(d(3,2) = 2\), \(d(4,2) = 6\), \(d(4,3) = 1\). Destination node 1.</div>
+<div class="math">\[ \begin{aligned} h=1:\quad d_2 &= 3 \ (\text{via } 1), \quad d_3 = \min\{7,\ 2+\infty\} = 7 \ (\text{via } 1), \quad d_4 = \infty\\ h=2:\quad d_3 &= \min\{7,\ 2+3\} = 5 \ (\text{via } 2), \quad d_4 = \min\{6+3,\ 1+7\} = 8 \ (\text{via } 3)\\ h=3:\quad d_4 &= \min\{6+3,\ 1+5\} = 6 \ (\text{via } 3)\\ h=4:\quad &\text{no change} \end{aligned} \]</div>
+<div class="answer">\(d_2 = 3\), \(d_3 = 5\) (3 → 2 → 1), \(d_4 = 6\) (4 → 3 → 2 → 1)</div>
+</div></details>
+<details class="work practice"><summary>Practice 11.2 (not from the lecture): a link fails in Example 18</summary><div class="body">
+<p>In Example 18, arc \((5,3)\) fails (its length becomes \(\infty\)). Find the new distances of nodes 4, 5 and 6.</p>
+<p>Nodes 2 and 3 are unaffected (\(d_2 = 1\), \(d_3 = 2\)). Node 5's only remaining arc is to node 4, so</p>
+<div class="math">\[ \begin{aligned} d_4 &= \min\{6 + d_2,\ 2 + d_5\} = \min\{7,\ 2 + d_5\}\\ d_5 &= 3 + d_4 \;\Rightarrow\; 2 + d_5 = 5 + d_4 \gt  d_4 \;\Rightarrow\; d_4 = 7 \ (\text{via } 2)\\ d_5 &= 3 + 7 = 10 \ (\text{via } 4)\\ d_6 &= \min\{1 + 7,\ 2 + 10\} = 8 \ (\text{via } 4) \end{aligned} \]</div>
+<div class="answer">\(d_4 = 7\) via 2, \(d_5 = 10\) via 4, \(d_6 = 8\) via 4</div>
+</div></details>
+
+<div class="quiz" data-quiz="q11"></div>
+</section>
+
+<section class="sec" id="s12">
+<h3><span class="num">Section 12</span>Bellman-Ford strengths, weaknesses and oscillation</h3>
+<p><b>Advantage.</b> The algorithm is very flexible about the initial estimates \(d_j^0\) (it still converges if it starts from other values), and it can be executed at each node \(i\) in parallel with every other node.</p>
+<p><b>Disadvantage.</b> It uses only <b>one path</b> per origin and destination pair, which can limit throughput. Its ability to adapt to changing traffic is limited by <b>oscillations</b>: when link delays depend on traffic, some shortest paths change, traffic shifts abruptly to the new path, which changes the delays again.</p>
+<div class="eq">
+<div class="math">\[ D_{\text{A}\to\text{D via R}i} = d(\text{A}, \text{R}i) + d(\text{R}i, \text{D}), \qquad \text{A chooses } \min\big(D_{\text{via R1}},\ D_{\text{via R2}}\big) \]</div>
+<span class="note">the path delay each route advertises, and the single-path choice that causes oscillation</span>
+<div class="defs">\(D\) = total delay of a path from A to D (delay unit, no specific unit in the lecture) · \(d(\cdot,\cdot)\) = delay of one link, which grows with the traffic on that link · \(e\) = a small positive extra delay on the R2 path (no unit given) · B = A's traffic rate, in bit/s</div>
+</div>
+
+<details class="work" open><summary>Example 19 (lecture): oscillation between two routes</summary><div class="body">
+<div class="givens">Source A is attached to routers R1 and R2, both of which reach D. Links A to R1 and A to R2 have no delay of interest. With no traffic, delay \((\text{R1},\text{D}) = 1\) and \((\text{R2},\text{D}) = 1 + e\). When A sends all its traffic (B bit/s) through a router, that router's link to D has delay 10 (R1) or \(10 + e\) (R2).</div>
+<p><b>Step 0.</b> No traffic yet: compare \(1\) with \(1 + e\). The R1 path is shorter, so A sends all its traffic (B bit/s) to D via R1.</p>
+<p><b>Step 1.</b> The R1 link is now loaded: \(d(\text{R1},\text{D}) = 10\), \(d(\text{R2},\text{D}) = 1 + e\). The routers advertise these delays to A, which finds that the preferred path to D now starts with R2, so A moves all its traffic to R2.</p>
+<p><b>Step 2.</b> Now \(d(\text{R1},\text{D}) = 1\) and \(d(\text{R2},\text{D}) = 10 + e\), so R1 looks better again and A switches back.</p>
+<div class="math">\[ \begin{aligned} \text{step 0:}\ \ & 1 \lt  1 + e &&\Rightarrow\ \text{all via R1}\\ \text{step 1:}\ \ & 10 \gt  1 + e &&\Rightarrow\ \text{all via R2}\\ \text{step 2:}\ \ & 1 \lt  10 + e &&\Rightarrow\ \text{all via R1}\ \ (\text{and so on}) \end{aligned} \]</div>
+<p>As a result, the situation alternates between the two paths. A better strategy would be for A to send <b>half</b> of its traffic to R1 and the other half to R2.</p>
+<div class="answer">Traffic flips between R1 and R2 every update; splitting it half and half is better</div>
+<p><b>Optimal routing</b> removes both disadvantages: it directs traffic along paths that are shortest with respect to link delays that depend on the traffic flows the links carry, and it can split a flow across several paths.</p>
+</div></details>
+
+<div class="demo" id="oscDemo">
+<div class="dtitle">Route flapping and traffic splitting</div>
+<div class="src">Endpoints from Example 19 (delays 1 and 10 on R1, 1 + e and 10 + e on R2). The straight line between them is an illustrative model, not from the lecture.</div>
+<canvas id="oscCv" height="230"></canvas>
+<div class="legend"><span><i style="background:var(--c1)"></i>delay via R1, \(D_1\)</span><span><i style="background:var(--c2)"></i>delay via R2, \(D_2\)</span><span><i style="background:var(--c3)"></i>current split</span></div>
+<div class="controls">
+<label>Share of traffic via R1, \(f\) <input type="range" id="oscF" min="0" max="1" step="0.01"><output id="oscFo"></output></label>
+<label>Extra delay \(e\) <input type="range" id="oscE" min="0" max="2" step="0.05"><output id="oscEo"></output></label>
+</div>
+<div class="controls">
+<button class="btn" type="button" id="oscStep">Bellman-Ford update (all traffic to the shorter path)</button>
+<button class="btn" type="button" id="oscReset">Reset to lecture values</button>
+</div>
+<div class="readout" id="oscMath"></div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture gives the delays only at the two extremes (all traffic on one path or the other) and leaves \(e\) as a small symbol. The demo assumes each link's delay grows in a straight line with its share of the traffic, \(D_1 = 1 + 9f\) and \(D_2 = 1 + e + 9(1 - f)\), which reproduces the lecture's 1, 10, \(1+e\) and \(10+e\) at \(f = 0\) and \(f = 1\). It starts with \(e = 0.1\) (chosen by the guide) and \(f = 1\), the state after step 0.</p></div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Two bridges into a city and a radio station that announces "the north bridge is faster" every morning. Everyone takes the north bridge, it jams, the next report says "south is faster", and everyone switches. If half the drivers took each bridge, both would flow well. The radio report is the advertised delay; the drivers are Bellman-Ford's single-path choice.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>The oscillation is caused by delays that <b>depend on the traffic</b> plus moving <b>all</b> traffic to the single shortest path. With fixed link lengths Bellman-Ford converges and does not oscillate.</li>
+<li>The advantage is flexibility in initial estimates and parallel execution, not "multiple paths". Using one path per pair is listed as a disadvantage.</li>
+<li>The small \(e\) only breaks the tie at the start (R1 first). It does not stop the flapping.</li>
+<li>Optimal routing fixes the problem by letting delays depend on flows and splitting traffic.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 12.1 (not from the lecture): the balancing split in the linear model</summary><div class="body">
+<p>In the demo's straight-line model, what share \(f\) of the traffic via R1 makes the two path delays equal when \(e = 0.2\)?</p>
+<div class="math">\[ \begin{aligned} 1 + 9f &= 1 + e + 9(1 - f)\\ 18f &= 9 + e\\ f &= \frac{9 + e}{18} = \frac{9.2}{18} = 0.511 \end{aligned} \]</div>
+<p>Both delays are then \(1 + 9 \times 0.511 = 5.6\).</p>
+<div class="answer">\(f = 0.511\) (51.1% via R1), both delays 5.6</div>
+</div></details>
+<details class="work practice"><summary>Practice 12.2 (not from the lecture): the first four routing choices</summary><div class="body">
+<p>Starting from no traffic, list A's first four choices under Bellman-Ford in Example 19.</p>
+<div class="math">\[ \begin{aligned} &1 \lt  1 + e \Rightarrow \text{R1}, \qquad 10 \gt  1 + e \Rightarrow \text{R2},\\ &1 \lt  10 + e \Rightarrow \text{R1}, \qquad 10 \gt  1 + e \Rightarrow \text{R2} \end{aligned} \]</div>
+<div class="answer">R1, R2, R1, R2</div>
+</div></details>
+
+<div class="quiz" data-quiz="q12"></div>
+</section>
+
+<section class="sec final" id="final">
+<h3><span class="num">Test yourself</span>Final exam</h3>
+<p>Twelve questions, one from each section, mostly calculations. Each explanation links back to the section to review. When you have answered all twelve, a list of your wrong answers appears below the exam.</p>
+<div class="quiz" data-quiz="final"></div>
+</section>
+
+<section class="sec" id="formulas">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<button class="btn" id="printSheet" type="button">Print formula sheet</button>
+<p></p>
+<div class="sheet">
+
+<div class="card"><h5>Part 1 · Datagrams and fragments</h5>
+<div class="f"><span class="expr">\[ H = 4 \times \text{HLEN}, \qquad \text{data} = L - H \]</span><span class="d">\(H\) = header length (bytes, 20 with no options, at most 60) · HLEN = header length field (4-byte words) · \(L\) = total length field (bytes)</span><span class="s">Section 2</span></div>
+<div class="f"><span class="expr">\[ \text{TTL}_{\text{after } k} = \text{TTL}_0 - k \]</span><span class="d">TTL = time to live (hops) · \(k\) = routers crossed</span><span class="s">Section 2</span></div>
+<div class="f"><span class="expr">\[ \text{overhead} = 20 + 20 = 40\ \text{bytes (TCP + IPv4)} \]</span><span class="d">TCP header 20 bytes, IPv4 header 20 bytes (IPv6: 40)</span><span class="s">Section 2</span></div>
+<div class="f"><span class="expr">\[ D_f = 8\left\lfloor \frac{\text{MTU} - H}{8} \right\rfloor \]</span><span class="d">\(D_f\) = data bytes per full fragment · MTU = maximum transmission unit of the link (bytes)</span><span class="s">Section 3</span></div>
+<div class="f"><span class="expr">\[ n = \left\lceil \frac{L - H}{D_f} \right\rceil \]</span><span class="d">\(n\) = number of fragments · \(L - H\) = data bytes of the original datagram</span><span class="s">Section 3</span></div>
+<div class="f"><span class="expr">\[ \text{offset}_k = \frac{k\,D_f}{8} \]</span><span class="d">offset in 8-byte units · \(k\) = fragment index from 0 · more-fragments flag 1 on all but the last</span><span class="s">Section 3</span></div>
+<div class="f"><span class="expr">\[ L_{\text{last}} = (L - H) - (n-1)D_f + H \]</span><span class="d">\(L_{\text{last}}\) = total length of the last fragment (bytes)</span><span class="s">Section 3</span></div>
+</div>
+
+<div class="card"><h5>Part 2 · Addresses and classes</h5>
+<div class="f"><span class="expr">\[ \text{byte} = \sum_{i=0}^{7} b_i\,2^{i} \]</span><span class="d">\(b_i\) = bit \(i\) from the right · weights 128, 64, 32, 16, 8, 4, 2, 1</span><span class="s">Section 4</span></div>
+<div class="f"><span class="expr">\[ 2^{32} = 4\,294\,967\,296 \]</span><span class="d">size of the IPv4 address space (addresses)</span><span class="s">Section 4</span></div>
+<div class="f"><span class="expr">\[ \text{networks} = 2^{\,n_{\text{net}}}, \qquad \text{addresses} = 2^{\,n_{\text{host}}} \]</span><span class="d">A: \(2^7\) networks of \(2^{24}\) · B: \(2^{14}\) of \(2^{16}\) · C: \(2^{21}\) of \(2^{8}\) · first byte A 0 to 127, B 128 to 191, C 192 to 223, D 224 to 239, E 240 to 255</span><span class="s">Section 5</span></div>
+</div>
+
+<div class="card"><h5>Part 3 · Masks and blocks</h5>
+<div class="f"><span class="expr">\[ \text{subnet address} = \text{IP} \;\text{AND}\; \text{mask} \]</span><span class="d">default masks: A 255.0.0.0, B 255.255.0.0, C 255.255.255.0</span><span class="s">Section 6</span></div>
+<div class="f"><span class="expr">\[ \text{mask byte} = 256 - 2^{\,8-m} \]</span><span class="d">\(m\) = number of 1s in that byte · values 128, 192, 224, 240, 248, 252, 254, 255</span><span class="s">Section 6</span></div>
+<div class="f"><span class="expr">\[ s = \lceil \log_2 N_{\text{sub}} \rceil, \quad s + h = h_0, \quad n' = n + s \]</span><span class="d">\(s\) = subnet bits · \(h\) = host bits per subnet · \(h_0\) = original host bits · \(n, n'\) = old and new prefix lengths (bits)</span><span class="s">Section 7</span></div>
+<div class="f"><span class="expr">\[ \text{max hosts} = 2^{h} - 2 \]</span><span class="d">all-0s host id = subnet address, all-1s = broadcast</span><span class="s">Section 7</span></div>
+<div class="f"><span class="expr">\[ \text{subnet } k = \text{base} + k \cdot 2^{h} \]</span><span class="d">\(k\) = subnet number from 0</span><span class="s">Section 7</span></div>
+<div class="f"><span class="expr">\[ \text{blocks} = 2^{k}, \quad n_{\text{super}} = 24 - k \]</span><span class="d">\(k\) = 1s removed from the class C mask · blocks contiguous, power of 2, first one aligned</span><span class="s">Section 8</span></div>
+<div class="f"><span class="expr">\[ N = 2^{\,32-n} \]</span><span class="d">\(N\) = addresses in a block with prefix length \(n\)</span><span class="s">Section 9</span></div>
+<div class="f"><span class="expr">\[ \text{first} = \text{addr AND mask}, \quad \text{last} = \text{first} + N - 1 \]</span><span class="d">first: suffix bits 0 · last: suffix bits 1</span><span class="s">Section 9</span></div>
+</div>
+
+<div class="card"><h5>Part 4 · Forwarding and routing</h5>
+<div class="f"><span class="expr">\[ (\text{D AND mask}_n) = P \ \Rightarrow\ \text{match} \]</span><span class="d">D = destination · \(P\) = entry prefix · \(n\) = entry prefix length · choose the matching entry with the largest \(n\)</span><span class="s">Section 10</span></div>
+<div class="f"><span class="expr">\[ d_1^{h} = 0, \qquad d_i^{0} = \infty \ (i \neq 1) \]</span><span class="d">node 1 = destination · \(h\) = iteration</span><span class="s">Section 11</span></div>
+<div class="f"><span class="expr">\[ d_i^{h+1} = \min_{j}\big[\, d(i,j) + d_j^{h} \,\big] \]</span><span class="d">\(d_i^h\) = estimated distance from \(i\) to node 1 · \(d(i,j)\) = arc length from \(i\) to \(j\) (\(\infty\) if none) · label \((d_i, j)\) · stop when a row repeats</span><span class="s">Section 11</span></div>
+<div class="f"><span class="expr">\[ D_{\text{via R}i} = d(\text{A}, \text{R}i) + d(\text{R}i, \text{D}) \]</span><span class="d">path delay; Bellman-Ford sends all traffic on the smaller one, so traffic-dependent delays make it oscillate</span><span class="s">Section 12</span></div>
+</div>
+
+</div>
+</section>
+<footer>Study guide generated from the lecture. Check flagged notes against your class materials.</footer></main></div>
+<script>window.GUIDE={"title": "ENEL 573 Ch4 Network Layer", "quizzes": {"q1": {"title": "Section 1 quiz", "questions": [{"q": "Which layer is responsible for host-to-host delivery when the two hosts are on different physical networks?", "options": ["Transport layer", "Network layer", "Data link layer", "Physical layer"], "answer": 1, "explain": "The network layer supervises host-to-host packet delivery across several networks. Transport is process to process, data link is node to node (one hop).", "mistakes": ["mixing up host to host with process to process", null, "thinking one hop is the whole path", "confusing bit transmission with delivery"], "review": "s1"}, {"q": "Which ATM service model gives only a guaranteed <i>minimum<\/i> bandwidth but does provide congestion feedback?", "options": ["CBR", "VBR", "ABR", "UBR"], "answer": 2, "explain": "From the service model table: ABR has a guaranteed minimum bandwidth and is the only row with congestion feedback 'yes'.", "mistakes": ["picking the strongest guarantee", "mixing up guaranteed rate with guaranteed minimum", null, "thinking 'unspecified' means minimum"], "review": "s1"}, {"q": "In Example 1, a datagram from A to D arrives at router S1 on interface f1. Which interface does S1 forward it on?", "options": ["f1", "f2", "f3", "All three interfaces"], "answer": 2, "explain": "D is reached across the WAN, and S1's WAN link is f3. S3 then forwards it on f2 to D's LAN.", "mistakes": ["sending it back out the interface it arrived on", "choosing S1's other LAN, which does not lead to D", null, "flooding, which a router's forwarding table avoids"], "review": "s1"}, {"q": "What does the Internet's best-effort service guarantee?", "options": ["Nothing: no guarantee on bandwidth, loss, order or timing", "Delivery, but not order", "Order, but not timing", "A minimum bandwidth"], "answer": 0, "explain": "Best effort means no guarantees at all. Congestion is only inferred from loss.", "mistakes": [null, "assuming 'best effort' means guaranteed delivery", "mixing up IP with the ATM UBR row", "mixing up IP with ATM ABR"], "review": "s1"}]}, "q2": {"title": "Section 2 quiz", "questions": [{"q": "An IPv4 header has header length field \\(\\text{HLEN} = 7\\). How long is the header?", "options": ["7 bytes", "28 bytes", "56 bytes", "8 bytes"], "answer": 1, "explain": "\\(H = 4 \\times \\text{HLEN} = 4 \\times 7 = 28\\) bytes (20 fixed bytes plus 8 bytes of options).", "mistakes": ["reading the field as bytes", null, "using the 8-byte unit of the offset field", "giving only the options part, 28 minus 20"], "review": "s2"}, {"q": "A datagram has total length 1200 bytes and \\(\\text{HLEN} = 5\\). How many bytes are in its IP data field?", "options": ["1200 bytes", "1195 bytes", "1180 bytes", "1160 bytes"], "answer": 2, "explain": "\\(H = 4\\times 5 = 20\\) bytes, so data \\(= 1200 - 20 = 1180\\) bytes. The data field still contains the TCP header.", "mistakes": ["treating total length as data length", "subtracting the field value 5 instead of 20 bytes", null, "also subtracting the 20-byte TCP header"], "review": "s2"}, {"q": "A datagram leaves its source with TTL = 64 and crosses 5 routers. What is its TTL when it reaches the destination host?", "options": ["64", "59", "58", "69"], "answer": 1, "explain": "TTL is decremented once at each router: \\(64 - 5 = 59\\) hops.", "mistakes": ["forgetting that routers decrement TTL", null, "also decrementing at the destination host", "adding instead of subtracting"], "review": "s2"}, {"q": "The upper layer protocol field is 6. What does that tell the receiving host?", "options": ["Deliver the payload to TCP", "The header is 6 words long", "The datagram may cross 6 more routers", "This is IP version 6"], "answer": 0, "explain": "The upper layer field names the protocol the payload goes to; the lecture's example is TCP = 6.", "mistakes": [null, "confusing it with the header length field", "confusing it with TTL", "confusing it with the version field"], "review": "s2"}]}, "q3": {"title": "Section 3 quiz", "questions": [{"q": "A 3000-byte datagram (20-byte header) must cross a link with MTU 1500 bytes. What happens?", "options": ["2 fragments of 1500 bytes each", "3 fragments, the last one 40 bytes long", "3 fragments, the last one 20 bytes long", "3 fragments, the last one 60 bytes long"], "answer": 1, "explain": "Data \\(= 3000 - 20 = 2980\\) bytes, \\(D_f = 1480\\) bytes. \\(\\left\\lceil \\frac{2980}{1480} \\right\\rceil = 3\\) fragments; the last carries \\(2980 - 2\\times1480 = 20\\) data bytes, so its length is \\(20 + 20 = 40\\) bytes.", "mistakes": ["dividing the total length by the MTU, ignoring that each fragment needs its own header", null, "forgetting to add the header to the last fragment", "treating all 3000 bytes as data"], "review": "s3"}, {"q": "A 2000-byte datagram (20-byte header) crosses a link with MTU 620 bytes. What is the offset field of the <b>third<\/b> fragment?", "options": ["75", "150", "155", "1200"], "answer": 1, "explain": "\\(D_f = 620 - 20 = 600\\) bytes (a multiple of 8). The third fragment's data starts at byte \\(2\\times600 = 1200\\), so offset \\(= \\frac{1200}{8} = 150\\).", "mistakes": ["giving the second fragment's offset", null, "using the MTU instead of MTU minus the header", "forgetting to divide the byte position by 8"], "review": "s3"}, {"q": "Which fragments have the more-fragments flag set to 0?", "options": ["Only the first fragment", "Only the last fragment", "All fragments", "None of the fragments"], "answer": 1, "explain": "The flag is 1 when more fragments follow and 0 for the last (or only) fragment.", "mistakes": ["thinking the flag marks the start", null, "mixing it up with the identification field, which is copied to all", "thinking every fragment has more to follow"], "review": "s3"}, {"q": "A 1500-byte datagram (20-byte header) crosses a link with MTU 1000 bytes. How many data bytes go in the first fragment?", "options": ["1000 bytes", "984 bytes", "980 bytes", "976 bytes"], "answer": 3, "explain": "\\(\\text{MTU} - H = 980\\), but \\(\\frac{980}{8} = 122.5\\) is not whole. Round down: \\(D_f = 8\\times122 = 976\\) bytes.", "mistakes": ["forgetting the header", "rounding up to a multiple of 8, which exceeds the MTU", "forgetting that data must be a multiple of 8 bytes", null], "review": "s3"}, {"q": "Where are fragments reassembled into the original datagram?", "options": ["At the next route", "At every router on the path", "Only at the final destination", "At the first router after the small-MTU link"], "answer": 2, "explain": "Fragments travel independently and are reassembled only at the final destination.", "mistakes": ["assuming routers undo fragmentation", "assuming routers undo fragmentation", null, "assuming the link with a bigger MTU triggers reassembly"], "review": "s3"}]}, "q4": {"title": "Section 4 quiz", "questions": [{"q": "What is 11000000 10101000 00000001 01100100 in dotted decimal?", "options": ["192.168.1.100", "3.21.128.38", "192.168.1.36", "192.160.1.100"], "answer": 0, "explain": "\\(11000000 = 192\\), \\(10101000 = 128+32+8 = 168\\), \\(00000001 = 1\\), \\(01100100 = 64+32+4 = 100\\).", "mistakes": [null, "reading each byte's bits right to left", "missing the 64 bit in the last byte", "missing the 8 bit in the second byte"], "review": "s4"}, {"q": "How many addresses are in the IPv4 address space?", "options": ["4 294 967 296", "4 228 250 625", "2 147 483 648", "16 777 216"], "answer": 0, "explain": "32 bits give \\(2^{32} = 4\\,294\\,967\\,296\\) addresses (more than 4 billion).", "mistakes": [null, "using 255 values per byte instead of 256", "using 31 bits", "using only 24 bits"], "review": "s4"}, {"q": "A router connects three networks. How many IP addresses does it have?", "options": ["1", "3, one per interface", "0, routers do not need addresses", "6, two per interface"], "answer": 1, "explain": "An IP address identifies a connection between a device and a network, so each of the 3 interfaces has its own address.", "mistakes": ["thinking an address belongs to a device", null, "thinking only hosts are addressed", "counting both ends of each link"], "review": "s4"}]}, "q5": {"title": "Section 5 quiz", "questions": [{"q": "What class is the address 128.10.20.30?", "options": ["Class A", "Class B", "Class C", "Class D"], "answer": 1, "explain": "128 is in the class B range 128 to 191 (leading bits 10).", "mistakes": ["thinking class A runs to 128", null, "thinking class C starts at 128", "thinking a leading 1 bit means multicast"], "review": "s5"}, {"q": "What is the classful network address of 140.120.84.24?", "options": ["140.0.0.0", "140.120.0.0", "140.120.84.0", "140.120.255.255"], "answer": 1, "explain": "140 is class B, so the first 2 bytes are the netid: replace 84.24 with 0s to get 140.120.0.0.", "mistakes": ["treating it as class A", null, "treating it as class C", "setting the host bits to 1 instead of 0"], "review": "s5"}, {"q": "How many addresses does one class B network contain?", "options": ["16 384", "65 536", "256", "16 777 216"], "answer": 1, "explain": "Class B has 16 host bits: \\(2^{16} = 65\\,536\\) addresses.", "mistakes": ["giving the number of class B networks", null, "giving the class C size", "giving the class A size"], "review": "s5"}, {"q": "How many class C networks are there?", "options": ["\\(2^{21} = 2\\,097\\,152\\)", "\\(2^{24} = 16\\,777\\,216\\)", "\\(2^{8} = 256\\)", "\\(2^{22} = 4\\,194\\,304\\)"], "answer": 0, "explain": "Class C has 21 netid bits after the fixed leading 110, so \\(2^{21} = 2\\,097\\,152\\) networks.", "mistakes": [null, "counting all 24 bits including the fixed 110", "giving the addresses per network", "removing only 2 leading bits"], "review": "s5"}]}, "q6": {"title": "Section 6 quiz", "questions": [{"q": "What is the subnet address of 159.100.30.77 with mask 255.255.248.0?", "options": ["159.100.0.0", "159.100.30.0", "159.100.24.0", "159.100.31.255"], "answer": 2, "explain": "Third byte: \\(30 \\;\\text{AND}\\; 248 = 00011110 \\;\\text{AND}\\; 11111000 = 00011000 = 24\\); the last byte becomes 0.", "mistakes": ["using the class B default mask", "using a /24 mask", null, "setting the host bits to 1 (the broadcast address)"], "review": "s6"}, {"q": "What prefix length is the mask 255.255.224.0?", "options": ["/19", "/21", "/3", "/27"], "answer": 0, "explain": "\\(224 = 11100000\\) has 3 ones, so \\(8 + 8 + 3 = 19\\).", "mistakes": [null, "taking 224 as having 5 ones", "counting only the subnet bits", "confusing it with 255.255.255.224"], "review": "s6"}, {"q": "A class B network uses mask 255.255.224.0. What is the maximum number of hosts per subnet?", "options": ["8192", "8190", "6", "65 534"], "answer": 1, "explain": "Host bits \\(= 32 - 19 = 13\\), so \\(2^{13} - 2 = 8190\\) hosts.", "mistakes": ["forgetting to subtract the subnet and broadcast addresses", null, "using the 3 subnet bits instead of the host bits", "using the default class B mask"], "review": "s6"}, {"q": "With mask 255.255.255.0, which pair of addresses is on the same subnet as each other?", "options": ["129.118.49.12 and 129.118.50.12", "129.118.49.12 and 129.118.49.240", "129.118.49.12 and 129.119.49.12", "129.118.49.12 and 130.118.49.12"], "answer": 1, "explain": "The mask keeps the first 3 bytes, so both must start 129.118.49; only the last byte may differ.", "mistakes": ["comparing only the host byte", null, "ignoring the second byte", "ignoring the first byte"], "review": "s6"}]}, "q7": {"title": "Section 7 quiz", "questions": [{"q": "Split 200.1.1.0/24 into 4 subnets. What is the subnet mask?", "options": ["255.255.255.192", "255.255.255.224", "255.255.255.240", "255.255.255.0"], "answer": 0, "explain": "\\(s = \\log_2 4 = 2\\) bits, so \\(n' = 26\\) and the last byte is \\(256 - 2^{6} = 192\\).", "mistakes": [null, "using 3 subnet bits", "using one bit per subnet", "keeping the default mask"], "review": "s7"}, {"q": "In Example 8 (193.1.1.0/24 split into /27 subnets), what is the address of subnet #5?", "options": ["193.1.1.160", "193.1.1.5", "193.1.1.128", "193.1.1.150"], "answer": 0, "explain": "Each subnet has \\(2^5 = 32\\) addresses, so subnet #5 starts at \\(5 \\times 32 = 160\\).", "mistakes": [null, "using the subnet number as the address", "numbering subnets from 1 instead of 0", "multiplying by 30 hosts instead of 32 addresses"], "review": "s7"}, {"q": "Class B network 150.100.0.0 needs subnets of at least 200 addresses each. Using the fewest host bits that fit, how many subnets are there?", "options": ["256", "512", "327", "254"], "answer": 0, "explain": "\\(2^7 = 128 \\lt  200 \\le 2^8 = 256\\), so \\(h = 8\\) and \\(s = 16 - 8 = 8\\): \\(2^8 = 256\\) subnets.", "mistakes": [null, "using 7 host bits, which give only 128 addresses", "dividing 65 536 by 200, but subnet counts must be powers of 2", "subtracting 2 from the subnet count"], "review": "s7"}, {"q": "What is the maximum number of hosts on a /27 subnet?", "options": ["32", "30", "6", "254"], "answer": 1, "explain": "Host bits \\(= 32 - 27 = 5\\): \\(2^5 - 2 = 30\\) hosts.", "mistakes": ["forgetting the subnet and broadcast addresses", null, "using the 3 subnet bits", "using a /24"], "review": "s7"}]}, "q8": {"title": "Section 8 quiz", "questions": [{"q": "An organization combines 8 contiguous class C blocks into a supernet. What is the supernet mask?", "options": ["255.255.255.248", "255.255.248.0", "255.255.252.0", "255.255.240.0"], "answer": 1, "explain": "\\(2^k = 8\\) so \\(k = 3\\): \\(n_{\\text{super}} = 24 - 3 = 21\\), third byte \\(256 - 8 = 248\\).", "mistakes": ["adding 3 ones (subnetting) instead of removing them", null, "the mask for 4 blocks", "the mask for 16 blocks"], "review": "s8"}, {"q": "A supernet has first address 205.16.32.0 and mask 255.255.248.0. Which destination belongs to it?", "options": ["205.16.40.1", "205.16.39.200", "205.17.32.5", "205.16.31.255"], "answer": 1, "explain": "\\(39 \\;\\text{AND}\\; 248 = 32\\), so 205.16.39.200 gives 205.16.32.0. The supernet runs from 205.16.32.0 to 205.16.39.255.", "mistakes": ["counting 8 blocks after 32 inclusively", null, "checking only the third byte", "taking the address just below the block"], "review": "s8"}, {"q": "What is the last address of the supernet 213.2.96.0/22?", "options": ["213.2.96.255", "213.2.99.255", "213.2.100.255", "213.2.99.0"], "answer": 1, "explain": "4 blocks: third bytes 96 to \\(96 + 4 - 1 = 99\\), last byte 255.", "mistakes": ["using only the first class C block", null, "counting 5 blocks (96 to 100)", "giving the network address of the last block"], "review": "s8"}, {"q": "Why must the number of combined class C blocks be a power of 2?", "options": ["So that one mask (1s then 0s) describes exactly the whole group", "Because routers can only store even numbers", "So that each block keeps its own routing entry", "Because class C blocks have 256 addresses"], "answer": 0, "explain": "Removing \\(k\\) ones from the mask always covers exactly \\(2^k\\) blocks, so only those sizes can be one supernet.", "mistakes": [null, "a made-up hardware limit", "the opposite of the goal: the supernet needs one entry", "confusing block size with block count"], "review": "s8"}]}, "q9": {"title": "Section 9 quiz", "questions": [{"q": "What is the range of the block 200.30.40.48/28?", "options": ["200.30.40.48 to 200.30.40.63", "200.30.40.48 to 200.30.40.64", "200.30.40.48 to 200.30.40.55", "200.30.40.48 to 200.30.40.79"], "answer": 0, "explain": "\\(N = 2^{32-28} = 16\\), last \\(= 48 + 16 - 1 = 63\\).", "mistakes": [null, "adding N instead of N minus 1", "using a /29 (8 addresses)", "using a /27 (32 addresses)"], "review": "s9"}, {"q": "What is the network (first) address of 99.40.17.201/26?", "options": ["99.40.17.192", "99.40.17.200", "99.40.17.128", "99.40.17.255"], "answer": 0, "explain": "\\(201 = 11\\,001001\\); keep 2 bits: \\(11\\,000000 = 192\\).", "mistakes": [null, "using a /29", "keeping only 1 bit (a /25)", "setting the suffix to 1s (the last address)"], "review": "s9"}, {"q": "The block 130.34.12.64/26 is split into 8 equal subnets. What is each subnet's prefix and size?", "options": ["/27, 32 addresses each", "/28, 16 addresses each", "/29, 8 addresses each", "/30, 4 addresses each"], "answer": 2, "explain": "8 subnets need \\(s = 3\\): \\(26 + 3 = 29\\), and \\(2^{32-29} = 8\\) addresses each (\\(\\frac{64}{8} = 8\\)).", "mistakes": ["adding only 1 bit", "using the four-subnet answer from Example 14", null, "adding 4 bits"], "review": "s9"}, {"q": "How many addresses are in a /20 block?", "options": ["4096", "1 048 576", "2048", "8192"], "answer": 0, "explain": "\\(N = 2^{32-20} = 2^{12} = 4096\\).", "mistakes": [null, "using the prefix length as the exponent", "using 11 suffix bits", "using 13 suffix bits"], "review": "s9"}]}, "q10": {"title": "Section 10 quiz", "questions": [{"q": "Using the slide 40 table (203.0.0.0/11 Route 1, 203.20.0.0/14 Route 2, 203.22.64.0/20 Route 3), where does 203.22.80.1 go?", "options": ["Route 1", "Route 2", "Route 3", "No matching route"], "answer": 1, "explain": "\\(80 = 0101\\,0000\\) does not start with 0100, so the /20 fails. The /14 (000101) and /11 match; the longer is /14: Route 2.", "mistakes": ["choosing the shortest match", null, "assuming the /20 block runs past 203.22.79.255", "requiring every bit to match"], "review": "s10"}, {"q": "Using the slide 39 table (200.23.16.0/21 interface 0, 200.23.24.0/24 interface 1, 200.23.24.0/21 interface 2, otherwise 3), where does 200.23.24.9 go?", "options": ["Interface 0", "Interface 1", "Interface 2", "Interface 3"], "answer": 1, "explain": "It matches both 200.23.24.0/24 and 200.23.24.0/21. The longest prefix, /24, wins: interface 1.", "mistakes": ["matching 00010 instead of 00011 in the third byte", null, "using the shorter /21 match", "using the default when a match exists"], "review": "s10"}, {"q": "Why does a router use the <b>longest<\/b> matching prefix?", "options": ["It is the most specific entry: the smallest network containing the destination", "It is always the first entry in the table", "It has the shortest path", "It covers the most addresses"], "answer": 0, "explain": "More fixed bits means a smaller, more specific block, so it overrides broader entries.", "mistakes": [null, "assuming table order matters", "confusing prefix length with path length", "reversing the relation: a longer prefix covers fewer addresses"], "review": "s10"}, {"q": "What address range does the entry 203.22.64.0/20 cover?", "options": ["203.22.64.0 to 203.22.79.255", "203.22.64.0 to 203.22.80.255", "203.22.64.0 to 203.22.64.255", "203.22.64.0 to 203.22.95.255"], "answer": 0, "explain": "12 suffix bits: 16 values of the third byte, 64 to \\(64 + 16 - 1 = 79\\).", "mistakes": [null, "adding 16 instead of 15", "treating it as a /24", "treating it as a /19"], "review": "s10"}]}, "q11": {"title": "Section 11 quiz", "questions": [{"q": "Node \\(i\\) has two neighbours: \\(j_1\\) with \\(d(i,j_1) = 4\\) and \\(d_{j_1}^{h} = 3\\), and \\(j_2\\) with \\(d(i,j_2) = 1\\) and \\(d_{j_2}^{h} = 5\\). What is \\(d_i^{h+1}\\)?", "options": ["6 via \\(j_2\\)", "7 via \\(j_1\\)", "1 via \\(j_2\\)", "4 via \\(j_1\\)"], "answer": 0, "explain": "\\(d_i^{h+1} = \\min\\{4 + 3,\\ 1 + 5\\} = \\min\\{7, 6\\} = 6\\), via \\(j_2\\).", "mistakes": [null, "picking the neighbour with the smallest estimate", "using the shortest link only", "mixing the smallest link with the other neighbour's estimate (1 + 3)"], "review": "s11"}, {"q": "In Example 18, at which step \\(h\\) does node 4 first reach its final distance 6?", "options": ["\\(h = 2\\)", "\\(h = 3\\)", "\\(h = 4\\)", "\\(h = 5\\)"], "answer": 2, "explain": "Node 4 is (7, 2) at \\(h = 2\\) and 3. At \\(h = 4\\), \\(d_5^3 = 4\\) gives \\(2 + 4 = 6\\) via node 5. \\(h = 5\\) only confirms no change.", "mistakes": ["taking the first finite estimate", "using \\(d_5^2 = 7\\) instead of \\(d_5^3 = 4\\)", null, "counting the confirming step"], "review": "s11"}, {"q": "What are the initial conditions of the lecture's Bellman-Ford algorithm (destination node 1)?", "options": ["\\(d_1^0 = 0\\) and \\(d_i^0 = \\infty\\) for \\(i \\neq 1\\)", "\\(d_i^0 = 0\\) for every node", "\\(d_i^0 = d(i,1)\\) for every node", "\\(d_1^0 = \\infty\\) and \\(d_i^0 = 0\\) for \\(i \\neq 1\\)"], "answer": 0, "explain": "Only the destination knows its distance (0); every other estimate starts at \\(\\infty\\).", "mistakes": [null, "starting everyone at 0, which would never update", "skipping the first iteration", "swapping the destination and the others"], "review": "s11"}, {"q": "In Example 18, the arc \\((4,5)\\) changes from 2 to 5. What is node 4's new label?", "options": ["(7, 2)", "(9, 5)", "(6, 5)", "(5, 5)"], "answer": 0, "explain": "\\(d_4 = \\min\\{6 + 1,\\ 5 + 4\\} = \\min\\{7, 9\\} = 7\\) via node 2.", "mistakes": [null, "keeping next hop 5 with the new length", "ignoring the change", "using the new arc length alone without \\(d_5 = 4\\)"], "review": "s11"}]}, "q12": {"title": "Section 12 quiz", "questions": [{"q": "What causes the oscillation in Example 19?", "options": ["Link delays depend on traffic, and all traffic moves to the single shortest path", "Routers lose their forwarding tables", "The value of \\(e\\) is too large", "Bellman-Ford never converges, even with fixed lengths"], "answer": 0, "explain": "Moving all traffic changes the delays, which changes the shortest path, which moves the traffic back.", "mistakes": [null, "inventing a failure that is not in the example", "thinking the tie-breaker causes flapping", "ignoring that with fixed lengths it converges"], "review": "s12"}, {"q": "In Example 19, A's traffic is all on R2, so the delays are 1 via R1 and \\(10 + e\\) via R2. What does Bellman-Ford make A do next?", "options": ["Keep all traffic on R2", "Move all traffic to R1", "Split it half and half", "Stop sending"], "answer": 1, "explain": "\\(1 \\lt  10 + e\\), so R1 is shorter and all traffic moves there, starting the next swing.", "mistakes": ["thinking routes do not change once chosen", null, "describing the better strategy, not Bellman-Ford", "confusing high delay with no route"], "review": "s12"}, {"q": "What does the lecture suggest as a better strategy for A?", "options": ["Send all traffic via R1 permanently", "Send half the traffic to R1 and half to R2", "Send all traffic via R2 permanently", "Alternate paths every update"], "answer": 1, "explain": "Splitting the traffic keeps both links moderately loaded and stops the swings.", "mistakes": ["fixing one path, which overloads it", null, "fixing one path, which overloads it", "describing the problem, not the fix"], "review": "s12"}, {"q": "Which is an <b>advantage<\/b> of Bellman-Ford listed in the lecture?", "options": ["It is flexible in the initial estimates and runs at each node in parallel", "It uses several paths per origin and destination pair", "It never oscillates", "It needs a central controller with the whole map"], "answer": 0, "explain": "The slide lists flexibility in \\(d_j^0\\) and parallel execution as the advantage; one path per pair is a disadvantage.", "mistakes": [null, "reversing the disadvantage", "contradicting Example 19", "confusing it with a centralized algorithm"], "review": "s12"}]}, "final": {"title": "Final exam", "questions": [{"q": "A 2500-byte datagram (20-byte header) crosses a link with MTU 820 bytes. What is the offset field of the last fragment?", "options": ["300", "2400", "307.5", "200"], "answer": 0, "explain": "\\(D_f = 800\\) bytes. Data \\(= 2480\\): \\(\\left\\lceil \\frac{2480}{800} \\right\\rceil = 4\\) fragments; the last starts at byte \\(3 \\times 800 = 2400\\), offset \\(\\frac{2400}{8} = 300\\).", "mistakes": [null, "forgetting to divide by 8", "using the MTU instead of MTU minus the header", "counting only 3 fragments"], "review": "s3"}, {"q": "A TCP segment travels in an IPv4 datagram of total length 1500 bytes with \\(\\text{HLEN} = 5\\). How many bytes of application data does it carry?", "options": ["1480 bytes", "1460 bytes", "1495 bytes", "1440 bytes"], "answer": 1, "explain": "\\(1500 - 20\\ \\text{(IP)} - 20\\ \\text{(TCP)} = 1460\\) bytes.", "mistakes": ["forgetting the TCP header", null, "subtracting the field value 5", "using the 40-byte IPv6 header"], "review": "s2"}, {"q": "What is the class and classful network address of 200.15.150.9?", "options": ["Class B, 200.15.0.0", "Class C, 200.15.150.0", "Class C, 200.15.150.255", "Class D, no network address"], "answer": 1, "explain": "200 is in 192 to 223: class C, netid is 3 bytes, so 200.15.150.0.", "mistakes": ["thinking class B runs to 223", null, "setting host bits to 1", "thinking class D starts at 200"], "review": "s5"}, {"q": "Which dotted-decimal address equals 11001000 00010111 00010000 00000000?", "options": ["200.23.16.0", "19.232.8.0", "200.23.32.0", "200.22.16.0"], "answer": 0, "explain": "\\(11001000 = 200\\), \\(00010111 = 16+4+2+1 = 23\\), \\(00010000 = 16\\).", "mistakes": [null, "reading each byte right to left", "using weights shifted one place", "missing the 1 bit in the second byte"], "review": "s4"}, {"q": "What is the subnet address of 88.40.200.17 with mask 255.255.192.0?", "options": ["88.40.192.0", "88.40.200.0", "88.0.0.0", "88.40.255.255"], "answer": 0, "explain": "\\(200 \\;\\text{AND}\\; 192 = 11001000 \\;\\text{AND}\\; 11000000 = 11000000 = 192\\).", "mistakes": [null, "using a /24 mask", "using the class A default mask", "setting the host bits to 1"], "review": "s6"}, {"q": "Class C network 210.5.5.0/24 is split into 16 subnets. What is the maximum number of hosts per subnet?", "options": ["14", "16", "30", "254"], "answer": 0, "explain": "\\(s = 4\\), \\(h = 4\\): \\(2^4 - 2 = 14\\) hosts.", "mistakes": [null, "forgetting the subnet and broadcast addresses", "using 3 subnet bits", "using the unsplit /24"], "review": "s7"}, {"q": "Which address belongs to the supernet 222.40.8.0/22?", "options": ["222.40.11.250", "222.40.12.1", "222.40.7.255", "222.41.9.9"], "answer": 0, "explain": "/22 covers 4 blocks, third bytes 8 to 11. \\(11 \\;\\text{AND}\\; 252 = 8\\).", "mistakes": [null, "counting 5 blocks", "taking the address just below the block", "checking only the third byte"], "review": "s8"}, {"q": "What is the range of the block that contains 150.80.33.77/21?", "options": ["150.80.32.0 to 150.80.39.255", "150.80.33.0 to 150.80.33.255", "150.80.32.0 to 150.80.40.255", "150.80.0.0 to 150.80.255.255"], "answer": 0, "explain": "\\(33 \\;\\text{AND}\\; 248 = 32\\); \\(N = 2^{11} = 2048\\) = 8 values of the third byte, 32 to 39.", "mistakes": [null, "treating it as a /24", "adding 8 instead of 7", "using the class B default mask"], "review": "s9"}, {"q": "A table has 10.0.0.0/8 → A, 10.1.0.0/16 → B, 10.1.128.0/17 → C, otherwise D. Where does 10.1.130.4 go?", "options": ["A", "B", "C", "D"], "answer": 2, "explain": "\\(130 = 1\\,0000010\\) starts with 1, like \\(128 = 1\\,0000000\\), so the /17 matches; it is the longest of the three matches.", "mistakes": ["using the shortest match", "stopping at the /16 match", null, "using the default although entries match"], "review": "s10"}, {"q": "Node \\(i\\) has neighbours 2 (\\(d(i,2) = 3\\), \\(d_2 = 4\\)), 5 (\\(d(i,5) = 1\\), \\(d_5 = 7\\)) and 6 (\\(d(i,6) = 5\\), \\(d_6 = 1\\)). What is its new label?", "options": ["(6, 6)", "(7, 2)", "(8, 5)", "(2, 5)"], "answer": 0, "explain": "\\(\\min\\{3+4,\\ 1+7,\\ 5+1\\} = \\min\\{7, 8, 6\\} = 6\\) via node 6.", "mistakes": [null, "stopping at the first neighbour", "picking the shortest link", "adding the shortest link to the smallest estimate from a different neighbour"], "review": "s11"}, {"q": "A router receives a datagram and forwards it. Which layers does the router process?", "options": ["Physical, data link and network", "All five layers", "Only the network layer", "Only physical and data link"], "answer": 0, "explain": "Network layer protocols run in every host and router; routers do not run the transport or application layers.", "mistakes": [null, "treating the router like an end host", "forgetting the frame must be received on a link", "thinking routers work like switches only"], "review": "s1"}, {"q": "In Example 19, the delays are 1 via R1 and \\(10 + e\\) via R2 with all traffic on R2. What does Bellman-Ford do, and what would be better?", "options": ["Move all traffic to R1; splitting half and half would be better", "Keep R2; nothing better exists", "Split half and half; that is what Bellman-Ford does", "Move all traffic to R1; that is already optimal"], "answer": 0, "explain": "Bellman-Ford sends everything on the shorter path, so it flips to R1 and keeps oscillating; the lecture suggests splitting the traffic.", "mistakes": [null, "thinking routes do not change", "crediting Bellman-Ford with multipath", "missing that the flip repeats"], "review": "s12"}]}}};</script>
+<script>
+window.initDemos = function(){
+  "use strict";
+  // ---------- shared helpers ----------
+  function $(id){ return document.getElementById(id); }
+  function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+  function tex(el, s){ try{ katex.render(s, el, {displayMode:true, throwOnError:false}); }catch(e){ el.textContent = s; } }
+  function ipToInt(s){
+    var p = String(s).trim().split(".");
+    if (p.length !== 4) return null;
+    var n = 0;
+    for (var i=0;i<4;i++){ if(!/^\d{1,3}$/.test(p[i])) return null; var v=+p[i]; if(v>255) return null; n = n*256 + v; }
+    return n;
+  }
+  function intToIp(n){ n = ((n%4294967296)+4294967296)%4294967296; return [Math.floor(n/16777216)%256, Math.floor(n/65536)%256, Math.floor(n/256)%256, n%256].join("."); }
+  function maskInt(p){ return p<=0 ? 0 : (4294967296 - Math.pow(2, 32-p)); }
+  function andInt(a, m){ var r=0; for(var b=0;b<4;b++){ var sh=Math.pow(256,3-b); r += (Math.floor(a/sh)%256 & Math.floor(m/sh)%256)*sh; } return r; }
+  function bin8(v){ var s=v.toString(2); return "00000000".slice(s.length)+s; }
+  function bits32(n){ return [Math.floor(n/16777216)%256, Math.floor(n/65536)%256, Math.floor(n/256)%256, n%256].map(bin8).join(""); }
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\\,"); }
+  function bitRow(label, n, p, cls){
+    var b = bits32(n), h = '<div class="row"><span class="lab">'+label+'</span>';
+    for (var i=0;i<32;i++){ if(i && i%8===0) h += '.'; h += '<span class="'+(i<p?(cls||"nb"):"hb")+'">'+b[i]+'</span>'; }
+    return h + '</div>';
+  }
+  var st = document.createElement("style");
+  st.textContent = ".bits{font-family:var(--mono);font-size:13px;overflow-x:auto;margin-top:10px}"+
+    ".bits .row{white-space:nowrap;line-height:1.9}.bits .lab{display:inline-block;width:56px;color:var(--muted)}"+
+    ".bits .nb{color:var(--c1);font-weight:600}.bits .hb{color:var(--c2)}"+
+    ".demo input[type=text]{font-family:var(--mono);font-size:13.5px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);max-width:150px}"+
+    ".demo .controls label{flex-wrap:wrap;max-width:100%} .demo .readout{overflow-x:auto;overflow-y:hidden} .demo tr.pick td{background:var(--hl)} .demo .readout .katex-display{text-align:left;margin:.3em 0}";
+  document.head.appendChild(st);
+  function table(head, rows, pickIdx){
+    var h = '<table><tr>'+head.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
+    rows.forEach(function(r,i){ h += '<tr'+(i===pickIdx?' class="pick"':'')+'>'+r.map(function(x){return '<td>'+x+'</td>';}).join('')+'</tr>'; });
+    return h + '</table>';
+  }
+
+  // ---------- Section 3: fragmentation ----------
+  (function(){
+    var L=$("frL"), M=$("frM"), H=$("frH"); if(!L) return;
+    function run(){
+      var l=+L.value, m=+M.value, h=+H.value;
+      if(!(l>h && m>h+8 && h>=20)){ $("frMath").textContent="Need L > H, MTU > H + 8 and H ≥ 20."; $("frOut").innerHTML=""; return; }
+      var data=l-h, df=8*Math.floor((m-h)/8), n=Math.ceil(data/df);
+      var rows=[];
+      if (l<=m){ rows.push(["1 (no fragmentation)", l, "X", 0, 0, "0 to "+(data-1)]); n=1; }
+      else for(var k=0;k<n;k++){ var d=Math.min(df, data-k*df); rows.push([k+1, d+h, "X", k<n-1?1:0, k*df/8, (k*df)+" to "+(k*df+d-1)]); }
+      tex($("frMath"), "\\begin{aligned} D_f &= 8\\left\\lfloor\\frac{"+m+"-"+h+"}{8}\\right\\rfloor = "+df+"\\ \\text{bytes}\\\\ n &= \\left\\lceil\\frac{"+l+"-"+h+"}{"+df+"}\\right\\rceil = "+(l<=m?1:n)+
+        (l<=m?"\\ (\\text{fits: no fragmentation})":"\\\\ L_{\\text{last}} &= "+(data-(n-1)*df+h)+"\\ \\text{bytes}")+"\\end{aligned}");
+      $("frOut").innerHTML = table(["Fragment","Length (bytes)","ID","Flag (more fragments)","Offset (8-byte units)","Data bytes"], rows);
+    }
+    [L,M,H].forEach(function(e){ e.addEventListener("input", run); });
+    $("frReset").addEventListener("click", function(){ L.value=4000; M.value=1500; H.value=20; run(); });
+    run();
+  })();
+
+  // ---------- Section 5: class inspector ----------
+  (function(){
+    var I=$("clIp"); if(!I) return;
+    function run(){
+      var n=ipToInt(I.value);
+      if(n===null){ $("clOut").textContent="Enter an address like 23.56.7.91 (four numbers 0 to 255)."; $("clBits").innerHTML=""; return; }
+      var f=Math.floor(n/16777216), cls, p, use;
+      if(f<128){cls="A";p=8;use="leading bit 0";} else if(f<192){cls="B";p=16;use="leading bits 10";}
+      else if(f<224){cls="C";p=24;use="leading bits 110";} else if(f<240){cls="D";p=0;use="leading bits 1110, multicast";} else {cls="E";p=0;use="leading bits 1111, reserved";}
+      $("clBits").innerHTML = bitRow("address", n, p || 32, p ? "nb" : "nb");
+      if(!p){ tex($("clOut"), "\\text{first byte } "+f+"\\ \\Rightarrow\\ \\text{class "+cls+" ("+use+"): no netid or hostid}"); return; }
+      var net=andInt(n, maskInt(p));
+      tex($("clOut"), "\\begin{aligned}&\\text{first byte } "+f+"\\ \\Rightarrow\\ \\text{class "+cls+" ("+use+")},\\ \\text{default mask } \\text{"+intToIp(maskInt(p))+"}\\\\ &\\text{network address} = \\text{"+intToIp(net)+"},\\quad \\text{block } \\text{"+intToIp(net)+"} \\text{ to } \\text{"+intToIp(net+Math.pow(2,32-p)-1)+"}\\end{aligned}");
+    }
+    I.addEventListener("input", run);
+    $("clReset").addEventListener("click", function(){ I.value="23.56.7.91"; run(); });
+    run();
+  })();
+
+  // ---------- Sections 6 and 9: mask / block calculator ----------
+  document.querySelectorAll(".maskDemo").forEach(function(D){
+    var I=D.querySelector(".mIp"), P=D.querySelector(".mP"), Po=D.querySelector(".mPo");
+    D.querySelector(".src").textContent = "Defaults: " + D.getAttribute("data-src");
+    function reset(){ I.value=D.getAttribute("data-ip"); P.value=D.getAttribute("data-p"); run(); }
+    function run(){
+      var p=+P.value; Po.textContent="/"+p;
+      var n=ipToInt(I.value), out=D.querySelector(".mOut");
+      if(n===null){ out.textContent="Enter a valid IPv4 address."; D.querySelector(".mBits").innerHTML=""; return; }
+      var m=maskInt(p), first=andInt(n,m), N=Math.pow(2,32-p), last=first+N-1;
+      D.querySelector(".mBits").innerHTML = bitRow("IP", n, p) + bitRow("mask", m, p) + bitRow("AND", first, p);
+      tex(out, "\\begin{aligned}\\text{mask} &= \\text{"+intToIp(m)+"}\\ (\\text{"+p+" ones})\\\\ \\text{first (network) address} &= \\text{"+intToIp(n)+"} \\;\\text{AND}\\; \\text{mask} = \\mathbf{"+intToIp(first)+"}\\\\ N &= 2^{\\,32-"+p+"} = "+fmt(N)+"\\ \\text{addresses}\\\\ \\text{last address} &= \\text{first} + N - 1 = \\mathbf{"+intToIp(last)+"}\\\\ \\text{max hosts} &= 2^{"+(32-p)+"} - 2 = "+fmt(Math.max(N-2,0))+"\\end{aligned}");
+    }
+    I.addEventListener("input", run); P.addEventListener("input", run);
+    D.querySelector(".mReset").addEventListener("click", reset);
+    reset();
+  });
+
+  // ---------- Sections 7 and 9: subnet splitter ----------
+  document.querySelectorAll(".splitDemo").forEach(function(D){
+    var I=D.querySelector(".sIp"), P=D.querySelector(".sP"), S=D.querySelector(".sS"), So=D.querySelector(".sSo");
+    D.querySelector(".src").textContent = "Defaults: " + D.getAttribute("data-src");
+    function reset(){ I.value=D.getAttribute("data-ip"); P.value=D.getAttribute("data-p"); S.value=D.getAttribute("data-s"); run(); }
+    function run(){
+      var n=ipToInt(I.value), p=+P.value, s=+S.value; So.textContent=s;
+      var mth=D.querySelector(".sMath"), out=D.querySelector(".sOut");
+      if(n===null || !(p>=8 && p<=30)){ mth.textContent="Enter a valid block address and a prefix from 8 to 30."; out.innerHTML=""; return; }
+      if(p+s>30){ s=30-p; S.value=s; So.textContent=s; }
+      var base=andInt(n, maskInt(p)), np=p+s, size=Math.pow(2,32-np), cnt=Math.pow(2,s);
+      tex(mth, "\\begin{aligned} n' &= "+p+" + "+s+" = "+np+",\\quad \\text{mask } \\text{"+intToIp(maskInt(np))+"}\\\\ \\text{subnets} &= 2^{"+s+"} = "+fmt(cnt)+",\\quad \\text{addresses each} = 2^{"+(32-np)+"} = "+fmt(size)+",\\quad \\text{max hosts} = "+fmt(size-2)+"\\end{aligned}" + (base!==n ? "" : ""));
+      var rows=[], show=cnt<=16 ? cnt : 16;
+      for(var k=0;k<show;k++){ var a=base+k*size; rows.push(["#"+k, intToIp(a)+"/"+np, intToIp(a)+" to "+intToIp(a+size-1)]); }
+      if(cnt>16){ var a2=base+(cnt-1)*size; rows.push(["...","...","..."]); rows.push(["#"+(cnt-1), intToIp(a2)+"/"+np, intToIp(a2)+" to "+intToIp(a2+size-1)]); }
+      out.innerHTML = (base!==n ? '<p style="margin:8px 12px;font-size:14px">Note: '+I.value+' is not the first address of a /'+p+' block; using '+intToIp(base)+'.</p>' : '') +
+        table(["Subnet","Subnet address","Range"], rows);
+    }
+    [I,P,S].forEach(function(e){ e.addEventListener("input", run); });
+    D.querySelector(".sReset").addEventListener("click", reset);
+    reset();
+  });
+
+  // ---------- Section 8: supernet membership ----------
+  (function(){
+    var F=$("spFirst"), P=$("spP"), Ds=document.querySelectorAll(".spD"); if(!F) return;
+    var def=["205.16.37.44","205.16.42.56","205.17.33.76"];
+    function reset(){ F.value="205.16.32.0"; P.value=21; Ds.forEach(function(d,i){ d.value=def[i]; }); run(); }
+    function run(){
+      var p=+P.value; $("spPo").textContent="/"+p;
+      var f=ipToInt(F.value);
+      if(f===null){ $("spMath").textContent="Enter a valid first address."; $("spOut").innerHTML=""; return; }
+      var m=maskInt(p), k=24-p, first=andInt(f,m), last=first+Math.pow(2,32-p)-1;
+      tex($("spMath"), "\\begin{aligned} k &= 24 - "+p+" = "+k+",\\quad \\text{blocks} = 2^{"+k+"} = "+Math.pow(2,k)+",\\quad \\text{mask} = \\text{"+intToIp(m)+"}\\\\ \\text{supernet} &= \\text{"+intToIp(first)+"} \\text{ to } \\text{"+intToIp(last)+"}\\end{aligned}");
+      var rows=[];
+      Ds.forEach(function(d){ var v=ipToInt(d.value); if(v===null){ rows.push([d.value||"(empty)","invalid",""]); return; }
+        var a=andInt(v,m), ok=(a===first);
+        rows.push([intToIp(v), intToIp(a), '<span class="verdict '+(ok?'ok':'no')+'">'+(ok?'belongs':'does not belong')+'</span>']); });
+      $("spOut").innerHTML = (first!==f ? '<p style="margin:8px 12px;font-size:14px">Note: '+F.value+' is not aligned for a /'+p+'; the block containing it starts at '+intToIp(first)+'.</p>' : '') +
+        table(["Destination","AND mask","Verdict"], rows);
+    }
+    [F,P].concat([].slice.call(Ds)).forEach(function(e){ e.addEventListener("input", run); });
+    $("spReset").addEventListener("click", reset);
+    reset();
+  })();
+
+  // ---------- Section 10: longest prefix match ----------
+  (function(){
+    var Din=$("lpmD"); if(!Din) return;
+    var T={ "40":{dest:"203.22.66.5", rows:[["203.0.0.0",11,"Route 1"],["203.20.0.0",14,"Route 2"],["203.22.64.0",20,"Route 3"]]},
+            "39":{dest:"200.23.24.170", rows:[["200.23.16.0",21,"Interface 0"],["200.23.24.0",24,"Interface 1"],["200.23.24.0",21,"Interface 2"],["0.0.0.0",0,"Interface 3 (otherwise)"]]} };
+    var cur="40", btns=document.querySelectorAll("#lpmDemo .seg button");
+    function run(){
+      var d=ipToInt(Din.value), t=T[cur];
+      if(d===null){ $("lpmMath").textContent="Enter a valid destination address."; $("lpmOut").innerHTML=""; return; }
+      var best=-1, bestN=-1, rows=[];
+      t.rows.forEach(function(r,i){ var P=ipToInt(r[0]), ok=andInt(d, maskInt(r[1]))===P; if(ok && r[1]>bestN){ best=i; bestN=r[1]; }
+        rows.push([r[1]?r[0]+"/"+r[1]:"otherwise", r[2], r[1]?bits32(d).slice(0,r[1]).replace(/(.{8})(?=.)/g,"$1 "):"(nothing)", ok?'<span class="verdict ok">match</span>':'<span class="verdict no">no</span>']); });
+      $("lpmOut").innerHTML = table(["Entry","Goes to","First n bits of D","Match?"], rows, best);
+      tex($("lpmMath"), best<0 ? "\\text{no entry matches: the packet has no route}" :
+        "\\text{longest match: } n = "+bestN+"\\ \\Rightarrow\\ \\mathbf{\\text{"+t.rows[best][2]+"}}");
+    }
+    function pick(k){ cur=k; btns.forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-t")===k)); }); Din.value=T[k].dest; run(); }
+    btns.forEach(function(b){ b.addEventListener("click", function(){ pick(b.getAttribute("data-t")); }); });
+    Din.addEventListener("input", run);
+    $("lpmReset").addEventListener("click", function(){ pick(cur); });
+    pick("40");
+  })();
+
+  // ---------- Section 11: Bellman-Ford stepper ----------
+  (function(){
+    var svg=$("bfSvg"); if(!svg) return;
+    var G={
+      B:{nodes:{1:[470,130],2:[340,50],3:[340,210],4:[180,50],5:[180,210],6:[50,130]},
+         arcs:[[2,1,1],[2,3,2],[3,1,5],[3,2,1],[4,2,6],[4,5,2],[5,3,2],[5,4,3],[6,4,1],[6,5,2]]},
+      A:{nodes:{1:[60,130],2:[200,50],3:[200,210],4:[380,50],5:[380,210]},
+         arcs:[[2,1,1],[3,1,4],[3,2,1],[2,3,2],[4,2,8],[5,3,2],[4,5,4],[5,4,2]]}
+    };
+    var cur="B", h=0, hist=[], btns=document.querySelectorAll("#bfDemo .seg button");
+    function compute(g){
+      var ids=Object.keys(g.nodes).map(Number), lab={};
+      ids.forEach(function(i){ lab[i]= i===1 ? [0,null] : [Infinity,null]; });
+      var rows=[JSON.parse(JSON.stringify(lab, function(k,v){ return v===Infinity?"inf":v; }))], steps=[null];
+      for(var it=0; it<12; it++){
+        var prev=rows[rows.length-1], nl={}, calc={}, changed=false;
+        function val(x){ return x==="inf"?Infinity:x; }
+        ids.forEach(function(i){
+          if(i===1){ nl[i]=[0,null]; return; }
+          var best=val(prev[i][0]), bj=prev[i][1], terms=[];
+          g.arcs.forEach(function(a){ if(a[0]!==i) return; var dj=val(prev[a[1]][0]), c=a[2]+dj;
+            terms.push(a[2]+"+"+(dj===Infinity?"\\infty":dj));
+            if(c<best){ best=c; bj=a[1]; } });
+          if(best!==val(prev[i][0])) changed=true;
+          nl[i]=[best===Infinity?"inf":best, bj]; calc[i]=terms;
+        });
+        rows.push(nl); steps.push(calc);
+        if(!changed) break;
+      }
+      return {rows:rows, steps:steps, ids:ids};
+    }
+    function draw(){
+      var g=G[cur], R=hist, row=R.rows[h], c1=cssv("--c1"), mu=cssv("--muted"), ink=cssv("--ink"), sf=cssv("--surface");
+      var s='<defs><marker id="bfm0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="'+mu+'"/></marker>'+
+            '<marker id="bfm1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="'+c1+'"/></marker></defs>';
+      g.arcs.forEach(function(a){
+        var p=g.nodes[a[0]], q=g.nodes[a[1]], dx=q[0]-p[0], dy=q[1]-p[1], L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+        var rev=g.arcs.some(function(b){ return b[0]===a[1]&&b[1]===a[0]; }), off=rev?14:0, nx=-uy, ny=ux;
+        var x1=p[0]+ux*22+nx*off, y1=p[1]+uy*22+ny*off, x2=q[0]-ux*24+nx*off, y2=q[1]-uy*24+ny*off;
+        var on = row[a[0]] && row[a[0]][1]===a[1];
+        s+='<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(on?c1:mu)+'" stroke-width="'+(on?3:1.4)+'" marker-end="url(#bfm'+(on?1:0)+')"/>';
+        var lx=(x1+x2)/2+nx*(rev?12:10), ly=(y1+y2)/2+ny*(rev?12:10);
+        s+='<text x="'+lx+'" y="'+(ly+5)+'" text-anchor="middle" font-size="15" font-family="Archivo,sans-serif" fill="'+(on?c1:ink)+'">'+a[2]+'</text>';
+      });
+      Object.keys(g.nodes).forEach(function(k){ var p=g.nodes[k], d=row[k][0];
+        s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="20" fill="'+sf+'" stroke="'+(k==="1"?c1:ink)+'" stroke-width="'+(k==="1"?3:1.5)+'"/>';
+        s+='<text x="'+p[0]+'" y="'+(p[1]+5)+'" text-anchor="middle" font-size="16" font-weight="700" font-family="Archivo,sans-serif" fill="'+ink+'">'+k+'</text>';
+        s+='<text x="'+p[0]+'" y="'+(p[1]+(p[1]<130?-28:40))+'" text-anchor="middle" font-size="13" font-family="JetBrains Mono,monospace" fill="'+c1+'">'+(d==="inf"?"∞":d)+'</text>';
+      });
+      svg.innerHTML=s;
+      $("bfH").textContent="h = "+h+(h===R.rows.length-1?" (no change: stop)":"");
+      var tr=R.rows.slice(0,h+1).map(function(r,hh){ return [hh].concat(R.ids.map(function(i){ return "("+(r[i][0]==="inf"?"∞":r[i][0])+", "+(r[i][1]===null?".":r[i][1])+")"; })); });
+      $("bfOut").innerHTML=table(["h"].concat(R.ids), tr, h);
+      if(h===0){ tex($("bfMath"), "h=0:\\ d_1^0 = 0,\\ d_i^0 = \\infty\\ (i \\neq 1)"); return; }
+      var lines=[]; R.ids.forEach(function(i){ if(i===1) return; var t=R.steps[h][i]; if(!t.length) return; var v=row[i][0];
+        lines.push("d_{"+i+"}^{"+h+"} &= \\min\\{"+t.join(",\\ ")+"\\} = "+(v==="inf"?"\\infty":v)+(row[i][1]?"\\ (\\text{via } "+row[i][1]+")":"")); });
+      tex($("bfMath"), "\\begin{aligned}"+lines.join("\\\\")+"\\end{aligned}");
+    }
+    function pick(k){ cur=k; hist=compute(G[k]); h=0; btns.forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-g")===k)); }); draw(); }
+    btns.forEach(function(b){ b.addEventListener("click", function(){ pick(b.getAttribute("data-g")); }); });
+    $("bfStep").addEventListener("click", function(){ if(h<hist.rows.length-1){ h++; draw(); } });
+    $("bfBack").addEventListener("click", function(){ if(h>0){ h--; draw(); } });
+    $("bfReset").addEventListener("click", function(){ pick("B"); });
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+    window.__bf = { compute:function(k){ return compute(G[k]); } };
+    pick("B");
+  })();
+
+  // ---------- Section 12: oscillation ----------
+  (function(){
+    var cv=$("oscCv"); if(!cv) return;
+    var F=$("oscF"), E=$("oscE"), log=[];
+    function d1(f){ return 1+9*f; } function d2(f,e){ return 1+e+9*(1-f); }
+    function draw(){
+      var f=+F.value, e=+E.value; $("oscFo").textContent=f.toFixed(2); $("oscEo").textContent=e.toFixed(2);
+      var dpr=window.devicePixelRatio||1, W=cv.clientWidth||600, Hh=230; cv.width=W*dpr; cv.height=Hh*dpr;
+      var c=cv.getContext("2d"); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,W,Hh);
+      var l=40, r=W-12, t=10, b=Hh-30, ymax=12;
+      function X(v){ return l+(r-l)*v; } function Y(v){ return b-(b-t)*v/ymax; }
+      c.strokeStyle=cssv("--grid"); c.lineWidth=1; c.fillStyle=cssv("--muted"); c.font="12px Archivo, sans-serif";
+      for(var y=0;y<=12;y+=2){ c.beginPath(); c.moveTo(l,Y(y)); c.lineTo(r,Y(y)); c.stroke(); c.fillText(y,8,Y(y)+4); }
+      for(var x=0;x<=1.001;x+=0.25){ c.beginPath(); c.moveTo(X(x),t); c.lineTo(X(x),b); c.stroke(); c.fillText(x.toFixed(2),X(x)-12,b+16); }
+      c.fillText("f (share via R1)", r-100, b+28 > Hh ? b-4 : b+28);
+      function line(fn,col){ c.strokeStyle=col; c.lineWidth=2.5; c.beginPath(); c.moveTo(X(0),Y(fn(0))); c.lineTo(X(1),Y(fn(1))); c.stroke(); }
+      line(function(v){return d1(v);}, cssv("--c1")); line(function(v){return d2(v,e);}, cssv("--c2"));
+      c.strokeStyle=cssv("--c3"); c.lineWidth=2; c.setLineDash([5,4]); c.beginPath(); c.moveTo(X(f),t); c.lineTo(X(f),b); c.stroke(); c.setLineDash([]);
+      var fs=(9+e)/18;
+      tex($("oscMath"), "\\begin{aligned} D_1 &= 1 + 9f = 1 + 9("+f.toFixed(2)+") = "+d1(f).toFixed(2)+"\\\\ D_2 &= 1 + e + 9(1-f) = 1 + "+e.toFixed(2)+" + 9("+(1-f).toFixed(2)+") = "+d2(f,e).toFixed(2)+
+        "\\\\ \\text{balanced split: } f^{*} &= \\frac{9+e}{18} = "+fs.toFixed(3) + (log.length? "\\\\ \\text{updates so far} &: "+log.join(",\\ ") : "") + "\\end{aligned}");
+    }
+    $("oscStep").addEventListener("click", function(){
+      var f=+F.value, e=+E.value, go = d1(f) < d2(f,e) ? 1 : 0;   // send everything on the currently shorter path
+      F.value=go; log.push(go?"\\text{R1}":"\\text{R2}"); if(log.length>6) log.shift(); draw(); });
+    [F,E].forEach(function(x){ x.addEventListener("input", function(){ log=[]; draw(); }); });
+    $("oscReset").addEventListener("click", function(){ F.value=1; E.value=0.1; log=[]; draw(); });
+    window.addEventListener("resize", draw);
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+    F.value=1; E.value=0.1; draw();
+  })();
+};
+
+</script>
+<script>
+/* Study guide engine: quizzes, saved progress, sidebar scores, final exam review,
+   math typesetting, active section highlight, print formula sheet.
+   Reads window.GUIDE = {title, quizzes:{id:{title, questions:[{q, options[4], answer, explain, mistakes[4], review}]}}}
+   Tested once; guides should not modify this file. */
+(function(){
+  "use strict";
+  var G = window.GUIDE || {quizzes:{}};
+  var KEY = "guide:" + String(G.title||document.title).toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  var L = ["A","B","C","D","E"];
+  var state = load();
+
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  function typeset(root){
+    if (window.renderMathInElement){
+      try{ renderMathInElement(root||document.body,{
+        delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],
+        throwOnError:false }); }catch(e){}
+    }
+  }
+  window.typeset = typeset;
+
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+
+  function score(id){
+    var qs=G.quizzes[id].questions, a=state[id]||[], n=0, right=0;
+    qs.forEach(function(q,i){ if(a[i]!=null){ n++; if(a[i]===q.answer) right++; } });
+    return {n:n, right:right, total:qs.length};
+  }
+
+  function updateChip(id){
+    var s=score(id);
+    document.querySelectorAll('[data-chip="'+id+'"]').forEach(function(c){
+      c.textContent = s.n ? (s.right+"/"+s.total) : "";
+      c.classList.toggle("done", s.n===s.total);
+    });
+    var box=document.querySelector('.quiz[data-quiz="'+id+'"] .score');
+    if (box) box.textContent = "Score: "+s.right+"/"+s.total + (s.n<s.total ? "  ("+s.n+" answered)" : "");
+  }
+
+  function explanation(id, q, chosen){
+    var html = chosen===q.answer
+      ? '<b class="ok">Correct.</b> '
+      : '<b class="no">Not quite.</b> You chose '+L[chosen]+((q.mistakes&&q.mistakes[chosen])?', which comes from '+q.mistakes[chosen]+'.':'.')+' The answer is '+L[q.answer]+'. ';
+    html += q.explain || "";
+    if (q.review){ var t=document.getElementById(q.review); var name=t?(t.querySelector("h3 .num")||{}).textContent||q.review:q.review;
+      html += ' <a href="#'+q.review+'">Review: '+name+'</a>'; }
+    return html;
+  }
+
+  function renderQuestion(id, i, item){
+    var q=G.quizzes[id].questions[i], chosen=(state[id]||[])[i];
+    item.innerHTML="";
+    item.appendChild(el("div","qq",'<span class="qn">'+(i+1)+'.</span>'+q.q));
+    var opts=el("div","opts");
+    q.options.forEach(function(o,k){
+      var b=el("button","opt",'<span class="L">'+L[k]+'</span><span>'+o+'</span>');
+      b.type="button";
+      if (chosen!=null){ b.disabled=true; if(k===q.answer) b.classList.add("right"); else if(k===chosen) b.classList.add("wrong"); }
+      else b.addEventListener("click",function(){ (state[id]=state[id]||[])[i]=k; save(); renderQuestion(id,i,item); updateChip(id); if(id==="final") renderReview(); });
+      opts.appendChild(b);
+    });
+    item.appendChild(opts);
+    if (chosen!=null) item.appendChild(el("div","expl",explanation(id,q,chosen)));
+    typeset(item);
+  }
+
+  function renderReview(){
+    var box=document.getElementById("finalReview"); if(!box||!G.quizzes.final) return;
+    var s=score("final"); box.innerHTML="";
+    if (s.n<s.total) return;
+    var qs=G.quizzes.final.questions, a=state.final, wrong=[];
+    qs.forEach(function(q,i){ if(a[i]!==q.answer) wrong.push(i); });
+    var h='<h4>Review my wrong answers</h4>';
+    if(!wrong.length) h+='<p>All '+s.total+' correct. Nothing to review.</p>';
+    else { h+='<ol class="plain review">'; wrong.forEach(function(i){ var q=qs[i];
+      h+='<li><b>Q'+(i+1)+'.</b> '+q.q+'<br>You chose '+L[a[i]]+': '+q.options[a[i]]+'<br>Correct: '+L[q.answer]+': '+q.options[q.answer]+(q.review?'<br><a href="#'+q.review+'">Review this section</a>':'')+'</li>'; });
+      h+='</ol>'; }
+    box.innerHTML=h; typeset(box);
+  }
+
+  function renderQuiz(box){
+    var id=box.getAttribute("data-quiz"), Q=G.quizzes[id];
+    if(!Q){ box.innerHTML='<div class="quiz-head"><span class="qt">Missing quiz data: '+id+'</span></div>'; return; }
+    box.innerHTML="";
+    var head=el("div","quiz-head",'<span class="qt">'+(Q.title||"Quiz")+'</span><span class="score"></span>');
+    var list=el("div","qlist");
+    Q.questions.forEach(function(_,i){ var it=el("div","qitem"); list.appendChild(it); renderQuestion(id,i,it); });
+    var foot=el("div","quiz-foot",'<span>'+Q.questions.length+' questions</span>');
+    var reset=el("button","btn","Reset"); reset.type="button";
+    reset.addEventListener("click",function(){ delete state[id]; save(); renderQuiz(box); if(id==="final") renderReview(); });
+    foot.appendChild(reset);
+    box.appendChild(head); box.appendChild(list); box.appendChild(foot);
+    if(id==="final"){ var r=el("div",""); r.id="finalReview"; r.style.padding="0 16px 8px"; box.appendChild(r); renderReview(); }
+    updateChip(id);
+  }
+
+  function init(){
+    document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz);
+    Object.keys(G.quizzes).forEach(updateChip);
+    var ra=document.getElementById("resetAll");
+    if(ra) ra.addEventListener("click",function(){ if(confirm("Clear all quiz answers and scores for this guide?")){ state={}; save(); document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz); } });
+    var pb=document.getElementById("printSheet");
+    if(pb) pb.addEventListener("click",function(){ document.body.classList.add("print-sheet"); window.print(); });
+    window.addEventListener("afterprint",function(){ document.body.classList.remove("print-sheet"); });
+    if("IntersectionObserver" in window){
+      var links={}; document.querySelectorAll('nav.toc a[href^="#"]').forEach(function(a){ links[a.getAttribute("href").slice(1)]=a; });
+      var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&links[e.target.id]){
+        Object.keys(links).forEach(function(k){ links[k].classList.remove("active"); }); links[e.target.id].classList.add("active"); } }); },{rootMargin:"-20% 0px -70% 0px"});
+      document.querySelectorAll("section.sec[id]").forEach(function(s){ io.observe(s); });
+    }
+    typeset();
+    if (typeof window.initDemos==="function"){ try{ window.initDemos(); }catch(e){ console.error(e); } }
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",function(){ waitKatex(init); }); else waitKatex(init);
+  function waitKatex(fn){ var t=0; (function w(){ if(window.renderMathInElement||t++>40) fn(); else setTimeout(w,50); })(); }
+})();
+
+</script>
+</body></html>
