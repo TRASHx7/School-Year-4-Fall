@@ -1,0 +1,15 @@
+OP1_bench {'Vo_rms': 25.1847, 'Vo1_rms': 25.1798, 'THD_vo': 0.0122, 'IL_rms': 2.1071, 'IL_peak': 5.1211, 'ripple_pp_max': 7.5039, 'Pin': 27.9958, 'Pout': 25.3709, 'Idc': 0.5094, 'm_peak': 0.6596, 'x_amp': 6.4977, 'Vdc': 54.9693, 'fault': 0}
+OP1_HIL {'Vo_rms': 24.7109, 'Vo1_rms': 24.7045, 'THD_vo': 0.0158, 'IL_rms': 2.1029, 'IL_peak': 5.1071, 'ripple_pp_max': 7.5021, 'Pin': 27.0658, 'Pout': 24.4252, 'Idc': 0.4925, 'm_peak': 0.6472, 'x_amp': 3.4979, 'Vdc': 54.9704, 'fault': 0}
+OP2_bench {'Vo_rms': 30.4283, 'Vo1_rms': 30.3905, 'THD_vo': 0.049, 'IL_rms': 2.988, 'IL_peak': 7.3008, 'ripple_pp_max': 7.6885, 'Pin': 76.9871, 'Pout': 74.0703, 'Idc': 1.4026, 'm_peak': 0.8604, 'x_amp': 9.6029, 'Vdc': 54.9219, 'fault': 0}
+OP2_HIL {'Vo_rms': 29.9517, 'Vo1_rms': 29.9163, 'THD_vo': 0.0477, 'IL_rms': 2.9686, 'IL_peak': 7.315, 'ripple_pp_max': 7.681, 'Pin': 74.6828, 'Pout': 71.7682, 'Idc': 1.3605, 'm_peak': 0.8462, 'x_amp': 6.0565, 'Vdc': 54.9241, 'fault': 0}
+load_step_bench {'amp_before': 42.8199, 'amp_min_after': 41.5739, 'dev_pct': -2.9098, 'amp_end': 43.1441, 'fault': 0, 'vo_peak_abs': 42.3732, 'il_peak_abs': 7.3417}
+load_step_HIL {'amp_before': 42.1502, 'amp_min_after': 40.9376, 'dev_pct': -2.8769, 'amp_end': 42.5406, 'fault': 0, 'vo_peak_abs': 41.576, 'il_peak_abs': 7.3486}
+ref_step_ff1 {'target_pk': 42.4264, 'first_cycle_pk': 35.6202, 'cycles_to_2pct': 2, 'overshoot_pct': 0.9615, 'vo_peak_abs': 43.0099, 'fault': 0}
+ref_step_ff0 {'target_pk': 42.4264, 'first_cycle_pk': 35.6197, 'cycles_to_2pct': 4, 'overshoot_pct': 0.9272, 'vo_peak_abs': 42.9844, 'fault': 0, 'tau_pred_ms': np.float64(16.758)}
+trip_ov_test {'fault': 1, 't_trip': 0.6616, 'vdc_at_trip': 54.9227, 'pwm_after': 0.0}
+trip_il_test {'fault': 2, 't_trip': 0.6605, 'vdc_at_trip': 54.9577, 'pwm_after': 0.0}
+trip_vdc_ov {'fault': 8, 't_trip': 0.6553, 'vdc_at_trip': 58.4687, 'pwm_after': 0.0}
+trip_uv_itech_off {'fault': 16, 't_trip': 0.6947, 'vdc_at_trip': 34.7575, 'pwm_after': 0.0, 't_after_off_ms': 39.6685}
+trip_polarity {'fault': 32, 't_trip': 0.0332, 'vdc_at_trip': 54.9982, 'pwm_after': 0.0, 'vo_max_before_trip': 13.8605}
+robust_HIL_L80_R250 {'Vo_rms': 24.6002, 'Vo1_rms': 24.5716, 'THD_vo': 0.0441, 'IL_rms': 2.3366, 'IL_peak': 5.1085, 'ripple_pp_max': 9.4402, 'Pin': 5.6732, 'Pout': 2.4207, 'Idc': 0.1032, 'm_peak': 0.632, 'x_amp': 3.8199, 'Vdc': 54.9882, 'fault': 0}
+robust_HIL_L120_R250 {'Vo_rms': 24.7598, 'Vo1_rms': 24.7326, 'THD_vo': 0.0455, 'IL_rms': 1.5646, 'IL_peak': 3.5148, 'ripple_pp_max': 6.2524, 'Pin': 4.5905, 'Pout': 2.4522, 'Idc': 0.0835, 'm_peak': 0.6367, 'x_amp': 3.994, 'Vdc': 54.9914, 'fault': 0}

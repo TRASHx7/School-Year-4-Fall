@@ -1,0 +1,2 @@
+date,time,session,step,firmware_build,model_file,Vref_rms,Kp,Ki,FF,Trip_vo,Trip_iL,Trip_io,ITECH_V,ITECH_A,load_switches,R_ohm,VP1_setting,VP2_setting,CP1_setting,CP2_setting,scope_file,fault_bits,observation
+2026-11-20,,Bench 2,ADC check (PWM off),,Controller.plecs,5,0.01,60,1,0,0,0,55,,10,25,10:1,10:1,100 mV/A,100 mV/A,,0,
