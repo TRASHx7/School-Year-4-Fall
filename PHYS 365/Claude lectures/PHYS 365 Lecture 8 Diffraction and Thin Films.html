@@ -1,0 +1,1447 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diffraction and Thin Films Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF;
+  --c1:#1D5FC2; --c2:#C24E12; --c3:#23804D; --grid:#DCE1DB;   /* plot series 1, 2, 3 and grid */
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --fill-bg:#E9F0FB; --fill-line:#5B7DB8; --fill-ink:#2A4677;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+main{max-width:760px; min-width:0}
+nav.toc{position:sticky; top:24px; align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc a.active{background:var(--accent-soft); color:var(--accent)}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px}
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+sub,sup{font-size:.72em; line-height:0}
+code,.mono{font-family:var(--mono); font-size:.86em}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+
+.eq{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 18px; margin:6px 0 18px}
+.math{margin:8px 0 14px; overflow-x:auto; overflow-y:hidden}
+.katex{font-size:1.12em; color:var(--ink)}
+.katex-display{margin:.6em 0}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted)}
+.eq .defs{font-size:15px; line-height:1.7; color:var(--muted); border-top:1px dashed var(--line); margin-top:10px; padding-top:8px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.callout p{margin-bottom:10px} .callout ul{margin:0 0 10px; padding-left:20px} .callout li{margin-bottom:6px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)} .analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)} .tricky .tag{color:var(--trk-ink)}
+.filled{background:var(--fill-bg); border-color:var(--fill-line); font-size:15.5px} .filled .tag{color:var(--fill-ink)}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px; margin:12px 0 18px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+.hlcol{background:var(--hl)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work.practice summary{color:var(--muted)}
+.givens{font-size:15.5px; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-bottom:10px}
+.answer{font-family:var(--display); font-weight:700; background:var(--good-bg); color:var(--good); border-radius:6px; padding:6px 10px; display:inline-block; margin:6px 0 12px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .src{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+.demo canvas, .demo svg{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px}
+.verdict.ok{background:var(--good-bg); color:var(--good)} .verdict.no{background:var(--bad-bg); color:var(--bad)}
+*:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qitem{padding:16px; border-top:1px solid var(--line)} .qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)} .opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)} .opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)} .final .quiz-head .score{color:var(--bg)}
+.review{margin-top:16px} .review li{margin-bottom:10px}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 16px; break-inside:avoid}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+.sheet .f{padding:8px 0; border-top:1px solid var(--line); line-height:2.1} .sheet .f:first-of-type{border-top:none}
+.sheet .f .expr{display:block; overflow-x:auto}
+.sheet .f .d{font-size:13.5px; color:var(--muted); line-height:1.5; display:block}
+.sheet .f .s{font-family:var(--mono); font-size:11px; color:var(--accent)}
+@media print{
+  body{background:#fff; color:#000; padding:0; font-size:12pt}
+  nav.toc, .demo, .quiz, .btn, details.practice, header.hero .lede{display:none!important}
+  .wrap{display:block; padding:0} main{max-width:none}
+  .sheet .card{border:1px solid #999; background:#fff}
+  .sheet .f .d, .sheet .f .s, .sheet .card h5{color:#333}
+  body.print-sheet main > *:not(#formulas){display:none!important}
+}
+
+nav.toc #resetAll{width:100%; margin-bottom:14px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important} }
+
+</style>
+</head><body>
+<div class="wrap"><nav class="toc" aria-label="Contents">
+<button class="btn" id="resetAll" type="button">Reset all progress</button>
+<h2>Start</h2><ol><li><a href="#big">Big picture</a></li></ol>
+<h2>Part 1 · Diffraction (Lecture 8a)</h2><ol>
+<li><a href="#s1">1 Huygens' principle <span class="chip" data-chip="q1"></span></a></li>
+<li><a href="#s2">2 Single-slit dark fringes <span class="chip" data-chip="q2"></span></a></li>
+<li><a href="#s3">3 Single-slit intensity <span class="chip" data-chip="q3"></span></a></li>
+</ol>
+<h2>Part 2 · Thin film interference (Lecture 8b)</h2><ol>
+<li><a href="#s4">4 Thin films and Snell's law <span class="chip" data-chip="q4"></span></a></li>
+<li><a href="#s5">5 Phase change on reflection <span class="chip" data-chip="q5"></span></a></li>
+<li><a href="#s6">6 Optical path difference <span class="chip" data-chip="q6"></span></a></li>
+</ol>
+<h2>Part 3 · Revision problems (Lecture 8b)</h2><ol>
+<li><a href="#s7">7 Beat frequency <span class="chip" data-chip="q7"></span></a></li>
+<li><a href="#s8">8 Two-speaker interference <span class="chip" data-chip="q8"></span></a></li>
+</ol>
+<h2>Finish</h2><ol><li><a href="#final">Final exam <span class="chip" data-chip="final"></span></a></li>
+<li><a href="#formulas">Formula sheet</a></li></ol></nav><main><header class="hero"><div class="eyebrow">PHYS 365 · Lectures 8a and 8b · Study guide</div><h1>Diffraction and Thin Films Guide</h1><p class="lede">Light that squeezes through a narrow slit spreads out and paints bright and dark bands on a screen. Light that bounces off the top and bottom of a soap film splits into two rays that rejoin and make colors. Both effects come from the same rule you already know from sound: add waves that took different paths, and the path difference decides whether they reinforce or cancel. This guide covers Dr. Andrew's Lecture 8a (Huygens' principle and single-slit diffraction) and Lecture 8b (thin film interference plus two revision problems on beats and two-speaker interference).</p></header><section class="sec" id="big">
+<h3><span class="num">Start</span>Big picture</h3>
+<p>In Lecture 7 two separate sources (two slits, two speakers) sent waves to the same point, and the <b>path difference</b> between them decided whether you got a bright or a dark spot. Lecture 8 asks two new versions of the same question.</p>
+<p><b>Lecture 8a:</b> what if the "sources" are every point across a single opening? Huygens' principle says each point of a wavefront acts as its own little source, so one slit already contains infinitely many sources. Adding all of them gives the single-slit diffraction pattern: a wide bright center, dark fringes at \(a\sin\theta = m\lambda\), and dimmer side bands described by \(I(\theta) = I_m\left[\frac{\sin\alpha}{\alpha}\right]^2\).</p>
+<p><b>Lecture 8b:</b> what if the two waves are made by one beam splitting at the top and bottom of a thin film? The extra trip through the film gives an optical path difference \(2n_2 d\cos\theta_2\), and a possible half-cycle flip on reflection decides which thicknesses look bright and which look dark. The lecture ends with two revision problems from earlier material: a beat frequency and a two-speaker interference minimum.</p>
+<div class="chain">
+  <a class="blk" href="#s1"><b>Diffraction</b><span>wavelets from one slit add up</span><span class="secs">§1 Huygens · §2 dark fringes · §3 intensity</span></a>
+  <div class="arrow">→</div>
+  <a class="blk" href="#s4"><b>Thin films</b><span>two reflections from one film</span><span class="secs">§4 Snell · §5 phase flip · §6 path difference</span></a>
+  <div class="arrow">→</div>
+  <a class="blk" href="#s7"><b>Revision</b><span>sound waves, same rules</span><span class="secs">§7 beats · §8 two speakers</span></a>
+</div>
+<p>The single idea tying it together, from Lecture 8a page 7:</p>
+<div class="eq">
+  <div class="math">\[ \Delta\phi = \frac{2\pi}{\lambda}\,\Delta L \]</div>
+  <span class="note">phase difference from path length difference</span>
+  <div class="defs">\(\Delta\phi\) = phase difference between two waves, in radians (rad) · \(\Delta L\) = path length difference between them, in metres (m) · \(\lambda\) = wavelength, in metres (m)</div>
+</div>
+</section>
+
+<h2 class="part">Part 1 · Diffraction (Lecture 8a)</h2>
+
+<section class="sec" id="s1">
+<h3><span class="num">Section 1</span>Huygens' principle</h3>
+<p>To predict where a wave will be a moment from now, you do not need to know where it came from. <b>Huygens' principle</b> (also called the <b>Huygens-Fresnel principle</b>) gives a recipe that works from the current wavefront alone:</p>
+<ul>
+<li>Every point on a wavefront acts as the source of a small <b>spherical wavelet</b>.</li>
+<li>The wavelets spread out at the wave speed and interfere with each other.</li>
+<li>Where they add up, they form the <b>new wavefront</b>: the surface that touches the front edge of all the wavelets (their common tangent, or envelope).</li>
+</ul>
+<p>Dr. Andrew draws two cases. For a <b>plane wave</b>, the sources sit on a straight line, all the wavelets have the same radius, and their common front edge is another straight line, parallel to the first and further along. For a <b>spherical wave</b>, the sources sit on a circle, and the envelope of the wavelets is a bigger circle with the same center.</p>
+<p>Why this matters for the rest of the lecture: when a wavefront hits a slit, only the points <i>inside the opening</i> keep sending wavelets. Those wavelets spread into the region behind the barrier and interfere, which is exactly what diffraction is.</p>
+
+<div class="eq">
+  <div class="math">\[ r = v\,\Delta t \]</div>
+  <span class="note">radius of each wavelet after a time \(\Delta t\)</span>
+  <div class="defs">\(r\) = wavelet radius, in metres (m) · \(v\) = wave speed in the medium, in metres per second (m/s) · \(\Delta t\) = elapsed time, in seconds (s)</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \text{plane: front moves forward by } v\,\Delta t \qquad \text{spherical: } R = R_0 + v\,\Delta t \]</div>
+  <span class="note">where the new wavefront ends up</span>
+  <div class="defs">\(R_0\) = radius of the initial spherical wavefront, in metres (m) · \(R\) = radius of the new wavefront, in metres (m)</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture states the principle in words and pictures only. The two equations above are added so you can put numbers to the pictures; they follow directly from "each wavelet moves outward at the wave speed".</p></div>
+
+<details class="work"><summary>Example 1 (lecture): building the new wavefront, plane and spherical</summary><div class="body">
+<p><b>Plane wave (Lecture 8a page 1).</b> Put point sources along the initial flat wavefront. Each one sends out a semicircular wavelet toward the direction of travel. Because all wavelets started at the same time and travel at the same speed, every wavelet has the same radius \(r = v\,\Delta t\). The line that touches the top of all of them is flat and sits a distance \(r\) above the initial wavefront: that is the wavefront at the later time.</p>
+<p><b>Spherical wave (Lecture 8a page 2).</b> Put point sources around the initial circular wavefront. Each wavelet again has radius \(r\). The outer envelope of all of them is a circle of radius</p>
+<div class="math">\[ R = R_0 + r = R_0 + v\,\Delta t \]</div>
+<p>with the same center as the original circle. The wave keeps its spherical shape and simply grows.</p>
+<div class="answer">New wavefront = envelope of wavelets of radius \(v\,\Delta t\)</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Picture a line of marching band members, each told "take one step forward in any direction you like, but exactly one step". If everyone steps straight ahead, the new front row is a straight line one step further on. The front row is set by the furthest anyone can reach, which is what the envelope of wavelets is. Where it breaks down: real wavelets are not people choosing a direction; they spread in every direction at once, and the backward parts cancel out (that is the "Fresnel" refinement).</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>The new wavefront is the <b>envelope</b> (outer common tangent) of the wavelets, not the circles themselves and not their centers.</li>
+<li>The wavelet radius is \(v\,\Delta t\), not the diameter. When a problem says "how far has the wavefront moved", the answer is one radius.</li>
+<li>Convert time units before multiplying: \(343\ \text{m/s} \times 2.0\ \text{ms} = 343 \times 0.0020 = 0.686\ \text{m}\), not 686 m.</li>
+<li>Huygens' principle assumes a uniform (homogeneous) medium so all wavelets have the same speed. If the speed changes, the wavelets have different radii and the wavefront bends (that is refraction, Section 4).</li>
+</ul></div>
+
+<div class="demo" id="demo1">
+  <div class="dtitle">Huygens wavelet builder</div>
+  <div class="src">Defaults: Practice 1.1 and 1.2 (the lecture gives no numbers). Sound, \(v = 343\ \text{m/s}\).</div>
+  <canvas id="c1" height="300" aria-label="Wavelets drawn from points on a wavefront"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>initial wavefront</span><span><i style="background:var(--c2)"></i>wavelets</span><span><i style="background:var(--c3)"></i>new wavefront (envelope)</span></div>
+  <div class="controls">
+    <span class="seg" id="h1mode"><button type="button" data-v="plane" aria-pressed="true">Plane</button><button type="button" data-v="sph" aria-pressed="false">Spherical</button></span>
+    <label>time \(\Delta t\) <input type="range" id="h1t" min="0.2" max="5" step="0.1" value="2"> <output id="h1to"></output></label>
+    <label>sources <input type="range" id="h1n" min="3" max="30" step="1" value="7"> <output id="h1no"></output></label>
+  </div>
+  <div class="readout" id="h1r"></div>
+  <button class="btn" type="button" id="h1reset">Reset to defaults</button>
+</div>
+
+<details class="work practice"><summary>Practice 1.1 (not from the lecture): a plane sound wave</summary><div class="body">
+<div class="givens">A plane sound wave travels through air at \(v = 343\ \text{m/s}\). How far ahead of the current wavefront is the wavefront \(\Delta t = 2.0\ \text{ms}\) later?</div>
+<div class="math">\[
+\begin{aligned}
+r &= v\,\Delta t = (343\ \text{m/s})(2.0\times 10^{-3}\ \text{s})\\
+&= 0.686\ \text{m}
+\end{aligned}\]</div>
+<p>Every wavelet has this radius, so the flat envelope is 0.686 m ahead.</p>
+<div class="answer">0.686 m ahead</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 1.2 (not from the lecture): a spherical wavefront grows</summary><div class="body">
+<div class="givens">A point source makes a spherical sound wave. At one instant the wavefront has radius \(R_0 = 3.0\ \text{m}\). Find its radius \(\Delta t = 5.0\ \text{ms}\) later (\(v = 343\ \text{m/s}\)).</div>
+<div class="math">\[
+\begin{aligned}
+r &= v\,\Delta t = (343\ \text{m/s})(5.0\times 10^{-3}\ \text{s}) = 1.715\ \text{m}\\
+R &= R_0 + r = 3.0\ \text{m} + 1.715\ \text{m} = 4.715\ \text{m}
+\end{aligned}\]</div>
+<div class="answer">\(R \approx 4.72\ \text{m}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q1"></div>
+</section>
+
+<section class="sec" id="s2">
+<h3><span class="num">Section 2</span>Single-slit dark fringes</h3>
+<p>Shine light through a single narrow slit onto a screen. <b>Geometric optics</b> (light as straight rays) predicts one bright band on the screen, the same shape as the slit, with sharp shadows around it. What actually appears, measured empirically, is a <b>set of bright and dark fringes</b>: a wide bright band in the middle with dimmer bands on both sides, separated by dark gaps. This spreading and banding is <b>diffraction</b>.</p>
+<p>The reason is Huygens' principle. Every point across the slit opening of width \(a\) is a source of wavelets. To reach a point on a far screen at angle \(\theta\) from the center line, wavelets from different parts of the slit travel slightly different distances. At some angles those differences make them cancel in pairs, and you get a dark fringe.</p>
+
+<h4>The pairing argument (Lecture 8a page 4)</h4>
+<p>Split the slit into two halves. Pair each ray in the top half with the ray exactly \(\frac{a}{2}\) below it in the bottom half. Toward angle \(\theta\), the lower ray of each pair travels further by</p>
+<div class="math">\[ \Delta L_2 = \frac{a}{2}\sin\theta \]</div>
+<p>If that extra distance is half a wavelength, every pair arrives exactly out of phase and cancels, so the whole slit gives zero light at that angle. Splitting into four quarters (pairs \(\frac{a}{4}\) apart) gives the next dark angle, and so on.</p>
+
+<svg viewBox="0 0 420 280" role="img" aria-label="Slit with two parallel rays leaving at angle theta; the ray from the top edge travels an extra distance a over 2 times sine theta compared with the ray from the middle" style="max-width:440px;margin:6px 0 14px">
+  <g stroke="var(--ink)" stroke-width="5" stroke-linecap="round"><line x1="80" y1="10" x2="80" y2="88"/><line x1="80" y1="182" x2="80" y2="270"/></g>
+  <line x1="80" y1="135" x2="410" y2="135" stroke="var(--muted)" stroke-dasharray="4 4"/>
+  <g stroke="var(--c1)" stroke-width="2" fill="none"><line x1="80" y1="92" x2="352" y2="219"/><line x1="80" y1="135" x2="330" y2="252"/></g>
+  <line x1="80" y1="92" x2="96.5" y2="99.7" stroke="var(--c2)" stroke-width="5"/>
+  <line x1="96.5" y1="99.7" x2="80" y2="135" stroke="var(--muted)" stroke-dasharray="3 3"/>
+  <path d="M140 135 A60 60 0 0 1 134.4 160.4" stroke="var(--ink)" fill="none"/>
+  <text x="146" y="156" font-size="15" fill="var(--ink)" font-style="italic">θ</text>
+  <text x="104" y="94" font-size="13" fill="var(--c2)">ΔL₂ = ½a sin θ</text>
+  <g stroke="var(--muted)"><line x1="60" y1="92" x2="60" y2="135"/><line x1="55" y1="92" x2="65" y2="92"/><line x1="55" y1="135" x2="65" y2="135"/></g>
+  <text x="24" y="118" font-size="13" fill="var(--muted)">½a</text>
+  <text x="190" y="40" font-size="12" fill="var(--muted)">parallel rays toward a far screen</text>
+</svg>
+
+<div class="eq">
+  <div class="math">\[ a\sin\theta = m\lambda, \qquad m = \pm 1, \pm 2, \pm 3, \ldots \]</div>
+  <span class="note">angles of the dark fringes (minima) in single-slit diffraction</span>
+  <div class="defs">\(a\) = slit width, in metres (m) · \(\theta\) = angle from the center line to the point on the screen, in degrees or radians · \(m\) = order of the dark fringe (integer, no unit): \(+\) above the central bright band, \(-\) below it · \(\lambda\) = wavelength of the light, in metres (m)</div>
+</div>
+
+<details class="work"><summary>Example 2 (lecture): first and second minima from path differences</summary><div class="body">
+<div class="givens">Slit width \(a\), wavelength \(\lambda\), rays toward a far screen at angle \(\theta\) (Lecture 8a page 4).</div>
+<p><b>First minimum.</b> Pair rays \(\frac{a}{2}\) apart (top of slit with middle, and so on). Destructive interference needs a half-wavelength path difference:</p>
+<div class="math">\[
+\begin{aligned}
+\Delta L_2 &= \frac{a}{2}\sin\theta = \frac{\lambda}{2}\\
+a\sin\theta &= \lambda
+\end{aligned}\]</div>
+<p><b>Second minimum.</b> Split the slit into quarters and pair rays \(\frac{a}{4}\) apart:</p>
+<div class="math">\[
+\begin{aligned}
+\Delta L_1 &= \frac{a}{4}\sin\theta = \frac{\lambda}{2}\\
+a\sin\theta &= 2\lambda
+\end{aligned}\]</div>
+<p><b>All minima.</b> Continuing the pattern (sixths, eighths, ...) gives every dark fringe:</p>
+<div class="math">\[ a\sin\theta = m\lambda \quad \text{[dark fringes]} \]</div>
+<p>On the screen (Lecture 8a page 5) the dark fringes are labelled \(m = +1, +2, +3\) going up from the central bright band and \(m = -1, -2, -3\) going down, so \(m = \pm 1, \pm 2, \pm 3, \ldots\)</p>
+<div class="answer">\(a\sin\theta = m\lambda\), \(m = \pm 1, \pm 2, \ldots\)</div>
+</div></details>
+
+<div class="callout filled"><span class="tag">Filled in</span><p>Two assumptions the lecture uses without stating: (1) the screen is far away compared with \(a\), so rays heading to the same point are nearly parallel and the extra distance is exactly \(\frac{a}{2}\sin\theta\); (2) \(m = 0\) is left out because at \(\theta = 0\) every ray travels the same distance and they all add. That is the center of the bright central band, not a dark fringe.</p></div>
+
+<div class="demo" id="demo2">
+  <div class="dtitle">Dark-fringe angle calculator</div>
+  <div class="src">Defaults: Practice 2.1 (the lecture gives no numbers).</div>
+  <canvas id="c2" height="120" aria-label="Screen pattern with dark fringe positions marked"></canvas>
+  <div class="controls">
+    <label>slit width \(a\) (µm) <input type="number" id="s2a" value="100" min="0.5" step="0.5"></label>
+    <label>wavelength \(\lambda\) (nm) <input type="number" id="s2l" value="600" min="100" step="10"></label>
+    <label>order \(m\) <input type="number" id="s2m" value="1" min="1" step="1"></label>
+  </div>
+  <div class="readout" id="s2r"></div>
+  <button class="btn" type="button" id="s2reset">Reset to defaults</button>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Imagine a choir standing in one row, all singing the same note, and you stand off to one side. If the row is long enough that the singer at one end is exactly half a wavelength further from you than the singer in the middle, then every singer in the left half has a partner in the right half who is half a wavelength further away, and the partners cancel. The row goes quiet for you even though everyone is singing. Where it breaks down: real singers are not perfectly in step, while the points across a slit are, because one wavefront feeds them all.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><b>Single slit vs double slit, opposite meanings.</b> In Young's double slit (Lecture 7), \(d\sin\theta = m\lambda\) gives <b>bright</b> fringes. In a single slit, \(a\sin\theta = m\lambda\) gives <b>dark</b> fringes. Same shape of equation, opposite result.</li>
+<li>\(m = 0\) is not allowed for single-slit minima. The center is the brightest point.</li>
+<li>A <b>narrower</b> slit gives a <b>wider</b> pattern: \(\sin\theta = \frac{m\lambda}{a}\) grows when \(a\) shrinks.</li>
+<li>Number of dark fringes on each side is the largest whole \(m\) with \(\frac{m\lambda}{a} \le 1\), since \(\sin\theta\) cannot exceed 1.</li>
+<li>Keep \(a\) and \(\lambda\) in the same unit (µm with µm, or m with m) and set your calculator to degrees if you want \(\theta\) in degrees.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 2.1 (not from the lecture): first two dark fringes</summary><div class="body">
+<div class="givens">Light of \(\lambda = 600\ \text{nm}\) passes a slit of width \(a = 0.10\ \text{mm} = 100\ \text{µm}\). Find the angles of the \(m = 1\) and \(m = 2\) dark fringes, and the distance \(y_1\) of the first dark fringe from the center on a screen \(L = 2.0\ \text{m}\) away (\(y\) = distance along the screen, \(L\) = slit-to-screen distance, both in metres).</div>
+<div class="math">\[
+\begin{aligned}
+\sin\theta_1 &= \frac{\lambda}{a} = \frac{600\times10^{-9}\ \text{m}}{100\times10^{-6}\ \text{m}} = 0.0060 &&\Rightarrow \theta_1 = 0.344^\circ\\
+\sin\theta_2 &= \frac{2\lambda}{a} = 0.0120 &&\Rightarrow \theta_2 = 0.688^\circ\\
+y_1 &= L\tan\theta_1 = (2.0\ \text{m})\tan(0.344^\circ) = 0.0120\ \text{m}
+\end{aligned}\]</div>
+<div class="answer">\(\theta_1 = 0.344^\circ\), \(\theta_2 = 0.688^\circ\), \(y_1 = 12.0\ \text{mm}\)</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 2.2 (not from the lecture): find the slit width</summary><div class="body">
+<div class="givens">A red laser, \(\lambda = 633\ \text{nm}\), makes its first dark fringe at \(\theta_1 = 0.50^\circ\). How wide is the slit?</div>
+<div class="math">\[
+\begin{aligned}
+a &= \frac{\lambda}{\sin\theta_1} = \frac{633\times10^{-9}\ \text{m}}{\sin(0.50^\circ)}\\
+&= \frac{633\times10^{-9}\ \text{m}}{0.008727} = 7.25\times10^{-5}\ \text{m}
+\end{aligned}\]</div>
+<div class="answer">\(a \approx 72.5\ \text{µm}\)</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 2.3 (not from the lecture): how many dark fringes?</summary><div class="body">
+<div class="givens">Slit width \(a = 2.2\ \text{µm}\), wavelength \(\lambda = 500\ \text{nm} = 0.50\ \text{µm}\). How many dark fringes appear in total?</div>
+<div class="math">\[
+\begin{aligned}
+\sin\theta &= \frac{m\lambda}{a} \le 1 \quad\Rightarrow\quad m \le \frac{a}{\lambda} = \frac{2.2\ \text{µm}}{0.50\ \text{µm}} = 4.4\\
+m_{\max} &= 4 \text{ on each side}
+\end{aligned}\]</div>
+<div class="answer">4 above + 4 below = 8 dark fringes</div>
+</div></details>
+
+<div class="quiz" data-quiz="q2"></div>
+</section>
+
+<section class="sec" id="s3">
+<h3><span class="num">Section 3</span>Single-slit intensity</h3>
+<p>The dark-fringe rule tells you where the light is zero. To know how bright every other point is, you add up the wavelets from the whole slit with their phases. Dr. Andrew states the result. The brightest point is the center (\(\theta = 0\)), with intensity \(I_m\). Moving away from the center, the intensity drops to zero at the first dark fringe, rises to a small side peak, drops to zero again, and so on, with each side peak dimmer than the last.</p>
+<p>Everything is controlled by one number, \(\alpha\), which is half the phase difference between the rays from the top and bottom edges of the slit. Those two edge rays differ in path by \(a\sin\theta\), and the phase-path rule turns that into a phase.</p>
+
+<div class="eq">
+  <div class="math">\[ I(\theta) = I_m\left[\frac{\sin\alpha}{\alpha}\right]^2 \]</div>
+  <span class="note">intensity of the diffraction pattern at any angle \(\theta\)</span>
+  <div class="defs">\(I(\theta)\) = intensity at angle \(\theta\), in watts per square metre (W/m²) · \(I_m\) = maximum intensity, at the center of the pattern, in W/m² · \(\alpha\) = half the phase difference between the top and bottom rays, in radians (rad)</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \alpha = \frac{\Delta\phi}{2} = \frac{\pi a}{\lambda}\sin\theta \]</div>
+  <span class="note">what \(\alpha\) is</span>
+  <div class="defs">\(\Delta\phi\) = phase difference between the rays from the top and bottom of the slit, in radians (rad) · \(a\), \(\lambda\), \(\theta\) as in Section 2</div>
+</div>
+<div class="eq">
+  <div class="math">\[ [\text{phase difference}] = \frac{2\pi}{\lambda}\,[\text{path length difference}] \quad\Longrightarrow\quad \Delta\phi = \frac{2\pi}{\lambda}\,a\sin\theta \]</div>
+  <span class="note">the note on Lecture 8a page 7, applied to the two edge rays</span>
+</div>
+
+<details class="work"><summary>Example 3 (lecture): intensity at the minima and at the maxima</summary><div class="body">
+<div class="givens">Use \(I(\theta) = I_m\left[\frac{\sin\alpha}{\alpha}\right]^2\) with \(\alpha = \frac{\pi a}{\lambda}\sin\theta\) (Lecture 8a pages 6 and 7).</div>
+<p><b>Minima (dark fringes).</b> Put in \(a\sin\theta = m\lambda\):</p>
+<div class="math">\[
+\begin{aligned}
+\alpha &= \frac{\pi}{\lambda}(m\lambda) = m\pi\\
+I(\theta) &= I_m\left[\frac{\sin m\pi}{m\pi}\right]^2 = 0
+\end{aligned}\]</div>
+<p>since \(\sin m\pi = 0\) for every whole number \(m\). This confirms the dark-fringe rule from Section 2.</p>
+<p><b>Maxima (bright fringes).</b> The side peaks sit roughly halfway between dark fringes:</p>
+<div class="math">\[
+\begin{aligned}
+a\sin\theta &= \left[m+\tfrac{1}{2}\right]\lambda\\
+\alpha &= \left(m+\tfrac{1}{2}\right)\pi\\
+I(\theta) &= I_m\left[\frac{\sin\left(m+\frac{1}{2}\right)\pi}{\left(m+\frac{1}{2}\right)\pi}\right]^2 = \frac{I_m}{\left[\left(m+\frac{1}{2}\right)\pi\right]^2}
+\end{aligned}\]</div>
+<p>because \(\sin\left(m+\frac{1}{2}\right)\pi = \pm 1\). Putting in numbers (Filled in):</p>
+<div class="math">\[
+\begin{aligned}
+m = 1:&\quad I = \frac{I_m}{(1.5\pi)^2} = 0.0450\,I_m\\
+m = 2:&\quad I = \frac{I_m}{(2.5\pi)^2} = 0.0162\,I_m\\
+m = 3:&\quad I = \frac{I_m}{(3.5\pi)^2} = 0.00827\,I_m
+\end{aligned}\]</div>
+<div class="answer">Side peaks: about 4.5%, 1.6% and 0.83% of \(I_m\)</div>
+</div></details>
+
+<div class="callout filled"><span class="tag">Filled in</span><p>Three details the lecture leaves out. (1) At the center, \(\alpha = 0\) and \(\frac{\sin\alpha}{\alpha} \to 1\), so \(I(0) = I_m\): the central band is the main maximum, and the bright-fringe rule \(\left[m+\frac{1}{2}\right]\lambda\) is for the side peaks, \(m = 1, 2, 3, \ldots\) (use the mirror-image angles below the center). Plugging \(m = 0\) would give \(a\sin\theta = \frac{\lambda}{2}\), which is partway down the central band, not a peak. (2) The rule \(\alpha = \left(m+\frac{1}{2}\right)\pi\) is an approximation: the exact side peaks are at \(\alpha = 1.430\pi\) and \(2.459\pi\), with intensities \(0.0472\,I_m\) and \(0.0165\,I_m\), within a few percent of the lecture's values. (3) On the handwritten page the expression for \(\alpha\) has a correction typed over it; the intended form is \(\alpha = \frac{\pi a}{\lambda}\sin\theta\), which is what the guide uses.</p></div>
+
+<div class="demo" id="demo3">
+  <div class="dtitle">Single-slit intensity plot</div>
+  <div class="src">Defaults: Practice 3.1 (the lecture gives no numbers). Drag \(\theta\) to read the intensity at any angle.</div>
+  <canvas id="c3" height="260" aria-label="Plot of intensity against angle for single-slit diffraction"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>\(\frac{I}{I_m}\)</span><span><i style="background:var(--c2)"></i>chosen angle</span><span><i style="background:var(--c3)"></i>dark fringes</span></div>
+  <div class="controls">
+    <label>\(a\) (µm) <input type="range" id="i3a" min="20" max="300" step="5" value="100"> <output id="i3ao"></output></label>
+    <label>\(\lambda\) (nm) <input type="range" id="i3l" min="400" max="700" step="5" value="600"> <output id="i3lo"></output></label>
+    <label>\(\theta\) (°) <input type="range" id="i3t" min="-1.5" max="1.5" step="0.01" value="0.2"> <output id="i3to"></output></label>
+  </div>
+  <div class="readout" id="i3r"></div>
+  <button class="btn" type="button" id="i3reset">Reset to defaults</button>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Think of a crowd doing a stadium wave, each person slightly out of step with the next. Viewed from straight ahead (\(\theta = 0\)), everyone is in step and the effect is huge. Viewed from an angle, the steps spread around a full cycle and mostly cancel; if they spread over exactly one full cycle (\(\Delta\phi = 2\pi\)), they cancel completely. The \(\frac{\sin\alpha}{\alpha}\) factor measures how much survives. Where it breaks down: in a crowd you see people, not a sum of waves, so there is nothing to cancel.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>\(\alpha\) is <b>half</b> the phase difference: \(\alpha = \frac{\Delta\phi}{2}\). At the first dark fringe \(\Delta\phi = 2\pi\) but \(\alpha = \pi\).</li>
+<li>\(\alpha\) is in <b>radians</b>. When you compute \(\sin\alpha\), put the calculator in radian mode, even if \(\theta\) was in degrees.</li>
+<li>Do not forget the square. \(\frac{\sin\alpha}{\alpha}\) is the amplitude ratio; the intensity ratio is its square.</li>
+<li>The side peaks are weak: the first one is only about 4.5% of the center, which is why most of the light lands in the central band.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 3.1 (not from the lecture): intensity at a given angle</summary><div class="body">
+<div class="givens">\(a = 100\ \text{µm}\), \(\lambda = 600\ \text{nm}\), \(\theta = 0.20^\circ\). Find \(\frac{I}{I_m}\).</div>
+<div class="math">\[
+\begin{aligned}
+\alpha &= \frac{\pi a}{\lambda}\sin\theta = \frac{\pi(100\times10^{-6}\ \text{m})}{600\times10^{-9}\ \text{m}}\sin(0.20^\circ)\\
+&= (523.6)(0.003491) = 1.828\ \text{rad}\\
+\frac{\sin\alpha}{\alpha} &= \frac{\sin(1.828\ \text{rad})}{1.828} = \frac{0.9671}{1.828} = 0.529\\
+\frac{I}{I_m} &= (0.529)^2 = 0.280
+\end{aligned}\]</div>
+<div class="answer">\(I \approx 0.280\,I_m\) (28% of the center)</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 3.2 (not from the lecture): brightness of the second side peak</summary><div class="body">
+<div class="givens">The center of a single-slit pattern has \(I_m = 5.0\ \text{W/m}^2\). Estimate the intensity of the \(m = 2\) side peak using the lecture's maxima rule.</div>
+<div class="math">\[
+\begin{aligned}
+I &= \frac{I_m}{\left[\left(2+\frac{1}{2}\right)\pi\right]^2} = \frac{5.0\ \text{W/m}^2}{(2.5\pi)^2}\\
+&= \frac{5.0\ \text{W/m}^2}{61.69} = 0.081\ \text{W/m}^2
+\end{aligned}\]</div>
+<div class="answer">\(I \approx 0.081\ \text{W/m}^2\)</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 3.3 (not from the lecture): phase across the slit at the first dark fringe</summary><div class="body">
+<div class="givens">At the first dark fringe, what is the phase difference \(\Delta\phi\) between the top and bottom rays, and what is \(\alpha\)?</div>
+<div class="math">\[
+\begin{aligned}
+a\sin\theta &= \lambda \quad\Rightarrow\quad \Delta\phi = \frac{2\pi}{\lambda}(\lambda) = 2\pi\ \text{rad}\\
+\alpha &= \frac{\Delta\phi}{2} = \pi\ \text{rad}
+\end{aligned}\]</div>
+<div class="answer">\(\Delta\phi = 2\pi\ \text{rad}\), \(\alpha = \pi\ \text{rad}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q3"></div>
+</section>
+
+<h2 class="part">Part 2 · Thin film interference (Lecture 8b)</h2>
+
+<section class="sec" id="s4">
+<h3><span class="num">Section 4</span>Thin films and Snell's law</h3>
+<p>The bright colors on certain surfaces come from <b>thin film interference</b>. Dr. Andrew's examples are the sunlit surface of a soap bubble and the colorful patterns when light reflects off a compact disk. A thin layer (soap, oil on water) reflects light twice: once at its <b>upper</b> boundary and once at its <b>lower</b> boundary. The two reflected waves overlap and interfere:</p>
+<ul>
+<li><b>Constructive interference</b> enhances the reflected light (that color looks bright).</li>
+<li><b>Destructive interference</b> reduces the reflected light (that color is missing).</li>
+</ul>
+<p>The lecture's setup (Lecture 8b pages 2 and 4) is a layer of oil, thickness \(d\) and refractive index \(n_2\), with air (\(n_1\)) above and water below. Incident light hits the top surface at point A:</p>
+<ul>
+<li><b>Ray 1</b> reflects straight off the top surface at A.</li>
+<li><b>Ray 2</b> refracts into the oil at A, reflects off the bottom surface at B, and refracts back out into the air at C, leaving parallel to ray 1.</li>
+</ul>
+<p>Point D is on ray 1, level with C along the outgoing wavefront (CD is perpendicular to the rays). From the line CD onward the two rays travel side by side, so all of their path difference is built up before that line. The lecture also assumes each layer is <b>homogeneous</b> (same index everywhere inside it).</p>
+
+<svg viewBox="0 0 440 260" role="img" aria-label="Thin film: incident ray hits the top surface at A, ray 1 reflects, ray 2 refracts to B on the bottom surface, reflects to C, and exits parallel to ray 1; D is the foot of the perpendicular from C to ray 1" style="max-width:460px;margin:6px 0 14px">
+  <rect x="0" y="120" width="440" height="70" fill="var(--accent-soft)"/>
+  <rect x="0" y="190" width="440" height="70" fill="var(--surface-2)"/>
+  <g stroke="var(--ink)" stroke-width="1.5"><line x1="0" y1="120" x2="440" y2="120"/><line x1="0" y1="190" x2="440" y2="190"/></g>
+  <g stroke="var(--muted)" stroke-dasharray="4 4"><line x1="170" y1="40" x2="170" y2="190"/><line x1="211.6" y1="130" x2="211.6" y2="200"/></g>
+  <g stroke="var(--c1)" stroke-width="2" fill="none"><line x1="60" y1="20" x2="170" y2="120"/><line x1="170" y1="120" x2="280" y2="20"/><line x1="170" y1="120" x2="211.6" y2="190"/><line x1="211.6" y1="190" x2="253.2" y2="120"/><line x1="253.2" y1="120" x2="363.2" y2="20"/></g>
+  <line x1="253.2" y1="120" x2="215.6" y2="78.6" stroke="var(--c2)" stroke-dasharray="3 3" stroke-width="1.5"/>
+  <g fill="var(--ink)"><circle cx="170" cy="120" r="3"/><circle cx="211.6" cy="190" r="3"/><circle cx="253.2" cy="120" r="3"/><circle cx="215.6" cy="78.6" r="3"/></g>
+  <g font-size="14" fill="var(--ink)">
+    <text x="150" y="140">A</text><text x="205" y="210">B</text><text x="260" y="140">C</text><text x="200" y="74">D</text>
+    <text x="284" y="20">1</text><text x="368" y="20">2</text>
+    <text x="150" y="80" font-style="italic">θ₁</text><text x="176" y="160" font-style="italic">θ₂</text>
+    <text x="10" y="110">air, n₁</text><text x="10" y="160">oil, n₂</text><text x="10" y="230">water</text>
+    <text x="396" y="160" font-style="italic">d</text>
+  </g>
+  <g stroke="var(--muted)"><line x1="390" y1="120" x2="390" y2="190"/><line x1="385" y1="120" x2="395" y2="120"/><line x1="385" y1="190" x2="395" y2="190"/></g>
+</svg>
+
+<p>To follow ray 2 into the film you need <b>Snell's law</b>, which links the angles on either side of a boundary (Lecture 8b page 3). The angles are measured from the <b>normal line</b> (the line perpendicular to the surface).</p>
+
+<div class="eq">
+  <div class="math">\[ \frac{n_1}{n_2} = \frac{\sin\theta_2}{\sin\theta_1} \qquad\Longleftrightarrow\qquad n_1\sin\theta_1 = n_2\sin\theta_2 \]</div>
+  <span class="note">Snell's law, refractive index relation</span>
+  <div class="defs">\(n_1\), \(n_2\) = refractive indices of the first and second medium (ratio, no unit) · \(\theta_1\) = angle of incidence from the normal, in degrees · \(\theta_2\) = angle of refraction from the normal, in degrees</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \frac{v_1}{v_2} = \frac{\sin\theta_1}{\sin\theta_2} \]</div>
+  <span class="note">Snell's law, velocity relation</span>
+  <div class="defs">\(v_1\), \(v_2\) = speed of light in the first and second medium, in metres per second (m/s)</div>
+</div>
+<div class="eq">
+  <div class="math">\[ n = \frac{c}{v} \qquad\qquad \lambda_n = \frac{\lambda}{n} \]</div>
+  <span class="note">from the course formula sheet; this is why the two forms of Snell's law agree</span>
+  <div class="defs">\(c = 3.00\times10^{8}\ \text{m/s}\) = speed of light in vacuum · \(v\) = speed in the medium, in m/s · \(\lambda\) = wavelength in vacuum (or air), in metres (m) · \(\lambda_n\) = wavelength inside a medium of index \(n\), in metres (m)</div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture gives the index form and the velocity form of Snell's law side by side without linking them. They are the same statement because \(n = \frac{c}{v}\): \(\frac{n_1}{n_2} = \frac{v_2}{v_1}\), so \(\frac{v_1}{v_2} = \frac{n_2}{n_1} = \frac{\sin\theta_1}{\sin\theta_2}\). The relation \(\lambda_n = \frac{\lambda}{n}\) is on the course formula sheet and is added here because it explains why a film behaves as if it were thicker than it is (Section 6).</p></div>
+<div class="callout filled"><span class="tag">Possible lecture error</span><p>The lecture lists the colors on a compact disk as a thin film example. The rainbow on a CD comes mainly from <b>diffraction</b>: its data tracks are about 1.6 µm apart and act like a reflection grating. A soap bubble or an oil slick on water is the clean thin-film example. If an exam asks for thin-film examples, soap bubbles and oil films are the safe choices; check with your instructor how they want the CD example treated.</p></div>
+
+<details class="work"><summary>Example 4 (lecture): why the film must be thin</summary><div class="body">
+<p>Lecture 8b page 4: interference effects are most significant when light interacts with something whose size is similar to (or smaller than) its wavelength, written as</p>
+<div class="math">\[ [\,d \lt  \lambda\,] \]</div>
+<p>Ray 1 and ray 2 started as the same wave at A, so they are coherent. When they meet again after CD, they may be <b>in phase</b> or <b>out of phase</b>, depending on the extra distance ray 2 travelled inside the film. With \(d\) around a wavelength, that extra distance is a small, well-defined fraction of a wavelength, so each color either clearly adds or clearly cancels.</p>
+<div class="answer">Thin film (\(d\) about \(\lambda\) or less): rays 1 and 2 may be in or out of phase</div>
+</div></details>
+
+<div class="demo" id="demo4">
+  <div class="dtitle">Snell's law ray tracer</div>
+  <div class="src">Defaults: Practice 4.1 (air into oil; the lecture gives no numbers).</div>
+  <canvas id="c4" height="260" aria-label="Ray bending at a boundary between two media"></canvas>
+  <div class="controls">
+    <label>\(n_1\) <input type="number" id="n4a" value="1.00" min="1" max="3" step="0.01"></label>
+    <label>\(n_2\) <input type="number" id="n4b" value="1.45" min="1" max="3" step="0.01"></label>
+    <label>\(\theta_1\) (°) <input type="range" id="n4t" min="0" max="89" step="1" value="30"> <output id="n4to"></output></label>
+  </div>
+  <div class="readout" id="n4r"></div>
+  <button class="btn" type="button" id="n4reset">Reset to defaults</button>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A shopping cart rolling at an angle from smooth tile onto carpet: the wheel that hits the carpet first slows down first, so the cart swings toward the normal. Light entering a higher-index (slower) medium bends toward the normal in the same way. Where it breaks down: a cart loses energy on carpet and eventually stops; light just changes speed and keeps going at the new speed.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Angles in Snell's law are measured from the <b>normal</b>, not from the surface.</li>
+<li>Watch which index goes where: \(\frac{n_1}{n_2} = \frac{\sin\theta_2}{\sin\theta_1}\) has the subscripts crossed. The safe form is \(n_1\sin\theta_1 = n_2\sin\theta_2\).</li>
+<li>Snell's law relates <b>sines</b>, not angles: \(\theta_2 \ne \frac{\theta_1}{n_2}\).</li>
+<li>Going into a higher index, the ray bends toward the normal (\(\theta_2 \lt  \theta_1\)), and the speed and wavelength drop by the factor \(n\). The frequency does not change.</li>
+<li>The lecture's rule of thumb is \(d \lt  \lambda\). Films a few wavelengths thick still show some color; very thick layers (a window pane) show none, because the many overlapping orders wash out.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 4.1 (not from the lecture): refraction into oil</summary><div class="body">
+<div class="givens">Light in air (\(n_1 = 1.00\)) hits an oil film (\(n_2 = 1.45\)) at \(\theta_1 = 30^\circ\). Find \(\theta_2\).</div>
+<div class="math">\[
+\begin{aligned}
+\sin\theta_2 &= \frac{n_1}{n_2}\sin\theta_1 = \frac{1.00}{1.45}\sin 30^\circ = \frac{0.500}{1.45} = 0.3448\\
+\theta_2 &= \sin^{-1}(0.3448) = 20.2^\circ
+\end{aligned}\]</div>
+<div class="answer">\(\theta_2 \approx 20.2^\circ\)</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 4.2 (not from the lecture): speed and wavelength in the oil</summary><div class="body">
+<div class="givens">Same oil, \(n_2 = 1.45\). Find the speed of light in it, and the wavelength inside it of light with \(\lambda = 600\ \text{nm}\) in air. Check the velocity relation with the angles from Practice 4.1.</div>
+<div class="math">\[
+\begin{aligned}
+v_2 &= \frac{c}{n_2} = \frac{3.00\times10^{8}\ \text{m/s}}{1.45} = 2.07\times10^{8}\ \text{m/s}\\
+\lambda_n &= \frac{\lambda}{n_2} = \frac{600\ \text{nm}}{1.45} = 414\ \text{nm}\\
+\frac{\sin\theta_1}{\sin\theta_2} &= \frac{0.500}{0.3448} = 1.45 = \frac{v_1}{v_2}\ \checkmark
+\end{aligned}\]</div>
+<div class="answer">\(v_2 = 2.07\times10^{8}\ \text{m/s}\), \(\lambda_n = 414\ \text{nm}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q4"></div>
+</section>
+
+<section class="sec" id="s5">
+<h3><span class="num">Section 5</span>Phase change on reflection</h3>
+<p>Path difference is only half of the thin film story. The other half is what happens <b>at the moment of reflection</b>. Lecture 8b page 6: light waves undergo a phase change of \(\pi\) rad upon reflection at an interface if \(n_2 \gt  n_1\), that is, when light travelling in medium 1 reflects off a medium with a <b>higher</b> index. Reflecting off a <b>lower</b> index gives no phase change.</p>
+<p>A phase change of \(\pi\) rad (180°) flips the wave upside down, which has the same effect as an extra half wavelength of path. So in every thin film problem you count the flips:</p>
+<ul>
+<li>One flip (only one of the two reflections is off a higher index): the reflections alone already put the rays half a cycle apart.</li>
+<li>Zero or two flips: the reflections alone leave the rays in step (two flips cancel each other).</li>
+</ul>
+
+<div class="eq">
+  <div class="math">\[ \Delta\phi_{\text{refl}} = \begin{cases} \pi\ \text{rad} \;\left(\text{same as } \tfrac{\lambda}{2}\right) & \text{if the far side has the higher index } (n_2 \gt  n_1)\\ 0 & \text{if the far side has the lower index } (n_2 \lt  n_1) \end{cases} \]</div>
+  <span class="note">phase change on reflection</span>
+  <div class="defs">\(\Delta\phi_{\text{refl}}\) = phase change of the reflected wave, in radians (rad) · \(n_1\) = index of the medium the light is travelling in · \(n_2\) = index of the medium it reflects off (both ratios, no unit)</div>
+</div>
+
+<details class="work"><summary>Example 5 (lecture): a very thin film looks dark</summary><div class="body">
+<div class="givens">Lecture 8b pages 5 and 6: a film of very small thickness \(d\), so the difference between the path lengths of the two rays is negligible. Does a phase change occur?</div>
+<p>Take an oil film in air (Lecture 8b page 7): \(n_{\text{air}} = 1\) and \(n_{\text{oil}} \gt  1\).</p>
+<div class="math">\[
+\begin{aligned}
+\text{upper boundary (air to oil)}:&\quad n_{\text{air}} \lt  n_{\text{oil}} \;\Rightarrow\; \pi\ \text{rad shift in ray 1}\\
+\text{lower boundary (oil to air)}:&\quad n_{\text{oil}} \gt  n_{\text{air}} \;\Rightarrow\; \text{no shift in ray 2}
+\end{aligned}\]</div>
+<p>With negligible path difference, the only difference between the rays is the single \(\pi\) flip:</p>
+<div class="math">\[ \Delta\phi_{\text{total}} \approx 0 + \pi = \pi\ \text{rad} \]</div>
+<p>The two rays are exactly out of phase, so destructive interference happens at <b>every</b> wavelength of the incident light.</p>
+<div class="answer">Yes, one \(\pi\) flip: the very thin film has a dark appearance</div>
+</div></details>
+
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture's diagrams switch between oil on water (pages 2 and 4) and oil in air (pages 7 to 9). For typical values (oil about 1.45, water 1.33) the bottom reflection is still off a lower index, so both setups have exactly one flip and the same equations apply. If the layer below the film had a <b>higher</b> index than the film (for example a coating of index 1.38 on glass of index 1.50), both reflections would flip and the bright and dark conditions in Section 6 would swap.</p></div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Flick a rope tied to a heavy wall: the pulse comes back upside down. Flick a rope tied to a light, loose string: it comes back right side up. Light reflecting off a higher index is the heavy wall; off a lower index is the loose string. Where it breaks down: a rope pulse is one bump you can watch, while light is a continuous wave, so the "upside down" shows up only as a half-cycle shift.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>The flip depends on the index of the medium being reflected <b>off</b> compared with the one the light is <b>in</b>, not on which layer is "on top".</li>
+<li>Count flips for <b>both</b> reflections. One flip shifts the conditions by half a wavelength; two flips cancel.</li>
+<li>Transmitted light never gets the flip; only reflected light can.</li>
+<li>A very thin soap film looks black just before it pops: one flip and negligible path difference, so all colors cancel.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 5.1 (not from the lecture): soap film in air</summary><div class="body">
+<div class="givens">A soap film (\(n = 1.33\)) has air (\(n = 1.00\)) on both sides. Count the flips.</div>
+<div class="math">\[
+\begin{aligned}
+\text{top (air to soap)}:&\quad 1.00 \lt  1.33 \Rightarrow \pi\\
+\text{bottom (soap to air)}:&\quad 1.33 \gt  1.00 \Rightarrow 0\\
+\text{relative shift} &= \pi\ \text{rad}
+\end{aligned}\]</div>
+<div class="answer">One flip, relative shift \(\pi\) rad</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 5.2 (not from the lecture): coating on glass</summary><div class="body">
+<div class="givens">A lens coating (\(n = 1.38\)) sits on glass (\(n = 1.50\)) in air. Count the flips.</div>
+<div class="math">\[
+\begin{aligned}
+\text{top (air to coating)}:&\quad 1.00 \lt  1.38 \Rightarrow \pi\\
+\text{bottom (coating to glass)}:&\quad 1.38 \lt  1.50 \Rightarrow \pi\\
+\text{relative shift} &= \pi - \pi = 0
+\end{aligned}\]</div>
+<div class="answer">Two flips, relative shift 0</div>
+</div></details>
+
+<div class="quiz" data-quiz="q5"></div>
+</section>
+
+<section class="sec" id="s6">
+<h3><span class="num">Section 6</span>Optical path difference</h3>
+<p>Ray 2 spends part of its trip inside the film, where light is slower and its wavelength is shorter by the factor \(n\). So a distance \(s\) in the film holds as many wavelengths as a distance \(ns\) in vacuum. That is the <b>optical path length</b>: the product of the geometric length \(s\) of the light's path and the refractive index \(n\) of a homogeneous medium. Comparing optical path lengths, not raw distances, tells you how far out of step two rays are.</p>
+
+<div class="eq">
+  <div class="math">\[ \text{OPL} = n\,s \]</div>
+  <span class="note">optical path length</span>
+  <div class="defs">OPL = optical path length, in metres (m) · \(n\) = refractive index of the medium (ratio, no unit) · \(s\) = geometric length of the path in that medium, in metres (m)</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \text{OPD} = n_2\left(\overline{AB} + \overline{BC}\right) - n_1\left(\overline{AD}\right) = 2n_2 d\cos\theta_2 \]</div>
+  <span class="note">optical path difference between ray 2 (in the oil) and ray 1 (in the air)</span>
+  <div class="defs">OPD = optical path difference, in metres (m) · \(\overline{AB}\), \(\overline{BC}\), \(\overline{AD}\) = segment lengths in the diagram of Section 4, in metres (m) · \(d\) = film thickness, in metres (m) · \(\theta_2\) = refraction angle inside the film, in degrees</div>
+</div>
+<div class="eq">
+  <div class="math">\[
+\begin{aligned}
+\text{constructive:}&\quad 2n_{\text{oil}}\,d\cos(\theta_2) = \left(m - \tfrac{1}{2}\right)\lambda, \quad m = 1, 2, 3, \ldots\\
+\text{destructive:}&\quad 2n_{\text{oil}}\,d\cos(\theta_2) = m\lambda, \quad m = 0, 1, 2, \ldots
+\end{aligned}\]</div>
+<span class="note">reflected light from a film with exactly one \(\pi\) flip (oil in air, oil on water, soap film in air)</span>
+<div class="defs">\(n_{\text{oil}}\) = film index (the lecture's \(n_2\)), no unit · \(\lambda\) = wavelength in air or vacuum, in metres (m) · \(m\) = order (integer, no unit)</div>
+</div>
+
+<details class="work"><summary>Example 6 (lecture): deriving \(\text{OPD} = 2n_2 d\cos\theta_2\)</summary><div class="body">
+<div class="givens">Film of thickness \(d\) and index \(n_2\); air above with \(n_1 = n_{\text{air}} = 1\) (Lecture 8b pages 8 and 9).</div>
+<p>Ray 2 crosses the film twice at angle \(\theta_2\) from the normal, so each leg is the hypotenuse of a right triangle with height \(d\):</p>
+<div class="math">\[ \overline{AB} = \overline{BC} = \frac{d}{\cos\theta_2} \]</div>
+<p>The horizontal distance from A to C is \(\overline{AC} = 2d\tan\theta_2\). Ray 1 leaves A at angle \(\theta_1\) from the normal, so the part of ray 1 up to the wavefront CD is</p>
+<div class="math">\[ \overline{AD} = 2d\tan\theta_2 \times \sin\theta_1 \]</div>
+<p>Snell's law, \(\frac{n_1}{n_2} = \frac{\sin\theta_2}{\sin\theta_1}\), lets us replace \(n_1\sin\theta_1\) with \(n_2\sin\theta_2\). Then:</p>
+<div class="math">\[
+\begin{aligned}
+\text{OPD} &= n_2\left[\frac{2d}{\cos\theta_2}\right] - 2d\tan\theta_2\,\left(n_2\sin\theta_2\right)\\
+&= 2n_2 d\left[\frac{1}{\cos\theta_2} - \frac{\sin^2\theta_2}{\cos\theta_2}\right]\\
+&= 2n_2 d\left[\frac{1-\sin^2\theta_2}{\cos\theta_2}\right]\\
+&= 2n_2 d\left[\frac{\cos^2\theta_2}{\cos\theta_2}\right]\\
+&= 2n_2 d\cos\theta_2
+\end{aligned}\]</div>
+<p>Because the top reflection adds a \(\pi\) flip and the bottom one does not, the rays cancel when the OPD is a whole number of wavelengths:</p>
+<div class="math">\[ \text{Destructive interference} \;\Rightarrow\; 2n_2 d\cos\theta_2 = m\lambda \]</div>
+<p>and they reinforce when it is a half-odd number of wavelengths, \(2n_{\text{oil}}\,d\cos(\theta_2) = \left(m - \frac{1}{2}\right)\lambda\) (Lecture 8b page 10).</p>
+<div class="answer">\(\text{OPD} = 2n_2 d\cos\theta_2\)</div>
+</div></details>
+
+<div class="callout filled"><span class="tag">Filled in</span><p>Steps the lecture skips: (1) why \(\overline{AD} = \overline{AC}\sin\theta_1\): ray 1 makes angle \(90^\circ - \theta_1\) with the surface, and D is the foot of the perpendicular from C, so \(\overline{AD} = \overline{AC}\cos(90^\circ - \theta_1) = \overline{AC}\sin\theta_1\). (2) The \(\cos^2\theta_2\) line, using \(1 - \sin^2\theta_2 = \cos^2\theta_2\). (3) Why \(m\lambda\) means dark: the total phase difference is \(\frac{2\pi}{\lambda}\text{OPD} + \pi\), which is an odd multiple of \(\pi\) exactly when \(\text{OPD} = m\lambda\). (4) The ranges of \(m\), which the lecture does not state: \(m = 0, 1, 2, \ldots\) for dark (\(m = 0\) is the very thin film of Section 5) and \(m = 1, 2, 3, \ldots\) for bright. At normal incidence (\(\theta_2 = 0\)) these become the course formula sheet's \(2t = m\frac{\lambda}{n}\) and \(2t = \left(m - \frac{1}{2}\right)\frac{\lambda}{n}\), with \(t\) for the thickness.</p></div>
+
+<p><b>What the pattern depends on</b> (Lecture 8b page 10): (a) the wavelength of light, \(\lambda\); (b) the film thickness, \(d\); (c) the refractive indices on both sides of the film; (d) the refractive index of the film. Items (b) and (d) set the OPD, item (c) sets how many flips there are, and item (a) decides which colors satisfy each condition. Because white light contains many wavelengths, a film of varying thickness shows bands of different colors.</p>
+
+<div class="demo" id="demo6">
+  <div class="dtitle">Thin film calculator and reflected color spectrum</div>
+  <div class="src">Defaults: Practice 6.1 (soap film in air; the lecture gives no numbers).</div>
+  <canvas id="c6" height="200" aria-label="Relative reflected strength against wavelength for the film"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>relative reflected strength (two-ray model)</span><span><i style="background:var(--c2)"></i>chosen \(\lambda\)</span></div>
+  <div class="controls">
+    <label>\(n\) above <input type="number" id="f6a" value="1.00" min="1" max="3" step="0.01"></label>
+    <label>\(n\) film <input type="number" id="f6n" value="1.33" min="1" max="3" step="0.01"></label>
+    <label>\(n\) below <input type="number" id="f6b" value="1.00" min="1" max="3" step="0.01"></label>
+    <label>\(d\) (nm) <input type="range" id="f6d" min="0" max="1200" step="5" value="300"> <output id="f6do"></output></label>
+    <label>\(\theta_1\) (°) <input type="range" id="f6t" min="0" max="80" step="1" value="0"> <output id="f6to"></output></label>
+    <label>\(\lambda\) (nm) <input type="range" id="f6l" min="380" max="750" step="1" value="532"> <output id="f6lo"></output></label>
+  </div>
+  <div class="readout" id="f6r"></div>
+  <button class="btn" type="button" id="f6reset">Reset to defaults</button>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Two runners start together. One runs straight along the track; the other takes a detour through a sandpit, where every step is shorter. What matters at the finish is not the distance but how many steps each took, and the sandpit multiplies the step count by \(n\). The OPD is the extra step count. Where it breaks down: runners do not get flipped upside down at the edge of the sandpit, but one of the light rays does (Section 5).</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Use the angle <b>inside</b> the film, \(\theta_2\), in \(\cos\theta_2\), not the incidence angle \(\theta_1\). Find \(\theta_2\) with Snell's law first.</li>
+<li>\(\lambda\) in these equations is the wavelength in <b>air</b>; the film index \(n\) on the left already accounts for the shorter wavelength inside.</li>
+<li>The "\(m\lambda\) is dark" rule holds only with exactly <b>one</b> flip. With zero or two flips, swap: \(m\lambda\) is bright and \(\left(m - \frac{1}{2}\right)\lambda\) is dark.</li>
+<li>The thinnest film that reflects a color strongly (one flip, normal incidence) is \(d = \frac{\lambda}{4n}\), a quarter of the wavelength inside the film, not \(\frac{\lambda}{2n}\).</li>
+<li>When asked "which visible color", list a few values of \(m\) and keep only the answers between about 380 nm and 750 nm.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 6.1 (not from the lecture): color of a soap film</summary><div class="body">
+<div class="givens">A soap film (\(n = 1.33\)) in air is \(d = 300\ \text{nm}\) thick, viewed straight on (\(\theta_2 = 0\)). Which visible wavelength is reflected most strongly?</div>
+<div class="math">\[
+\begin{aligned}
+2nd\cos\theta_2 &= 2(1.33)(300\ \text{nm})(1) = 798\ \text{nm}\\
+\lambda &= \frac{798\ \text{nm}}{m - \frac{1}{2}}: \quad m=1: 1596\ \text{nm},\quad m=2: 532\ \text{nm},\quad m=3: 319\ \text{nm}
+\end{aligned}\]</div>
+<p>Only \(m = 2\) is visible.</p>
+<div class="answer">\(\lambda = 532\ \text{nm}\) (green)</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 6.2 (not from the lecture): thinnest bright oil film</summary><div class="body">
+<div class="givens">Oil (\(n = 1.45\)) floats on water (\(n = 1.33\)). Find the smallest thickness that strongly reflects \(\lambda = 580\ \text{nm}\) at normal incidence.</div>
+<p>One flip (top only), so constructive needs \(2nd = \left(m - \frac{1}{2}\right)\lambda\) with \(m = 1\):</p>
+<div class="math">\[
+\begin{aligned}
+2nd &= \tfrac{1}{2}\lambda\\
+d &= \frac{\lambda}{4n} = \frac{580\ \text{nm}}{4(1.45)} = 100\ \text{nm}
+\end{aligned}\]</div>
+<div class="answer">\(d = 100\ \text{nm}\)</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 6.3 (not from the lecture): a missing color at an angle</summary><div class="body">
+<div class="givens">An oil film (\(n_2 = 1.45\), \(d = 400\ \text{nm}\)) in air is lit at \(\theta_1 = 30^\circ\). Which visible wavelength is missing from the reflected light?</div>
+<div class="math">\[
+\begin{aligned}
+\theta_2 &= \sin^{-1}\!\left(\frac{\sin 30^\circ}{1.45}\right) = 20.2^\circ, \qquad \cos\theta_2 = 0.9387\\
+\text{OPD} &= 2(1.45)(400\ \text{nm})(0.9387) = 1089\ \text{nm}\\
+\lambda &= \frac{\text{OPD}}{m}: \quad m=1: 1089\ \text{nm},\quad m=2: 544\ \text{nm},\quad m=3: 363\ \text{nm}
+\end{aligned}\]</div>
+<div class="answer">\(\lambda \approx 544\ \text{nm}\) is cancelled</div>
+</div></details>
+
+<div class="quiz" data-quiz="q6"></div>
+</section>
+
+<h2 class="part">Part 3 · Revision problems (Lecture 8b)</h2>
+
+<section class="sec" id="s7">
+<h3><span class="num">Section 7</span>Beat frequency</h3>
+<p>Lecture 8b ends with two revision problems on sound from earlier lectures. The first is about <b>beats</b> (Lecture 7). When two sound waves of slightly different frequencies play together, they drift in and out of step. When in step they add (loud); half a beat later they cancel (quiet). The loudness rises and falls at the <b>beat frequency</b>, defined as the absolute difference of the frequencies of the two sound waves.</p>
+
+<div class="eq">
+  <div class="math">\[ f_{\text{beat}} = \left|f_1 - f_2\right| \]</div>
+  <span class="note">beat frequency</span>
+  <div class="defs">\(f_{\text{beat}}\) = beat frequency, in hertz (Hz) · \(f_1\), \(f_2\) = frequencies of the two sound waves, in hertz (Hz)</div>
+</div>
+<div class="eq">
+  <div class="math">\[ T_{\text{beat}} = \frac{1}{f_{\text{beat}}} \]</div>
+  <span class="note">time from one loud moment to the next</span>
+  <div class="defs">\(T_{\text{beat}}\) = beat period, in seconds (s)</div>
+</div>
+
+<details class="work"><summary>Example 7 (lecture): two tuning forks, 200 Hz and 400 Hz</summary><div class="body">
+<div class="givens">Two tuning forks are struck simultaneously: \(f_1 = 200\ \text{Hz}\), \(f_2 = 400\ \text{Hz}\). What beat frequency is generated? (Lecture 8b pages 11 and 12)</div>
+<div class="math">\[
+\begin{aligned}
+f_{\text{beat}} &= \left|f_1 - f_2\right|\\
+&= \left|200 - 400\right|\ \text{Hz}\\
+&= 200\ \text{Hz}
+\end{aligned}\]</div>
+<div class="answer">\(f_{\text{beat}} = 200\ \text{Hz}\)</div>
+</div></details>
+
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture's answer, 200 Hz, is what the definition gives, and it is the expected answer on a test. Two practical notes: the beat period \(T_{\text{beat}} = \frac{1}{f_{\text{beat}}}\) is added from Lecture 7; and your ear hears beats as a slow pulsing only when the two frequencies are close (a difference of up to roughly 10 to 20 Hz). Forks at 200 Hz and 400 Hz are an octave apart, so in practice you would hear two separate notes, not a 200 Hz pulsing. The formula still gives the rate at which the combined waveform repeats its pattern.</p></div>
+
+<div class="demo" id="demo7">
+  <div class="dtitle">Two tones and their sum</div>
+  <div class="src">Defaults: Example 7 from the lecture (200 Hz and 400 Hz). Try 200 Hz and 210 Hz to see a slow envelope.</div>
+  <canvas id="c7" height="220" aria-label="Two sine waves and their sum"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>wave 1</span><span><i style="background:var(--c3)"></i>wave 2</span><span><i style="background:var(--c2)"></i>sum</span></div>
+  <div class="controls">
+    <label>\(f_1\) (Hz) <input type="range" id="b7a" min="100" max="500" step="1" value="200"> <output id="b7ao"></output></label>
+    <label>\(f_2\) (Hz) <input type="range" id="b7b" min="100" max="500" step="1" value="400"> <output id="b7bo"></output></label>
+  </div>
+  <div class="readout" id="b7r"></div>
+  <button class="btn" type="button" id="b7reset">Reset to lecture values</button>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Two people walking side by side with slightly different step rates: every so often their feet land together, then drift apart, then land together again. How often they line up is the difference of their step rates. Where it breaks down: footsteps are separate events, while sound waves are continuous, so between "in step" and "out of step" the loudness changes smoothly.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>The beat frequency is the <b>difference</b>, not the sum and not the average. The average \(\frac{f_1 + f_2}{2}\) is the pitch you hear.</li>
+<li>The envelope in \(\cos\left(2\pi\,\frac{f_1 - f_2}{2}\,t\right)\) has half the difference, but loud moments happen twice per envelope cycle, so beats come at the full difference \(\left|f_1 - f_2\right|\).</li>
+<li>Beats tell you the size of the difference, not which fork is higher. To decide, change one fork slightly (add wax to lower it) and see whether the beats speed up or slow down.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 7.1 (not from the lecture): tuning a guitar string</summary><div class="body">
+<div class="givens">A 440 Hz reference and a string at 444 Hz sound together. Find the beat frequency and beat period.</div>
+<div class="math">\[
+\begin{aligned}
+f_{\text{beat}} &= \left|440 - 444\right|\ \text{Hz} = 4\ \text{Hz}\\
+T_{\text{beat}} &= \frac{1}{4\ \text{Hz}} = 0.25\ \text{s}
+\end{aligned}\]</div>
+<div class="answer">4 Hz, one beat every 0.25 s</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 7.2 (not from the lecture): which side of the reference?</summary><div class="body">
+<div class="givens">An unknown fork beats 3 times per second with a 256 Hz reference. Adding a bit of wax to the unknown fork (which lowers its frequency) makes the beats faster, 5 per second. Find the original frequency.</div>
+<p>Possible frequencies: \(256 \pm 3\) Hz, so 259 Hz or 253 Hz. Lowering 259 Hz would move it toward 256 Hz and slow the beats. Lowering 253 Hz moves it away and speeds them up, which matches.</p>
+<div class="math">\[ f = 256\ \text{Hz} - 3\ \text{Hz} = 253\ \text{Hz} \]</div>
+<div class="answer">\(f = 253\ \text{Hz}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q7"></div>
+</section>
+
+<section class="sec" id="s8">
+<h3><span class="num">Section 8</span>Two-speaker interference</h3>
+<p>The second revision problem uses the same path difference logic as the rest of this lecture, now with sound. Two speakers driven by the same signal generator send out the same signal, in phase. At a detector, the wave from the farther speaker lags behind by the path difference \(\Delta r\). If that lag is half a wavelength, the waves cancel and the detector reads a minimum.</p>
+
+<div class="eq">
+  <div class="math">\[ \Delta r = \left|r_2 - r_1\right| = \left(m + \tfrac{1}{2}\right)\lambda, \quad m = 0, 1, 2, \ldots \]</div>
+  <span class="note">minimum (destructive interference) for two in-phase sources; the first minimum is \(m = 0\), \(\Delta r = \frac{\lambda}{2}\)</span>
+  <div class="defs">\(r_1\), \(r_2\) = distances from each speaker to the detector, in metres (m) · \(\Delta r\) = path length difference, in metres (m) · \(\lambda\) = wavelength of the sound, in metres (m)</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \Delta r = m\lambda \;\;\text{(maximum)}, \qquad f = \frac{v}{\lambda}, \qquad r = \sqrt{x^2 + y^2} \]</div>
+  <span class="note">maxima, wave speed relation, and Pythagoras for each path</span>
+  <div class="defs">\(f\) = frequency, in hertz (Hz) · \(v\) = speed of sound, in metres per second (m/s) · \(x\), \(y\) = horizontal and vertical legs of each path, in metres (m)</div>
+</div>
+
+<details class="work"><summary>Example 8 (lecture): finding the speakers' frequency from the first minimum</summary><div class="body">
+<div class="givens">Two speakers, same signal, separated by 8 m. A sound level detector is 12 m in front of the speakers and 2 m below the upper speaker (so 6 m above the lower one), where the 1st minimum intensity is found. Speed of sound \(v = 343\ \text{m/s}\). Find the frequency. (Lecture 8b pages 13 to 16)</div>
+<p><b>Strategy.</b> (1) Calculate the path length from each speaker to the detector. (2) Use the path length difference to determine the wavelength (destructive interference). (3) Calculate the frequency with \(f = \frac{v}{\lambda}\).</p>
+<p><b>Path lengths to the minimum point.</b></p>
+<div class="math">\[
+\begin{aligned}
+r_1 &= \sqrt{12^2 + 2^2}\ \text{m} = 12.17\ \text{m}\\
+r_2 &= \sqrt{6^2 + 12^2}\ \text{m} = 13.42\ \text{m}
+\end{aligned}\]</div>
+<p><b>Path length difference to find \(\lambda\).</b></p>
+<div class="math">\[ \Delta r = \left|r_2 - r_1\right| = 1.25\ \text{m} \]</div>
+<p>The 1st minimum intensity is the 1st destructive interference. The lecture writes \(\Delta r = \left|r_2 - r_1\right| = n\frac{\lambda}{2}\) and sets \(n = 1\):</p>
+<div class="math">\[
+\begin{aligned}
+\Delta r &= \frac{\lambda}{2} \quad\Rightarrow\quad 2\Delta r = \lambda\\
+\lambda &= 2\Delta r = 2(1.25\ \text{m}) = 2.5\ \text{m}
+\end{aligned}\]</div>
+<p><b>Frequency.</b></p>
+<div class="math">\[ f = \frac{v}{\lambda} = \frac{343\ \text{m/s}}{2.5\ \text{m}} = 137.2\ \text{Hz} \]</div>
+<div class="answer">\(f = 137.2\ \text{Hz}\)</div>
+</div></details>
+
+<div class="callout filled"><span class="tag">Filled in</span><p>(1) The lecture's general form \(\Delta r = n\frac{\lambda}{2}\) is a minimum only for <b>odd</b> \(n\) (1, 3, 5, ...). With \(n = 2\) it would give \(\Delta r = \lambda\), which is a maximum. The guide writes the general rule as \(\Delta r = \left(m + \frac{1}{2}\right)\lambda\), the same as the course formula sheet's \(\frac{\Delta L}{\lambda} = 0.5, 1.5, 2.5, \ldots\) for destructive interference. The lecture's answer is unaffected because it uses \(n = 1\). (2) Both speakers are assumed to be in phase, since they share one signal generator. (3) With unrounded distances (\(r_1 = 12.166\ \text{m}\), \(r_2 = 13.416\ \text{m}\), \(\Delta r = 1.2509\ \text{m}\)) the answer is 137.1 Hz; the lecture's 137.2 Hz comes from rounding \(\Delta r\) to 1.25 m. Both are fine.</p></div>
+
+<div class="demo" id="demo8">
+  <div class="dtitle">Two-speaker minimum finder</div>
+  <div class="src">Defaults: Example 8 from the lecture.</div>
+  <canvas id="c8" height="240" aria-label="Two speakers and a detector with the two path lengths drawn"></canvas>
+  <div class="controls">
+    <label>separation (m) <input type="number" id="p8s" value="8" min="0.5" step="0.5"></label>
+    <label>detector below top speaker (m) <input type="number" id="p8h" value="2" step="0.5"></label>
+    <label>distance in front (m) <input type="number" id="p8x" value="12" min="0.5" step="0.5"></label>
+    <label>\(v\) (m/s) <input type="number" id="p8v" value="343" min="1" step="1"></label>
+    <label>minimum number <input type="number" id="p8m" value="1" min="1" step="1"></label>
+  </div>
+  <div class="readout" id="p8r"></div>
+  <button class="btn" type="button" id="p8reset">Reset to lecture values</button>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Two friends clap in perfect sync from different spots in a hall. If you stand where one clap reaches you exactly halfway between the other's claps, the claps arrive alternately, and for a smooth tone that alternation means cancellation. Where it breaks down: claps are short pulses, so you would hear a double clap rather than silence; cancellation needs continuous waves.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Measure each leg from its own speaker. The detector is 2 m from the top speaker vertically, so it is \(8 - 2 = 6\) m from the bottom one.</li>
+<li>First minimum means \(\Delta r = \frac{\lambda}{2}\), so \(\lambda = 2\Delta r\). Using \(\lambda = \Delta r\) gives a maximum, not a minimum.</li>
+<li>Higher-order minima use \(\frac{3\lambda}{2}, \frac{5\lambda}{2}, \ldots\), never \(\lambda\) or \(2\lambda\).</li>
+<li>Round only at the end if you want to match an answer key closely; small rounding of \(\Delta r\) moves the frequency by about 0.1 Hz here.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 8.1 (not from the lecture): the second minimum at the same spot</summary><div class="body">
+<div class="givens">Same geometry as Example 8 (\(\Delta r = 1.25\ \text{m}\), \(v = 343\ \text{m/s}\)). What frequency puts the <b>second</b> minimum at the detector?</div>
+<div class="math">\[
+\begin{aligned}
+\Delta r &= \tfrac{3}{2}\lambda \quad\Rightarrow\quad \lambda = \frac{2\Delta r}{3} = \frac{2(1.25\ \text{m})}{3} = 0.833\ \text{m}\\
+f &= \frac{v}{\lambda} = \frac{343\ \text{m/s}}{0.833\ \text{m}} = 411.6\ \text{Hz}
+\end{aligned}\]</div>
+<div class="answer">\(f \approx 411.6\ \text{Hz}\)</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 8.2 (not from the lecture): a 3-4-5 triangle</summary><div class="body">
+<div class="givens">Two in-phase speakers are 3.0 m apart. A detector is 4.0 m directly in front of one of them. With \(v = 343\ \text{m/s}\), find the lowest frequency giving a minimum and the lowest giving a maximum at the detector.</div>
+<div class="math">\[
+\begin{aligned}
+r_1 &= 4.0\ \text{m}, \qquad r_2 = \sqrt{3.0^2 + 4.0^2}\ \text{m} = 5.0\ \text{m}, \qquad \Delta r = 1.0\ \text{m}\\
+\text{minimum: } \lambda &= 2\Delta r = 2.0\ \text{m} \Rightarrow f = \frac{343\ \text{m/s}}{2.0\ \text{m}} = 171.5\ \text{Hz}\\
+\text{maximum: } \lambda &= \Delta r = 1.0\ \text{m} \Rightarrow f = \frac{343\ \text{m/s}}{1.0\ \text{m}} = 343\ \text{Hz}
+\end{aligned}\]</div>
+<div class="answer">Minimum at 171.5 Hz, maximum at 343 Hz</div>
+</div></details>
+
+<div class="quiz" data-quiz="q8"></div>
+</section>
+
+<section class="sec final" id="final">
+<h3><span class="num">Final exam</span>Mixed problems from Lectures 8a and 8b</h3>
+<p>Twelve questions covering every section. Each explanation names the section to review. After you answer all twelve, a list of the ones you missed appears below.</p>
+<div class="quiz" data-quiz="final"></div>
+</section>
+
+<section class="sec" id="formulas">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<button class="btn" id="printSheet" type="button">Print formula sheet</button>
+<div class="sheet" style="margin-top:14px">
+  <div class="card">
+    <h5>Part 1 · Diffraction (Lecture 8a)</h5>
+    <div class="f"><span class="expr">\[ r = v\,\Delta t \]</span><span class="d">wavelet radius \(r\) (m) after time \(\Delta t\) (s) at wave speed \(v\) (m/s); new wavefront = envelope of wavelets</span><span class="s">Section 1</span></div>
+    <div class="f"><span class="expr">\[ \Delta L_2 = \frac{a}{2}\sin\theta = \frac{\lambda}{2} \]</span><span class="d">pairing argument for the first minimum; \(a\) = slit width (m), \(\theta\) = angle from center line, \(\lambda\) = wavelength (m)</span><span class="s">Section 2</span></div>
+    <div class="f"><span class="expr">\[ a\sin\theta = m\lambda, \quad m = \pm1, \pm2, \ldots \]</span><span class="d">single-slit dark fringes; \(m\) = order (no unit), \(+\) above and \(-\) below the central band</span><span class="s">Section 2</span></div>
+    <div class="f"><span class="expr">\[ \Delta\phi = \frac{2\pi}{\lambda}\,\Delta L \]</span><span class="d">phase difference \(\Delta\phi\) (rad) from path difference \(\Delta L\) (m)</span><span class="s">Section 3</span></div>
+    <div class="f"><span class="expr">\[ I(\theta) = I_m\left[\frac{\sin\alpha}{\alpha}\right]^2 \]</span><span class="d">intensity \(I\) (W/m²) at angle \(\theta\); \(I_m\) = central maximum intensity (W/m²)</span><span class="s">Section 3</span></div>
+    <div class="f"><span class="expr">\[ \alpha = \frac{\Delta\phi}{2} = \frac{\pi a}{\lambda}\sin\theta \]</span><span class="d">\(\alpha\) in radians; \(\Delta\phi\) = phase difference between top and bottom rays (rad)</span><span class="s">Section 3</span></div>
+    <div class="f"><span class="expr">\[ a\sin\theta \approx \left[m+\tfrac{1}{2}\right]\lambda, \quad I \approx \frac{I_m}{\left[\left(m+\frac{1}{2}\right)\pi\right]^2} \]</span><span class="d">side maxima, \(m = 1, 2, 3, \ldots\) (approximate positions)</span><span class="s">Section 3</span></div>
+  </div>
+  <div class="card">
+    <h5>Part 2 · Thin film interference (Lecture 8b)</h5>
+    <div class="f"><span class="expr">\[ \frac{n_1}{n_2} = \frac{\sin\theta_2}{\sin\theta_1} \]</span><span class="d">Snell's law; \(n_1\), \(n_2\) = refractive indices (no unit); \(\theta_1\), \(\theta_2\) = angles from the normal</span><span class="s">Section 4</span></div>
+    <div class="f"><span class="expr">\[ \frac{v_1}{v_2} = \frac{\sin\theta_1}{\sin\theta_2}, \qquad n = \frac{c}{v}, \qquad \lambda_n = \frac{\lambda}{n} \]</span><span class="d">\(v\) = speed in the medium (m/s); \(c = 3.00\times10^{8}\) m/s; \(\lambda_n\) = wavelength inside the medium (m)</span><span class="s">Section 4</span></div>
+    <div class="f"><span class="expr">\[ \Delta\phi_{\text{refl}} = \pi\ \text{rad if } n_2 \gt n_1, \text{ else } 0 \]</span><span class="d">phase change on reflection off a higher index; \(\pi\) rad is equivalent to \(\frac{\lambda}{2}\) of path</span><span class="s">Section 5</span></div>
+    <div class="f"><span class="expr">\[ \text{OPL} = n\,s \]</span><span class="d">optical path length (m); \(s\) = geometric path length in the medium (m)</span><span class="s">Section 6</span></div>
+    <div class="f"><span class="expr">\[ \text{OPD} = n_2\left(\overline{AB} + \overline{BC}\right) - n_1\left(\overline{AD}\right) = 2n_2 d\cos\theta_2 \]</span><span class="d">optical path difference (m); \(d\) = film thickness (m); \(\theta_2\) = angle inside the film</span><span class="s">Section 6</span></div>
+    <div class="f"><span class="expr">\[ 2n_{\text{oil}}\,d\cos(\theta_2) = \left(m - \tfrac{1}{2}\right)\lambda \]</span><span class="d">constructive (bright) reflection, one \(\pi\) flip, \(m = 1, 2, 3, \ldots\); \(\lambda\) in air (m)</span><span class="s">Section 6</span></div>
+    <div class="f"><span class="expr">\[ 2n_{\text{oil}}\,d\cos(\theta_2) = m\lambda \]</span><span class="d">destructive (dark) reflection, one \(\pi\) flip, \(m = 0, 1, 2, \ldots\); swap the two rules for zero or two flips</span><span class="s">Section 6</span></div>
+  </div>
+  <div class="card">
+    <h5>Part 3 · Revision problems (Lecture 8b)</h5>
+    <div class="f"><span class="expr">\[ f_{\text{beat}} = \left|f_1 - f_2\right| \]</span><span class="d">beat frequency (Hz); \(f_1\), \(f_2\) = the two frequencies (Hz)</span><span class="s">Section 7</span></div>
+    <div class="f"><span class="expr">\[ T_{\text{beat}} = \frac{1}{f_{\text{beat}}} \]</span><span class="d">beat period (s)</span><span class="s">Section 7</span></div>
+    <div class="f"><span class="expr">\[ r = \sqrt{x^2 + y^2} \]</span><span class="d">path length (m) from a speaker to the detector; \(x\), \(y\) = legs (m)</span><span class="s">Section 8</span></div>
+    <div class="f"><span class="expr">\[ \Delta r = \left|r_2 - r_1\right| = \left(m + \tfrac{1}{2}\right)\lambda \]</span><span class="d">minimum for in-phase sources, \(m = 0, 1, 2, \ldots\); first minimum \(\lambda = 2\Delta r\)</span><span class="s">Section 8</span></div>
+    <div class="f"><span class="expr">\[ \Delta r = m\lambda, \qquad f = \frac{v}{\lambda} \]</span><span class="d">maximum for in-phase sources; \(f\) = frequency (Hz), \(v\) = speed of sound (m/s), 343 m/s in air</span><span class="s">Section 8</span></div>
+  </div>
+</div>
+</section>
+<footer>Study guide generated from the lecture. Check flagged notes against your class materials.</footer></main></div>
+<script>window.GUIDE={"title": "Diffraction and Thin Films Guide", "quizzes": {"q1": {"title": "Section 1 quiz", "questions": [{"q": "In Huygens' principle, what forms the wavefront at a later time?", "options": ["The line joining the back edges of the wavelets", "The envelope (common front edge) of the spherical wavelets from every point on the current wavefront", "The circles traced by the wavelet centers", "Only the wavelet from the point closest to the source"], "answer": 1, "explain": "Every point on the wavefront sends out a spherical wavelet; the wavelets interfere, and their sum forms the new wavefront along their common tangent (envelope) on the forward side.", "mistakes": ["taking the backward side, where the wavelets cancel", null, "confusing the sources with the wavefront they produce", "ignoring the other wavelets, which all contribute"], "review": "s1"}, {"q": "A plane sound wave moves through air at \\(v = 343\\ \\text{m/s}\\). How far ahead is the wavefront after \\(\\Delta t = 4.0\\ \\text{ms}\\)?", "options": ["\\(1.372\\ \\text{m}\\)", "\\(0.686\\ \\text{m}\\)", "\\(1372\\ \\text{m}\\)", "\\(85.75\\ \\text{m}\\)"], "answer": 0, "explain": "Each wavelet radius is \\(r = v\\,\\Delta t = (343\\ \\text{m/s})(4.0\\times10^{-3}\\ \\text{s}) = 1.372\\ \\text{m}\\), and the flat envelope moves forward by one radius.", "mistakes": [null, "halving the radius as if it were a diameter", "not converting milliseconds to seconds", "dividing \\(v\\) by the time instead of multiplying"], "review": "s1"}, {"q": "A spherical sound wavefront has radius \\(R_0 = 2.0\\ \\text{m}\\). With \\(v = 343\\ \\text{m/s}\\), what is its radius \\(10\\ \\text{ms}\\) later?", "options": ["\\(3.43\\ \\text{m}\\)", "\\(8.86\\ \\text{m}\\)", "\\(1.43\\ \\text{m}\\)", "\\(5.43\\ \\text{m}\\)"], "answer": 3, "explain": "Wavelet radius \\(r = (343\\ \\text{m/s})(0.010\\ \\text{s}) = 3.43\\ \\text{m}\\). The envelope is a circle of radius \\(R = R_0 + r = 2.0 + 3.43 = 5.43\\ \\text{m}\\).", "mistakes": ["giving the wavelet radius instead of the new wavefront radius", "adding the wavelet diameter (6.86 m) instead of its radius", "subtracting the wavelet radius, as if the wave moved inward", null], "review": "s1"}, {"q": "Why is the new wavefront of a plane wave also flat?", "options": ["Because only the central wavelet survives", "Because the wave speed increases away from the center", "All wavelets start at the same time and travel at the same speed, so they all have the same radius and their front edges line up", "Because the wavelets are flat, not spherical"], "answer": 2, "explain": "In a homogeneous medium every wavelet grows to the same radius \\(v\\,\\Delta t\\). Equal circles centered on a straight line have a straight common tangent, parallel to the original wavefront.", "mistakes": ["ignoring the contribution of every other point", "assuming a non-uniform medium (that would bend the front)", null, "forgetting that Huygens wavelets are spherical"], "review": "s1"}]}, "q2": {"title": "Section 2 quiz", "questions": [{"q": "A slit of width \\(a = 50\\ \\text{µm}\\) is lit with \\(\\lambda = 500\\ \\text{nm}\\). At what angle is the \\(m = 2\\) dark fringe?", "options": ["\\(1.43^\\circ\\)", "\\(1.15^\\circ\\)", "\\(0.573^\\circ\\)", "\\(2.29^\\circ\\)"], "answer": 1, "explain": "\\(\\sin\\theta = \\frac{m\\lambda}{a} = \\frac{2(0.50\\ \\text{µm})}{50\\ \\text{µm}} = 0.020\\), so \\(\\theta = 1.15^\\circ\\).", "mistakes": ["using \\(\\left(m+\\frac{1}{2}\\right)\\lambda\\), the bright-fringe rule", null, "using \\(m = 1\\) (the first dark fringe)", "using the half-slit width \\(\\frac{a}{2}\\) in place of \\(a\\)"], "review": "s2"}, {"q": "In the lecture's argument for the first minimum, why do rays a distance \\(\\frac{a}{2}\\) apart cancel?", "options": ["Their path difference \\(\\frac{a}{2}\\sin\\theta\\) equals \\(\\frac{\\lambda}{2}\\), so each pair arrives exactly out of phase", "Their path difference equals \\(\\lambda\\), so they arrive out of phase", "They come from opposite edges of the slit", "The top ray reflects off the slit edge and flips phase"], "answer": 0, "explain": "Pairing every ray in the top half with the one \\(\\frac{a}{2}\\) below it, each pair differs in path by \\(\\frac{a}{2}\\sin\\theta\\). Setting this to \\(\\frac{\\lambda}{2}\\) makes every pair cancel, giving \\(a\\sin\\theta = \\lambda\\).", "mistakes": [null, "mixing up half a wavelength (cancel) with a full wavelength (add)", "pairing the wrong rays: the edges are \\(a\\) apart, not \\(\\frac{a}{2}\\)", "importing the thin-film phase flip, which does not apply here"], "review": "s2"}, {"q": "The first dark fringe of a slit is at \\(0.40^\\circ\\). The slit width is halved. Where is the first dark fringe now?", "options": ["About \\(0.20^\\circ\\)", "Still \\(0.40^\\circ\\)", "About \\(1.60^\\circ\\)", "About \\(0.80^\\circ\\)"], "answer": 3, "explain": "\\(\\sin\\theta_1 = \\frac{\\lambda}{a}\\). Halving \\(a\\) doubles \\(\\sin\\theta_1\\): \\(\\sin\\theta_1' = 2\\sin(0.40^\\circ)\\), so \\(\\theta_1' = 0.80^\\circ\\). A narrower slit spreads the pattern out.", "mistakes": ["thinking a narrower slit gives a narrower pattern", "thinking the angle depends only on \\(\\lambda\\)", "squaring the factor of 2", null], "review": "s2"}, {"q": "A slit with \\(a = 3.4\\ \\text{µm}\\) is lit with \\(\\lambda = 0.80\\ \\text{µm}\\). How many dark fringes appear in total (both sides)?", "options": ["10", "5", "8", "4"], "answer": 2, "explain": "\\(\\sin\\theta = \\frac{m\\lambda}{a} \\le 1\\) needs \\(m \\le \\frac{3.4}{0.80} = 4.25\\), so \\(m = 1, 2, 3, 4\\) on each side: 8 in total.", "mistakes": ["rounding 4.25 up to 5 per side", "rounding up and counting one side only", null, "counting one side only"], "review": "s2"}]}, "q3": {"title": "Section 3 quiz", "questions": [{"q": "Using the lecture's maxima rule, what is the intensity of the first side peak, where \\(a\\sin\\theta = 1.5\\lambda\\)?", "options": ["\\(0.444\\,I_m\\)", "\\(0.045\\,I_m\\)", "\\(0.212\\,I_m\\)", "\\(0\\)"], "answer": 1, "explain": "\\(\\alpha = 1.5\\pi\\) and \\(\\sin(1.5\\pi) = -1\\), so \\(I = I_m\\left[\\frac{1}{1.5\\pi}\\right]^2 = \\frac{I_m}{22.2} = 0.045\\,I_m\\).", "mistakes": ["dropping the \\(\\pi\\) from \\(\\alpha\\)", null, "forgetting to square \\(\\frac{\\sin\\alpha}{\\alpha}\\)", "treating the point as a dark fringe"], "review": "s3"}, {"q": "For \\(a = 20\\ \\text{µm}\\), \\(\\lambda = 500\\ \\text{nm}\\) and \\(\\theta = 1.0^\\circ\\), what is \\(\\alpha\\)?", "options": ["\\(2.19\\ \\text{rad}\\)", "\\(4.39\\ \\text{rad}\\)", "\\(0.698\\ \\text{rad}\\)", "\\(1.10\\ \\text{rad}\\)"], "answer": 0, "explain": "\\(\\alpha = \\frac{\\pi a}{\\lambda}\\sin\\theta = \\pi(40)\\sin(1.0^\\circ) = 125.66 \\times 0.017452 = 2.19\\ \\text{rad}\\).", "mistakes": [null, "giving \\(\\Delta\\phi\\) instead of \\(\\alpha = \\frac{\\Delta\\phi}{2}\\)", "leaving out the \\(\\pi\\)", "halving \\(\\alpha\\) a second time"], "review": "s3"}, {"q": "For the same slit and angle (\\(\\alpha = 2.19\\ \\text{rad}\\)), what is \\(\\frac{I}{I_m}\\)?", "options": ["\\(0.370\\)", "\\(0.0466\\)", "\\(0.000304\\)", "\\(0.137\\)"], "answer": 3, "explain": "\\(\\frac{\\sin\\alpha}{\\alpha} = \\frac{\\sin(2.193\\ \\text{rad})}{2.193} = \\frac{0.812}{2.193} = 0.370\\); squaring gives \\(\\frac{I}{I_m} = 0.137\\).", "mistakes": ["forgetting to square", "using \\(\\Delta\\phi\\) (4.39 rad) in place of \\(\\alpha\\)", "taking \\(\\sin\\alpha\\) with the calculator in degree mode", null], "review": "s3"}, {"q": "At the second dark fringe (\\(a\\sin\\theta = 2\\lambda\\)), what is the phase difference \\(\\Delta\\phi\\) between the rays from the top and bottom of the slit?", "options": ["\\(\\pi\\ \\text{rad}\\)", "\\(5\\pi\\ \\text{rad}\\)", "\\(4\\pi\\ \\text{rad}\\)", "\\(2\\pi\\ \\text{rad}\\)"], "answer": 2, "explain": "\\(\\Delta\\phi = \\frac{2\\pi}{\\lambda}(a\\sin\\theta) = \\frac{2\\pi}{\\lambda}(2\\lambda) = 4\\pi\\ \\text{rad}\\), so \\(\\alpha = 2\\pi\\) and \\(\\sin\\alpha = 0\\).", "mistakes": ["using the half-wavelength pairing condition", "using the maxima rule \\(\\left(m+\\frac{1}{2}\\right)\\) with \\(m = 2\\)", null, "giving \\(\\alpha\\) instead of \\(\\Delta\\phi\\)"], "review": "s3"}]}, "q4": {"title": "Section 4 quiz", "questions": [{"q": "Light in air (\\(n_1 = 1.00\\)) enters water (\\(n_2 = 1.33\\)) at \\(\\theta_1 = 40^\\circ\\). What is \\(\\theta_2\\)?", "options": ["\\(40^\\circ\\)", "\\(28.9^\\circ\\)", "\\(58.7^\\circ\\)", "\\(30.1^\\circ\\)"], "answer": 1, "explain": "\\(\\sin\\theta_2 = \\frac{n_1}{n_2}\\sin\\theta_1 = \\frac{\\sin 40^\\circ}{1.33} = \\frac{0.6428}{1.33} = 0.4833\\), so \\(\\theta_2 = 28.9^\\circ\\).", "mistakes": ["assuming no bending", null, "putting the index ratio upside down", "dividing the angle by \\(n_2\\) instead of its sine"], "review": "s4"}, {"q": "What is the speed of light in glass with \\(n = 1.50\\)?", "options": ["\\(2.00\\times10^{8}\\ \\text{m/s}\\)", "\\(4.50\\times10^{8}\\ \\text{m/s}\\)", "\\(3.00\\times10^{8}\\ \\text{m/s}\\)", "\\(1.33\\times10^{8}\\ \\text{m/s}\\)"], "answer": 0, "explain": "\\(v = \\frac{c}{n} = \\frac{3.00\\times10^{8}\\ \\text{m/s}}{1.50} = 2.00\\times10^{8}\\ \\text{m/s}\\).", "mistakes": [null, "multiplying by \\(n\\)", "assuming light keeps its vacuum speed", "dividing by \\(n^2\\)"], "review": "s4"}, {"q": "Which of these would show strong thin-film colors in visible light (\\(\\lambda \\approx 500\\ \\text{nm}\\))?", "options": ["A window pane \\(3\\ \\text{mm}\\) thick", "A glass block \\(1\\ \\text{cm}\\) thick", "A pond \\(2\\ \\text{m}\\) deep", "A soap film \\(300\\ \\text{nm}\\) thick"], "answer": 3, "explain": "Interference effects are most significant when the film thickness is similar to or smaller than the wavelength (\\(d \\lt \\lambda\\) in the lecture). Only the 300 nm soap film qualifies; the others are thousands of wavelengths thick.", "mistakes": ["thinking any transparent layer gives colors (a 3 mm pane is about 6000 wavelengths thick)", "thinking thickness does not matter (1 cm is far thicker than a wavelength)", "thinking any surface reflecting light makes thin-film colors", null], "review": "s4"}, {"q": "In the oil film diagram, ray 2 passes from air into oil (\\(n_{\\text{oil}} \\gt n_{\\text{air}}\\)). Which is true?", "options": ["It bends toward the normal and speeds up", "It goes straight on, at the same speed", "It bends toward the normal and slows down", "It bends away from the normal and speeds up"], "answer": 2, "explain": "Higher index means lower speed (\\(v = \\frac{c}{n}\\)), and \\(n_1\\sin\\theta_1 = n_2\\sin\\theta_2\\) with \\(n_2 \\gt n_1\\) gives \\(\\theta_2 \\lt \\theta_1\\): toward the normal.", "mistakes": ["linking a higher index with a higher speed", "forgetting that light refracts at an oblique boundary", null, "reversing the direction of bending and speed change"], "review": "s4"}]}, "q5": {"title": "Section 5 quiz", "questions": [{"q": "A soap film in air is so thin that the path difference between the two reflected rays is negligible. How does it look in reflected light?", "options": ["Bright white with dark bands", "Dark at every wavelength", "Bright at every wavelength", "A single bright color"], "answer": 1, "explain": "The top reflection (air to soap) flips by \\(\\pi\\); the bottom one (soap to air) does not. With no path difference the rays are exactly out of phase, so all wavelengths cancel: a dark appearance.", "mistakes": ["ignoring that every wavelength cancels", null, "forgetting the \\(\\pi\\) flip at the top surface", "treating the film as thick enough to pick out one color"], "review": "s5"}, {"q": "Oil (\\(n = 1.45\\)) floats on water (\\(n = 1.33\\)) with air above. How many of the two reflections get a \\(\\pi\\) phase change?", "options": ["1 (only the top)", "2 (both)", "0", "1 (only the bottom)"], "answer": 0, "explain": "Top: air to oil, \\(1.00 \\lt 1.45\\), flip. Bottom: oil to water, \\(1.45 \\gt 1.33\\), reflecting off a lower index, no flip.", "mistakes": [null, "assuming every reflection flips", "assuming no reflection flips", "comparing water with air instead of with oil"], "review": "s5"}, {"q": "A \\(\\pi\\ \\text{rad}\\) phase change on reflection is equivalent to an extra path of", "options": ["\\(\\lambda\\)", "\\(\\frac{\\lambda}{4}\\)", "\\(2\\lambda\\)", "\\(\\frac{\\lambda}{2}\\)"], "answer": 3, "explain": "A full cycle is \\(2\\pi\\ \\text{rad}\\), equivalent to \\(\\lambda\\). Half a cycle, \\(\\pi\\ \\text{rad}\\), is \\(\\frac{\\lambda}{2}\\) (the course formula sheet's 0.5 wavelength shift).", "mistakes": ["equating \\(\\pi\\) with a full cycle", "halving one time too many", "doubling instead of halving", null], "review": "s5"}, {"q": "A coating (\\(n = 1.38\\)) sits on glass (\\(n = 1.52\\)) in air. What is the relative phase shift between the two reflected rays from reflection alone?", "options": ["\\(\\frac{\\pi}{2}\\ \\text{rad}\\)", "\\(\\frac{3\\pi}{2}\\ \\text{rad}\\)", "\\(0\\)", "\\(\\pi\\ \\text{rad}\\)"], "answer": 2, "explain": "Both reflections are off a higher index (\\(1.00 \\lt 1.38\\) and \\(1.38 \\lt 1.52\\)), so both flip by \\(\\pi\\). The flips cancel: relative shift 0.", "mistakes": ["taking a flip as a quarter cycle", "adding a flip and a half flip", null, "counting only the top flip"], "review": "s5"}]}, "q6": {"title": "Section 6 quiz", "questions": [{"q": "Light travels \\(2.0\\ \\text{µm}\\) through glass with \\(n = 1.5\\). What is the optical path length?", "options": ["\\(6.0\\ \\text{µm}\\)", "\\(3.0\\ \\text{µm}\\)", "\\(1.33\\ \\text{µm}\\)", "\\(2.0\\ \\text{µm}\\)"], "answer": 1, "explain": "\\(\\text{OPL} = ns = (1.5)(2.0\\ \\text{µm}) = 3.0\\ \\text{µm}\\).", "mistakes": ["doubling as if the light crossed twice", null, "dividing by \\(n\\) instead of multiplying", "ignoring the index"], "review": "s6"}, {"q": "A soap film (\\(n = 1.33\\)) in air is viewed at normal incidence. What is the thinnest film that strongly reflects \\(\\lambda = 600\\ \\text{nm}\\)?", "options": ["\\(113\\ \\text{nm}\\)", "\\(226\\ \\text{nm}\\)", "\\(150\\ \\text{nm}\\)", "\\(200\\ \\text{nm}\\)"], "answer": 0, "explain": "One flip, so constructive needs \\(2nd = \\left(m - \\frac{1}{2}\\right)\\lambda\\). With \\(m = 1\\): \\(d = \\frac{\\lambda}{4n} = \\frac{600\\ \\text{nm}}{4(1.33)} = 113\\ \\text{nm}\\).", "mistakes": [null, "using the destructive condition \\(2nd = \\lambda\\)", "leaving out the film index", "multiplying by \\(n\\) instead of dividing"], "review": "s6"}, {"q": "A film with \\(n_2 = 1.40\\) and \\(d = 500\\ \\text{nm}\\) has refraction angle \\(\\theta_2 = 25^\\circ\\). What is the OPD?", "options": ["\\(1400\\ \\text{nm}\\)", "\\(1545\\ \\text{nm}\\)", "\\(592\\ \\text{nm}\\)", "\\(1269\\ \\text{nm}\\)"], "answer": 3, "explain": "\\(\\text{OPD} = 2n_2 d\\cos\\theta_2 = 2(1.40)(500\\ \\text{nm})\\cos 25^\\circ = 1400 \\times 0.9063 = 1269\\ \\text{nm}\\).", "mistakes": ["leaving out \\(\\cos\\theta_2\\)", "dividing by \\(\\cos\\theta_2\\) (only the \\(\\overline{AB}+\\overline{BC}\\) part)", "using \\(\\sin\\theta_2\\) instead of \\(\\cos\\theta_2\\)", null], "review": "s6"}, {"q": "Oil (\\(n = 1.45\\), \\(d = 250\\ \\text{nm}\\)) floats on water, viewed straight on. Which visible wavelength is reflected most strongly?", "options": ["\\(1450\\ \\text{nm}\\)", "\\(333\\ \\text{nm}\\)", "\\(483\\ \\text{nm}\\)", "\\(725\\ \\text{nm}\\)"], "answer": 2, "explain": "\\(2nd = 2(1.45)(250\\ \\text{nm}) = 725\\ \\text{nm}\\). One flip, so bright when \\(725 = \\left(m - \\frac{1}{2}\\right)\\lambda\\): \\(m = 1\\) gives 1450 nm (infrared), \\(m = 2\\) gives \\(483\\ \\text{nm}\\) (blue, visible).", "mistakes": ["stopping at \\(m = 1\\), which is not visible", "leaving out the film index", null, "using the destructive condition \\(2nd = m\\lambda\\)"], "review": "s6"}]}, "q7": {"title": "Section 7 quiz", "questions": [{"q": "Two tones of \\(300\\ \\text{Hz}\\) and \\(306\\ \\text{Hz}\\) play together. What is the beat frequency?", "options": ["\\(3\\ \\text{Hz}\\)", "\\(6\\ \\text{Hz}\\)", "\\(303\\ \\text{Hz}\\)", "\\(606\\ \\text{Hz}\\)"], "answer": 1, "explain": "\\(f_{\\text{beat}} = \\left|f_1 - f_2\\right| = \\left|300 - 306\\right|\\ \\text{Hz} = 6\\ \\text{Hz}\\).", "mistakes": ["using half the difference (the envelope term)", null, "giving the average (the pitch heard)", "adding the frequencies"], "review": "s7"}, {"q": "Tones of \\(440\\ \\text{Hz}\\) and \\(437\\ \\text{Hz}\\) play together. What is the beat period?", "options": ["\\(0.333\\ \\text{s}\\)", "\\(3\\ \\text{s}\\)", "\\(0.667\\ \\text{s}\\)", "\\(0.00229\\ \\text{s}\\)"], "answer": 0, "explain": "\\(f_{\\text{beat}} = 3\\ \\text{Hz}\\), so \\(T_{\\text{beat}} = \\frac{1}{3\\ \\text{Hz}} = 0.333\\ \\text{s}\\).", "mistakes": [null, "giving the beat frequency as a time", "using half the frequency difference", "taking the period of the tone itself"], "review": "s7"}, {"q": "An unknown fork beats 4 times per second with a \\(512\\ \\text{Hz}\\) fork. Adding wax to the unknown fork (lowering it) makes the beats 6 per second. What was its frequency?", "options": ["\\(516\\ \\text{Hz}\\)", "\\(518\\ \\text{Hz}\\)", "\\(506\\ \\text{Hz}\\)", "\\(508\\ \\text{Hz}\\)"], "answer": 3, "explain": "Candidates are \\(512 \\pm 4\\): 516 Hz or 508 Hz. Lowering 516 Hz would bring it closer to 512 Hz and slow the beats; lowering 508 Hz moves it away and speeds them up. So \\(f = 508\\ \\text{Hz}\\).", "mistakes": ["ignoring which way the wax moves the frequency", "adding the new beat count to the reference", "using the beat count after the wax was added", null], "review": "s7"}]}, "q8": {"title": "Section 8 quiz", "questions": [{"q": "Two in-phase speakers give a path difference \\(\\Delta r = 0.85\\ \\text{m}\\) at a detector, with \\(v = 340\\ \\text{m/s}\\). What is the lowest frequency that gives a minimum there?", "options": ["\\(100\\ \\text{Hz}\\)", "\\(289\\ \\text{Hz}\\)", "\\(200\\ \\text{Hz}\\)", "\\(400\\ \\text{Hz}\\)"], "answer": 2, "explain": "First minimum: \\(\\Delta r = \\frac{\\lambda}{2}\\), so \\(\\lambda = 1.70\\ \\text{m}\\) and \\(f = \\frac{340\\ \\text{m/s}}{1.70\\ \\text{m}} = 200\\ \\text{Hz}\\).", "mistakes": ["setting \\(\\lambda = 4\\Delta r\\)", "multiplying \\(v\\) by \\(\\Delta r\\)", null, "setting \\(\\Delta r = \\lambda\\) (a maximum)"], "review": "s8"}, {"q": "In the lecture's geometry (speakers 8 m apart, detector 12 m in front and 2 m below the top speaker), what is \\(r_2\\), the distance from the bottom speaker?", "options": ["\\(18\\ \\text{m}\\)", "\\(13.42\\ \\text{m}\\)", "\\(12.17\\ \\text{m}\\)", "\\(14.42\\ \\text{m}\\)"], "answer": 1, "explain": "The detector is \\(8 - 2 = 6\\ \\text{m}\\) above the bottom speaker, so \\(r_2 = \\sqrt{6^2 + 12^2}\\ \\text{m} = \\sqrt{180}\\ \\text{m} = 13.42\\ \\text{m}\\).", "mistakes": ["adding the legs instead of using Pythagoras", null, "computing \\(r_1\\), the top speaker's distance", "using the full 8 m separation as the vertical leg"], "review": "s8"}, {"q": "Same geometry as the lecture (\\(\\Delta r = 1.25\\ \\text{m}\\), first minimum), but on a cold day \\(v = 330\\ \\text{m/s}\\). What frequency gives the first minimum?", "options": ["\\(132\\ \\text{Hz}\\)", "\\(264\\ \\text{Hz}\\)", "\\(137.2\\ \\text{Hz}\\)", "\\(66\\ \\text{Hz}\\)"], "answer": 0, "explain": "\\(\\lambda = 2\\Delta r = 2.5\\ \\text{m}\\) (geometry unchanged), so \\(f = \\frac{330\\ \\text{m/s}}{2.5\\ \\text{m}} = 132\\ \\text{Hz}\\).", "mistakes": [null, "using \\(\\lambda = \\Delta r\\)", "keeping the old speed of 343 m/s", "using \\(\\lambda = 4\\Delta r\\)"], "review": "s8"}, {"q": "Same lecture geometry (\\(\\Delta r = 1.25\\ \\text{m}\\), \\(v = 343\\ \\text{m/s}\\)). What frequency puts the <b>second<\/b> minimum at the detector?", "options": ["\\(274.4\\ \\text{Hz}\\)", "\\(137.2\\ \\text{Hz}\\)", "\\(548.8\\ \\text{Hz}\\)", "\\(411.6\\ \\text{Hz}\\)"], "answer": 3, "explain": "Second minimum: \\(\\Delta r = \\frac{3}{2}\\lambda\\), so \\(\\lambda = \\frac{2(1.25\\ \\text{m})}{3} = 0.833\\ \\text{m}\\) and \\(f = \\frac{343\\ \\text{m/s}}{0.833\\ \\text{m}} = 411.6\\ \\text{Hz}\\).", "mistakes": ["using \\(n = 2\\) in \\(n\\frac{\\lambda}{2}\\), which gives a maximum", "giving the first minimum", "setting \\(\\Delta r = 2\\lambda\\) (also a maximum)", null], "review": "s8"}]}, "final": {"title": "Final exam", "questions": [{"q": "A spherical sound wavefront has radius \\(1.5\\ \\text{m}\\). With \\(v = 343\\ \\text{m/s}\\), what is its radius \\(2.0\\ \\text{ms}\\) later?", "options": ["\\(2.87\\ \\text{m}\\)", "\\(687.5\\ \\text{m}\\)", "\\(2.19\\ \\text{m}\\)", "\\(0.686\\ \\text{m}\\)"], "answer": 2, "explain": "Wavelet radius \\(r = (343\\ \\text{m/s})(0.0020\\ \\text{s}) = 0.686\\ \\text{m}\\); new radius \\(R = 1.5 + 0.686 = 2.19\\ \\text{m}\\). Review: Section 1.", "mistakes": ["adding the wavelet diameter", "not converting milliseconds", null, "giving only the wavelet radius"], "review": "s1"}, {"q": "A slit of width \\(0.25\\ \\text{mm}\\) is lit with \\(\\lambda = 500\\ \\text{nm}\\). At what angle is the \\(m = 3\\) dark fringe?", "options": ["\\(0.688^\\circ\\)", "\\(0.344^\\circ\\)", "\\(0.115^\\circ\\)", "\\(0.401^\\circ\\)"], "answer": 1, "explain": "\\(\\sin\\theta = \\frac{3(500\\times10^{-9}\\ \\text{m})}{0.25\\times10^{-3}\\ \\text{m}} = 0.0060\\), so \\(\\theta = 0.344^\\circ\\). Review: Section 2.", "mistakes": ["using \\(\\frac{a}{2}\\) for the slit width", null, "using \\(m = 1\\)", "using \\(\\left(m+\\frac{1}{2}\\right)\\lambda\\)"], "review": "s2"}, {"q": "Sodium light (\\(\\lambda = 589\\ \\text{nm}\\)) gives a first dark fringe at \\(2.0^\\circ\\). What is the slit width?", "options": ["\\(16.9\\ \\text{µm}\\)", "\\(33.8\\ \\text{µm}\\)", "\\(8.44\\ \\text{µm}\\)", "\\(0.648\\ \\text{µm}\\)"], "answer": 0, "explain": "\\(a = \\frac{\\lambda}{\\sin\\theta_1} = \\frac{589\\times10^{-9}\\ \\text{m}}{\\sin 2.0^\\circ} = \\frac{589\\times10^{-9}}{0.03490}\\ \\text{m} = 16.9\\ \\text{µm}\\). Review: Section 2.", "mistakes": [null, "using the second-minimum condition \\(2\\lambda\\)", "using the half-slit path difference \\(\\frac{\\lambda}{2}\\)", "taking \\(\\sin 2.0\\) in radian mode"], "review": "s2"}, {"q": "In single-slit diffraction, what is \\(\\frac{I}{I_m}\\) at a point where \\(\\alpha = \\frac{\\pi}{2}\\)?", "options": ["\\(0.637\\)", "\\(1\\)", "\\(0.000123\\)", "\\(0.405\\)"], "answer": 3, "explain": "\\(\\frac{\\sin\\alpha}{\\alpha} = 1 \\div \\frac{\\pi}{2} = \\frac{2}{\\pi} = 0.637\\); squared, \\(\\frac{I}{I_m} = \\frac{4}{\\pi^2} = 0.405\\). Review: Section 3.", "mistakes": ["forgetting to square", "thinking \\(\\sin\\alpha = 1\\) means a maximum of the pattern", "treating \\(\\alpha\\) as 90 in degrees", null], "review": "s3"}, {"q": "A single-slit pattern has \\(I_m = 8.0\\ \\text{W/m}^2\\). Using the lecture's maxima rule, what is the intensity of the \\(m = 2\\) side peak?", "options": ["\\(1.02\\ \\text{W/m}^2\\)", "\\(1.28\\ \\text{W/m}^2\\)", "\\(0.130\\ \\text{W/m}^2\\)", "\\(0.360\\ \\text{W/m}^2\\)"], "answer": 2, "explain": "\\(I = \\frac{I_m}{(2.5\\pi)^2} = \\frac{8.0\\ \\text{W/m}^2}{61.69} = 0.130\\ \\text{W/m}^2\\). Review: Section 3.", "mistakes": ["forgetting to square", "dropping the \\(\\pi\\)", null, "using \\(m = 1\\)"], "review": "s3"}, {"q": "Light in air hits glass (\\(n = 1.50\\)) at \\(50^\\circ\\) from the normal. What is the refraction angle?", "options": ["\\(59.3^\\circ\\)", "\\(30.7^\\circ\\)", "\\(33.3^\\circ\\)", "\\(50^\\circ\\)"], "answer": 1, "explain": "\\(\\sin\\theta_2 = \\frac{\\sin 50^\\circ}{1.50} = \\frac{0.7660}{1.50} = 0.5107\\), so \\(\\theta_2 = 30.7^\\circ\\). Review: Section 4.", "mistakes": ["taking the inverse cosine instead of the inverse sine", null, "dividing the angle by \\(n\\)", "assuming no bending"], "review": "s4"}, {"q": "A coating (\\(n = 1.38\\)) sits on glass (\\(n = 1.50\\)) in air. Which reflections get a \\(\\pi\\) phase change?", "options": ["Both, so the reflection shifts cancel", "Only the top one", "Only the bottom one", "Neither"], "answer": 0, "explain": "Top: \\(1.00 \\lt 1.38\\), flip. Bottom: \\(1.38 \\lt 1.50\\), flip. Two flips cancel, so the relative shift comes only from the path difference. Review: Section 5.", "mistakes": [null, "assuming the bottom reflection never flips", "forgetting that air to coating is a step up in index", "thinking flips need a big index jump"], "review": "s5"}, {"q": "A soap film (\\(n = 1.33\\), \\(d = 250\\ \\text{nm}\\)) in air is viewed straight on. Which visible wavelength is reflected most strongly?", "options": ["\\(665\\ \\text{nm}\\)", "\\(1330\\ \\text{nm}\\)", "\\(333\\ \\text{nm}\\)", "\\(443\\ \\text{nm}\\)"], "answer": 3, "explain": "\\(2nd = 2(1.33)(250\\ \\text{nm}) = 665\\ \\text{nm}\\). One flip, so bright when \\(665 = \\left(m - \\frac{1}{2}\\right)\\lambda\\): \\(m = 2\\) gives \\(443\\ \\text{nm}\\). Review: Section 6.", "mistakes": ["using the destructive condition", "stopping at \\(m = 1\\) (infrared)", "leaving out the film index", null], "review": "s6"}, {"q": "Oil (\\(n = 1.45\\)) floats on water. What is the thinnest non-zero thickness that makes \\(\\lambda = 600\\ \\text{nm}\\) dark in reflection at normal incidence?", "options": ["\\(300\\ \\text{nm}\\)", "\\(435\\ \\text{nm}\\)", "\\(207\\ \\text{nm}\\)", "\\(103\\ \\text{nm}\\)"], "answer": 2, "explain": "One flip, so dark when \\(2nd = m\\lambda\\). With \\(m = 1\\): \\(d = \\frac{\\lambda}{2n} = \\frac{600\\ \\text{nm}}{2(1.45)} = 207\\ \\text{nm}\\). Review: Section 6.", "mistakes": ["leaving out the film index", "multiplying by \\(n\\) instead of dividing", null, "using the constructive condition"], "review": "s6"}, {"q": "Two tuning forks of \\(523\\ \\text{Hz}\\) and \\(527\\ \\text{Hz}\\) sound together. What is the beat period?", "options": ["\\(0.0019\\ \\text{s}\\)", "\\(0.25\\ \\text{s}\\)", "\\(4\\ \\text{s}\\)", "\\(0.50\\ \\text{s}\\)"], "answer": 1, "explain": "\\(f_{\\text{beat}} = \\left|523 - 527\\right|\\ \\text{Hz} = 4\\ \\text{Hz}\\), so \\(T_{\\text{beat}} = \\frac{1}{4\\ \\text{Hz}} = 0.25\\ \\text{s}\\). Review: Section 7.", "mistakes": ["taking the period of the average tone", null, "giving the beat frequency as a time", "using half the frequency difference"], "review": "s7"}, {"q": "Two in-phase speakers are \\(5.00\\ \\text{m}\\) and \\(5.60\\ \\text{m}\\) from a microphone, with \\(v = 343\\ \\text{m/s}\\). What is the lowest frequency that gives a minimum?", "options": ["\\(286\\ \\text{Hz}\\)", "\\(572\\ \\text{Hz}\\)", "\\(143\\ \\text{Hz}\\)", "\\(68.6\\ \\text{Hz}\\)"], "answer": 0, "explain": "\\(\\Delta r = 0.60\\ \\text{m} = \\frac{\\lambda}{2}\\), so \\(\\lambda = 1.20\\ \\text{m}\\) and \\(f = \\frac{343\\ \\text{m/s}}{1.20\\ \\text{m}} = 286\\ \\text{Hz}\\). Review: Section 8.", "mistakes": [null, "setting \\(\\Delta r = \\lambda\\) (a maximum)", "setting \\(\\lambda = 4\\Delta r\\)", "using a path length (5.00 m) as the wavelength"], "review": "s8"}, {"q": "An oil film (\\(n = 1.45\\), \\(d = 350\\ \\text{nm}\\)) in air is lit at \\(45^\\circ\\) from the normal. Which visible wavelength is missing from the reflected light?", "options": ["\\(508\\ \\text{nm}\\)", "\\(886\\ \\text{nm}\\)", "\\(591\\ \\text{nm}\\)", "\\(443\\ \\text{nm}\\)"], "answer": 3, "explain": "\\(\\theta_2 = \\sin^{-1}\\left(\\frac{\\sin 45^\\circ}{1.45}\\right) = 29.2^\\circ\\), \\(\\cos\\theta_2 = 0.873\\). \\(\\text{OPD} = 2(1.45)(350\\ \\text{nm})(0.873) = 886\\ \\text{nm}\\). Dark when \\(\\text{OPD} = m\\lambda\\): \\(m = 2\\) gives \\(443\\ \\text{nm}\\). Review: Section 6.", "mistakes": ["leaving out \\(\\cos\\theta_2\\)", "stopping at \\(m = 1\\) (infrared)", "using the constructive condition", null], "review": "s6"}]}}};</script>
+<script>
+window.initDemos = function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function fmt(x, d) { return Number(x).toFixed(d); }
+  function sig(x, n) {
+    if (!isFinite(x)) return "\\infty";
+    if (x === 0) return "0";
+    var e = Math.floor(Math.log10(Math.abs(x)));
+    var d = Math.max(0, n - 1 - e);
+    return Number(x).toFixed(d);
+  }
+  function tex(el, lines) {
+    el.innerHTML = "";
+    lines.forEach(function (t) {
+      var div = document.createElement("div");
+      div.style.overflowX = "auto"; div.style.overflowY = "hidden"; div.style.maxWidth = "100%";
+      if (t.charAt(0) === "!") { div.innerHTML = t.slice(1); }
+      else if (window.katex) { katex.render(t, div, { displayMode: true, throwOnError: false }); }
+      else { div.textContent = t; }
+      el.appendChild(div);
+    });
+  }
+  function setup(canvas) {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.clientWidth || 600;
+    var h = parseFloat(canvas.getAttribute("height")) || 240;
+    if (!canvas.dataset.h) canvas.dataset.h = h;
+    h = parseFloat(canvas.dataset.h);
+    canvas.style.height = h + "px";
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    var ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.font = "12px Archivo, Arial, sans-serif";
+    return { ctx: ctx, w: w, h: h };
+  }
+  function line(ctx, x1, y1, x2, y2, color, width, dash) {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = width || 1;
+    if (dash) ctx.setLineDash(dash);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.restore();
+  }
+  function label(ctx, text, x, y, color, align) {
+    ctx.save(); ctx.fillStyle = color || css("--muted"); ctx.textAlign = align || "left"; ctx.fillText(text, x, y); ctx.restore();
+  }
+  function num(id, fallback) { var v = parseFloat($(id).value); return isFinite(v) ? v : fallback; }
+  var redrawers = [];
+  function onAll(ids, fn) { ids.forEach(function (id) { $(id).addEventListener("input", fn); }); redrawers.push(fn); fn(); }
+  function deg(r) { return r * 180 / Math.PI; }
+  function rad(d) { return d * Math.PI / 180; }
+
+  /* ---------- Demo 1: Huygens wavelets ---------- */
+  var h1mode = "plane";
+  function drawHuygens() {
+    var t = num("h1t", 2), n = Math.round(num("h1n", 7));
+    $("h1to").textContent = fmt(t, 1) + " ms"; $("h1no").textContent = n;
+    var S = setup($("c1")), ctx = S.ctx, w = S.w, h = S.h;
+    var v = 343, r = v * t / 1000, c1 = css("--c1"), c2 = css("--c2"), c3 = css("--c3");
+    if (h1mode === "plane") {
+      var y0 = h - 30, sc = (h - 60) / 1.8, x0 = 30, x1 = w - 30;
+      line(ctx, 10, y0, w - 10, y0, c1, 3);
+      for (var i = 0; i < n; i++) {
+        var x = x0 + (n === 1 ? 0 : i * (x1 - x0) / (n - 1));
+        ctx.save(); ctx.strokeStyle = c2; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.arc(x, y0, r * sc, Math.PI, 2 * Math.PI); ctx.stroke(); ctx.restore();
+        ctx.save(); ctx.fillStyle = c2; ctx.beginPath(); ctx.arc(x, y0, 3, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+      }
+      line(ctx, x0, y0 - r * sc, x1, y0 - r * sc, c3, 3);
+      label(ctx, "initial wavefront", 12, y0 + 18);
+      label(ctx, "new wavefront, " + fmt(r, 3) + " m ahead", 12, Math.max(14, y0 - r * sc - 8), c3);
+      tex($("h1r"), ["r = v\\,\\Delta t = (343\\ \\text{m/s})(" + fmt(t / 1000, 4) + "\\ \\text{s}) = \\mathbf{" + fmt(r, 3) + "}\\ \\text{m}",
+        "\\text{new plane wavefront is } " + fmt(r, 3) + "\\ \\text{m ahead}"]);
+    } else {
+      var R0 = 3.0, cx = w / 2, cy = h / 2, scs = (Math.min(w, h) / 2 - 8) / 4.8;
+      ctx.save(); ctx.strokeStyle = c1; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, R0 * scs, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+      for (var j = 0; j < n; j++) {
+        var a = 2 * Math.PI * j / n, sx = cx + R0 * scs * Math.cos(a), sy = cy + R0 * scs * Math.sin(a);
+        ctx.save(); ctx.strokeStyle = c2; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.arc(sx, sy, r * scs, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+        ctx.save(); ctx.fillStyle = c2; ctx.beginPath(); ctx.arc(sx, sy, 3, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+      }
+      ctx.save(); ctx.strokeStyle = c3; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, (R0 + r) * scs, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+      label(ctx, "R₀ = 3.0 m", cx, cy, css("--muted"), "center");
+      tex($("h1r"), ["r = v\\,\\Delta t = (343\\ \\text{m/s})(" + fmt(t / 1000, 4) + "\\ \\text{s}) = " + fmt(r, 3) + "\\ \\text{m}",
+        "R = R_0 + r = 3.0\\ \\text{m} + " + fmt(r, 3) + "\\ \\text{m} = \\mathbf{" + fmt(3 + r, 3) + "}\\ \\text{m}"]);
+    }
+  }
+  var segBtns = $("h1mode").querySelectorAll("button");
+  function setMode(m) { h1mode = m; segBtns.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.v === m ? "true" : "false"); }); drawHuygens(); }
+  segBtns.forEach(function (b) { b.addEventListener("click", function () { setMode(b.dataset.v); }); });
+  $("h1reset").addEventListener("click", function () { $("h1t").value = 2; $("h1n").value = 7; setMode("plane"); });
+  onAll(["h1t", "h1n"], drawHuygens);
+
+  /* ---------- Demo 2: dark-fringe angles ---------- */
+  function sinc2(alpha) { return Math.abs(alpha) < 1e-9 ? 1 : Math.pow(Math.sin(alpha) / alpha, 2); }
+  function drawFringes() {
+    var aum = num("s2a", 100), lnm = num("s2l", 600), m = Math.max(1, Math.round(num("s2m", 1)));
+    var S = setup($("c2")), ctx = S.ctx, w = S.w, h = S.h;
+    var ratio = lnm / (aum * 1000);              // lambda / a
+    var smax = Math.min(1, 4.5 * ratio);
+    var ink = css("--ink"), c2 = css("--c2"), c3 = css("--c3");
+    var y0 = 18, bh = h - 50;
+    for (var px = 0; px < w; px++) {
+      var s = -smax + 2 * smax * px / (w - 1);
+      var I = sinc2(Math.PI / ratio * s);
+      ctx.fillStyle = "rgba(220,40,20," + Math.pow(I, 0.45).toFixed(3) + ")";
+      ctx.fillRect(px, y0, 1, bh);
+    }
+    ctx.strokeStyle = css("--line"); ctx.strokeRect(0.5, y0 + 0.5, w - 1, bh);
+    var mMax = Math.floor(1 / ratio + 1e-9);
+    for (var k = 1; k <= mMax; k++) {
+      var sk = k * ratio; if (sk > smax) break;
+      [1, -1].forEach(function (sg) {
+        var x = (sg * sk + smax) / (2 * smax) * (w - 1);
+        line(ctx, x, y0 - 4, x, y0 + bh + 4, k === m ? c2 : c3, k === m ? 3 : 1.5);
+        label(ctx, (sg > 0 ? "+" : "−") + k, x, y0 + bh + 18, k === m ? c2 : css("--muted"), "center");
+      });
+    }
+    label(ctx, "center", w / 2, 12, css("--muted"), "center");
+    var sinT = m * ratio;
+    var lines = ["\\sin\\theta = \\frac{m\\lambda}{a} = \\frac{(" + m + ")(" + lnm + "\\times10^{-9}\\ \\text{m})}{" + aum + "\\times10^{-6}\\ \\text{m}} = " + sig(sinT, 3)];
+    if (sinT > 1) lines.push("\\sin\\theta \\gt 1 \\Rightarrow \\text{no dark fringe of order } m = " + m);
+    else lines.push("\\theta_{" + m + "} = \\sin^{-1}(" + sig(sinT, 3) + ") = \\mathbf{" + sig(deg(Math.asin(sinT)), 3) + "^\\circ}");
+    lines.push("\\text{dark fringes on each side: } m \\le \\frac{a}{\\lambda} = " + sig(1 / ratio, 4) + " \\Rightarrow " + mMax);
+    tex($("s2r"), lines);
+  }
+  $("s2reset").addEventListener("click", function () { $("s2a").value = 100; $("s2l").value = 600; $("s2m").value = 1; drawFringes(); });
+  onAll(["s2a", "s2l", "s2m"], drawFringes);
+
+  /* ---------- Demo 3: single-slit intensity ---------- */
+  function drawIntensity() {
+    var aum = num("i3a", 100), lnm = num("i3l", 600);
+    var ratio = lnm / (aum * 1000);
+    var thMax = deg(Math.asin(Math.min(1, 3.5 * ratio)));
+    var slider = $("i3t");
+    var lim = Math.max(0.05, Math.round(thMax * 100) / 100);
+    slider.min = -lim; slider.max = lim;
+    var th = Math.max(-lim, Math.min(lim, num("i3t", 0.2)));
+    $("i3ao").textContent = aum + " µm"; $("i3lo").textContent = lnm + " nm"; $("i3to").textContent = fmt(th, 2) + "°";
+    var S = setup($("c3")), ctx = S.ctx, w = S.w, h = S.h;
+    var L = 40, R = w - 12, T = 12, B = h - 30;
+    var X = function (t) { return L + (t + lim) / (2 * lim) * (R - L); };
+    var Y = function (v) { return B - v * (B - T); };
+    var grid = css("--grid"), muted = css("--muted");
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (v) { line(ctx, L, Y(v), R, Y(v), grid, 1); label(ctx, v.toFixed(2), L - 4, Y(v) + 4, muted, "right"); });
+    line(ctx, X(0), T, X(0), B, grid, 1);
+    label(ctx, "θ (°)", R, h - 4, muted, "right");
+    label(ctx, fmt(-lim, 2), L, B + 16, muted, "left"); label(ctx, fmt(lim, 2), R, B + 16, muted, "right"); label(ctx, "0", X(0), B + 16, muted, "center");
+    for (var k = 1; k * ratio <= Math.sin(rad(lim)); k++) {
+      var tk = deg(Math.asin(k * ratio));
+      line(ctx, X(tk), T, X(tk), B, css("--c3"), 1, [4, 4]); line(ctx, X(-tk), T, X(-tk), B, css("--c3"), 1, [4, 4]);
+    }
+    ctx.save(); ctx.strokeStyle = css("--c1"); ctx.lineWidth = 2; ctx.beginPath();
+    for (var px = 0; px <= 400; px++) {
+      var t = -lim + 2 * lim * px / 400, al = Math.PI / ratio * Math.sin(rad(t)), I = sinc2(al);
+      if (px === 0) ctx.moveTo(X(t), Y(I)); else ctx.lineTo(X(t), Y(I));
+    }
+    ctx.stroke(); ctx.restore();
+    var alpha = Math.PI / ratio * Math.sin(rad(th)), Ir = sinc2(alpha);
+    line(ctx, X(th), T, X(th), B, css("--c2"), 2);
+    ctx.save(); ctx.fillStyle = css("--c2"); ctx.beginPath(); ctx.arc(X(th), Y(Ir), 4, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+    var sa = Math.abs(alpha) < 1e-9 ? 1 : Math.sin(alpha) / alpha;
+    tex($("i3r"), [
+      "\\alpha = \\frac{\\pi a}{\\lambda}\\sin\\theta = \\frac{\\pi(" + aum + "\\times10^{-6}\\ \\text{m})}{" + lnm + "\\times10^{-9}\\ \\text{m}}\\sin(" + fmt(th, 2) + "^\\circ) = " + sig(alpha, 4) + "\\ \\text{rad}",
+      "\\frac{I}{I_m} = \\left[\\frac{\\sin\\alpha}{\\alpha}\\right]^2 = (" + sig(sa, 3) + ")^2 = \\mathbf{" + sig(Ir, 3) + "}"
+    ]);
+  }
+  $("i3reset").addEventListener("click", function () { $("i3a").value = 100; $("i3l").value = 600; drawIntensity(); $("i3t").value = 0.2; drawIntensity(); });
+  onAll(["i3a", "i3l", "i3t"], drawIntensity);
+
+  /* ---------- Demo 4: Snell's law ---------- */
+  function drawSnell() {
+    var n1 = num("n4a", 1), n2 = num("n4b", 1.45), t1 = num("n4t", 30);
+    $("n4to").textContent = t1 + "°";
+    var S = setup($("c4")), ctx = S.ctx, w = S.w, h = S.h;
+    var cx = w / 2, cy = h / 2, Lr = Math.min(w / 2, h / 2) - 14;
+    ctx.fillStyle = css("--accent-soft"); ctx.fillRect(0, cy, w, h - cy);
+    line(ctx, 0, cy, w, cy, css("--ink"), 1.5);
+    line(ctx, cx, 6, cx, h - 6, css("--muted"), 1, [5, 5]);
+    label(ctx, "n₁ = " + n1, 10, 18); label(ctx, "n₂ = " + n2, 10, h - 10);
+    label(ctx, "normal", cx + 6, 16);
+    var a1 = rad(t1);
+    line(ctx, cx - Lr * Math.sin(a1), cy - Lr * Math.cos(a1), cx, cy, css("--c1"), 3);
+    ctx.save(); ctx.globalAlpha = 0.35; line(ctx, cx, cy, cx + Lr * Math.sin(a1), cy - Lr * Math.cos(a1), css("--c1"), 2); ctx.restore();
+    var s2 = n1 * Math.sin(a1) / n2, lines;
+    if (s2 > 1) {
+      lines = ["\\sin\\theta_2 = \\frac{n_1}{n_2}\\sin\\theta_1 = " + sig(s2, 3) + " \\gt 1", "\\text{no refracted ray (total internal reflection)}"];
+    } else {
+      var a2 = Math.asin(s2);
+      line(ctx, cx, cy, cx + Lr * Math.sin(a2), cy + Lr * Math.cos(a2), css("--c2"), 3);
+      label(ctx, "θ₁", cx - 26, cy - 30, css("--ink")); label(ctx, "θ₂", cx + 10, cy + 40, css("--ink"));
+      lines = ["\\sin\\theta_2 = \\frac{n_1}{n_2}\\sin\\theta_1 = \\frac{" + n1 + "}{" + n2 + "}\\sin " + t1 + "^\\circ = " + sig(s2, 4),
+        "\\theta_2 = \\mathbf{" + sig(deg(a2), 3) + "^\\circ}",
+        "\\frac{v_1}{v_2} = \\frac{n_2}{n_1} = " + sig(n2 / n1, 3) + ", \\qquad v_2 = \\frac{c}{n_2} = " + sig(3e8 / n2 / 1e8, 3) + "\\times10^{8}\\ \\text{m/s}"];
+    }
+    tex($("n4r"), lines);
+  }
+  $("n4reset").addEventListener("click", function () { $("n4a").value = "1.00"; $("n4b").value = "1.45"; $("n4t").value = 30; drawSnell(); });
+  onAll(["n4a", "n4b", "n4t"], drawSnell);
+
+  /* ---------- Demo 6: thin film ---------- */
+  function specColor(l) {
+    var r = 0, g = 0, b = 0;
+    if (l < 440) { r = (440 - l) / 60; b = 1; } else if (l < 490) { g = (l - 440) / 50; b = 1; }
+    else if (l < 510) { g = 1; b = (510 - l) / 20; } else if (l < 580) { r = (l - 510) / 70; g = 1; }
+    else if (l < 645) { r = 1; g = (645 - l) / 65; } else { r = 1; }
+    return "rgb(" + Math.round(255 * r) + "," + Math.round(255 * g) + "," + Math.round(255 * b) + ")";
+  }
+  function film() {
+    var nA = num("f6a", 1), nF = num("f6n", 1.33), nB = num("f6b", 1), d = num("f6d", 300), t1 = num("f6t", 0);
+    var s2 = nA * Math.sin(rad(t1)) / nF; if (s2 > 1) s2 = 1;
+    var t2 = Math.asin(s2), opd = 2 * nF * d * Math.cos(t2);
+    var flips = (nF > nA ? 1 : 0) + (nB > nF ? 1 : 0), net = flips % 2;
+    return { nA: nA, nF: nF, nB: nB, d: d, t1: t1, t2: t2, opd: opd, flips: flips, net: net };
+  }
+  function refl(F, l) { var ph = 2 * Math.PI * F.opd / l + F.net * Math.PI; return Math.pow(Math.cos(ph / 2), 2); }
+  function drawFilm() {
+    var F = film(), l = num("f6l", 532);
+    $("f6do").textContent = F.d + " nm"; $("f6to").textContent = F.t1 + "°"; $("f6lo").textContent = l + " nm";
+    var S = setup($("c6")), ctx = S.ctx, w = S.w, h = S.h;
+    var L = 40, R = w - 12, T = 10, B = h - 46;
+    var X = function (x) { return L + (x - 380) / 370 * (R - L); }, Y = function (v) { return B - v * (B - T); };
+    var grid = css("--grid"), muted = css("--muted");
+    [0, 0.5, 1].forEach(function (v) { line(ctx, L, Y(v), R, Y(v), grid, 1); label(ctx, v.toFixed(1), L - 4, Y(v) + 4, muted, "right"); });
+    for (var px = Math.floor(L); px <= R; px++) {
+      var lam = 380 + (px - L) / (R - L) * 370;
+      ctx.save(); ctx.globalAlpha = Math.max(0.08, refl(F, lam)); ctx.fillStyle = specColor(lam); ctx.fillRect(px, B + 6, 1, 14); ctx.restore();
+    }
+    [400, 500, 600, 700].forEach(function (v) { label(ctx, v + " nm", X(v), h - 6, muted, "center"); });
+    ctx.save(); ctx.strokeStyle = css("--c1"); ctx.lineWidth = 2; ctx.beginPath();
+    for (var i = 0; i <= 370; i++) { var x = 380 + i; if (i === 0) ctx.moveTo(X(x), Y(refl(F, x))); else ctx.lineTo(X(x), Y(refl(F, x))); }
+    ctx.stroke(); ctx.restore();
+    line(ctx, X(l), T, X(l), B + 20, css("--c2"), 2);
+    var phase = 2 * F.opd / l + F.net;               // in units of pi
+    var rv = refl(F, l);
+    var verdict = rv > 0.9 ? "constructive (bright)" : (rv < 0.1 ? "destructive (dark)" : "partial");
+    var bright = [], dark = [];
+    for (var m = 0; m < 40; m++) {
+      var lb = F.net ? F.opd / (m + 0.5) : (m > 0 ? F.opd / m : Infinity);
+      var ld = F.net ? (m > 0 ? F.opd / m : Infinity) : F.opd / (m + 0.5);
+      if (lb >= 380 && lb <= 750) bright.push(sig(lb, 3));
+      if (ld >= 380 && ld <= 750) dark.push(sig(ld, 3));
+    }
+    tex($("f6r"), [
+      "\\theta_2 = \\sin^{-1}\\!\\left(\\frac{" + F.nA + "\\sin " + F.t1 + "^\\circ}{" + F.nF + "}\\right) = " + sig(deg(F.t2), 3) + "^\\circ",
+      "\\text{OPD} = 2n_2 d\\cos\\theta_2 = 2(" + F.nF + ")(" + F.d + "\\ \\text{nm})(" + sig(Math.cos(F.t2), 4) + ") = " + sig(F.opd, 4) + "\\ \\text{nm}",
+      "\\text{flips: } " + F.flips + " \\Rightarrow \\text{extra } " + (F.net ? "\\pi" : "0") + ", \\quad \\Delta\\phi = \\frac{2\\pi}{\\lambda}\\text{OPD} + " + (F.net ? "\\pi" : "0") + " = " + sig(phase, 3) + "\\pi\\ \\text{rad}",
+      "\\text{at } \\lambda = " + l + "\\ \\text{nm: } \\textbf{" + verdict + "}",
+      "\\text{visible bright: } " + (bright.length ? bright.join(",\\ ") + "\\ \\text{nm}" : "\\text{none}") + "\\qquad \\text{visible dark: } " + (dark.length ? dark.join(",\\ ") + "\\ \\text{nm}" : "\\text{none}")
+    ]);
+  }
+  $("f6reset").addEventListener("click", function () { $("f6a").value = "1.00"; $("f6n").value = "1.33"; $("f6b").value = "1.00"; $("f6d").value = 300; $("f6t").value = 0; $("f6l").value = 532; drawFilm(); });
+  onAll(["f6a", "f6n", "f6b", "f6d", "f6t", "f6l"], drawFilm);
+
+  /* ---------- Demo 7: beats ---------- */
+  function drawBeats() {
+    var f1 = num("b7a", 200), f2 = num("b7b", 400);
+    $("b7ao").textContent = f1 + " Hz"; $("b7bo").textContent = f2 + " Hz";
+    var fb = Math.abs(f1 - f2);
+    var win = fb > 0 ? Math.min(0.25, Math.max(0.02, 2.2 / fb)) : 0.05;
+    var S = setup($("c7")), ctx = S.ctx, w = S.w, h = S.h;
+    var L = 8, R = w - 8, yA = h * 0.2, yB = h * 0.68, amp1 = h * 0.12, amp2 = h * 0.24;
+    line(ctx, L, yA, R, yA, css("--grid"), 1); line(ctx, L, yB, R, yB, css("--grid"), 1);
+    function plot(fn, y0, amp, color, wdt) {
+      ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = wdt; ctx.beginPath();
+      var N = Math.round(R - L) * 3;
+      for (var i = 0; i <= N; i++) { var t = win * i / N, x = L + (R - L) * i / N, y = y0 - amp * fn(t); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
+      ctx.stroke(); ctx.restore();
+    }
+    plot(function (t) { return Math.sin(2 * Math.PI * f1 * t); }, yA, amp1, css("--c1"), 1.2);
+    ctx.save(); ctx.globalAlpha = 0.8; plot(function (t) { return Math.sin(2 * Math.PI * f2 * t); }, yA, amp1, css("--c3"), 1.2); ctx.restore();
+    plot(function (t) { return 0.5 * (Math.sin(2 * Math.PI * f1 * t) + Math.sin(2 * Math.PI * f2 * t)); }, yB, amp2, css("--c2"), 1.5);
+    label(ctx, "time window: " + fmt(win * 1000, 0) + " ms", R, h - 6, css("--muted"), "right");
+    var lines = ["f_{\\text{beat}} = \\left|f_1 - f_2\\right| = \\left|" + f1 + " - " + f2 + "\\right|\\ \\text{Hz} = \\mathbf{" + fb + "}\\ \\text{Hz}"];
+    lines.push(fb > 0 ? "T_{\\text{beat}} = \\frac{1}{f_{\\text{beat}}} = \\frac{1}{" + fb + "\\ \\text{Hz}} = " + sig(1 / fb, 3) + "\\ \\text{s}" : "\\text{equal frequencies: no beats}");
+    if (fb > 20) lines.push("!<span>Difference above about 20 Hz: heard as two separate tones rather than a pulsing.</span>");
+    tex($("b7r"), lines);
+  }
+  $("b7reset").addEventListener("click", function () { $("b7a").value = 200; $("b7b").value = 400; drawBeats(); });
+  onAll(["b7a", "b7b"], drawBeats);
+
+  /* ---------- Demo 8: two speakers ---------- */
+  function drawSpeakers() {
+    var s = num("p8s", 8), hh = num("p8h", 2), x = num("p8x", 12), v = num("p8v", 343), k = Math.max(1, Math.round(num("p8m", 1)));
+    var r1 = Math.sqrt(x * x + hh * hh), r2 = Math.sqrt(x * x + (s - hh) * (s - hh)), dr = Math.abs(r2 - r1);
+    var lam = dr / (k - 0.5), f = v / lam;
+    var S = setup($("c8")), ctx = S.ctx, w = S.w, h = S.h;
+    var ext = Math.max(s, Math.abs(hh), Math.abs(s - hh)) + 1;
+    var sc = Math.min((w - 120) / x, (h - 40) / (ext + Math.max(0, hh - s) + Math.max(0, -hh)));
+    var ox = 50, oy = 20 + Math.max(0, -hh) * sc;
+    var top = { x: ox, y: oy }, bot = { x: ox, y: oy + s * sc }, det = { x: ox + x * sc, y: oy + hh * sc };
+    line(ctx, top.x, top.y, det.x, det.y, css("--c1"), 2.5);
+    line(ctx, bot.x, bot.y, det.x, det.y, css("--c2"), 2.5);
+    line(ctx, top.x, top.y, det.x, top.y, css("--muted"), 1, [4, 4]);
+    [top, bot].forEach(function (p) { ctx.fillStyle = css("--ink"); ctx.fillRect(p.x - 10, p.y - 8, 12, 16); });
+    ctx.fillStyle = css("--ink"); ctx.beginPath(); ctx.arc(det.x, det.y, 6, 0, 2 * Math.PI); ctx.fill();
+    label(ctx, "r₁ = " + fmt(r1, 2) + " m", (top.x + det.x) / 2, (top.y + det.y) / 2 - 8, css("--c1"), "center");
+    label(ctx, "r₂ = " + fmt(r2, 2) + " m", (bot.x + det.x) / 2, (bot.y + det.y) / 2 + 18, css("--c2"), "center");
+    label(ctx, "detector", det.x + 10, det.y + 4, css("--muted"));
+    label(ctx, s + " m", ox - 44, (top.y + bot.y) / 2, css("--muted"));
+    var fr = v / (dr.toFixed(2) / (k - 0.5));
+    tex($("p8r"), [
+      "r_1 = \\sqrt{" + x + "^2 + " + hh + "^2} = " + fmt(r1, 2) + "\\ \\text{m}, \\qquad r_2 = \\sqrt{" + fmt(s - hh, 2).replace(/\.00$/, "") + "^2 + " + x + "^2} = " + fmt(r2, 2) + "\\ \\text{m}",
+      "\\Delta r = \\left|r_2 - r_1\\right| = " + fmt(dr, 4) + "\\ \\text{m} \\approx " + fmt(dr, 2) + "\\ \\text{m}",
+      "\\Delta r = \\left(" + (k - 1) + " + \\tfrac{1}{2}\\right)\\lambda \\Rightarrow \\lambda = " + sig(lam, 4) + "\\ \\text{m}",
+      "f = \\frac{v}{\\lambda} = \\frac{" + v + "\\ \\text{m/s}}{" + sig(lam, 4) + "\\ \\text{m}} = \\mathbf{" + fmt(f, 1) + "}\\ \\text{Hz}",
+      "!<span>With \u0394r rounded to " + fmt(dr, 2) + " m (as the lecture does): f = " + fmt(fr, 1) + " Hz.</span>"
+    ]);
+  }
+  $("p8reset").addEventListener("click", function () { $("p8s").value = 8; $("p8h").value = 2; $("p8x").value = 12; $("p8v").value = 343; $("p8m").value = 1; drawSpeakers(); });
+  onAll(["p8s", "p8h", "p8x", "p8v", "p8m"], drawSpeakers);
+
+  /* ---------- redraw on resize and theme change ---------- */
+  var rt;
+  function redrawAll() { redrawers.forEach(function (fn) { try { fn(); } catch (e) { console.error(e); } }); }
+  window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(redrawAll, 120); });
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", redrawAll);
+  }
+  new MutationObserver(redrawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+};
+
+</script>
+<script>
+/* Study guide engine: quizzes, saved progress, sidebar scores, final exam review,
+   math typesetting, active section highlight, print formula sheet.
+   Reads window.GUIDE = {title, quizzes:{id:{title, questions:[{q, options[4], answer, explain, mistakes[4], review}]}}}
+   Tested once; guides should not modify this file. */
+(function(){
+  "use strict";
+  var G = window.GUIDE || {quizzes:{}};
+  var KEY = "guide:" + String(G.title||document.title).toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  var L = ["A","B","C","D","E"];
+  var state = load();
+
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  function typeset(root){
+    if (window.renderMathInElement){
+      try{ renderMathInElement(root||document.body,{
+        delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],
+        throwOnError:false }); }catch(e){}
+    }
+  }
+  window.typeset = typeset;
+
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+
+  function score(id){
+    var qs=G.quizzes[id].questions, a=state[id]||[], n=0, right=0;
+    qs.forEach(function(q,i){ if(a[i]!=null){ n++; if(a[i]===q.answer) right++; } });
+    return {n:n, right:right, total:qs.length};
+  }
+
+  function updateChip(id){
+    var s=score(id);
+    document.querySelectorAll('[data-chip="'+id+'"]').forEach(function(c){
+      c.textContent = s.n ? (s.right+"/"+s.total) : "";
+      c.classList.toggle("done", s.n===s.total);
+    });
+    var box=document.querySelector('.quiz[data-quiz="'+id+'"] .score');
+    if (box) box.textContent = "Score: "+s.right+"/"+s.total + (s.n<s.total ? "  ("+s.n+" answered)" : "");
+  }
+
+  function explanation(id, q, chosen){
+    var html = chosen===q.answer
+      ? '<b class="ok">Correct.</b> '
+      : '<b class="no">Not quite.</b> You chose '+L[chosen]+((q.mistakes&&q.mistakes[chosen])?', which comes from '+q.mistakes[chosen]+'.':'.')+' The answer is '+L[q.answer]+'. ';
+    html += q.explain || "";
+    if (q.review){ var t=document.getElementById(q.review); var name=t?(t.querySelector("h3 .num")||{}).textContent||q.review:q.review;
+      html += ' <a href="#'+q.review+'">Review: '+name+'</a>'; }
+    return html;
+  }
+
+  function renderQuestion(id, i, item){
+    var q=G.quizzes[id].questions[i], chosen=(state[id]||[])[i];
+    item.innerHTML="";
+    item.appendChild(el("div","qq",'<span class="qn">'+(i+1)+'.</span>'+q.q));
+    var opts=el("div","opts");
+    q.options.forEach(function(o,k){
+      var b=el("button","opt",'<span class="L">'+L[k]+'</span><span>'+o+'</span>');
+      b.type="button";
+      if (chosen!=null){ b.disabled=true; if(k===q.answer) b.classList.add("right"); else if(k===chosen) b.classList.add("wrong"); }
+      else b.addEventListener("click",function(){ (state[id]=state[id]||[])[i]=k; save(); renderQuestion(id,i,item); updateChip(id); if(id==="final") renderReview(); });
+      opts.appendChild(b);
+    });
+    item.appendChild(opts);
+    if (chosen!=null) item.appendChild(el("div","expl",explanation(id,q,chosen)));
+    typeset(item);
+  }
+
+  function renderReview(){
+    var box=document.getElementById("finalReview"); if(!box||!G.quizzes.final) return;
+    var s=score("final"); box.innerHTML="";
+    if (s.n<s.total) return;
+    var qs=G.quizzes.final.questions, a=state.final, wrong=[];
+    qs.forEach(function(q,i){ if(a[i]!==q.answer) wrong.push(i); });
+    var h='<h4>Review my wrong answers</h4>';
+    if(!wrong.length) h+='<p>All '+s.total+' correct. Nothing to review.</p>';
+    else { h+='<ol class="plain review">'; wrong.forEach(function(i){ var q=qs[i];
+      h+='<li><b>Q'+(i+1)+'.</b> '+q.q+'<br>You chose '+L[a[i]]+': '+q.options[a[i]]+'<br>Correct: '+L[q.answer]+': '+q.options[q.answer]+(q.review?'<br><a href="#'+q.review+'">Review this section</a>':'')+'</li>'; });
+      h+='</ol>'; }
+    box.innerHTML=h; typeset(box);
+  }
+
+  function renderQuiz(box){
+    var id=box.getAttribute("data-quiz"), Q=G.quizzes[id];
+    if(!Q){ box.innerHTML='<div class="quiz-head"><span class="qt">Missing quiz data: '+id+'</span></div>'; return; }
+    box.innerHTML="";
+    var head=el("div","quiz-head",'<span class="qt">'+(Q.title||"Quiz")+'</span><span class="score"></span>');
+    var list=el("div","qlist");
+    Q.questions.forEach(function(_,i){ var it=el("div","qitem"); list.appendChild(it); renderQuestion(id,i,it); });
+    var foot=el("div","quiz-foot",'<span>'+Q.questions.length+' questions</span>');
+    var reset=el("button","btn","Reset"); reset.type="button";
+    reset.addEventListener("click",function(){ delete state[id]; save(); renderQuiz(box); if(id==="final") renderReview(); });
+    foot.appendChild(reset);
+    box.appendChild(head); box.appendChild(list); box.appendChild(foot);
+    if(id==="final"){ var r=el("div",""); r.id="finalReview"; r.style.padding="0 16px 8px"; box.appendChild(r); renderReview(); }
+    updateChip(id);
+  }
+
+  function init(){
+    document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz);
+    Object.keys(G.quizzes).forEach(updateChip);
+    var ra=document.getElementById("resetAll");
+    if(ra) ra.addEventListener("click",function(){ if(confirm("Clear all quiz answers and scores for this guide?")){ state={}; save(); document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz); } });
+    var pb=document.getElementById("printSheet");
+    if(pb) pb.addEventListener("click",function(){ document.body.classList.add("print-sheet"); window.print(); });
+    window.addEventListener("afterprint",function(){ document.body.classList.remove("print-sheet"); });
+    if("IntersectionObserver" in window){
+      var links={}; document.querySelectorAll('nav.toc a[href^="#"]').forEach(function(a){ links[a.getAttribute("href").slice(1)]=a; });
+      var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&links[e.target.id]){
+        Object.keys(links).forEach(function(k){ links[k].classList.remove("active"); }); links[e.target.id].classList.add("active"); } }); },{rootMargin:"-20% 0px -70% 0px"});
+      document.querySelectorAll("section.sec[id]").forEach(function(s){ io.observe(s); });
+    }
+    typeset();
+    if (typeof window.initDemos==="function"){ try{ window.initDemos(); }catch(e){ console.error(e); } }
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",function(){ waitKatex(init); }); else waitKatex(init);
+  function waitKatex(fn){ var t=0; (function w(){ if(window.renderMathInElement||t++>40) fn(); else setTimeout(w,50); })(); }
+})();
+
+</script>
+</body></html>
