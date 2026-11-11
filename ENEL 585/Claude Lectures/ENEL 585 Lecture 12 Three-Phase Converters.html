@@ -1,0 +1,1556 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Three-Phase Converters Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF;
+  --c1:#1D5FC2; --c2:#C24E12; --c3:#23804D; --grid:#DCE1DB;   /* plot series 1, 2, 3 and grid */
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --fill-bg:#E9F0FB; --fill-line:#5B7DB8; --fill-ink:#2A4677;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+main{max-width:760px; min-width:0}
+nav.toc{position:sticky; top:24px; align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc a.active{background:var(--accent-soft); color:var(--accent)}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px}
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+sub,sup{font-size:.72em; line-height:0}
+code,.mono{font-family:var(--mono); font-size:.86em}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+
+.eq{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 18px; margin:6px 0 18px}
+.math{margin:8px 0 14px; overflow-x:auto; overflow-y:hidden}
+.katex{font-size:1.12em; color:var(--ink)}
+.katex-display{margin:.6em 0}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted)}
+.eq .defs{font-size:15px; line-height:1.7; color:var(--muted); border-top:1px dashed var(--line); margin-top:10px; padding-top:8px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.callout p{margin-bottom:10px} .callout ul{margin:0 0 10px; padding-left:20px} .callout li{margin-bottom:6px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)} .analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)} .tricky .tag{color:var(--trk-ink)}
+.filled{background:var(--fill-bg); border-color:var(--fill-line); font-size:15.5px} .filled .tag{color:var(--fill-ink)}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px; margin:12px 0 18px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+.hlcol{background:var(--hl)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work.practice summary{color:var(--muted)}
+.givens{font-size:15.5px; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-bottom:10px}
+.answer{font-family:var(--display); font-weight:700; background:var(--good-bg); color:var(--good); border-radius:6px; padding:6px 10px; display:inline-block; margin:6px 0 12px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .src{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+.demo canvas, .demo svg{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px}
+.verdict.ok{background:var(--good-bg); color:var(--good)} .verdict.no{background:var(--bad-bg); color:var(--bad)}
+*:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qitem{padding:16px; border-top:1px solid var(--line)} .qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)} .opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)} .opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)} .final .quiz-head .score{color:var(--bg)}
+.review{margin-top:16px} .review li{margin-bottom:10px}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 16px; break-inside:avoid}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+.sheet .f{padding:8px 0; border-top:1px solid var(--line); line-height:2.1} .sheet .f:first-of-type{border-top:none}
+.sheet .f .expr{display:block; overflow-x:auto}
+.sheet .f .d{font-size:13.5px; color:var(--muted); line-height:1.5; display:block}
+.sheet .f .s{font-family:var(--mono); font-size:11px; color:var(--accent)}
+@media print{
+  body{background:#fff; color:#000; padding:0; font-size:12pt}
+  nav.toc, .demo, .quiz, .btn, details.practice, header.hero .lede{display:none!important}
+  .wrap{display:block; padding:0} main{max-width:none}
+  .sheet .card{border:1px solid #999; background:#fff}
+  .sheet .f .d, .sheet .f .s, .sheet .card h5{color:#333}
+  body.print-sheet main > *:not(#formulas){display:none!important}
+}
+
+nav.toc #resetAll{width:100%; margin-bottom:14px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important} }
+
+</style>
+</head><body>
+<div class="wrap"><nav class="toc" aria-label="Contents">
+<button class="btn" id="resetAll" type="button">Reset all progress</button>
+<h2>Start</h2><ol><li><a href="#big">Big picture</a></li></ol>
+<h2>Part 1 · Sequences</h2><ol>
+<li><a href="#s1">1 Why three phases <span class="chip" data-chip="q1"></span></a></li>
+<li><a href="#s2">2 Positive, negative, zero sequence <span class="chip" data-chip="q2"></span></a></li>
+<li><a href="#s3">3 Any set is a sum of sequences <span class="chip" data-chip="q3"></span></a></li>
+<li><a href="#s4">4 Solving each sequence alone <span class="chip" data-chip="q4"></span></a></li>
+<li><a href="#s5">5 Zero sequence needs a return path <span class="chip" data-chip="q5"></span></a></li>
+</ol>
+<h2>Part 2 · The three-leg converter</h2><ol>
+<li><a href="#s6">6 Three legs into a grid <span class="chip" data-chip="q6"></span></a></li>
+<li><a href="#s7">7 Three references, one carrier <span class="chip" data-chip="q7"></span></a></li>
+<li><a href="#s8">8 KVL and the floating neutral <span class="chip" data-chip="q8"></span></a></li>
+<li><a href="#s9">9 Three equations, two independent <span class="chip" data-chip="q9"></span></a></li>
+</ol>
+<h2>Part 3 · The Clarke transform</h2><ol>
+<li><a href="#s10">10 A balanced set is one rotating arrow <span class="chip" data-chip="q10"></span></a></li>
+<li><a href="#s11">11 The Clarke transform <span class="chip" data-chip="q11"></span></a></li>
+<li><a href="#s12">12 Back to phases <span class="chip" data-chip="q12"></span></a></li>
+<li><a href="#s13">13 Clarke applied to the KVL <span class="chip" data-chip="q13"></span></a></li>
+</ol>
+<h2>Finish</h2><ol><li><a href="#final">Final exam <span class="chip" data-chip="final"></span></a></li>
+<li><a href="#formulas">Formula sheet</a></li></ol></nav><main><header class="hero"><div class="eyebrow">ENEL 585 · Lecture 12 · Study guide</div><h1>Three-Phase Converters Guide</h1><p class="lede">A three-phase converter is three half-bridge legs, each driving a grid phase through its own inductor. Without a neutral wire, the three phase currents must add to zero, the grid's star point floats, and every phase equation picks up a term from the other two legs. This lecture untangles that: it splits any three-phase set into positive, negative and zero sequence parts, shows that the missing neutral removes only the zero sequence, and uses the Clarke transform to turn three coupled equations into two independent single-phase ones.</p></header><style>.controls label{flex-wrap:wrap}.readout .katex-display{overflow-x:auto;overflow-y:hidden;padding-bottom:2px}.answer{max-width:100%}</style>
+<section class="sec" id="big">
+<h3><span class="num">Start here</span>Big picture</h3>
+<p>Topic 11 controlled the current of one grid phase: a bridge makes a voltage, an inductor sits between it and the grid, and the inductor current follows the difference. This lecture asks what changes with three phases. The answer is: surprisingly little, once you look at the circuit the right way. Three legs into a three-phase grid with no neutral wire behave exactly like <strong>two independent single-phase circuits</strong>, so Topic 11's controller can be used twice.</p>
+<p>Getting there takes three steps, one per part of this guide.</p>
+<div class="chain">
+  <div class="blk"><b>Sequences</b><span>Any three-phase set is positive + negative + zero sequence. With no neutral wire, the zero sequence carries no current.</span><span class="secs">§1 to §5</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>The three-leg converter</b><span>Three half-bridge legs, three inductors, a floating grid neutral. The KVL equations come out coupled.</span><span class="secs">§6 to §9</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>The Clarke transform</b><span>Turn \(A, B, C\) into \(\alpha, \beta, 0\). The neutral voltage drops out, leaving two independent equations.</span><span class="secs">§10 to §13</span></div>
+</div>
+<div class="callout filled"><span class="tag">Filled in</span><p><strong>About the scope.</strong> The posted file is the student version of the first session ("Three-phase converters I"). Its last slide says the remaining slides will be released after the next lecture, so this guide covers everything up to Clarke applied to the converter's KVL. The lecture's only numerical example is the sequence decomposition in Section 3 (100 V, 40 V, 25 V). Its figures use \(m_i = 0.8\), \(f_s = 15f_1\) and one switching period at \(\omega t = 15^\circ\); the demos load those values. Other numbers, such as \(v_d = 800\ \text{V}\) and \(L = 5\ \text{mH}\), are practice values and are labelled as not from the lecture.</p></div>
+</section>
+
+<h2 class="part">Part 1 · Sequences</h2>
+
+<section class="sec" id="s1">
+<h3><span class="num">Section 1</span>Why three phases</h3>
+<p>A single-phase inverter delivers power in pulses: the instantaneous power swings between zero and twice its average, twice every line cycle, and the dc link has to absorb that \(2\omega\) ripple (Topic 8). Three phases fix this. Each phase still pulses, but the three pulses are spaced so that they add up to a perfectly flat total. The dc link then sees steady power and needs no large ripple-buffering capacitor.</p>
+<p>The condition is that both the phase voltages and the phase currents form a <strong>balanced set</strong>: equal peaks, one frequency, each phase \(120^\circ\) (that is, \(\frac{2\pi}{3}\) rad) from the other two.</p>
+<div class="eq">
+  <div class="math">\[
+  \begin{aligned}
+  x_{A}&=\hat X\cos\omega t\\
+  x_{B}&=\hat X\cos\Bigl(\omega t-\frac{2\pi}{3}\Bigr)\\
+  x_{C}&=\hat X\cos\Bigl(\omega t+\frac{2\pi}{3}\Bigr)
+  \end{aligned}\]</div>
+  <span class="note">a balanced set (recalled from Topic 8)</span>
+  <div class="defs">\(x_A, x_B, x_C\) = the three phase quantities (a voltage in V or a current in A) · \(\hat X\) = their common peak, same unit · \(\omega\) = angular line frequency, in rad/s · \(t\) = time, in s</div>
+</div>
+<div class="eq">
+  <div class="math">\[ p_{A}(t)=P+P\cos 2\omega t \qquad\qquad p_{t,1}(t)=p_A+p_B+p_C=3P \]</div>
+  <span class="note">one phase pulses; three balanced phases at unity power factor give a constant total</span>
+  <div class="defs">\(p_A(t)\) = instantaneous power of phase \(A\), in W · \(P\) = average power per phase, in W · \(p_{t,1}(t)\) = total instantaneous power of the three phases (fundamental), in W</div>
+</div>
+
+<details class="work"><summary>Example 1 (lecture): why the three \(2\omega\) terms cancel</summary><div class="body">
+<div class="givens">Balanced phase voltages of peak \(\hat V\) and balanced phase currents of peak \(\hat I\), in phase with each other (unity power factor).</div>
+<p>Phase \(A\) power is voltage times current. Use \(\cos^2\theta = \frac{1}{2}(1+\cos 2\theta)\):</p>
+<div class="math">\[
+\begin{aligned}
+p_A &= \hat V\cos\omega t\cdot \hat I\cos\omega t\\
+&= \frac{\hat V\hat I}{2}\bigl(1+\cos 2\omega t\bigr)\\
+&= P + P\cos 2\omega t,\qquad P=\frac{\hat V\hat I}{2}
+\end{aligned}\]</div>
+<p>Phases \(B\) and \(C\) are the same with \(\omega t\) shifted by \(\mp\frac{2\pi}{3}\), so their \(2\omega\) terms are shifted by twice that:</p>
+<div class="math">\[
+\begin{aligned}
+p_B &= P + P\cos\Bigl(2\omega t-\frac{4\pi}{3}\Bigr)\\
+p_C &= P + P\cos\Bigl(2\omega t+\frac{4\pi}{3}\Bigr)
+\end{aligned}\]</div>
+<p>The three cosines are \(2\omega t\), \(2\omega t - 240^\circ\) and \(2\omega t + 240^\circ\): again three equal waves \(120^\circ\) apart, which sum to zero at every instant. What is left is</p>
+<div class="math">\[ p_{t,1}(t) = 3P \]</div>
+<div class="answer">Total power is constant at \(3P\): no \(2\omega\) ripple on the dc link</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide states the cancellation; the steps above (the \(\cos^2\) identity, \(P = \frac{\hat V\hat I}{2}\) from peak values, and the doubled shift of \(240^\circ\)) are added to show why.</p></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Three people pedal a tandem bicycle, each pushing hardest at a different third of the crank turn. Any one rider's push surges and fades, but the chain feels a smooth, steady pull. One rider alone (single phase) gives a jerky ride that a flywheel (the dc-link capacitor) has to smooth out. The analogy breaks down if one rider pushes harder than the others: real cancellation needs the three phases to be exactly balanced.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>Both sets must be balanced.</strong> Balanced voltages with unbalanced currents (or the reverse) leave some \(2\omega\) ripple. The demo below shows it.</li>
+<li><strong>Peak values carry a \(\frac{1}{2}\).</strong> \(P = \frac{\hat V\hat I}{2}\) per phase. With RMS values it is \(V_{\text{rms}}I_{\text{rms}}\), no \(\frac{1}{2}\).</li>
+<li><strong>The total is \(3P\), not \(\sqrt{3}P\).</strong> \(\sqrt{3}\) appears when you write power with line-to-line voltage; the sum of three phase powers is simply three times one.</li>
+<li><strong>Each phase still pulses</strong> from \(0\) to \(2P\). Only the sum is flat.</li>
+</ul></div>
+
+<div class="demo" id="powDemo">
+  <div class="dtitle">Three phase powers and their sum</div>
+  <div class="src">Defaults: practice values (not from the lecture), \(\hat V = 340\ \text{V}\), \(\hat I = 20\ \text{A}\), balanced</div>
+  <canvas height="230"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>\(p_A\)</span><span><i style="background:var(--c2)"></i>\(p_B\)</span><span><i style="background:var(--c3)"></i>\(p_C\)</span><span><i style="background:var(--ink)"></i>sum</span></div>
+  <div class="controls">
+    <label>\(\hat V\) (V) <input type="number" data-k="V" value="340" min="1" step="10"></label>
+    <label>\(\hat I\) (A) <input type="number" data-k="I" value="20" min="0" step="1"></label>
+    <label>phase \(B\) current scale \(k_B\) (no unit) <input type="range" data-k="kB" min="0.5" max="1.5" step="0.05" value="1"><output></output></label>
+    <button class="btn" type="button" data-reset>Reset to defaults</button>
+  </div>
+  <div class="readout"></div>
+</div>
+
+<details class="work practice"><summary>Practice 1.1 (not from the lecture): power of a balanced set</summary><div class="body">
+<div class="givens">Phase voltage peak \(\hat V = 340\ \text{V}\), phase current peak \(\hat I = 20\ \text{A}\), unity power factor, balanced.</div>
+<div class="math">\[
+\begin{aligned}
+P &= \frac{\hat V\hat I}{2} = \frac{340\ \text{V}\times 20\ \text{A}}{2} = 3400\ \text{W}\\
+p_{t,1} &= 3P = 10\,200\ \text{W}\\
+p_{A,\max} &= 2P = 6800\ \text{W}
+\end{aligned}\]</div>
+<div class="answer">\(P = 3.4\ \text{kW}\) per phase, total \(10.2\ \text{kW}\) constant, \(p_A\) peaks at \(6.8\ \text{kW}\)</div>
+</div></details>
+
+<details class="work practice"><summary>Practice 1.2 (not from the lecture): check the sum at one instant</summary><div class="body">
+<div class="givens">Same set, \(P = 3400\ \text{W}\) per phase, at \(\omega t = 30^\circ\).</div>
+<div class="math">\[
+\begin{aligned}
+p_A &= 3400\bigl(1+\cos 60^\circ\bigr) = 5100\ \text{W}\\
+p_B &= 3400\bigl(1+\cos(60^\circ-240^\circ)\bigr) = 3400\,(1-1) = 0\ \text{W}\\
+p_C &= 3400\bigl(1+\cos(60^\circ+240^\circ)\bigr) = 5100\ \text{W}\\
+p_A+p_B+p_C &= 10\,200\ \text{W}
+\end{aligned}\]</div>
+<div class="answer">\(5100 + 0 + 5100 = 10\,200\ \text{W} = 3P\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q1"></div>
+</section>
+
+<section class="sec" id="s2">
+<h3><span class="num">Section 2</span>Positive, negative and zero sequence</h3>
+<p>Three sinusoids of the same peak and frequency can be arranged in three basic ways. What differs is the <strong>order in which they peak</strong>.</p>
+<div class="tbl"><table>
+<tr><th>Sequence</th><th>Phases</th><th>Peaks in the order</th><th>Sum at every instant</th></tr>
+<tr><td>Positive</td><td>\(x_B\) lags \(x_A\) by \(120^\circ\), \(x_C\) leads by \(120^\circ\)</td><td>\(A, B, C\)</td><td>\(0\) (balanced)</td></tr>
+<tr><td>Negative</td><td>\(x_B\) leads \(x_A\) by \(120^\circ\), \(x_C\) lags by \(120^\circ\)</td><td>\(A, C, B\)</td><td>\(0\) (balanced)</td></tr>
+<tr><td>Zero</td><td>all three identical</td><td>all together</td><td>\(3x_A\) (not balanced)</td></tr>
+</table></div>
+<div class="eq">
+  <div class="math">\[
+  \begin{aligned}
+  \text{positive:}\quad & x_A=\hat X\cos\omega t,\ \ x_B=\hat X\cos(\omega t-120^\circ),\ \ x_C=\hat X\cos(\omega t+120^\circ)\\
+  \text{negative:}\quad & x_A=\hat X\cos\omega t,\ \ x_B=\hat X\cos(\omega t+120^\circ),\ \ x_C=\hat X\cos(\omega t-120^\circ)\\
+  \text{zero:}\quad & x_A=x_B=x_C=\hat X\cos\omega t
+  \end{aligned}\]</div>
+  <span class="note">same peak, same frequency; only the order differs</span>
+  <div class="defs">\(\hat X\) = peak of each phase (V or A) · \(\omega t\) = phase angle of the line cycle, in degrees or rad</div>
+</div>
+<p>Positive and negative sequence sets are both balanced: they sum to zero at every instant. A zero sequence set is not: its three phases add up to three times one phase.</p>
+
+<details class="work"><summary>Example 2 (lecture figure): reading the order of peaks</summary><div class="body">
+<p>The lecture plots each set over one cycle. For the positive sequence, \(x_A\) peaks at \(\omega t = 0\), \(x_B\) at \(\omega t = 120^\circ\) and \(x_C\) at \(\omega t = 240^\circ\): order \(A, B, C\). For the negative sequence, \(x_B = \hat X\cos(\omega t + 120^\circ)\) peaks when \(\omega t = -120^\circ\), which is \(240^\circ\), and \(x_C\) peaks at \(120^\circ\): order \(A, C, B\). For the zero sequence, all three peak together at \(\omega t = 0\).</p>
+<div class="answer">Positive: A, B, C. Negative: A, C, B. Zero: together.</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Three dancers in a circle each raise an arm once per beat. In the positive sequence the wave goes round clockwise, in the negative sequence it goes round the other way, and in the zero sequence everyone raises their arm at the same moment. Same dancers, same beat; only the direction (or absence) of the wave changes. Real phase sets are not people, of course: a measured set is usually a mix of all three patterns at once, which is the next section.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>Look at the sign on \(x_B\).</strong> \(\cos(\omega t - 120^\circ)\) on phase \(B\) means positive sequence; \(\cos(\omega t + 120^\circ)\) on phase \(B\) means negative.</li>
+<li><strong>Negative sequence is just \(B\) and \(C\) swapped.</strong> Swapping two supply wires on a motor reverses its direction for exactly this reason.</li>
+<li><strong>"Balanced" means summing to zero.</strong> A zero sequence set has equal peaks but is not balanced.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 2.1 (not from the lecture): name the sequence</summary><div class="body">
+<div class="givens">\(x_A = 10\cos\omega t\ \text{V}\), \(x_B = 10\cos(\omega t+120^\circ)\ \text{V}\), \(x_C = 10\cos(\omega t-120^\circ)\ \text{V}\).</div>
+<p>Phase \(B\) has \(+120^\circ\), so it peaks at \(\omega t = 240^\circ\), after \(C\) (which peaks at \(120^\circ\)). The order is \(A, C, B\).</p>
+<div class="answer">Negative sequence</div>
+</div></details>
+<details class="work practice"><summary>Practice 2.2 (not from the lecture): sums at one instant</summary><div class="body">
+<div class="givens">At \(\omega t = 0\): a positive sequence set of peak \(10\ \text{V}\) and a zero sequence set of peak \(5\ \text{V}\).</div>
+<div class="math">\[
+\begin{aligned}
+\text{positive:}\quad x_A+x_B+x_C &= 10 + 10\cos(-120^\circ) + 10\cos 120^\circ = 10-5-5 = 0\ \text{V}\\
+\text{zero:}\quad x_A+x_B+x_C &= 5+5+5 = 15\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">Positive sums to \(0\ \text{V}\); zero sums to \(15\ \text{V}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q2"></div>
+</section>
+
+<section class="sec" id="s3">
+<h3><span class="num">Section 3</span>Any three-phase set is a sum of sequences</h3>
+<p>Fortescue's theorem: <strong>any</strong> three phasors at one frequency, however unbalanced, can be written as the sum of one positive sequence set, one negative sequence set and one zero sequence set. Name each set by its phase \(A\) phasor: \(\underline{V}_{+}\), \(\underline{V}_{-}\), \(\underline{V}_{0}\). Then each phase is built from those three, rotated as its sequence requires.</p>
+<div class="eq">
+  <div class="math">\[
+  \begin{aligned}
+  \underline{V}_{A}&=\underline{V}_{+}+\underline{V}_{-}+\underline{V}_{0}\\
+  \underline{V}_{B}&=\underline{V}_{+}\,1\angle{-120^\circ}+\underline{V}_{-}\,1\angle 120^\circ+\underline{V}_{0}\\
+  \underline{V}_{C}&=\underline{V}_{+}\,1\angle 120^\circ+\underline{V}_{-}\,1\angle{-120^\circ}+\underline{V}_{0}
+  \end{aligned}\]</div>
+  <span class="note">Fortescue: phases from sequences</span>
+  <div class="defs">\(\underline{V}_A, \underline{V}_B, \underline{V}_C\) = phase voltage phasors, in V (peak) · \(\underline{V}_{+}, \underline{V}_{-}, \underline{V}_{0}\) = phase \(A\) phasor of the positive, negative and zero sequence sets, in V · \(1\angle\theta\) = unit rotation by angle \(\theta\) (no unit)</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \underline{V}_{0}=\frac{1}{3}\bigl(\underline{V}_{A}+\underline{V}_{B}+\underline{V}_{C}\bigr) \]</div>
+  <span class="note">add the three lines: the positive and negative sets each sum to zero</span>
+</div>
+
+<details class="work" open><summary>Example 3 (lecture): build an unbalanced set from 100 V, 40 V and 25 V</summary><div class="body">
+<div class="givens">\(\underline{V}_{+}=100\ \text{V}\), \(\underline{V}_{-}=40\ \text{V}\), \(\underline{V}_{0}=25\ \text{V}\), all with their phase \(A\) peaks at \(0^\circ\).</div>
+<p>Phase \(A\) simply adds the three:</p>
+<div class="math">\[ \underline{V}_{A}=100+40+25=165\angle 0^\circ\ \text{V} \]</div>
+<p>Phase \(B\) rotates the positive set by \(-120^\circ\) and the negative set by \(+120^\circ\). In rectangular form, \(1\angle{-120^\circ} = -0.5 - j0.866\) and \(1\angle 120^\circ = -0.5 + j0.866\):</p>
+<div class="math">\[
+\begin{aligned}
+\underline{V}_{B}&=100\angle{-120^\circ}+40\angle 120^\circ+25\\
+&=(-50-j86.60)+(-20+j34.64)+25\\
+&=-45-j51.96\ \text{V}\\
+&=68.7\angle{-130.9^\circ}\ \text{V}
+\end{aligned}\]</div>
+<p>Phase \(C\) swaps the two rotations, which gives the mirror image:</p>
+<div class="math">\[
+\begin{aligned}
+\underline{V}_{C}&=100\angle 120^\circ+40\angle{-120^\circ}+25\\
+&=-45+j51.96\ \text{V}=68.7\angle 130.9^\circ\ \text{V}
+\end{aligned}\]</div>
+<p>Check by recovering \(\underline{V}_0\). The imaginary parts of \(\underline{V}_B\) and \(\underline{V}_C\) cancel, so \(\underline{V}_B+\underline{V}_C = -90\ \text{V}\):</p>
+<div class="math">\[ \underline{V}_{0}=\frac{1}{3}\bigl(165-90\bigr)=25\ \text{V} \]</div>
+<div class="answer">\(\underline{V}_A=165\angle 0^\circ\ \text{V}\),<br>\(\underline{V}_B=68.7\angle{-130.9^\circ}\ \text{V}\),<br>\(\underline{V}_C=68.7\angle 130.9^\circ\ \text{V}\)</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide gives the results only; the rectangular-form steps for \(\underline{V}_B\) and \(\underline{V}_C\) are added.</p></div>
+</div></details>
+
+<div class="demo" id="fortDemo">
+  <div class="dtitle">Fortescue calculator: sequences to phases</div>
+  <div class="src">Defaults: Example 3 from the lecture (100 V, 40 V, 25 V, all at \(0^\circ\))</div>
+  <canvas height="300"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>positive part</span><span><i style="background:var(--c2)"></i>negative part</span><span><i style="background:var(--c3)"></i>zero part</span><span><i style="background:var(--ink)"></i>phase phasor</span></div>
+  <div class="controls">
+    <label>\(V_{+}\) (V) <input type="number" data-k="p" value="100" step="5"></label>
+    <label>\(V_{-}\) (V) <input type="number" data-k="n" value="40" step="5"></label>
+    <label>\(V_{0}\) (V) <input type="number" data-k="z" value="25" step="5"></label>
+    <button class="btn" type="button" data-reset>Reset to lecture values</button>
+  </div>
+  <div class="readout"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A chord on a piano is made of separate notes; once you know the notes, you know the chord. Fortescue says any unbalanced three-phase set is a "chord" of exactly three "notes": one positive, one negative and one zero sequence set. Each note can be studied on its own, then you add them back. The analogy holds only for linear circuits (Section 4), where the notes do not interact.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>Rotations are opposite for \(+\) and \(-\).</strong> In phase \(B\) the positive set is turned by \(-120^\circ\) and the negative set by \(+120^\circ\). Using the same rotation for both is the classic slip.</li>
+<li><strong>The zero set is not rotated</strong>: it appears unchanged in all three phases.</li>
+<li><strong>Add phasors as complex numbers, not magnitudes.</strong> \(|\underline{V}_B| = 68.7\ \text{V}\), not \(100+40+25\).</li>
+<li><strong>\(\frac{1}{3}\) in \(\underline{V}_0\).</strong> The sum of the three phases is \(3\underline{V}_0\).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 3.1 (not from the lecture): positive plus zero only</summary><div class="body">
+<div class="givens">\(\underline{V}_{+}=200\ \text{V}\), \(\underline{V}_{-}=0\ \text{V}\), \(\underline{V}_{0}=50\ \text{V}\), all at \(0^\circ\).</div>
+<div class="math">\[
+\begin{aligned}
+\underline{V}_A &= 200+50 = 250\angle 0^\circ\ \text{V}\\
+\underline{V}_B &= (-100-j173.2)+50 = -50-j173.2\ \text{V} = 180.3\angle{-106.1^\circ}\ \text{V}\\
+\underline{V}_C &= -50+j173.2\ \text{V} = 180.3\angle 106.1^\circ\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">\(250\angle 0^\circ\ \text{V}\), \(180.3\angle{-106.1^\circ}\ \text{V}\), \(180.3\angle 106.1^\circ\ \text{V}\)</div>
+</div></details>
+<details class="work practice"><summary>Practice 3.2 (not from the lecture): find the zero sequence part</summary><div class="body">
+<div class="givens">\(\underline{V}_A = 120\angle 0^\circ\ \text{V}\), \(\underline{V}_B = 120\angle{-120^\circ}\ \text{V}\), \(\underline{V}_C = 60\angle 120^\circ\ \text{V}\).</div>
+<div class="math">\[
+\begin{aligned}
+\underline{V}_A+\underline{V}_B+\underline{V}_C &= 120 + (-60-j103.92) + (-30+j51.96)\\
+&= 30 - j51.96\ \text{V}\\
+\underline{V}_0 &= \frac{30-j51.96}{3} = 10 - j17.32\ \text{V} = 20\angle{-60^\circ}\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">\(\underline{V}_0 = 20\angle{-60^\circ}\ \text{V}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q3"></div>
+</section>
+
+<section class="sec" id="s4">
+<h3><span class="num">Section 4</span>Each sequence can be solved on its own</h3>
+<p>The lecture's test circuit: three star-connected sources (star point \(n\)) feed three equal resistors \(R\) (star point \(n'\)), and a neutral wire of resistance \(R_n\) joins \(n'\) to \(n\). The circuit is linear and every phase has the same \(R\), so <strong>superposition</strong> works: split each source into its \(+\), \(-\) and \(0\) parts, solve the circuit for each part alone, and add the currents.</p>
+<ul>
+<li><strong>Positive sequence alone.</strong> The circuit looks the same from every phase, so the currents are a positive sequence set too. They sum to zero, so \(i_n = 0\), no voltage appears across \(R_n\), and \(n'\) sits at \(n\). Each phase is just its source across \(R\).</li>
+<li><strong>Negative sequence alone.</strong> The same with \(B\) and \(C\) swapped.</li>
+<li><strong>Zero sequence alone.</strong> All three sources are the same, so all three currents are the same \(\underline{I}_0\), and the neutral carries all three: \(\underline{I}_n = 3\underline{I}_0\).</li>
+</ul>
+<div class="eq">
+  <div class="math">\[ \underline{I}_{+}=\frac{\underline{V}_{+}}{R},\qquad \underline{I}_{-}=\frac{\underline{V}_{-}}{R},\qquad \underline{V}_{0}=(R+3R_{n})\,\underline{I}_{0},\qquad \underline{I}_{n}=3\underline{I}_{0} \]</div>
+  <span class="note">three single-phase circuits, one per sequence; only the zero sequence sees \(R_n\)</span>
+  <div class="defs">\(\underline{I}_{+}, \underline{I}_{-}, \underline{I}_{0}\) = phase \(A\) current of each sequence, in A · \(R\) = resistance per phase, in Ω · \(R_n\) = neutral wire resistance, in Ω · \(\underline{I}_{n}\) = neutral wire current, in A</div>
+</div>
+
+<details class="work"><summary>Example 4 (lecture): where the \(3R_n\) comes from</summary><div class="body">
+<div class="givens">Zero sequence sources \(\underline{V}_0\) in all three phases, resistors \(R\), neutral resistance \(R_n\).</div>
+<p>Go round phase \(A\): source, then the resistor \(R\), then back through the neutral wire, which carries all three equal phase currents:</p>
+<div class="math">\[
+\begin{aligned}
+\underline{V}_0 &= R\,\underline{I}_0 + R_n\,\underline{I}_n\\
+&= R\,\underline{I}_0 + R_n\,(3\underline{I}_0)\\
+&= (R+3R_n)\,\underline{I}_0
+\end{aligned}\]</div>
+<p>With no neutral wire, \(R_n \to \infty\), so \(\underline{I}_0 = 0\). The positive and negative sequence circuits never see \(R_n\) at all.</p>
+<div class="answer">Zero sequence equivalent: \(\underline{V}_0\) drives \(R + 3R_n\)</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide states \(\underline{V}_{0}=(R+3R_{n})\,\underline{I}_{0}\); the loop equation above is added to show where the factor 3 comes from.</p></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Three houses share one drain pipe to the street. When the houses take turns using water (positive or negative sequence), the flows are staggered and the shared pipe barely notices. When all three flush at once (zero sequence), the shared pipe carries three times one house's flow, so its resistance counts three times over. Remove the shared pipe and nobody can flush at once at all. The picture breaks down for sinusoids: balanced currents do not take turns so much as cancel exactly, at every instant.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>It is \(R + 3R_n\), not \(R + R_n\).</strong> The neutral carries \(3\underline{I}_0\), so its drop seen per phase is \(3R_n\underline{I}_0\).</li>
+<li><strong>\(R_n\) affects only the zero sequence.</strong> Positive and negative currents sum to zero and never use the neutral wire.</li>
+<li><strong>Superposition needs a linear circuit with equal impedances in all phases.</strong> If the three resistors differed, the sequences would couple.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 4.1 (not from the lecture): currents for the lecture's source set</summary><div class="body">
+<div class="givens">Sources from Example 3 (\(\underline{V}_+ = 100\ \text{V}\), \(\underline{V}_- = 40\ \text{V}\), \(\underline{V}_0 = 25\ \text{V}\)), \(R = 10\ \Omega\), \(R_n = 2\ \Omega\).</div>
+<div class="math">\[
+\begin{aligned}
+\underline{I}_+ &= \frac{100\ \text{V}}{10\ \Omega} = 10\ \text{A}\\
+\underline{I}_- &= \frac{40\ \text{V}}{10\ \Omega} = 4\ \text{A}\\
+\underline{I}_0 &= \frac{25\ \text{V}}{10+3(2)\ \Omega} = \frac{25}{16}\ \text{A} = 1.5625\ \text{A}\\
+\underline{I}_n &= 3\underline{I}_0 = 4.6875\ \text{A}
+\end{aligned}\]</div>
+<div class="answer">\(\underline{I}_+ = 10\ \text{A}\), \(\underline{I}_- = 4\ \text{A}\), \(\underline{I}_0 = 1.5625\ \text{A}\), \(\underline{I}_n = 4.6875\ \text{A}\)</div>
+</div></details>
+<details class="work practice"><summary>Practice 4.2 (not from the lecture): solid neutral vs no neutral</summary><div class="body">
+<div class="givens">Same circuit, but \(R_n = 0\ \Omega\) (solid neutral), then \(R_n \to \infty\) (no neutral wire).</div>
+<div class="math">\[
+\begin{aligned}
+R_n = 0:\quad \underline{I}_0 &= \frac{25\ \text{V}}{10\ \Omega} = 2.5\ \text{A},\qquad \underline{I}_n = 7.5\ \text{A}\\
+R_n \to \infty:\quad \underline{I}_0 &= 0\ \text{A},\qquad \underline{I}_n = 0\ \text{A}
+\end{aligned}\]</div>
+<div class="answer">Solid neutral: \(\underline{I}_n = 7.5\ \text{A}\). No neutral: no zero sequence current at all.</div>
+</div></details>
+
+<div class="quiz" data-quiz="q4"></div>
+</section>
+
+<section class="sec" id="s5">
+<h3><span class="num">Section 5</span>Zero sequence needs a return path</h3>
+<p>Remove the neutral wire. The sources are still star-connected at \(n\) and the load at \(n'\), but nothing joins the two. Now the lecture argues at each instant, not with phasors:</p>
+<ol>
+<li><strong>KCL at \(n'\):</strong> \(i_A + i_B + i_C = 0\) at every instant.</li>
+<li><strong>No zero sequence current:</strong> a zero sequence current is the same \(i_0\) in all three phases, so KCL says \(3i_0 = 0\). None flows.</li>
+<li><strong>A zero sequence voltage can still exist.</strong> Added equally to all three sources, it just lifts \(n'\) with respect to \(n\) and drives no current.</li>
+</ol>
+<p>These steps use only KCL and KVL at each instant, so they hold for <strong>any waveforms</strong>, switched PWM voltages included, not only sinusoids. At each instant, the zero sequence part of any three signals is their average:</p>
+<div class="eq">
+  <div class="math">\[ x_{0}=\frac{1}{3}\bigl(x_{A}+x_{B}+x_{C}\bigr) \]</div>
+  <span class="note">instantaneous zero sequence component</span>
+  <div class="defs">\(x_0\) = zero sequence part at one instant, same unit as \(x_A, x_B, x_C\) (V or A)</div>
+</div>
+
+<details class="work"><summary>Example 5 (lecture): what the missing neutral removes</summary><div class="body">
+<div class="givens">Three sources star-connected at \(n\), three equal resistors star-connected at \(n'\), no wire from \(n\) to \(n'\).</div>
+<p>Write KVL around each phase from \(n\) to \(n'\), with \(v_{n'n}\) the voltage of \(n'\) above \(n\):</p>
+<div class="math">\[
+\begin{aligned}
+v_A &= R\,i_A + v_{n'n}\\
+v_B &= R\,i_B + v_{n'n}\\
+v_C &= R\,i_C + v_{n'n}
+\end{aligned}\]</div>
+<p>Add the three lines and use KCL, \(i_A + i_B + i_C = 0\):</p>
+<div class="math">\[ v_A+v_B+v_C = 3\,v_{n'n}\quad\Longrightarrow\quad v_{n'n}=\frac{v_A+v_B+v_C}{3}=v_0 \]</div>
+<p>So the load star point sits exactly at the zero sequence voltage, and each resistor sees \(v_A - v_0\): only the positive and negative parts.</p>
+<div class="answer">No neutral: \(i_0 = 0\), and \(n'\) moves by \(v_0\) with respect to \(n\)</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide says a zero sequence voltage "moves \(n'\) with respect to \(n\)". The three KVL lines above are added to show it moves by exactly \(v_0\). This is the same algebra the lecture uses later for the converter (Section 8).</p></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Three people hold the corners of a triangular trampoline that is not tied to the ground. If all three lift their corners by the same amount, the whole trampoline rises but nothing stretches. Only uneven lifts stretch the fabric (drive current). The zero sequence is the "everyone lifts together" part, and without a tie to the ground (neutral wire) it does nothing but move the trampoline's centre.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>Zero sequence current is removed; zero sequence voltage is not.</strong> The voltage still exists; it appears between \(n\) and \(n'\) instead of across the load.</li>
+<li><strong>The argument is instantaneous.</strong> It does not need phasors, so it applies to the square-edged leg voltages of a converter.</li>
+<li><strong>\(x_0\) is an average, not a sum.</strong> Divide by 3.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 5.1 (not from the lecture): zero sequence part at one instant</summary><div class="body">
+<div class="givens">At one instant \(x_A = 100\ \text{V}\), \(x_B = -20\ \text{V}\), \(x_C = -50\ \text{V}\).</div>
+<div class="math">\[ x_0 = \frac{100-20-50}{3}\ \text{V} = \frac{30}{3}\ \text{V} = 10\ \text{V} \]</div>
+<div class="answer">\(x_0 = 10\ \text{V}\)</div>
+</div></details>
+<details class="work practice"><summary>Practice 5.2 (not from the lecture): a zero sequence voltage with no neutral</summary><div class="body">
+<div class="givens">Each source is a \(100\ \text{V}\) peak positive sequence set plus the same \(25\cos\omega t\ \text{V}\) in every phase. \(R = 10\ \Omega\) per phase, no neutral wire.</div>
+<div class="math">\[
+\begin{aligned}
+v_{n'n} &= \frac{v_A+v_B+v_C}{3} = \frac{0 + 3(25\cos\omega t)}{3} = 25\cos\omega t\ \text{V}\\
+i_A &= \frac{v_A - v_{n'n}}{R} = \frac{100\cos\omega t}{10\ \Omega} = 10\cos\omega t\ \text{A}
+\end{aligned}\]</div>
+<div class="answer">The 25 V zero sequence appears between \(n'\) and \(n\); the currents are the \(10\ \text{A}\) positive sequence set alone</div>
+</div></details>
+
+<div class="quiz" data-quiz="q5"></div>
+</section>
+
+<h2 class="part">Part 2 · The three-leg converter</h2>
+
+<section class="sec" id="s6">
+<h3><span class="num">Section 6</span>Three legs into a grid</h3>
+<p>The converter is Topic 8's three-leg bridge with Topic 11's inductor and grid source in every phase. A dc link \(v_d\) has a midpoint \(N\) used as the voltage reference. Each leg (\(A\), \(B\), \(C\)) has a top and a bottom switch (\(S_1\)/\(S_2\) for leg \(A\), \(S_3\)/\(S_4\) for \(B\), \(S_5\)/\(S_6\) for \(C\)). Each leg midpoint drives an inductor \(L\) into one grid phase \(v_{gA}\), \(v_{gB}\), \(v_{gC}\). The grid is star-connected at \(n\), and <strong>there is no wire from \(n\) to \(N\)</strong>.</p>
+<div class="demo" style="padding:10px">
+<svg viewBox="0 0 640 250" role="img" aria-label="Three-leg bridge: dc link v_d with midpoint N, legs A, B, C with switches S1 to S6, each midpoint through an inductor L into a grid source, grid star point n with no wire to N." style="font-family:var(--body);font-size:15px">
+<g fill="none" stroke="var(--ink)" stroke-width="1.6">
+<path d="M60 25 H420 M60 225 H420"/>
+<path d="M60 25 V96 M60 154 V225 M44 96 H76 M44 104 H76 M44 146 H76 M44 154 H76 M60 104 V146"/>
+<path d="M180 25 V40 M180 70 V180 M180 210 V225 M180 40 L194 70 M180 180 L194 210"/>
+<path d="M300 25 V40 M300 70 V180 M300 210 V225 M300 40 L314 70 M300 180 L314 210"/>
+<path d="M420 25 V40 M420 70 V180 M420 210 V225 M420 40 L434 70 M420 180 L434 210"/>
+<path d="M180 85 H470 M300 125 H470 M420 165 H470"/>
+<path d="M470 85 q6 -10 12 0 q6 -10 12 0 q6 -10 12 0 H530 M470 125 q6 -10 12 0 q6 -10 12 0 q6 -10 12 0 H530 M470 165 q6 -10 12 0 q6 -10 12 0 q6 -10 12 0 H530"/>
+<circle cx="545" cy="85" r="14"/><circle cx="545" cy="125" r="14"/><circle cx="545" cy="165" r="14"/>
+<path d="M559 85 H595 V165 H559 M559 125 H595"/>
+</g>
+<g fill="var(--accent)"><circle cx="60" cy="125" r="5"/><circle cx="180" cy="85" r="5"/><circle cx="300" cy="125" r="5"/><circle cx="420" cy="165" r="5"/><circle cx="595" cy="125" r="5"/></g>
+<g fill="var(--ink)">
+<text x="14" y="130">v<tspan baseline-shift="sub" font-size="11">d</tspan></text><text x="84" y="80">+</text><text x="84" y="178">−</text><text x="74" y="130" fill="var(--accent)">N</text>
+<text x="150" y="58">S₁</text><text x="150" y="200">S₂</text><text x="270" y="58">S₃</text><text x="270" y="200">S₄</text><text x="390" y="58">S₅</text><text x="390" y="200">S₆</text>
+<text x="160" y="80" fill="var(--accent)">A</text><text x="280" y="120" fill="var(--accent)">B</text><text x="400" y="160" fill="var(--accent)">C</text>
+<text x="484" y="72">L</text><text x="484" y="112">L</text><text x="484" y="152">L</text>
+<text x="200" y="78" font-size="13">i<tspan baseline-shift="sub" font-size="11">LA</tspan> →</text><text x="320" y="118" font-size="13">i<tspan baseline-shift="sub" font-size="11">LB</tspan> →</text><text x="430" y="158" font-size="13">i<tspan baseline-shift="sub" font-size="11">LC</tspan> →</text>
+<text x="530" y="66" font-size="13">v<tspan baseline-shift="sub" font-size="11">gA</tspan></text><text x="566" y="118" font-size="13">v<tspan baseline-shift="sub" font-size="11">gB</tspan></text><text x="530" y="194" font-size="13">v<tspan baseline-shift="sub" font-size="11">gC</tspan></text>
+<text x="604" y="130" fill="var(--accent)">n</text>
+<text x="470" y="236" font-size="13" fill="var(--muted)">no wire from n to N</text>
+</g>
+</svg>
+<div class="src">After the lecture's figure. Currents \(i_{LA}, i_{LB}, i_{LC}\) flow from the legs toward the grid.</div>
+</div>
+<p><strong>Why phasors stop here.</strong> A phasor describes only the steady state: a sinusoid of fixed amplitude and phase. To <em>control</em> the currents we need to know how they change in time, so from now on the circuit equations are written in time and averaged over one switching period \(T_s\), as in Topic 11.</p>
+<p>Each leg connects its midpoint to the top or the bottom of the link, so with respect to \(N\) it can only make \(+\frac{v_d}{2}\) or \(-\frac{v_d}{2}\). Switching fast (\(f_s \gg f_1\)) and averaging over \(T_s\) gives any value in between:</p>
+<div class="eq">
+  <div class="math">\[ \langle v_{tAN}\rangle_{T_{s}}=m_{A}\,\frac{\langle v_{d}\rangle_{T_{s}}}{2},\qquad m_{A}=2d_{A}-1 \]</div>
+  <span class="note">averaged leg voltage</span>
+  <div class="defs">\(v_{tAN}\) = voltage of leg \(A\)'s midpoint with respect to \(N\), in V · \(\langle\cdot\rangle_{T_s}\) = average over one switching period · \(v_d\) = dc link voltage, in V · \(d_A\) = fraction of \(T_s\) with \(S_1\) on (no unit, 0 to 1) · \(m_A\) = leg \(A\)'s modulation (no unit, \(-1\) with \(S_2\) always on, \(+1\) with \(S_1\) always on) · \(T_s\) = switching period, in s · \(f_s\), \(f_1\) = switching and line frequency, in Hz</div>
+</div>
+
+<details class="work"><summary>Example 6 (lecture): the averaged leg voltage</summary><div class="body">
+<div class="givens">Leg \(A\): \(S_1\) on for \(d_AT_s\) (leg at \(+\frac{v_d}{2}\)), \(S_2\) on for the rest (leg at \(-\frac{v_d}{2}\)). \(v_d\) roughly constant over one \(T_s\).</div>
+<div class="math">\[
+\begin{aligned}
+\langle v_{tAN}\rangle_{T_s} &= d_A\Bigl(+\frac{v_d}{2}\Bigr) + (1-d_A)\Bigl(-\frac{v_d}{2}\Bigr)\\
+&= (2d_A - 1)\,\frac{v_d}{2}\\
+&= m_A\,\frac{v_d}{2}
+\end{aligned}\]</div>
+<div class="answer">\(\langle v_{tAN}\rangle_{T_s} = m_A\frac{\langle v_d\rangle_{T_s}}{2}\), with \(-1\le m_A\le 1\)</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide states the result; the two-line weighted average is added. The slide also says this is "half Topic 11's gain": a leg swings \(\pm\frac{v_d}{2}\), while Topic 11's full bridge swung \(\pm v_d\). That implies Topic 11's average was \(\langle v_t\rangle_{T_s} = m\,\langle v_d\rangle_{T_s}\); no Lecture 11 guide exists to quote, so this is inferred from the slide's wording.</p></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A light switch that is only ever fully on or fully off can still give "60% brightness" if you flick it fast enough and your eye averages. Each leg does the same thing with voltage: it only knows \(+\frac{v_d}{2}\) and \(-\frac{v_d}{2}\), and the inductor does the averaging. Where the analogy stops: the inductor current does ripple a little at \(f_s\); the "average" is what matters for control, not the whole story.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>Half the gain of a full bridge.</strong> \(\langle v_{tAN}\rangle = m_A\frac{v_d}{2}\), not \(m_Av_d\). The leg voltage is measured to the midpoint \(N\).</li>
+<li><strong>\(m_A\) and \(d_A\) are different.</strong> \(d_A\) runs from 0 to 1; \(m_A = 2d_A - 1\) runs from \(-1\) to \(+1\). \(d_A = 0.5\) means zero average voltage.</li>
+<li><strong>\(N\) is only a reference.</strong> The link need not be physically split into two capacitors. And \(n\) floats: nothing ties it to \(N\).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 6.1 (not from the lecture): from duty cycle to leg voltage</summary><div class="body">
+<div class="givens">\(v_d = 800\ \text{V}\), \(d_A = 0.7\).</div>
+<div class="math">\[
+\begin{aligned}
+m_A &= 2(0.7) - 1 = 0.4\\
+\langle v_{tAN}\rangle &= 0.4\times\frac{800\ \text{V}}{2} = 160\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">\(\langle v_{tAN}\rangle = 160\ \text{V}\)</div>
+</div></details>
+<details class="work practice"><summary>Practice 6.2 (not from the lecture): duty cycle for a negative voltage</summary><div class="body">
+<div class="givens">\(v_d = 800\ \text{V}\), wanted \(\langle v_{tAN}\rangle = -250\ \text{V}\).</div>
+<div class="math">\[
+\begin{aligned}
+m_A &= \frac{-250\ \text{V}}{400\ \text{V}} = -0.625\\
+d_A &= \frac{1+m_A}{2} = \frac{0.375}{2} = 0.1875
+\end{aligned}\]</div>
+<div class="answer">\(d_A = 0.1875\): \(S_1\) on for 18.75% of each \(T_s\)</div>
+</div></details>
+<details class="work practice"><summary>Practice 6.3 (not from the lecture): leg vs full bridge</summary><div class="body">
+<div class="givens">Same \(m = 0.4\) and \(v_d = 800\ \text{V}\), in one leg of this converter and in Topic 11's full bridge.</div>
+<div class="math">\[ \text{leg: } 0.4\times\frac{800}{2} = 160\ \text{V},\qquad \text{bridge: } 0.4\times 800 = 320\ \text{V} \]</div>
+<div class="answer">The leg gives half: \(160\ \text{V}\) vs \(320\ \text{V}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q6"></div>
+</section>
+
+<section class="sec" id="s7">
+<h3><span class="num">Section 7</span>Three references, one carrier</h3>
+<p>Sine-triangle PWM extends naturally to three legs: one triangular carrier is compared with three sinusoidal references \(m_A\), \(m_B\), \(m_C\), each of peak \(m_i\) and \(120^\circ\) apart. A leg is at \(+\frac{v_d}{2}\) whenever its reference is above the carrier.</p>
+<ul>
+<li>Each leg voltage switches between \(\pm\frac{v_d}{2}\), and its fundamental has peak \(m_i\frac{v_d}{2}\).</li>
+<li>The line-to-line voltage \(v_{AB} = v_{tAN} - v_{tBN}\) takes only \(0\) or \(\pm v_d\), and its fundamental is \(\sqrt{3}\) times a phase's.</li>
+<li>The limit: for \(m_i \le 1\) (no overmodulation), a phase's fundamental peak is at most \(\frac{v_d}{2}\). The lecture says Session 2 returns to this.</li>
+</ul>
+<div class="eq">
+  <div class="math">\[
+  \begin{aligned}
+  m_A &= m_i\cos\omega t,\quad m_B = m_i\cos(\omega t-120^\circ),\quad m_C = m_i\cos(\omega t+120^\circ)\\
+  \hat V_{tAN,1} &= m_i\,\frac{v_d}{2},\qquad \hat V_{AB,1} = \sqrt{3}\,m_i\,\frac{v_d}{2}
+  \end{aligned}\]</div>
+  <span class="note">three-leg sine-triangle PWM, \(m_i \le 1\)</span>
+  <div class="defs">\(m_i\) = amplitude modulation index, the peak of each reference (no unit) · \(\hat V_{tAN,1}\) = peak of the fundamental of a leg voltage, in V · \(v_{AB}\) = line-to-line voltage between leg midpoints \(A\) and \(B\), in V · \(\hat V_{AB,1}\) = peak of its fundamental, in V</div>
+</div>
+
+<details class="work"><summary>Example 7 (lecture): where the \(\sqrt{3}\) comes from</summary><div class="body">
+<div class="givens">Leg fundamentals of peak \(m_i\frac{v_d}{2}\), with leg \(B\) lagging leg \(A\) by \(120^\circ\).</div>
+<p>Write the two fundamentals as phasors and subtract:</p>
+<div class="math">\[
+\begin{aligned}
+\underline{V}_{AB,1} &= m_i\frac{v_d}{2}\bigl(1\angle 0^\circ - 1\angle{-120^\circ}\bigr)\\
+&= m_i\frac{v_d}{2}\bigl(1 - (-0.5 - j0.866)\bigr)\\
+&= m_i\frac{v_d}{2}\,(1.5 + j0.866)\\
+&= \sqrt{3}\,m_i\frac{v_d}{2}\angle 30^\circ
+\end{aligned}\]</div>
+<p>The lecture's figure uses \(m_i = 0.8\) and \(f_s = 15f_1\): the leg voltage toggles between \(\pm\frac{v_d}{2}\), while \(v_{AB}\) steps between \(0\) and \(\pm v_d\).</p>
+<div class="answer">\(\hat V_{AB,1} = \sqrt{3}\,m_i\frac{v_d}{2}\), leading \(v_{tAN,1}\) by \(30^\circ\)</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide states the \(\sqrt{3}\); the phasor subtraction above is added to show it.</p></div>
+</div></details>
+
+<div class="demo" id="pwmDemo">
+  <div class="dtitle">Sine-triangle PWM on three legs</div>
+  <div class="src">Defaults: the lecture's figure, \(m_i = 0.8\), \(f_s = 15f_1\). \(v_d = 800\ \text{V}\) is a practice value (not from the lecture).</div>
+  <canvas height="360"></canvas>
+  <div class="legend"><span><i style="background:var(--muted)"></i>carrier</span><span><i style="background:var(--c1)"></i>\(m_A\), \(v_{tAN}\)</span><span><i style="background:var(--c2)"></i>\(m_B\)</span><span><i style="background:var(--c3)"></i>\(m_C\)</span><span><i style="background:var(--bad)"></i>fundamental</span><span><i style="background:var(--ink)"></i>\(v_{AB}\)</span></div>
+  <div class="controls">
+    <label>\(m_i\) (no unit) <input type="range" data-k="mi" min="0.1" max="1" step="0.05" value="0.8"><output></output></label>
+    <label>\(\frac{f_s}{f_1}\) (no unit) <input type="range" data-k="fr" min="3" max="33" step="3" value="15"><output></output></label>
+    <label>\(v_d\) (V) <input type="number" data-k="vd" value="800" min="1" step="50"></label>
+    <button class="btn" type="button" data-reset>Reset to lecture values</button>
+  </div>
+  <div class="readout"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Three people stand on different steps of a staircase and you measure the height difference between two of them. Each can be on only the top or bottom step, so the difference is zero (same step) or one full staircase height (\(\pm v_d\)). The smooth "average" heights of the two people are sine waves \(120^\circ\) apart, and the difference of two such waves is \(\sqrt{3}\) times larger, just as the side of an equilateral triangle is \(\sqrt{3}\) times the distance from its centre to a corner.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>Phase vs line.</strong> \(m_i\frac{v_d}{2}\) is the leg (phase) fundamental peak; multiply by \(\sqrt{3}\) for line-to-line.</li>
+<li><strong>Leg voltage has two levels, line voltage has three.</strong> \(v_{tAN}\in\{\pm\frac{v_d}{2}\}\); \(v_{AB}\in\{0, \pm v_d\}\).</li>
+<li><strong>Peak vs RMS.</strong> Grid ratings are line-to-line RMS: \(480\ \text{V}\) means a line peak of \(480\sqrt{2} = 678.8\ \text{V}\).</li>
+<li><strong>The \(\frac{v_d}{2}\) ceiling</strong> holds only for \(m_i \le 1\) in sine-triangle PWM.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 7.1 (not from the lecture): output voltages for a given link</summary><div class="body">
+<div class="givens">\(v_d = 800\ \text{V}\), \(m_i = 0.8\).</div>
+<div class="math">\[
+\begin{aligned}
+\hat V_{tAN,1} &= 0.8\times\frac{800\ \text{V}}{2} = 320\ \text{V}\\
+\hat V_{AB,1} &= \sqrt{3}\times 320\ \text{V} = 554.3\ \text{V}\\
+V_{AB,1,\text{rms}} &= \frac{554.3\ \text{V}}{\sqrt{2}} = 391.9\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">\(320\ \text{V}\) phase peak, \(554.3\ \text{V}\) line peak, \(391.9\ \text{V}\) line RMS</div>
+</div></details>
+<details class="work practice"><summary>Practice 7.2 (not from the lecture): smallest link for a 480 V grid</summary><div class="body">
+<div class="givens">Grid \(480\ \text{V}\) line-to-line RMS; sine-triangle PWM with \(m_i \le 1\). Ignore the inductor drop.</div>
+<div class="math">\[
+\begin{aligned}
+\hat V_{AB,1} &= 480\sqrt{2} = 678.8\ \text{V}\\
+\hat V_{tAN,1} &= \frac{678.8}{\sqrt{3}} = 391.9\ \text{V} \le \frac{v_d}{2}\\
+v_d &\ge 2\times 391.9 = 783.8\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">\(v_d \ge 783.8\ \text{V}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q7"></div>
+</section>
+
+<section class="sec" id="s8">
+<h3><span class="num">Section 8</span>KVL and the floating neutral</h3>
+<p>Go round phase \(A\): from \(N\) up to leg midpoint \(A\) (\(v_{tAN}\)), through the inductor, through the grid source \(v_{gA}\) to the grid star point \(n\), and from \(n\) back to \(N\) (\(v_{nN}\)). The same loop works for \(B\) and \(C\):</p>
+<div class="eq">
+  <div class="math">\[
+  \begin{aligned}
+  L\frac{di_{LA}}{dt}&=v_{tAN}-v_{nN}-v_{gA}\\
+  L\frac{di_{LB}}{dt}&=v_{tBN}-v_{nN}-v_{gB}\\
+  L\frac{di_{LC}}{dt}&=v_{tCN}-v_{nN}-v_{gC}
+  \end{aligned}\]</div>
+  <span class="note">KVL, phase by phase</span>
+  <div class="defs">\(L\) = inductance per phase, in H · \(i_{LA}, i_{LB}, i_{LC}\) = inductor currents toward the grid, in A · \(v_{gA}, v_{gB}, v_{gC}\) = grid phase voltages (to \(n\)), in V · \(v_{nN}\) = voltage of grid star point \(n\) with respect to \(N\), in V</div>
+</div>
+<p>This is Topic 11's equation plus one term. We chose the leg voltages; \(v_{nN}\) we did not. To find it, add the three equations: with no wire from \(n\) and equal \(L\), the currents sum to zero, so the left side sums to zero; and a balanced grid has \(v_{gA}+v_{gB}+v_{gC}=0\).</p>
+<div class="eq">
+  <div class="math">\[ v_{nN}=\frac{v_{tAN}+v_{tBN}+v_{tCN}}{3} \]</div>
+  <span class="note">the neutral sits at the average of the three leg voltages; it moves in steps of \(\frac{v_d}{3}\)</span>
+</div>
+
+<details class="work" open><summary>Example 8 (lecture): where the neutral sits</summary><div class="body">
+<div class="givens">The three KVL equations above, no neutral wire (\(i_{LA}+i_{LB}+i_{LC}=0\)), equal \(L\), balanced grid.</div>
+<div class="math">\[
+\begin{aligned}
+L\frac{d}{dt}\bigl(i_{LA}+i_{LB}+i_{LC}\bigr) &= (v_{tAN}+v_{tBN}+v_{tCN}) - 3v_{nN} - (v_{gA}+v_{gB}+v_{gC})\\
+0 &= (v_{tAN}+v_{tBN}+v_{tCN}) - 3v_{nN} - 0\\
+v_{nN} &= \frac{v_{tAN}+v_{tBN}+v_{tCN}}{3}
+\end{aligned}\]</div>
+<p>Each leg is \(\pm\frac{v_d}{2}\), so the sum of the three is \(\pm\frac{3v_d}{2}\) or \(\pm\frac{v_d}{2}\), and \(v_{nN}\) can only be \(\pm\frac{v_d}{2}\) or \(\pm\frac{v_d}{6}\): steps of \(\frac{v_d}{3}\).</p>
+<p>The lecture's figure shows one switching period at \(\omega t = 15^\circ\) with \(m_i = 0.8\). The references and duty cycles are</p>
+<div class="math">\[
+\begin{aligned}
+m_A &= 0.8\cos 15^\circ = 0.773, & d_A &= 0.886\\
+m_B &= 0.8\cos(-105^\circ) = -0.207, & d_B &= 0.396\\
+m_C &= 0.8\cos 135^\circ = -0.566, & d_C &= 0.217
+\end{aligned}\]</div>
+<p>During the period \(v_{nN}\) visits all four levels: \(+\frac{v_d}{2}\) for 0.217 of \(T_s\) (all legs up), \(+\frac{v_d}{6}\) for 0.179, \(-\frac{v_d}{6}\) for 0.490 and \(-\frac{v_d}{2}\) for 0.114. Its mean is</p>
+<div class="math">\[ \langle v_{nN}\rangle_{T_s} = \frac{m_A+m_B+m_C}{3}\cdot\frac{v_d}{2} = 0 \]</div>
+<p>because balanced references sum to zero.</p>
+<div class="answer">\(v_{nN} = \frac{1}{3}(v_{tAN}+v_{tBN}+v_{tCN})\): levels \(\pm\frac{v_d}{2}\), \(\pm\frac{v_d}{6}\); mean zero here</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The figure's \(m\), \(d\) values and the time spent at each level are computed here from its stated settings (\(\omega t = 15^\circ\), \(m_i = 0.8\)), assuming the carrier is at its peak at the start and end of \(T_s\) as drawn. The level list and the zero mean follow the figure.</p></div>
+</div></details>
+
+<div class="demo" id="nDemo">
+  <div class="dtitle">One switching period: leg voltages and the neutral</div>
+  <div class="src">Defaults: the lecture's figure, \(\omega t = 15^\circ\), \(m_i = 0.8\). Voltages shown as multiples of \(v_d\).</div>
+  <canvas height="330"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>\(v_{tAN}\)</span><span><i style="background:var(--c2)"></i>\(v_{tBN}\)</span><span><i style="background:var(--c3)"></i>\(v_{tCN}\)</span><span><i style="background:var(--ink)"></i>\(v_{nN}\)</span><span><i style="background:var(--bad)"></i>mean of \(v_{nN}\)</span></div>
+  <div class="controls">
+    <label>\(\omega t\) (deg) <input type="range" data-k="wt" min="0" max="360" step="1" value="15"><output></output></label>
+    <label>\(m_i\) (no unit) <input type="range" data-k="mi" min="0" max="1" step="0.05" value="0.8"><output></output></label>
+    <button class="btn" type="button" data-reset>Reset to lecture values</button>
+  </div>
+  <div class="readout"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Picture the grid's star point \(n\) as a boat tied by three equal springs (the inductors) to three posts that jump up and down (the legs). The boat cannot be anchored (no neutral wire), so it settles at the average height of the three posts. Each phase feels its own post minus the boat's height. The analogy is loose: the real "boat" voltage jumps instantly with every switching edge, it does not drift.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>Sign of \(v_{nN}\).</strong> It is subtracted in every phase equation: \(L\frac{di_{LA}}{dt} = v_{tAN} - v_{nN} - v_{gA}\).</li>
+<li><strong>\(v_{nN}\) is not zero instant by instant</strong>, even though its average is zero for balanced sine references. It is a square-edged staircase at the switching frequency.</li>
+<li><strong>Three conditions</strong> make the sum work: no neutral wire, equal \(L\) in all phases, balanced grid.</li>
+<li><strong>Four levels, not two.</strong> \(\pm\frac{v_d}{2}\) only when all legs agree; otherwise \(\pm\frac{v_d}{6}\).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 8.1 (not from the lecture): neutral voltage for one switch state</summary><div class="body">
+<div class="givens">\(v_d = 800\ \text{V}\); leg \(A\) up (\(S_1\) on), legs \(B\) and \(C\) down (\(S_4\), \(S_6\) on).</div>
+<div class="math">\[ v_{nN} = \frac{400 - 400 - 400}{3}\ \text{V} = -133.3\ \text{V} = -\frac{v_d}{6} \]</div>
+<div class="answer">\(v_{nN} = -133.3\ \text{V}\)</div>
+</div></details>
+<details class="work practice"><summary>Practice 8.2 (not from the lecture): all three legs up</summary><div class="body">
+<div class="givens">\(v_d = 800\ \text{V}\), all three top switches on, grid voltage \(v_{gA} = 300\ \text{V}\) at this instant.</div>
+<div class="math">\[
+\begin{aligned}
+v_{nN} &= \frac{400+400+400}{3} = 400\ \text{V}\\
+L\frac{di_{LA}}{dt} &= 400 - 400 - 300 = -300\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">\(v_{nN} = 400\ \text{V}\); the legs cancel and only the grid drives the inductor (\(-300\ \text{V}\))</div>
+</div></details>
+<details class="work practice"><summary>Practice 8.3 (not from the lecture): one phase's inductor voltage</summary><div class="body">
+<div class="givens">State of Practice 8.1 (\(v_{tAN} = 400\ \text{V}\), \(v_{nN} = -133.3\ \text{V}\)), \(v_{gA} = 300\ \text{V}\).</div>
+<div class="math">\[ L\frac{di_{LA}}{dt} = 400 - (-133.3) - 300 = 233.3\ \text{V} \]</div>
+<div class="answer">\(233.3\ \text{V}\) across phase \(A\)'s inductor</div>
+</div></details>
+
+<div class="quiz" data-quiz="q8"></div>
+</section>
+
+<section class="sec" id="s9">
+<h3><span class="num">Section 9</span>Three equations, two independent</h3>
+<p>Put \(v_{nN}\) back into the phase \(A\) equation. Phase \(A\)'s inductor now depends on <strong>all three</strong> leg voltages: the phases are coupled. A controller that sets \(m_A\) to fix \(i_{LA}\) would also disturb \(i_{LB}\) and \(i_{LC}\).</p>
+<div class="eq">
+  <div class="math">\[ L\frac{di_{LA}}{dt}=\frac{2}{3}v_{tAN}-\frac{1}{3}v_{tBN}-\frac{1}{3}v_{tCN}-v_{gA} \]</div>
+  <span class="note">phase \(A\) after substituting \(v_{nN}\) (phases \(B\) and \(C\) follow the same pattern)</span>
+</div>
+<div class="eq">
+  <div class="math">\[ i_{LA}+i_{LB}+i_{LC}=0 \]</div>
+  <span class="note">only two of the three currents are independent: two of them give the third</span>
+</div>
+<p>So what we really want is <strong>two new variables</strong>, each with its own voltage and its own equation, and no \(v_{nN}\) anywhere. Part 3 builds them.</p>
+
+<details class="work"><summary>Example 9 (lecture): the substitution</summary><div class="body">
+<div class="math">\[
+\begin{aligned}
+L\frac{di_{LA}}{dt} &= v_{tAN} - \frac{v_{tAN}+v_{tBN}+v_{tCN}}{3} - v_{gA}\\
+&= \Bigl(1-\frac{1}{3}\Bigr)v_{tAN} - \frac{1}{3}v_{tBN} - \frac{1}{3}v_{tCN} - v_{gA}\\
+&= \frac{2}{3}v_{tAN} - \frac{1}{3}v_{tBN} - \frac{1}{3}v_{tCN} - v_{gA}
+\end{aligned}\]</div>
+<div class="answer">Coefficients \(\frac{2}{3}, -\frac{1}{3}, -\frac{1}{3}\) on the three legs</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The middle line of the algebra is added; the slide gives the first and last.</p></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Three kids share one seesaw-like platform balanced on a point: if one pushes down, the others go up. You cannot move one kid's height without moving the others, and only two heights are free (the third follows). The fix, coming next, is to stop describing the platform by three heights and instead use two tilt angles that move independently.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>\(\frac{2}{3}\), not 1, on the own leg.</strong> One third of each leg's voltage is "used up" lifting the neutral.</li>
+<li><strong>The coefficients sum to zero</strong> (\(\frac{2}{3}-\frac{1}{3}-\frac{1}{3}=0\)): moving all three legs together changes no current. That is the zero sequence again.</li>
+<li><strong>Three equations, two unknowns.</strong> The third current is never free: \(i_{LC} = -(i_{LA}+i_{LB})\).</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 9.1 (not from the lecture): rate of change of one current</summary><div class="body">
+<div class="givens">\(v_d = 800\ \text{V}\), leg \(A\) up and legs \(B\), \(C\) down, \(v_{gA} = 300\ \text{V}\), \(L = 5\ \text{mH}\).</div>
+<div class="math">\[
+\begin{aligned}
+L\frac{di_{LA}}{dt} &= \frac{2}{3}(400) - \frac{1}{3}(-400) - \frac{1}{3}(-400) - 300\\
+&= 266.7 + 133.3 + 133.3 - 300 = 233.3\ \text{V}\\
+\frac{di_{LA}}{dt} &= \frac{233.3\ \text{V}}{5\times 10^{-3}\ \text{H}} = 46\,667\ \text{A/s}
+\end{aligned}\]</div>
+<div class="answer">\(46\,667\ \text{A/s}\) (about \(46.7\ \text{A}\) per ms); matches Practice 8.3</div>
+</div></details>
+<details class="work practice"><summary>Practice 9.2 (not from the lecture): the third current</summary><div class="body">
+<div class="givens">\(i_{LA} = 12\ \text{A}\), \(i_{LB} = -5\ \text{A}\), no neutral wire.</div>
+<div class="math">\[ i_{LC} = -(i_{LA}+i_{LB}) = -(12-5)\ \text{A} = -7\ \text{A} \]</div>
+<div class="answer">\(i_{LC} = -7\ \text{A}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q9"></div>
+</section>
+
+<h2 class="part">Part 3 · The Clarke transform</h2>
+
+<section class="sec" id="s10">
+<h3><span class="num">Section 10</span>A balanced set is one rotating arrow</h3>
+<p>Three phase values at one instant are three numbers. Draw each one along its own <strong>phase axis</strong> in a plane: phase \(A\) along \(0^\circ\), phase \(B\) along \(120^\circ\), phase \(C\) along \(-120^\circ\). Scale each by \(\frac{2}{3}\) and add them head to tail. The sum is a single arrow (the red arrow in the lecture's figure).</p>
+<div class="eq">
+  <div class="math">\[ \vec x = \frac{2}{3}\Bigl(x_{A}+x_{B}\,1\angle 120^\circ+x_{C}\,1\angle{-120^\circ}\Bigr) \]</div>
+  <span class="note">the three phases combined into one arrow (a complex number)</span>
+  <div class="defs">\(\vec x\) = the combined arrow, a complex number in the same unit as the phases (V or A) · \(1\angle 120^\circ\), \(1\angle{-120^\circ}\) = the directions of the \(B\) and \(C\) axes (no unit)</div>
+</div>
+<p>For a balanced positive sequence set, this arrow has length \(\hat X\) at <strong>every instant</strong> and turns at \(\omega\). Three oscillating numbers have become one arrow of constant length turning steadily.</p>
+<div class="eq">
+  <div class="math">\[ \vec x = \hat X\,e^{j\omega t}\qquad\text{(balanced positive sequence)} \]</div>
+  <span class="note">length \(\hat X\), angle \(\omega t\)</span>
+</div>
+
+<details class="work" open><summary>Example 10 (lecture): why the arrow keeps its length</summary><div class="body">
+<div class="givens">\(x_{A}=\hat X\cos\omega t\), \(x_{B}=\hat X\cos(\omega t-120^\circ)\), \(x_{C}=\hat X\cos(\omega t+120^\circ)\).</div>
+<p>Write each cosine with Euler's formula, \(\cos\phi=\frac{1}{2}\bigl(e^{j\phi}+e^{-j\phi}\bigr)\). For phase \(B\), multiplying by its axis \(1\angle 120^\circ = e^{j120^\circ}\):</p>
+<div class="math">\[
+\begin{aligned}
+x_B\,e^{j120^\circ} &= \frac{\hat X}{2}\Bigl(e^{j(\omega t-120^\circ)}+e^{-j(\omega t-120^\circ)}\Bigr)e^{j120^\circ}\\
+&= \frac{\hat X}{2}\Bigl(e^{j\omega t}+e^{-j\omega t}\,e^{j240^\circ}\Bigr)
+\end{aligned}\]</div>
+<p>Phase \(C\) is the same with the signs of the angles flipped. Collect the \(e^{j\omega t}\) and \(e^{-j\omega t}\) terms of all three:</p>
+<div class="math">\[
+\begin{aligned}
+\vec x &= \frac{2}{3}\cdot\frac{\hat X}{2}\Big[e^{j\omega t}\bigl(1+1+1\bigr)\\
+&\qquad\qquad +e^{-j\omega t}\bigl(1+1\angle 240^\circ+1\angle{-240^\circ}\bigr)\Big]
+\end{aligned}\]</div>
+<p>The second bracket holds three unit arrows \(120^\circ\) apart, which sum to zero. The first is 3, and \(\frac{2}{3}\cdot\frac{1}{2}\cdot 3 = 1\):</p>
+<div class="math">\[ \vec x = \hat X\,e^{j\omega t} \]</div>
+<div class="answer">Length \(\hat X\) at every instant, turning at \(\omega\). The \(\frac{2}{3}\) is chosen exactly so that the length equals the phase peak.</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide jumps from Euler to the bracketed result; the phase \(B\) step is added.</p></div>
+</div></details>
+
+<div class="demo" id="arrDemo">
+  <div class="dtitle">Three phases, one arrow</div>
+  <div class="src">Defaults: a positive sequence set of 100 V peak, the \(\underline{V}_+\) of Example 3. Add negative and zero sequence parts to see what changes.</div>
+  <canvas height="320"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>\(\frac{2}{3}x_A\)</span><span><i style="background:var(--c2)"></i>\(\frac{2}{3}x_B\)</span><span><i style="background:var(--c3)"></i>\(\frac{2}{3}x_C\)</span><span><i style="background:var(--bad)"></i>arrow \(\vec x\) and the path of its tip</span></div>
+  <div class="controls">
+    <label>\(\omega t\) (deg) <input type="range" data-k="wt" min="0" max="360" step="1" value="45"><output></output></label>
+    <label>\(V_{+}\) (V) <input type="number" data-k="p" value="100" step="10"></label>
+    <label>\(V_{-}\) (V) <input type="number" data-k="n" value="0" step="10"></label>
+    <label>\(V_{0}\) (V) <input type="number" data-k="z" value="0" step="5"></label>
+    <button class="btn" type="button" data-play>Play</button>
+    <button class="btn" type="button" data-ex3>Example 3 set (100, 40, 25 V)</button>
+    <button class="btn" type="button" data-reset>Reset</button>
+  </div>
+  <div class="readout"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Think of three shadows of one spinning clock hand, cast on three walls set \(120^\circ\) apart. Each shadow grows and shrinks (a phase waveform), but they all come from one hand of fixed length turning steadily. The \(\frac{2}{3}\)-weighted sum rebuilds the hand from its shadows. It breaks down for unbalanced sets: then there is no single hand, and the rebuilt arrow traces an ellipse instead of a circle.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>Axis of \(B\) is at \(+120^\circ\)</strong> even though \(x_B\) lags \(x_A\) in time. Positive sequence peaks reach \(A\), then \(B\), then \(C\) as the arrow turns counterclockwise.</li>
+<li><strong>Do not forget the \(\frac{2}{3}\)</strong>: without it the arrow is \(\frac{3}{2}\hat X\) long.</li>
+<li><strong>Negative sequence turns backwards</strong>: \(\vec x = \hat X e^{-j\omega t}\). An unbalanced mix makes the length vary between \(V_+ - V_-\) and \(V_+ + V_-\).</li>
+<li><strong>The zero sequence never shows up in the arrow</strong>: three equal values along axes \(120^\circ\) apart cancel.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 10.1 (not from the lecture): the arrow at one instant</summary><div class="body">
+<div class="givens">Positive sequence, \(\hat X = 100\ \text{V}\), at \(\omega t = 30^\circ\).</div>
+<div class="math">\[
+\begin{aligned}
+x_A &= 100\cos 30^\circ = 86.60\ \text{V},\quad x_B = 100\cos(-90^\circ) = 0\ \text{V},\quad x_C = 100\cos 150^\circ = -86.60\ \text{V}\\
+\vec x &= \frac{2}{3}\Bigl(86.60 + 0 + (-86.60)(-0.5 - j0.866)\Bigr)\\
+&= \frac{2}{3}\,(129.9 + j75.0) = 86.60 + j50.0\ \text{V} = 100\angle 30^\circ\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">\(\vec x = 100\angle 30^\circ\ \text{V}\): length \(\hat X\), angle \(\omega t\)</div>
+</div></details>
+<details class="work practice"><summary>Practice 10.2 (not from the lecture): a negative sequence set</summary><div class="body">
+<div class="givens">\(x_B = \hat X\cos(\omega t+120^\circ)\), \(x_C = \hat X\cos(\omega t-120^\circ)\).</div>
+<p>Repeat Example 10. Now \(x_B e^{j120^\circ} = \frac{\hat X}{2}\bigl(e^{j\omega t}e^{j240^\circ} + e^{-j\omega t}\bigr)\), so the roles of the brackets swap:</p>
+<div class="math">\[ \vec x = \frac{2}{3}\cdot\frac{\hat X}{2}\Big[e^{j\omega t}\cdot 0 + e^{-j\omega t}\cdot 3\Big] = \hat X\,e^{-j\omega t} \]</div>
+<div class="answer">Length \(\hat X\), turning at \(-\omega\) (clockwise)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q10"></div>
+</section>
+
+<section class="sec" id="s11">
+<h3><span class="num">Section 11</span>The Clarke transform</h3>
+<p>Instead of a complex arrow, take its two components. The \(\alpha\) axis lies along phase \(A\); the \(\beta\) axis is \(90^\circ\) ahead. Each phase axis is \((\cos\theta, \sin\theta)\) at \(\theta = 0^\circ, 120^\circ, -120^\circ\), and those become the columns of a matrix:</p>
+<div class="eq">
+  <div class="math">\[ \begin{bmatrix}x_{\alpha}\\x_{\beta}\end{bmatrix}=\frac{2}{3}\begin{bmatrix}1&-\frac12&-\frac12\\0&\frac{\sqrt3}{2}&-\frac{\sqrt3}{2}\end{bmatrix}\begin{bmatrix}x_{A}\\x_{B}\\x_{C}\end{bmatrix} \]</div>
+  <span class="note">the arrow's two components</span>
+  <div class="defs">\(x_\alpha\) = component along the \(\alpha\) axis (phase \(A\)'s direction) · \(x_\beta\) = component along the \(\beta\) axis, \(90^\circ\) ahead of \(\alpha\); both in the same unit as the phases (V or A)</div>
+</div>
+<p>Two rows cannot hold three numbers, so a third row, \(x_0\), keeps all the information. The matrix becomes square and invertible:</p>
+<div class="eq">
+  <div class="math">\[ \begin{bmatrix}x_{\alpha}\\x_{\beta}\\x_{0}\end{bmatrix}=\underbrace{\frac{2}{3}\begin{bmatrix}1&-\frac12&-\frac12\\0&\frac{\sqrt3}{2}&-\frac{\sqrt3}{2}\\\frac12&\frac12&\frac12\end{bmatrix}}_{\mathbf{T}}\begin{bmatrix}x_{A}\\x_{B}\\x_{C}\end{bmatrix} \]</div>
+  <span class="note">the Clarke transform \(\mathbf{T}\); the third row gives \(x_0=\frac{1}{3}(x_A+x_B+x_C)\)</span>
+  <div class="defs">\(\mathbf{T}\) = Clarke matrix (no unit) · \(x_0\) = zero sequence component, same unit as the phases</div>
+</div>
+<p>It holds <strong>at each instant, for any three signals</strong>: switched leg voltages too, not only sinusoids. And each sequence lands somewhere simple:</p>
+<div class="tbl"><table>
+<tr><th>Phases</th><th>After Clarke</th></tr>
+<tr><td>Positive sequence</td><td>\(x_\alpha = \hat X\cos\omega t\), \(x_\beta = \hat X\sin\omega t\): \(x_\beta\) <strong>lags</strong> \(x_\alpha\) by \(90^\circ\); \(x_0 = 0\)</td></tr>
+<tr><td>Negative sequence</td><td>\(x_\alpha = \hat X\cos\omega t\), \(x_\beta = -\hat X\sin\omega t\): \(x_\beta\) <strong>leads</strong> by \(90^\circ\); \(x_0 = 0\)</td></tr>
+<tr><td>Zero sequence</td><td>only \(x_0 = \hat X\cos\omega t\); \(x_\alpha = x_\beta = 0\)</td></tr>
+</table></div>
+<p>So a missing neutral, which removes only the zero sequence, costs nothing in \(\alpha\) and \(\beta\).</p>
+
+<details class="work"><summary>Example 11 (lecture): the positive sequence after Clarke</summary><div class="body">
+<div class="givens">Positive sequence set of peak \(\hat X\).</div>
+<p>\(x_\alpha\) and \(x_\beta\) are the real and imaginary parts of the arrow \(\vec x = \hat Xe^{j\omega t}\) from Section 10:</p>
+<div class="math">\[
+\begin{aligned}
+x_\alpha &= \frac{2}{3}\Bigl(x_A - \frac{1}{2}x_B - \frac{1}{2}x_C\Bigr) = \hat X\cos\omega t\\
+x_\beta &= \frac{2}{3}\cdot\frac{\sqrt3}{2}\,(x_B - x_C) = \hat X\sin\omega t = \hat X\cos(\omega t - 90^\circ)\\
+x_0 &= \frac{1}{3}(x_A+x_B+x_C) = 0
+\end{aligned}\]</div>
+<div class="answer">\(x_\beta\) lags \(x_\alpha\) by \(90^\circ\); \(x_0 = 0\)</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture shows this with plots; the three lines above write it out. The \(x_\beta\) line uses \(\cos(\omega t-120^\circ)-\cos(\omega t+120^\circ) = 2\sin 120^\circ\sin\omega t = \sqrt3\sin\omega t\).</p></div>
+</div></details>
+
+<div class="demo" id="stDemo">
+  <div class="dtitle">Clarke of the switched leg voltages</div>
+  <div class="src">Click a leg to flip it between up (\(+\frac{v_d}{2}\)) and down (\(-\frac{v_d}{2}\)). \(v_d = 800\ \text{V}\) is a practice value (not from the lecture).</div>
+  <div class="controls">
+    <span class="seg" data-leg="0"><button type="button" aria-pressed="true">A up</button><button type="button" aria-pressed="false">A down</button></span>
+    <span class="seg" data-leg="1"><button type="button" aria-pressed="false">B up</button><button type="button" aria-pressed="true">B down</button></span>
+    <span class="seg" data-leg="2"><button type="button" aria-pressed="false">C up</button><button type="button" aria-pressed="true">C down</button></span>
+    <label>\(v_d\) (V) <input type="number" data-k="vd" value="800" min="1" step="50"></label>
+    <button class="btn" type="button" data-reset>Reset</button>
+  </div>
+  <div class="readout"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Giving a location as "3 blocks east, 2 blocks north" instead of using three streets that meet at \(120^\circ\). Three-street directions are redundant (one can always be expressed by the other two), while east and north are independent. The third coordinate \(x_0\) is like altitude: it is needed to describe every possible signal, but for a city map (no neutral wire) it is always zero.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>The \(\frac{2}{3}\) multiplies every row</strong>, so the zero row is \(\frac{2}{3}\cdot\frac{1}{2} = \frac{1}{3}\) of the sum: \(x_0\) is the average, not the sum.</li>
+<li><strong>\(\frac{2}{3}\cdot\frac{\sqrt3}{2} = \frac{1}{\sqrt3}\)</strong>: \(x_\beta = \frac{x_B - x_C}{\sqrt3}\). Getting \(B - C\) the wrong way round flips the sign.</li>
+<li><strong>Positive: \(x_\beta\) lags. Negative: \(x_\beta\) leads.</strong> Easy to swap.</li>
+<li><strong>When \(x_A+x_B+x_C=0\), \(x_\alpha = x_A\).</strong> A handy check.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 11.1 (not from the lecture): transform three numbers</summary><div class="body">
+<div class="givens">\(x_A = 100\ \text{V}\), \(x_B = -20\ \text{V}\), \(x_C = -50\ \text{V}\) (the instant of Practice 5.1).</div>
+<div class="math">\[
+\begin{aligned}
+x_\alpha &= \frac{2}{3}\Bigl(100 + 10 + 25\Bigr) = 90\ \text{V}\\
+x_\beta &= \frac{2}{3}\cdot\frac{\sqrt3}{2}\bigl(-20-(-50)\bigr) = \frac{30}{\sqrt3} = 17.32\ \text{V}\\
+x_0 &= \frac{100-20-50}{3} = 10\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">\(x_\alpha = 90\ \text{V}\), \(x_\beta = 17.32\ \text{V}\), \(x_0 = 10\ \text{V}\)</div>
+</div></details>
+<details class="work practice"><summary>Practice 11.2 (not from the lecture): a switching state</summary><div class="body">
+<div class="givens">\(v_d = 800\ \text{V}\); leg \(A\) up, legs \(B\) and \(C\) down: \(v_{tAN} = 400\ \text{V}\), \(v_{tBN} = v_{tCN} = -400\ \text{V}\).</div>
+<div class="math">\[
+\begin{aligned}
+v_{t\alpha} &= \frac{2}{3}\bigl(400 + 200 + 200\bigr) = 533.3\ \text{V} = \frac{2}{3}v_d\\
+v_{t\beta} &= \frac{1}{\sqrt3}\bigl(-400-(-400)\bigr) = 0\ \text{V}\\
+v_{t0} &= \frac{400-400-400}{3} = -133.3\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">\(v_{t\alpha} = 533.3\ \text{V}\), \(v_{t\beta} = 0\), \(v_{t0} = -133.3\ \text{V}\), the same as \(v_{nN}\) in Practice 8.1</div>
+</div></details>
+
+<div class="quiz" data-quiz="q11"></div>
+</section>
+
+<section class="sec" id="s12">
+<h3><span class="num">Section 12</span>Back to phases</h3>
+<p>The controller will work in \(\alpha\) and \(\beta\), but the legs need \(A\), \(B\) and \(C\). The inverse transform takes us back:</p>
+<div class="eq">
+  <div class="math">\[ \begin{bmatrix}x_{A}\\x_{B}\\x_{C}\end{bmatrix}=\begin{bmatrix}1&0&1\\-\frac12&\frac{\sqrt3}{2}&1\\-\frac12&-\frac{\sqrt3}{2}&1\end{bmatrix}\begin{bmatrix}x_{\alpha}\\x_{\beta}\\x_{0}\end{bmatrix} \]</div>
+  <span class="note">inverse Clarke, \(\mathbf{T}^{-1}\)</span>
+  <div class="defs">Same symbols as Section 11. Each row is that phase's axis \((\cos\theta, \sin\theta)\), then a 1.</div>
+</div>
+<p>Read it back: each phase is the arrow's component along that phase's axis, plus \(x_0\). There is no \(\frac{2}{3}\) here; it lives only in the forward transform.</p>
+
+<details class="work"><summary>Example 12 (lecture): check the inverse on phase A</summary><div class="body">
+<p>Row \(A\) says \(x_A = x_\alpha + x_0\). Substitute the forward transform:</p>
+<div class="math">\[
+\begin{aligned}
+x_\alpha + x_0 &= \frac{2}{3}\Bigl(x_A - \frac{1}{2}x_B - \frac{1}{2}x_C\Bigr) + \frac{1}{3}\bigl(x_A + x_B + x_C\bigr)\\
+&= \Bigl(\frac{2}{3}+\frac{1}{3}\Bigr)x_A + \Bigl(-\frac{1}{3}+\frac{1}{3}\Bigr)x_B + \Bigl(-\frac{1}{3}+\frac{1}{3}\Bigr)x_C\\
+&= x_A
+\end{aligned}\]</div>
+<div class="answer">The inverse returns \(x_A\) exactly; rows \(B\) and \(C\) check the same way</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The slide gives the matrix and how to read it; this check is added.</p></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Going from map coordinates (east, north) back to "how far along each of the three streets": you project the point onto each street's direction. The altitude \(x_0\) is simply added to every street's reading, the way the same floor number applies to every entrance of a building.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>No \(\frac{2}{3}\) in the inverse.</strong> Multiplying by \(\frac{3}{2}\) again is a common slip.</li>
+<li><strong>Row \(B\) has \(+\frac{\sqrt3}{2}\), row \(C\) has \(-\frac{\sqrt3}{2}\).</strong> They follow the \(B\) axis at \(+120^\circ\) and \(C\) at \(-120^\circ\).</li>
+<li><strong>Keep \(x_0\)</strong> when it is not zero: it adds to all three phases.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 12.1 (not from the lecture): round trip</summary><div class="body">
+<div class="givens">\(x_\alpha = 90\ \text{V}\), \(x_\beta = 17.32\ \text{V}\), \(x_0 = 10\ \text{V}\) (the result of Practice 11.1).</div>
+<div class="math">\[
+\begin{aligned}
+x_A &= 90 + 10 = 100\ \text{V}\\
+x_B &= -45 + \frac{\sqrt3}{2}(17.32) + 10 = -45 + 15 + 10 = -20\ \text{V}\\
+x_C &= -45 - 15 + 10 = -50\ \text{V}
+\end{aligned}\]</div>
+<div class="answer">Back to \(100\ \text{V}\), \(-20\ \text{V}\), \(-50\ \text{V}\)</div>
+</div></details>
+<details class="work practice"><summary>Practice 12.2 (not from the lecture): an arrow on the \(\alpha\) axis</summary><div class="body">
+<div class="givens">\(x_\alpha = 300\ \text{V}\), \(x_\beta = 0\), \(x_0 = 0\).</div>
+<div class="math">\[ x_A = 300\ \text{V},\qquad x_B = -\frac{1}{2}(300) = -150\ \text{V},\qquad x_C = -150\ \text{V} \]</div>
+<div class="answer">\(300\ \text{V}\), \(-150\ \text{V}\), \(-150\ \text{V}\) (they sum to zero, as \(x_0 = 0\) requires)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q12"></div>
+</section>
+
+<section class="sec" id="s13">
+<h3><span class="num">Section 13</span>Clarke applied to the KVL</h3>
+<p>Now use the transform on the converter. Start from the three KVL equations of Section 8 in vector form, under the lecture's three conditions: equal \(L\) in the three phases, no neutral wire, balanced grid.</p>
+<div class="math">\[
+\begin{aligned}
+L\frac{d}{dt}\begin{bmatrix}i_{LA}\\i_{LB}\\i_{LC}\end{bmatrix}&=\begin{bmatrix}v_{tAN}\\v_{tBN}\\v_{tCN}\end{bmatrix}-v_{nN}\begin{bmatrix}1\\1\\1\end{bmatrix}-\begin{bmatrix}v_{gA}\\v_{gB}\\v_{gC}\end{bmatrix}
+\end{aligned}\]</div>
+<p>Multiply both sides by \(\mathbf{T}\). Since \(\mathbf{T}\) is constant and \(L\) is the same in every phase, \(L\frac{d}{dt}\) comes outside, and every vector simply becomes its \(\alpha\beta 0\) version. The neutral term needs \(\mathbf{T}\) times \((1,1,1)\), which is \((0,0,1)\): it vanishes from the \(\alpha\) and \(\beta\) rows.</p>
+<div class="eq">
+  <div class="math">\[ L\frac{di_{L\alpha}}{dt}=v_{t\alpha}-v_{g\alpha},\qquad L\frac{di_{L\beta}}{dt}=v_{t\beta}-v_{g\beta} \]</div>
+  <span class="note">two independent single-phase circuits, with no \(v_{nN}\)</span>
+  <div class="defs">\(i_{L\alpha}, i_{L\beta}\) = Clarke components of the inductor currents, in A · \(v_{t\alpha}, v_{t\beta}\) = Clarke components of the leg voltages \(v_{tAN}, v_{tBN}, v_{tCN}\), in V · \(v_{g\alpha}, v_{g\beta}\) = Clarke components of the grid voltages, in V</div>
+</div>
+<div class="eq">
+  <div class="math">\[ 0 = v_{t0} - v_{nN}\qquad\bigl(i_{L0}=0,\ v_{g0}=0\bigr) \]</div>
+  <span class="note">the zero row just gives the neutral result again</span>
+  <div class="defs">\(i_{L0}\) = zero sequence inductor current, in A (zero with no neutral wire) · \(v_{g0}\) = zero sequence grid voltage, in V (zero for a balanced grid) · \(v_{t0}\) = average of the three leg voltages, in V</div>
+</div>
+
+<details class="work" open><summary>Example 13 (lecture): one change per step</summary><div class="body">
+<p><strong>Step 1.</strong> Multiply by \(\mathbf{T}\):</p>
+<div class="math">\[
+\begin{aligned}
+L\frac{d}{dt}\begin{bmatrix}i_{L\alpha}\\i_{L\beta}\\i_{L0}\end{bmatrix}&=\begin{bmatrix}v_{t\alpha}\\v_{t\beta}\\v_{t0}\end{bmatrix}-v_{nN}\,\mathbf{T}\begin{bmatrix}1\\1\\1\end{bmatrix}-\begin{bmatrix}v_{g\alpha}\\v_{g\beta}\\v_{g0}\end{bmatrix}
+\end{aligned}\]</div>
+<p><strong>Step 2.</strong> Evaluate \(\mathbf{T}(1,1,1)\) row by row:</p>
+<div class="math">\[
+\begin{aligned}
+\text{row } \alpha:&\quad \frac{2}{3}\Bigl(1-\frac{1}{2}-\frac{1}{2}\Bigr) = 0\\
+\text{row } \beta:&\quad \frac{2}{3}\Bigl(0+\frac{\sqrt3}{2}-\frac{\sqrt3}{2}\Bigr) = 0\\
+\text{row } 0:&\quad \frac{2}{3}\Bigl(\frac{1}{2}+\frac{1}{2}+\frac{1}{2}\Bigr) = 1
+\end{aligned}\]</div>
+<p><strong>Step 3.</strong> So \(v_{nN}\) drops out of the \(\alpha\) and \(\beta\) rows, which leaves the two independent equations above. The zero row, with \(i_{L0}=0\) and \(v_{g0}=0\), gives \(0 = v_{t0} - v_{nN}\), so \(v_{nN} = v_{t0} = \frac{1}{3}(v_{tAN}+v_{tBN}+v_{tCN})\): the neutral result of Section 8 again.</p>
+<div class="answer">\(L\frac{di_{L\alpha}}{dt}=v_{t\alpha}-v_{g\alpha}\) and \(L\frac{di_{L\beta}}{dt}=v_{t\beta}-v_{g\beta}\): two copies of Topic 11's single-phase equation</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>Step 2's row-by-row product is added; the slide states the result \((0,0,1)\).</p></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Back to the seesaw from Section 9: describing it by three heights tangled everything together. Describe it instead by its two tilt angles (\(\alpha\), \(\beta\)) and its overall height (\(0\)). The two tilts move independently, each with its own push, and the overall height is fixed by the pivot (no neutral wire). Two separate steering problems replace one tangled one.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><strong>"\(L\frac{d}{dt}\) comes outside" needs equal \(L\)</strong> in all three phases. Unequal inductors would mix \(\alpha\), \(\beta\) and \(0\).</li>
+<li><strong>\(v_{nN}\) does not vanish; it moves.</strong> It is all in the zero row, where it equals \(v_{t0}\).</li>
+<li><strong>\(v_{t\alpha}\) uses the leg voltages to \(N\).</strong> Using them is fine precisely because the \(N\) to \(n\) offset is zero sequence.</li>
+<li><strong>With no neutral, \(i_{L\alpha} = i_{LA}\)</strong> (the currents sum to zero), so the \(\alpha\) equation is phase \(A\) without the coupling.</li>
+</ul></div>
+
+<details class="work practice"><summary>Practice 13.1 (not from the lecture): the \(\alpha\) current slope</summary><div class="body">
+<div class="givens">State of Practice 11.2: \(v_{t\alpha} = 533.3\ \text{V}\). Grid \(v_{g\alpha} = 300\ \text{V}\) at this instant, \(L = 5\ \text{mH}\).</div>
+<div class="math">\[
+\begin{aligned}
+L\frac{di_{L\alpha}}{dt} &= 533.3 - 300 = 233.3\ \text{V}\\
+\frac{di_{L\alpha}}{dt} &= \frac{233.3\ \text{V}}{5\times10^{-3}\ \text{H}} = 46\,667\ \text{A/s}
+\end{aligned}\]</div>
+<div class="answer">\(46\,667\ \text{A/s}\), the same as \(\frac{di_{LA}}{dt}\) in Practice 9.1, because \(i_{L\alpha} = i_{LA}\) here</div>
+</div></details>
+<details class="work practice"><summary>Practice 13.2 (not from the lecture): the \(\beta\) current slope</summary><div class="body">
+<div class="givens">Same state: \(v_{t\beta} = 0\ \text{V}\). Grid \(v_{g\beta} = -150\ \text{V}\) at this instant, \(L = 5\ \text{mH}\).</div>
+<div class="math">\[ \frac{di_{L\beta}}{dt} = \frac{0-(-150)\ \text{V}}{5\times 10^{-3}\ \text{H}} = 30\,000\ \text{A/s} \]</div>
+<div class="answer">\(30\,000\ \text{A/s}\)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q13"></div>
+</section>
+
+<section class="sec final" id="final">
+<h3><span class="num">Exam</span>Final exam: mixed problems</h3>
+<p>Twelve questions across the whole lecture. Each explanation names the section to review.</p>
+<div class="quiz" data-quiz="final"></div>
+</section>
+
+<section class="sec" id="formulas">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<button class="btn" id="printSheet" type="button">Print formula sheet</button>
+<div class="sheet" style="margin-top:14px">
+<div class="card"><h5>Part 1 · Sequences</h5>
+<div class="f"><span class="expr">\[ x_A=\hat X\cos\omega t,\ \ x_B=\hat X\cos\Bigl(\omega t-\frac{2\pi}{3}\Bigr),\ \ x_C=\hat X\cos\Bigl(\omega t+\frac{2\pi}{3}\Bigr) \]</span><span class="d">Balanced positive sequence set. \(\hat X\) = peak (V or A), \(\omega\) = line frequency (rad/s). Negative: swap \(B\) and \(C\). Zero: all equal.</span><span class="s">Sections 1, 2</span></div>
+<div class="f"><span class="expr">\[ p_A=P+P\cos 2\omega t,\qquad p_A+p_B+p_C=3P,\qquad P=\frac{\hat V\hat I}{2} \]</span><span class="d">\(P\) = average power per phase (W), unity power factor, \(\hat V\), \(\hat I\) = phase peaks (V, A).</span><span class="s">Section 1</span></div>
+<div class="f"><span class="expr">\[ \underline{V}_B=\underline{V}_{+}\,1\angle{-120^\circ}+\underline{V}_{-}\,1\angle 120^\circ+\underline{V}_{0} \]</span><span class="d">Fortescue. \(\underline{V}_A=\underline{V}_{+}+\underline{V}_{-}+\underline{V}_{0}\); for \(\underline{V}_C\) swap the two rotations. Sequence phasors in V.</span><span class="s">Section 3</span></div>
+<div class="f"><span class="expr">\[ x_0=\frac{1}{3}\bigl(x_A+x_B+x_C\bigr) \]</span><span class="d">Zero sequence part, for phasors or at each instant (same unit as the phases).</span><span class="s">Sections 3, 5</span></div>
+<div class="f"><span class="expr">\[ \underline{I}_{\pm}=\frac{\underline{V}_{\pm}}{R},\qquad \underline{V}_{0}=(R+3R_n)\,\underline{I}_{0},\qquad \underline{I}_n=3\underline{I}_0 \]</span><span class="d">\(R\) = phase resistance (Ω), \(R_n\) = neutral resistance (Ω). No neutral: \(R_n\to\infty\), \(\underline{I}_0=0\).</span><span class="s">Section 4</span></div>
+</div>
+<div class="card"><h5>Part 2 · The three-leg converter</h5>
+<div class="f"><span class="expr">\[ \langle v_{tAN}\rangle_{T_s}=m_A\,\frac{\langle v_d\rangle_{T_s}}{2},\qquad m_A=2d_A-1 \]</span><span class="d">\(v_{tAN}\) = leg voltage to link midpoint \(N\) (V), \(v_d\) = link voltage (V), \(d_A\) = fraction of \(T_s\) with \(S_1\) on, \(-1\le m_A\le 1\).</span><span class="s">Section 6</span></div>
+<div class="f"><span class="expr">\[ \hat V_{tAN,1}=m_i\,\frac{v_d}{2},\qquad \hat V_{AB,1}=\sqrt3\,m_i\,\frac{v_d}{2} \]</span><span class="d">Sine-triangle PWM, \(m_i\le 1\) = reference peak (no unit). \(v_{AB}\in\{0,\pm v_d\}\).</span><span class="s">Section 7</span></div>
+<div class="f"><span class="expr">\[ L\frac{di_{LA}}{dt}=v_{tAN}-v_{nN}-v_{gA} \]</span><span class="d">KVL per phase. \(L\) = inductance (H), \(i_{LA}\) = inductor current (A), \(v_{gA}\) = grid phase voltage (V), \(v_{nN}\) = grid star point to \(N\) (V).</span><span class="s">Section 8</span></div>
+<div class="f"><span class="expr">\[ v_{nN}=\frac{v_{tAN}+v_{tBN}+v_{tCN}}{3}\in\Bigl\{\pm\frac{v_d}{2},\ \pm\frac{v_d}{6}\Bigr\} \]</span><span class="d">No neutral wire, equal \(L\), balanced grid. Steps of \(\frac{v_d}{3}\).</span><span class="s">Section 8</span></div>
+<div class="f"><span class="expr">\[ L\frac{di_{LA}}{dt}=\frac{2}{3}v_{tAN}-\frac{1}{3}v_{tBN}-\frac{1}{3}v_{tCN}-v_{gA} \]</span><span class="d">Coupled form; \(i_{LA}+i_{LB}+i_{LC}=0\).</span><span class="s">Section 9</span></div>
+</div>
+<div class="card"><h5>Part 3 · The Clarke transform</h5>
+<div class="f"><span class="expr">\[ \vec x=\frac{2}{3}\Bigl(x_A+x_B\,1\angle 120^\circ+x_C\,1\angle{-120^\circ}\Bigr)=\hat X e^{j\omega t} \]</span><span class="d">Rotating arrow; constant length \(\hat X\) for a balanced positive sequence set (negative: \(\hat Xe^{-j\omega t}\)).</span><span class="s">Section 10</span></div>
+<div class="f"><span class="expr">\[ \begin{bmatrix}x_{\alpha}\\x_{\beta}\\x_{0}\end{bmatrix}=\frac{2}{3}\begin{bmatrix}1&-\frac12&-\frac12\\0&\frac{\sqrt3}{2}&-\frac{\sqrt3}{2}\\\frac12&\frac12&\frac12\end{bmatrix}\begin{bmatrix}x_{A}\\x_{B}\\x_{C}\end{bmatrix} \]</span><span class="d">Clarke \(\mathbf{T}\). \(x_\beta=\frac{x_B-x_C}{\sqrt3}\). Positive: \(x_\beta\) lags \(x_\alpha\) by \(90^\circ\); negative: leads.</span><span class="s">Section 11</span></div>
+<div class="f"><span class="expr">\[ \begin{bmatrix}x_{A}\\x_{B}\\x_{C}\end{bmatrix}=\begin{bmatrix}1&0&1\\-\frac12&\frac{\sqrt3}{2}&1\\-\frac12&-\frac{\sqrt3}{2}&1\end{bmatrix}\begin{bmatrix}x_{\alpha}\\x_{\beta}\\x_{0}\end{bmatrix} \]</span><span class="d">Inverse Clarke: phase axis \((\cos\theta,\sin\theta)\), then 1. No \(\frac{2}{3}\).</span><span class="s">Section 12</span></div>
+<div class="f"><span class="expr">\[ L\frac{di_{L\alpha}}{dt}=v_{t\alpha}-v_{g\alpha},\qquad L\frac{di_{L\beta}}{dt}=v_{t\beta}-v_{g\beta},\qquad v_{t0}=v_{nN} \]</span><span class="d">Converter in \(\alpha\beta0\): \(\mathbf{T}(1,1,1)=(0,0,1)\). Equal \(L\), no neutral, balanced grid.</span><span class="s">Section 13</span></div>
+</div>
+</div>
+</section>
+<footer>Study guide generated from the lecture. Check flagged notes against your class materials.</footer></main></div>
+<script>window.GUIDE={"title": "Three-Phase Converters Guide", "quizzes": {"q1": {"title": "Section 1 quiz", "questions": [{"q": "A balanced three-phase set at unity power factor has phase voltage peak \\(340\\ \\text{V}\\) and phase current peak \\(20\\ \\text{A}\\). What is the total power delivered?", "options": ["\\(20.4\\ \\text{kW}\\)", "\\(3.4\\ \\text{kW}\\)", "\\(5.89\\ \\text{kW}\\)", "\\(10.2\\ \\text{kW}\\)"], "answer": 3, "explain": "Per phase \\(P=\\frac{\\hat V\\hat I}{2}=\\frac{340\\times 20}{2}=3400\\ \\text{W}\\). The three phases add to \\(3P=10.2\\ \\text{kW}\\), constant in time.", "mistakes": ["dropping the \\(\\frac{1}{2}\\) in \\(P=\\frac{\\hat V\\hat I}{2}\\)", "stopping at one phase", "multiplying by \\(\\sqrt3\\) instead of 3", null]}, {"q": "Why does the dc link of a balanced three-phase converter see no \\(2\\omega\\) ripple?", "options": ["The three \\(2\\omega\\) power terms are \\(120^\\circ\\) apart and sum to zero at every instant", "The dc-link capacitor is made large enough to absorb it", "Each phase's power is constant", "The three phase currents sum to zero"], "answer": 0, "explain": "Each \\(p_x = P + P\\cos(2\\omega t - \\cdots)\\) still pulses, but the pulsing terms at \\(2\\omega t\\), \\(2\\omega t-240^\\circ\\) and \\(2\\omega t+240^\\circ\\) form a balanced set and cancel, leaving \\(3P\\).", "mistakes": [null, "the single-phase fix (Topic 8), which three phases do not need", "thinking each phase is flat; each phase still swings from 0 to \\(2P\\)", "KCL, which is about currents, not power"]}, {"q": "One phase delivers average power \\(P=3400\\ \\text{W}\\) at unity power factor. What is the peak of its instantaneous power \\(p_A(t)\\)?", "options": ["\\(6800\\ \\text{W}\\)", "\\(3400\\ \\text{W}\\)", "\\(4808\\ \\text{W}\\)", "\\(10\\,200\\ \\text{W}\\)"], "answer": 0, "explain": "\\(p_A=P+P\\cos 2\\omega t\\) peaks at \\(2P = 6800\\ \\text{W}\\) and dips to zero.", "mistakes": [null, "taking the average as the peak", "multiplying by \\(\\sqrt2\\) as if converting RMS to peak", "giving the three-phase total"]}]}, "q2": {"title": "Section 2 quiz", "questions": [{"q": "\\(x_A=10\\cos\\omega t\\), \\(x_B=10\\cos(\\omega t+120^\\circ)\\), \\(x_C=10\\cos(\\omega t-120^\\circ)\\), in volts. Which sequence is this?", "options": ["Positive sequence", "Zero sequence", "Negative sequence", "Not a pure sequence (unbalanced)"], "answer": 2, "explain": "Phase \\(B\\) carries \\(+120^\\circ\\), so it peaks at \\(\\omega t=240^\\circ\\), after \\(C\\) at \\(120^\\circ\\). Order \\(A, C, B\\): negative.", "mistakes": ["reading \\(+120^\\circ\\) on \\(B\\) as a lag", "confusing equal peaks with equal phases", null, "thinking any set not in order \\(A, B, C\\) is unbalanced"]}, {"q": "A positive sequence set has peak \\(10\\ \\text{V}\\). What is \\(x_A+x_B+x_C\\) at \\(\\omega t=0\\)?", "options": ["\\(0\\ \\text{V}\\)", "\\(-10\\ \\text{V}\\)", "\\(30\\ \\text{V}\\)", "\\(10\\ \\text{V}\\)"], "answer": 0, "explain": "\\(10+10\\cos(-120^\\circ)+10\\cos 120^\\circ = 10-5-5 = 0\\ \\text{V}\\). Balanced sets sum to zero at every instant.", "mistakes": [null, "adding only \\(x_B+x_C\\)", "treating it as a zero sequence set", "counting only \\(x_A\\)"]}, {"q": "A zero sequence set has peak \\(5\\ \\text{V}\\). What is \\(x_A+x_B+x_C\\) at \\(\\omega t=0\\)?", "options": ["\\(8.66\\ \\text{V}\\)", "\\(5\\ \\text{V}\\)", "\\(15\\ \\text{V}\\)", "\\(0\\ \\text{V}\\)"], "answer": 2, "explain": "All three phases are equal, \\(5\\ \\text{V}\\) each, so the sum is \\(15\\ \\text{V}\\). A zero sequence set is not balanced.", "mistakes": ["multiplying by \\(\\sqrt3\\) as for a line voltage", "counting one phase only", null, "assuming every three-phase set sums to zero"]}]}, "q3": {"title": "Section 3 quiz", "questions": [{"q": "\\(\\underline{V}_+=100\\ \\text{V}\\), \\(\\underline{V}_-=40\\ \\text{V}\\), \\(\\underline{V}_0=25\\ \\text{V}\\), all at \\(0^\\circ\\). What is \\(\\underline{V}_A\\)?", "options": ["\\(165\\angle 0^\\circ\\ \\text{V}\\)", "\\(140\\angle 0^\\circ\\ \\text{V}\\)", "\\(85\\angle 0^\\circ\\ \\text{V}\\)", "\\(125\\angle 0^\\circ\\ \\text{V}\\)"], "answer": 0, "explain": "Phase \\(A\\) adds the three sets unrotated: \\(100+40+25=165\\ \\text{V}\\).", "mistakes": [null, "leaving out \\(\\underline{V}_0\\)", "subtracting the negative sequence", "leaving out \\(\\underline{V}_-\\)"]}, {"q": "\\(\\underline{V}_A=120\\angle 0^\\circ\\), \\(\\underline{V}_B=120\\angle{-120^\\circ}\\), \\(\\underline{V}_C=60\\angle 120^\\circ\\), in volts. What is \\(\\underline{V}_0\\)?", "options": ["\\(60\\angle{-60^\\circ}\\ \\text{V}\\)", "\\(0\\ \\text{V}\\)", "\\(100\\ \\text{V}\\)", "\\(20\\angle{-60^\\circ}\\ \\text{V}\\)"], "answer": 3, "explain": "Sum: \\(120+(-60-j103.92)+(-30+j51.96)=30-j51.96\\ \\text{V}\\). Divide by 3: \\(10-j17.32 = 20\\angle{-60^\\circ}\\ \\text{V}\\).", "mistakes": ["forgetting the \\(\\frac{1}{3}\\)", "assuming the set is balanced", "averaging the magnitudes instead of adding phasors", null]}, {"q": "Why does adding the three Fortescue lines isolate \\(\\underline{V}_0\\)?", "options": ["The positive and negative sequence sets each sum to zero", "The positive and negative sequences cancel each other", "\\(\\underline{V}_0\\) is the largest component", "The rotations \\(1\\angle\\pm120^\\circ\\) are both equal to \\(-1\\)"], "answer": 0, "explain": "Each of the positive and negative sets is balanced, so its three phases sum to zero on its own. Only \\(3\\underline{V}_0\\) survives.", "mistakes": [null, "thinking the two sequences cancel each other (they cancel within themselves)", "a guess about size; size plays no role", "misreading \\(1\\angle\\pm120^\\circ\\); their real part is \\(-\\frac{1}{2}\\)"]}, {"q": "For the lecture's set (\\(100\\), \\(40\\), \\(25\\ \\text{V}\\)), what is \\(|\\underline{V}_B|\\)?", "options": ["\\(68.7\\ \\text{V}\\)", "\\(129.3\\ \\text{V}\\)", "\\(87.2\\ \\text{V}\\)", "\\(165\\ \\text{V}\\)"], "answer": 0, "explain": "\\(100\\angle{-120^\\circ}+40\\angle 120^\\circ+25=(-50-j86.60)+(-20+j34.64)+25=-45-j51.96\\), magnitude \\(68.7\\ \\text{V}\\) at \\(-130.9^\\circ\\).", "mistakes": [null, "rotating the negative set by \\(-120^\\circ\\) like the positive set", "leaving out \\(\\underline{V}_0\\)", "adding the magnitudes"]}]}, "q4": {"title": "Section 4 quiz", "questions": [{"q": "\\(R=10\\ \\Omega\\), \\(R_n=2\\ \\Omega\\), \\(\\underline{V}_0=25\\ \\text{V}\\). What is \\(\\underline{I}_0\\)?", "options": ["\\(2.083\\ \\text{A}\\)", "\\(2.5\\ \\text{A}\\)", "\\(1.5625\\ \\text{A}\\)", "\\(0.78125\\ \\text{A}\\)"], "answer": 2, "explain": "\\(\\underline{I}_0=\\frac{\\underline{V}_0}{R+3R_n}=\\frac{25}{10+6}=1.5625\\ \\text{A}\\).", "mistakes": ["using \\(R+R_n\\) without the factor 3", "ignoring \\(R_n\\)", null, "putting the 3 on \\(R\\) instead of \\(R_n\\)"]}, {"q": "In the same circuit, what is the neutral current \\(\\underline{I}_n\\)?", "options": ["\\(4.6875\\ \\text{A}\\)", "\\(7.5\\ \\text{A}\\)", "\\(0\\ \\text{A}\\)", "\\(1.5625\\ \\text{A}\\)"], "answer": 0, "explain": "The neutral carries all three equal zero sequence currents: \\(3\\times1.5625=4.6875\\ \\text{A}\\).", "mistakes": [null, "using \\(\\underline{I}_0=2.5\\ \\text{A}\\) from ignoring \\(R_n\\)", "assuming the neutral never carries current", "forgetting the neutral carries three phase currents"]}, {"q": "Which sequence currents depend on \\(R_n\\)?", "options": ["Only the zero sequence", "Only the positive sequence", "None of them", "All three"], "answer": 0, "explain": "Positive and negative sequence currents sum to zero, so \\(i_n=0\\) and \\(R_n\\) carries nothing for them. Only the zero sequence sees \\(R+3R_n\\).", "mistakes": [null, "mixing up which sequence uses the neutral", "forgetting the zero sequence returns through the neutral", "forgetting balanced currents return through the other phases"]}]}, "q5": {"title": "Section 5 quiz", "questions": [{"q": "At one instant \\(x_A=100\\ \\text{V}\\), \\(x_B=-20\\ \\text{V}\\), \\(x_C=-50\\ \\text{V}\\). What is \\(x_0\\)?", "options": ["\\(0\\ \\text{V}\\)", "\\(56.67\\ \\text{V}\\)", "\\(30\\ \\text{V}\\)", "\\(10\\ \\text{V}\\)"], "answer": 3, "explain": "\\(x_0=\\frac{100-20-50}{3}=10\\ \\text{V}\\).", "mistakes": ["assuming every set sums to zero", "averaging the magnitudes, ignoring signs", "forgetting to divide by 3", null]}, {"q": "With no neutral wire and equal resistors, a \\(25\\ \\text{V}\\) zero sequence voltage is added to all three sources. What happens?", "options": ["Each resistor sees an extra \\(25\\ \\text{V}\\)", "\\(n'\\) moves by \\(25\\ \\text{V}\\) with respect to \\(n\\); no extra current flows", "\\(n'\\) moves by \\(75\\ \\text{V}\\) with respect to \\(n\\)", "A current \\(\\frac{25\\ \\text{V}}{R}\\) flows in each phase"], "answer": 1, "explain": "KCL forces \\(3i_0=0\\). Adding the three KVL loops gives \\(v_{n'n}=\\frac{v_A+v_B+v_C}{3}=v_0\\), so the \\(25\\ \\text{V}\\) appears between \\(n'\\) and \\(n\\), not across the load.", "mistakes": ["forgetting the star point moves", null, "adding the three zero sequence voltages instead of averaging", "assuming a return path exists"]}, {"q": "Why does the 'no zero sequence current' result hold for switched PWM waveforms too?", "options": ["Because \\(f_s\\gg f_1\\)", "PWM waveforms are sinusoidal on average", "It uses only KCL and KVL at each instant", "Phasors apply to any periodic waveform"], "answer": 2, "explain": "KCL at \\(n'\\) holds at every instant for any waveform. No phasor or averaging step is used.", "mistakes": ["confusing it with the averaging assumption of Section 6", "thinking the argument needs averaging", null, "thinking phasors describe switched waveforms; they only describe steady sinusoids"]}]}, "q6": {"title": "Section 6 quiz", "questions": [{"q": "\\(v_d=800\\ \\text{V}\\) and \\(d_A=0.7\\). What is \\(\\langle v_{tAN}\\rangle_{T_s}\\)?", "options": ["\\(560\\ \\text{V}\\)", "\\(280\\ \\text{V}\\)", "\\(320\\ \\text{V}\\)", "\\(160\\ \\text{V}\\)"], "answer": 3, "explain": "\\(m_A=2(0.7)-1=0.4\\); \\(\\langle v_{tAN}\\rangle=0.4\\times\\frac{800}{2}=160\\ \\text{V}\\).", "mistakes": ["multiplying \\(d_A\\) by \\(v_d\\) (a boost-style average to the bottom rail)", "multiplying \\(d_A\\) by \\(\\frac{v_d}{2}\\) instead of \\(m_A\\)", "using the full-bridge gain \\(m\\,v_d\\)", null]}, {"q": "\\(v_d=800\\ \\text{V}\\). Which \\(d_A\\) gives \\(\\langle v_{tAN}\\rangle=-250\\ \\text{V}\\)?", "options": ["\\(-0.625\\)", "\\(0.1875\\)", "\\(0.34375\\)", "\\(0.8125\\)"], "answer": 1, "explain": "\\(m_A=\\frac{-250}{400}=-0.625\\), so \\(d_A=\\frac{1+m_A}{2}=0.1875\\) (no unit).", "mistakes": ["giving \\(m_A\\) instead of \\(d_A\\)", null, "using the full-bridge gain, \\(m=\\frac{-250}{800}\\)", "dropping the minus sign"]}, {"q": "The lecture says '\\(N\\) is a reference, so the link need not be split'. What does that mean?", "options": ["The grid star point \\(n\\) must be wired to \\(N\\)", "\\(N\\) is always at \\(0\\ \\text{V}\\) with respect to \\(n\\)", "\\(N\\) is only the point voltages are measured from; no converter current needs to flow into it", "The two link capacitors must be equal"], "answer": 2, "explain": "Leg voltages are measured to \\(N\\) for convenience. Nothing connects to \\(N\\) (and \\(n\\) floats), so a single capacitor works.", "mistakes": ["assuming a neutral wire", "confusing \\(N\\) with \\(n\\); \\(v_{nN}\\) is not zero", null, "thinking the midpoint must physically exist"]}]}, "q7": {"title": "Section 7 quiz", "questions": [{"q": "\\(v_d=800\\ \\text{V}\\), \\(m_i=0.8\\). What is the peak of the fundamental of \\(v_{tAN}\\)?", "options": ["\\(554.3\\ \\text{V}\\)", "\\(320\\ \\text{V}\\)", "\\(640\\ \\text{V}\\)", "\\(226.3\\ \\text{V}\\)"], "answer": 1, "explain": "\\(\\hat V_{tAN,1}=m_i\\frac{v_d}{2}=0.8\\times400=320\\ \\text{V}\\).", "mistakes": ["giving the line-to-line peak", null, "forgetting the \\(\\frac{1}{2}\\) (full-bridge gain)", "converting to RMS"]}, {"q": "Same converter. What is the peak of the fundamental of \\(v_{AB}\\)?", "options": ["\\(554.3\\ \\text{V}\\)", "\\(640\\ \\text{V}\\)", "\\(320\\ \\text{V}\\)", "\\(1108.5\\ \\text{V}\\)"], "answer": 0, "explain": "\\(\\hat V_{AB,1}=\\sqrt3\\,m_i\\frac{v_d}{2}=\\sqrt3\\times320=554.3\\ \\text{V}\\).", "mistakes": [null, "doubling the phase value instead of multiplying by \\(\\sqrt3\\)", "giving the phase value", "using \\(\\sqrt3\\,m_iv_d\\) without the \\(\\frac{1}{2}\\)"]}, {"q": "A \\(480\\ \\text{V}\\) (line-to-line RMS) grid, sine-triangle PWM with \\(m_i\\le1\\). What is the smallest \\(v_d\\), ignoring the inductor drop?", "options": ["\\(678.8\\ \\text{V}\\)", "\\(960\\ \\text{V}\\)", "\\(783.8\\ \\text{V}\\)", "\\(1357.6\\ \\text{V}\\)"], "answer": 2, "explain": "Line peak \\(480\\sqrt2=678.8\\ \\text{V}\\); phase peak \\(\\frac{678.8}{\\sqrt3}=391.9\\ \\text{V}\\le\\frac{v_d}{2}\\), so \\(v_d\\ge783.8\\ \\text{V}\\).", "mistakes": ["setting \\(v_d\\) equal to the line peak", "doubling the RMS value", null, "doubling the line peak instead of the phase peak"]}, {"q": "Which values can the line-to-line voltage \\(v_{AB}\\) take?", "options": ["\\(0,\\ \\pm v_d\\)", "\\(0,\\ \\pm\\frac{v_d}{2}\\)", "\\(\\pm\\frac{v_d}{2}\\)", "\\(\\pm v_d\\)"], "answer": 0, "explain": "\\(v_{AB}=v_{tAN}-v_{tBN}\\) with each leg at \\(\\pm\\frac{v_d}{2}\\): equal legs give 0, opposite legs give \\(\\pm v_d\\).", "mistakes": [null, "halving the levels", "giving a single leg's levels", "forgetting both legs can be at the same rail"]}]}, "q8": {"title": "Section 8 quiz", "questions": [{"q": "\\(v_d=800\\ \\text{V}\\). Leg \\(A\\) is up, legs \\(B\\) and \\(C\\) are down. What is \\(v_{nN}\\)?", "options": ["\\(0\\ \\text{V}\\)", "\\(-400\\ \\text{V}\\)", "\\(-133.3\\ \\text{V}\\)", "\\(+133.3\\ \\text{V}\\)"], "answer": 2, "explain": "\\(v_{nN}=\\frac{400-400-400}{3}=-133.3\\ \\text{V}=-\\frac{v_d}{6}\\).", "mistakes": ["assuming \\(n\\) stays at \\(N\\)", "forgetting to divide the sum by 3", null, "a sign slip"]}, {"q": "Which values can \\(v_{nN}\\) take?", "options": ["\\(\\pm\\frac{v_d}{2}\\ \\text{only}\\)", "\\(\\pm\\frac{v_d}{2},\\ \\pm\\frac{v_d}{6}\\)", "\\(\\pm\\frac{v_d}{3},\\ \\pm v_d\\)", "\\(0,\\ \\pm\\frac{v_d}{2}\\)"], "answer": 1, "explain": "The leg sum is \\(\\pm\\frac{3v_d}{2}\\) (all legs agree) or \\(\\pm\\frac{v_d}{2}\\) (two against one). Divided by 3: \\(\\pm\\frac{v_d}{2}\\), \\(\\pm\\frac{v_d}{6}\\), steps of \\(\\frac{v_d}{3}\\).", "mistakes": ["forgetting the two-against-one states", null, "confusing the step size with a level", "thinking the legs can cancel to zero (three legs never can)"]}, {"q": "With balanced sinusoidal references, what is \\(\\langle v_{nN}\\rangle_{T_s}\\)?", "options": ["\\(\\frac{v_d}{2}\\)", "\\(\\frac{v_d}{6}\\)", "\\(0\\ \\text{V}\\)", "\\(m_i\\frac{v_d}{2}\\)"], "answer": 2, "explain": "\\(\\langle v_{nN}\\rangle=\\frac{m_A+m_B+m_C}{3}\\cdot\\frac{v_d}{2}\\) and balanced references sum to zero.", "mistakes": ["taking the all-legs-up level", "taking one instantaneous level as the mean", null, "giving a leg's fundamental peak"]}, {"q": "\\(v_{tAN}=400\\ \\text{V}\\), \\(v_{nN}=-133.3\\ \\text{V}\\), \\(v_{gA}=300\\ \\text{V}\\). What is \\(L\\frac{di_{LA}}{dt}\\)?", "options": ["\\(833.3\\ \\text{V}\\)", "\\(100\\ \\text{V}\\)", "\\(233.3\\ \\text{V}\\)", "\\(-33.3\\ \\text{V}\\)"], "answer": 2, "explain": "\\(L\\frac{di_{LA}}{dt}=v_{tAN}-v_{nN}-v_{gA}=400+133.3-300=233.3\\ \\text{V}\\).", "mistakes": ["adding \\(v_{gA}\\) instead of subtracting it", "leaving out \\(v_{nN}\\)", null, "adding \\(v_{nN}\\) instead of subtracting it"]}]}, "q9": {"title": "Section 9 quiz", "questions": [{"q": "No neutral wire. \\(i_{LA}=12\\ \\text{A}\\), \\(i_{LB}=-5\\ \\text{A}\\). What is \\(i_{LC}\\)?", "options": ["\\(-7\\ \\text{A}\\)", "\\(17\\ \\text{A}\\)", "\\(7\\ \\text{A}\\)", "\\(0\\ \\text{A}\\)"], "answer": 0, "explain": "\\(i_{LC}=-(i_{LA}+i_{LB})=-(12-5)=-7\\ \\text{A}\\).", "mistakes": [null, "adding magnitudes", "dropping the minus sign", "assuming a third current is free to be zero"]}, {"q": "In the coupled phase \\(A\\) equation, what is the coefficient of \\(v_{tBN}\\)?", "options": ["\\(-\\frac{1}{3}\\)", "\\(+\\frac{1}{3}\\)", "\\(0\\)", "\\(-1\\)"], "answer": 0, "explain": "\\(v_{tAN}-v_{nN}=v_{tAN}-\\frac{v_{tAN}+v_{tBN}+v_{tCN}}{3}\\), so \\(v_{tBN}\\) enters with \\(-\\frac{1}{3}\\).", "mistakes": [null, "a sign slip", "ignoring \\(v_{nN}\\), as if the phases were independent", "treating it like a line-to-line voltage"]}, {"q": "How many of the three inductor currents can the controller set independently?", "options": ["Three", "None, they are all fixed by the grid", "Two", "One"], "answer": 2, "explain": "\\(i_{LA}+i_{LB}+i_{LC}=0\\), so two of them fix the third. That is why the lecture looks for two new variables.", "mistakes": ["forgetting the KCL constraint", "confusing the grid voltages with the currents", null, "over-counting the constraint"]}]}, "q10": {"title": "Section 10 quiz", "questions": [{"q": "Positive sequence, \\(\\hat X=100\\ \\text{V}\\), \\(\\omega t=30^\\circ\\). What is \\(\\vec x=\\frac{2}{3}(x_A+x_B1\\angle120^\\circ+x_C1\\angle{-120^\\circ})\\)?", "options": ["\\(150\\angle 30^\\circ\\ \\text{V}\\)", "\\(100\\angle{-30^\\circ}\\ \\text{V}\\)", "\\(86.6\\angle 30^\\circ\\ \\text{V}\\)", "\\(100\\angle 30^\\circ\\ \\text{V}\\)"], "answer": 3, "explain": "For a balanced positive sequence set \\(\\vec x=\\hat Xe^{j\\omega t}=100\\angle30^\\circ\\ \\text{V}\\). By numbers: \\(\\frac{2}{3}(129.9+j75.0)=86.60+j50.0\\).", "mistakes": ["forgetting the \\(\\frac{2}{3}\\)", "turning the arrow the wrong way", "taking \\(x_A\\) as the length", null]}, {"q": "For a balanced negative sequence set, the arrow \\(\\vec x\\)...", "options": ["has a length that pulses at \\(2\\omega\\)", "has length \\(\\hat X\\) and turns at \\(+\\omega\\)", "is zero", "has length \\(\\hat X\\) and turns at \\(-\\omega\\)"], "answer": 3, "explain": "Swapping \\(B\\) and \\(C\\) swaps the brackets: \\(\\vec x=\\hat Xe^{-j\\omega t}\\). Same length, opposite rotation.", "mistakes": ["confusing it with an unbalanced mix", "missing the change of direction", "thinking only positive sequence survives the transform", null]}, {"q": "In the Euler derivation, why is \\(1+1\\angle240^\\circ+1\\angle{-240^\\circ}=0\\)?", "options": ["Because \\(1\\angle240^\\circ=-1\\)", "Because the \\(\\frac{2}{3}\\) cancels it", "Because \\(e^{-j\\omega t}\\) averages to zero", "Three unit arrows \\(120^\\circ\\) apart sum to zero"], "answer": 3, "explain": "\\(1\\angle240^\\circ=-\\frac{1}{2}-j\\frac{\\sqrt3}{2}\\) and \\(1\\angle{-240^\\circ}=-\\frac{1}{2}+j\\frac{\\sqrt3}{2}\\); with 1 they sum to 0 at every instant.", "mistakes": ["misplacing \\(240^\\circ\\) on the unit circle", "mixing up the scale factor with the bracket", "replacing an exact identity by an average", null]}, {"q": "For the lecture's unbalanced set (\\(V_+=100\\), \\(V_-=40\\), \\(V_0=25\\ \\text{V}\\)), how does \\(|\\vec x|\\) behave over a cycle?", "options": ["It varies between \\(60\\ \\text{V}\\) and \\(140\\ \\text{V}\\)", "It stays at \\(140\\ \\text{V}\\)", "It varies between \\(35\\ \\text{V}\\) and \\(165\\ \\text{V}\\)", "It stays at \\(100\\ \\text{V}\\)"], "answer": 0, "explain": "\\(\\vec x=100e^{j\\omega t}+40e^{-j\\omega t}\\); the zero sequence drops out. The two arrows align (\\(140\\ \\text{V}\\)) and oppose (\\(60\\ \\text{V}\\)) twice per cycle, so the tip traces an ellipse.", "mistakes": [null, "adding the peaks as if always aligned", "including the zero sequence, which never enters the arrow", "ignoring the negative sequence"]}]}, "q11": {"title": "Section 11 quiz", "questions": [{"q": "\\(x_A=100\\ \\text{V}\\), \\(x_B=-20\\ \\text{V}\\), \\(x_C=-50\\ \\text{V}\\). What is \\(x_\\alpha\\)?", "options": ["\\(43.33\\ \\text{V}\\)", "\\(100\\ \\text{V}\\)", "\\(90\\ \\text{V}\\)", "\\(135\\ \\text{V}\\)"], "answer": 2, "explain": "\\(x_\\alpha=\\frac{2}{3}\\bigl(100+10+25\\bigr)=90\\ \\text{V}\\).", "mistakes": ["using \\(+\\frac{1}{2}\\) instead of \\(-\\frac{1}{2}\\)", "assuming \\(x_\\alpha=x_A\\), which holds only when \\(x_0=0\\)", null, "forgetting the \\(\\frac{2}{3}\\)"]}, {"q": "Same values. What is \\(x_\\beta\\)?", "options": ["\\(30\\ \\text{V}\\)", "\\(-17.32\\ \\text{V}\\)", "\\(17.32\\ \\text{V}\\)", "\\(25.98\\ \\text{V}\\)"], "answer": 2, "explain": "\\(x_\\beta=\\frac{2}{3}\\cdot\\frac{\\sqrt3}{2}(x_B-x_C)=\\frac{-20+50}{\\sqrt3}=17.32\\ \\text{V}\\).", "mistakes": ["dropping both factors", "using \\(x_C-x_B\\)", null, "forgetting the \\(\\frac{2}{3}\\)"]}, {"q": "Same values. What is \\(x_0\\)?", "options": ["\\(30\\ \\text{V}\\)", "\\(0\\ \\text{V}\\)", "\\(10\\ \\text{V}\\)", "\\(20\\ \\text{V}\\)"], "answer": 2, "explain": "\\(x_0=\\frac{2}{3}\\cdot\\frac{1}{2}(x_A+x_B+x_C)=\\frac{30}{3}=10\\ \\text{V}\\).", "mistakes": ["giving the sum, not the average", "assuming the phases always sum to zero", null, "applying \\(\\frac{2}{3}\\) but forgetting the \\(\\frac{1}{2}\\) in the row"]}, {"q": "For a positive sequence set, how is \\(x_\\beta\\) related to \\(x_\\alpha\\)?", "options": ["\\(x_\\beta\\) leads \\(x_\\alpha\\) by \\(90^\\circ\\)", "\\(x_\\beta\\) is in phase with \\(x_\\alpha\\)", "\\(x_\\beta\\) lags \\(x_\\alpha\\) by \\(90^\\circ\\)", "\\(x_\\beta=0\\)"], "answer": 2, "explain": "\\(x_\\alpha=\\hat X\\cos\\omega t\\), \\(x_\\beta=\\hat X\\sin\\omega t=\\hat X\\cos(\\omega t-90^\\circ)\\): a lag.", "mistakes": ["the negative sequence case", "confusing the two axes with two equal phases", null, "the zero sequence case (where both are zero)"]}]}, "q12": {"title": "Section 12 quiz", "questions": [{"q": "\\(x_\\alpha=300\\ \\text{V}\\), \\(x_\\beta=0\\), \\(x_0=0\\). What is \\(x_B\\)?", "options": ["\\(-259.81\\ \\text{V}\\)", "\\(-150\\ \\text{V}\\)", "\\(-300\\ \\text{V}\\)", "\\(150\\ \\text{V}\\)"], "answer": 1, "explain": "Row \\(B\\): \\(x_B=-\\frac{1}{2}x_\\alpha+\\frac{\\sqrt3}{2}x_\\beta+x_0=-150\\ \\text{V}\\).", "mistakes": ["using \\(\\frac{\\sqrt3}{2}\\) as the \\(\\alpha\\) coefficient", null, "forgetting the \\(\\frac{1}{2}\\)", "dropping the minus sign"]}, {"q": "\\(x_\\alpha=90\\ \\text{V}\\), \\(x_\\beta=17.32\\ \\text{V}\\), \\(x_0=10\\ \\text{V}\\). What is \\(x_A\\)?", "options": ["\\(135\\ \\text{V}\\)", "\\(80\\ \\text{V}\\)", "\\(90\\ \\text{V}\\)", "\\(100\\ \\text{V}\\)"], "answer": 3, "explain": "Row \\(A\\): \\(x_A=x_\\alpha+x_0=90+10=100\\ \\text{V}\\).", "mistakes": ["multiplying by \\(\\frac{3}{2}\\) (there is no such factor in the inverse)", "subtracting \\(x_0\\)", "leaving out \\(x_0\\)", null]}, {"q": "Which row of the inverse Clarke matrix gives \\(x_C\\)?", "options": ["\\(\\begin{bmatrix}1 & 0 & 1\\end{bmatrix}\\)", "\\(\\begin{bmatrix}-\\frac13 & -\\frac13 & 1\\end{bmatrix}\\)", "\\(\\begin{bmatrix}-\\frac12 & \\frac{\\sqrt3}{2} & 1\\end{bmatrix}\\)", "\\(\\begin{bmatrix}-\\frac12 & -\\frac{\\sqrt3}{2} & 1\\end{bmatrix}\\)"], "answer": 3, "explain": "Phase \\(C\\)'s axis is at \\(-120^\\circ\\): \\((\\cos(-120^\\circ),\\sin(-120^\\circ))=(-\\frac12,-\\frac{\\sqrt3}{2})\\), then 1 for \\(x_0\\).", "mistakes": ["using phase \\(A\\)'s row", "mixing in the coupled-equation coefficients", "using phase \\(B\\)'s axis", null]}]}, "q13": {"title": "Section 13 quiz", "questions": [{"q": "Why does \\(v_{nN}\\) disappear from the \\(\\alpha\\) and \\(\\beta\\) equations?", "options": ["\\(v_{nN}\\) is zero", "\\(L\\) is the same in every phase", "\\(\\mathbf{T}\\) maps \\((1,1,1)\\) to \\((0,0,1)\\)", "The grid is balanced"], "answer": 2, "explain": "\\(v_{nN}\\) appears equally in all three phases, a pure zero sequence term, which \\(\\mathbf{T}\\) sends entirely to the zero row.", "mistakes": ["confusing 'drops out of a row' with 'is zero'; it is still \\(v_{t0}\\)", "the condition for pulling \\(L\\frac{d}{dt}\\) outside, a different step", null, "the condition that makes \\(v_{g0}=0\\), a different step"]}, {"q": "\\(v_{t\\alpha}=533.3\\ \\text{V}\\), \\(v_{g\\alpha}=300\\ \\text{V}\\), \\(L=5\\ \\text{mH}\\). What is \\(\\frac{di_{L\\alpha}}{dt}\\)?", "options": ["\\(1.167\\ \\text{A/s}\\)", "\\(20{,}000\\ \\text{A/s}\\)", "\\(46{,}667\\ \\text{A/s}\\)", "\\(106{,}667\\ \\text{A/s}\\)"], "answer": 2, "explain": "\\(\\frac{di_{L\\alpha}}{dt}=\\frac{533.3-300}{5\\times10^{-3}}=46\\,667\\ \\text{A/s}\\).", "mistakes": ["multiplying by \\(L\\) instead of dividing", "also subtracting \\(v_{nN}\\), which is not in the \\(\\alpha\\) equation", null, "leaving out \\(v_{g\\alpha}\\)"]}, {"q": "What does the zero row of the transformed KVL give (no neutral wire, balanced grid)?", "options": ["\\(v_{t0}=0\\)", "\\(L\\frac{di_{L0}}{dt}=v_{t0}\\)", "\\(v_{t0}=v_{nN}\\)", "\\(v_{nN}=0\\)"], "answer": 2, "explain": "\\(L\\frac{di_{L0}}{dt}=v_{t0}-v_{nN}-v_{g0}\\) with \\(i_{L0}=0\\) and \\(v_{g0}=0\\) leaves \\(0=v_{t0}-v_{nN}\\).", "mistakes": ["forgetting the \\(v_{nN}\\) term", "leaving out \\(v_{nN}\\) and forgetting \\(i_{L0}=0\\)", null, "assuming the grid neutral sits at \\(N\\)"]}]}, "final": {"title": "Final exam", "questions": [{"q": "Each phase of a balanced set delivers average \\(P=2\\ \\text{kW}\\) at unity power factor. What is the total instantaneous power at \\(\\omega t=45^\\circ\\)?", "options": ["\\(12\\ \\text{kW}\\)", "\\(3.46\\ \\text{kW}\\)", "\\(6\\ \\text{kW}\\)", "\\(2\\ \\text{kW}\\)"], "answer": 2, "explain": "The total is \\(3P=6\\ \\text{kW}\\) at every instant. (Phase \\(A\\) alone is \\(2(1+\\cos90^\\circ)=2\\ \\text{kW}\\) at this instant.)", "mistakes": ["using the peak \\(2P\\) per phase", "multiplying by \\(\\sqrt3\\)", null, "giving phase \\(A\\) alone"], "review": "s1"}, {"q": "\\(\\underline{V}_+=50\\ \\text{V}\\), \\(\\underline{V}_-=20\\ \\text{V}\\), \\(\\underline{V}_0=10\\ \\text{V}\\), all at \\(0^\\circ\\). What is \\(\\underline{V}_A\\)?", "options": ["\\(70\\ \\text{V}\\)", "\\(60\\ \\text{V}\\)", "\\(40\\ \\text{V}\\)", "\\(80\\ \\text{V}\\)"], "answer": 3, "explain": "\\(\\underline{V}_A=50+20+10=80\\ \\text{V}\\).", "mistakes": ["leaving out \\(\\underline{V}_0\\)", "leaving out \\(\\underline{V}_-\\)", "subtracting \\(\\underline{V}_-\\)", null], "review": "s3"}, {"q": "Same set. What is \\(|\\underline{V}_B|\\)?", "options": ["\\(43.59\\ \\text{V}\\)", "\\(65.57\\ \\text{V}\\)", "\\(80\\ \\text{V}\\)", "\\(36.06\\ \\text{V}\\)"], "answer": 3, "explain": "\\(50\\angle{-120^\\circ}+20\\angle120^\\circ+10=(-25-j43.30)+(-10+j17.32)+10=-25-j25.98\\), so \\(36.06\\ \\text{V}\\) at \\(-133.9^\\circ\\).", "mistakes": ["leaving out \\(\\underline{V}_0\\)", "rotating the negative set by \\(-120^\\circ\\)", "adding magnitudes", null], "review": "s3"}, {"q": "\\(R=5\\ \\Omega\\), \\(R_n=1\\ \\Omega\\), zero sequence source \\(\\underline{V}_0=16\\ \\text{V}\\). What is the neutral current \\(\\underline{I}_n\\)?", "options": ["\\(2\\ \\text{A}\\)", "\\(6\\ \\text{A}\\)", "\\(8\\ \\text{A}\\)", "\\(9.6\\ \\text{A}\\)"], "answer": 1, "explain": "\\(\\underline{I}_0=\\frac{16}{5+3}=2\\ \\text{A}\\); \\(\\underline{I}_n=3\\underline{I}_0=6\\ \\text{A}\\).", "mistakes": ["giving \\(\\underline{I}_0\\) instead of \\(3\\underline{I}_0\\)", null, "using \\(R+R_n\\) without the 3", "ignoring \\(R_n\\)"], "review": "s4"}, {"q": "Three sources feed three equal resistors, no neutral wire. A \\(30\\ \\text{V}\\) zero sequence voltage is added to every source. Which is true?", "options": ["The load star point shifts by \\(30\\ \\text{V}\\); the currents do not change", "Nothing changes anywhere in the circuit", "The load star point shifts by \\(90\\ \\text{V}\\)", "Each phase current rises by \\(\\frac{30\\ \\text{V}}{R}\\)"], "answer": 0, "explain": "KCL forbids a zero sequence current; summing the KVL loops gives \\(v_{n'n}=v_0=30\\ \\text{V}\\).", "mistakes": [null, "forgetting the zero sequence voltage still appears between the star points", "summing instead of averaging", "assuming a return path"], "review": "s5"}, {"q": "A leg needs \\(m_A=0.6\\). What fraction of \\(T_s\\) is \\(S_1\\) on?", "options": ["\\(0.6\\)", "\\(0.2\\)", "\\(0.3\\)", "\\(0.8\\)"], "answer": 3, "explain": "\\(d_A=\\frac{1+m_A}{2}=\\frac{1.6}{2}=0.8\\) (no unit).", "mistakes": ["taking \\(d_A=m_A\\)", "using \\(\\frac{1-m_A}{2}\\), which is the bottom switch", "halving \\(m_A\\)", null], "review": "s6"}, {"q": "\\(v_d=700\\ \\text{V}\\), \\(m_i=0.9\\), sine-triangle PWM. What is the peak of the fundamental line-to-line voltage?", "options": ["\\(315\\ \\text{V}\\)", "\\(545.6\\ \\text{V}\\)", "\\(1091.2\\ \\text{V}\\)", "\\(630\\ \\text{V}\\)"], "answer": 1, "explain": "\\(\\sqrt3\\,m_i\\frac{v_d}{2}=\\sqrt3\\times0.9\\times350=545.6\\ \\text{V}\\).", "mistakes": ["giving the phase value", null, "dropping the \\(\\frac{1}{2}\\)", "using \\(m_iv_d\\)"], "review": "s7"}, {"q": "\\(v_d=600\\ \\text{V}\\). Legs \\(A\\) and \\(B\\) are up, leg \\(C\\) is down. What is \\(v_{nN}\\)?", "options": ["\\(100\\ \\text{V}\\)", "\\(0\\ \\text{V}\\)", "\\(-100\\ \\text{V}\\)", "\\(300\\ \\text{V}\\)"], "answer": 0, "explain": "\\(v_{nN}=\\frac{300+300-300}{3}=100\\ \\text{V}=\\frac{v_d}{6}\\).", "mistakes": [null, "assuming \\(n\\) stays at \\(N\\)", "a sign slip", "forgetting to divide by 3"], "review": "s8"}, {"q": "Legs at \\(v_{tAN}=+300\\), \\(v_{tBN}=+300\\), \\(v_{tCN}=-300\\ \\text{V}\\); \\(v_{gA}=150\\ \\text{V}\\). What is \\(L\\frac{di_{LA}}{dt}\\)?", "options": ["\\(150\\ \\text{V}\\)", "\\(250\\ \\text{V}\\)", "\\(50\\ \\text{V}\\)", "\\(200\\ \\text{V}\\)"], "answer": 2, "explain": "\\(\\frac{2}{3}(300)-\\frac{1}{3}(300)-\\frac{1}{3}(-300)-150=200-100+100-150=50\\ \\text{V}\\).", "mistakes": ["ignoring \\(v_{nN}\\) (no coupling)", "adding \\(v_{nN}\\) instead of subtracting it", null, "leaving out \\(v_{gA}\\)"], "review": "s9"}, {"q": "Positive sequence set, \\(\\hat X=200\\ \\text{V}\\), at \\(\\omega t=60^\\circ\\). What is \\(x_\\beta\\)?", "options": ["\\(173.2\\ \\text{V}\\)", "\\(259.8\\ \\text{V}\\)", "\\(100\\ \\text{V}\\)", "\\(-173.2\\ \\text{V}\\)"], "answer": 0, "explain": "\\(x_\\beta=\\hat X\\sin\\omega t=200\\sin60^\\circ=173.2\\ \\text{V}\\) (and \\(x_\\alpha=100\\ \\text{V}\\)).", "mistakes": [null, "forgetting the \\(\\frac{2}{3}\\)", "giving \\(x_\\alpha\\)", "using the negative sequence sign"], "review": "s11"}, {"q": "\\(x_\\alpha=120\\ \\text{V}\\), \\(x_\\beta=-69.28\\ \\text{V}\\), \\(x_0=0\\). What is \\(x_B\\)?", "options": ["\\(120\\ \\text{V}\\)", "\\(-120\\ \\text{V}\\)", "\\(0\\ \\text{V}\\)", "\\(-60\\ \\text{V}\\)"], "answer": 1, "explain": "\\(x_B=-\\frac{1}{2}(120)+\\frac{\\sqrt3}{2}(-69.28)+0=-60-60=-120\\ \\text{V}\\).", "mistakes": ["a sign slip", null, "using phase \\(C\\)'s row", "leaving out the \\(x_\\beta\\) term"], "review": "s12"}, {"q": "\\(v_{t\\beta}=200\\ \\text{V}\\), \\(v_{g\\beta}=-100\\ \\text{V}\\), \\(L=4\\ \\text{mH}\\). What is \\(\\frac{di_{L\\beta}}{dt}\\)?", "options": ["\\(25{,}000\\ \\text{A/s}\\)", "\\(1.2\\ \\text{A/s}\\)", "\\(50{,}000\\ \\text{A/s}\\)", "\\(75{,}000\\ \\text{A/s}\\)"], "answer": 3, "explain": "\\(\\frac{di_{L\\beta}}{dt}=\\frac{200-(-100)}{4\\times10^{-3}}=75\\,000\\ \\text{A/s}\\).", "mistakes": ["a sign slip on \\(v_{g\\beta}\\)", "multiplying by \\(L\\)", "leaving out \\(v_{g\\beta}\\)", null], "review": "s13"}]}}};</script>
+<script>
+window.initDemos = function(){
+  var D2R = Math.PI/180, S3 = Math.sqrt(3);
+  function css(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim() || "#888"; }
+  function fx(x, d){ var s = (Math.abs(x) < 1e-9 ? 0 : x).toFixed(d); return s === "-0" || /^-0\.0*$/.test(s) ? s.slice(1) : s; }
+  function show(el, lines){
+    el.innerHTML = "";
+    lines.forEach(function(t){ var d = document.createElement("div"); el.appendChild(d);
+      try{ katex.render(t, d, {displayMode:true, throwOnError:false}); }catch(e){ d.textContent = t; } });
+  }
+  function setup(cv){
+    var w = cv.clientWidth || 600, h = +cv.getAttribute("height") || 240, r = window.devicePixelRatio || 1;
+    if (!cv.dataset.h) cv.dataset.h = h; h = +cv.dataset.h;
+    cv.style.height = h + "px"; cv.width = Math.round(w*r); cv.height = Math.round(h*r);
+    var c = cv.getContext("2d"); c.setTransform(r, 0, 0, r, 0, 0); c.clearRect(0, 0, w, h);
+    c.font = "12px " + css("--display"); c.lineJoin = "round";
+    return {c:c, w:w, h:h};
+  }
+  // strip: plot area at [x0,x1]x[y0,y1] for data range [ymin,ymax], xs in [0,1]
+  function strip(c, x0, x1, y0, y1, ymin, ymax, label){
+    var m = {X:function(t){ return x0 + t*(x1-x0); }, Y:function(v){ return y1 - (v-ymin)/(ymax-ymin)*(y1-y0); }};
+    c.strokeStyle = css("--grid"); c.lineWidth = 1; c.strokeRect(x0, y0, x1-x0, y1-y0);
+    if (ymin < 0 && ymax > 0){ c.beginPath(); c.moveTo(x0, m.Y(0)); c.lineTo(x1, m.Y(0)); c.stroke(); }
+    if (label){ c.fillStyle = css("--muted"); c.fillText(label, x0 + 4, y0 + 13); }
+    return m;
+  }
+  function line(c, m, n, f, color, width, dash){
+    c.strokeStyle = color; c.lineWidth = width || 1.6; c.setLineDash(dash || []); c.beginPath();
+    for (var i = 0; i <= n; i++){ var t = i/n, v = f(t); if (i) c.lineTo(m.X(t), m.Y(v)); else c.moveTo(m.X(t), m.Y(v)); }
+    c.stroke(); c.setLineDash([]);
+  }
+  function arrow(c, x0, y0, x1, y1, color, width){
+    c.strokeStyle = color; c.fillStyle = color; c.lineWidth = width || 2;
+    c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke();
+    var a = Math.atan2(y1-y0, x1-x0), L = Math.hypot(x1-x0, y1-y0), s = Math.min(9, L*0.4);
+    if (L < 2) return;
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - s*Math.cos(a-0.4), y1 - s*Math.sin(a-0.4)); c.lineTo(x1 - s*Math.cos(a+0.4), y1 - s*Math.sin(a+0.4)); c.closePath(); c.fill();
+  }
+  // generic wiring: inputs with data-k, outputs next to ranges, reset button
+  function wire(root, draw){
+    var ins = root.querySelectorAll("[data-k]"), defs = {};
+    ins.forEach(function(i){ defs[i.dataset.k] = i.value; i.addEventListener("input", draw); });
+    var rb = root.querySelector("[data-reset]");
+    if (rb) rb.addEventListener("click", function(){ ins.forEach(function(i){ i.value = defs[i.dataset.k]; }); if (root._reset) root._reset(); draw(); });
+    redrawers.push(draw); draw();
+  }
+  function val(root, k){ var v = parseFloat(root.querySelector('[data-k="'+k+'"]').value); return isFinite(v) ? v : 0; }
+  function out(root, k, txt){ var i = root.querySelector('[data-k="'+k+'"]'), o = i && i.parentNode.querySelector("output"); if (o) o.textContent = txt; }
+  var redrawers = [];
+
+  // ---------- Section 1: phase powers ----------
+  (function(){
+    var root = document.getElementById("powDemo"); if (!root) return;
+    var cv = root.querySelector("canvas"), ro = root.querySelector(".readout");
+    function draw(){
+      var V = val(root, "V"), I = val(root, "I"), kB = val(root, "kB"); out(root, "kB", kB.toFixed(2));
+      var P = V*I/2, g = setup(cv), c = g.c;
+      function pa(t){ var th = 2*Math.PI*t; return P*(1+Math.cos(2*th)); }
+      function pb(t){ var th = 2*Math.PI*t; return kB*P*(1+Math.cos(2*th - 240*D2R)); }
+      function pc(t){ var th = 2*Math.PI*t; return P*(1+Math.cos(2*th + 240*D2R)); }
+      function sum(t){ return pa(t)+pb(t)+pc(t); }
+      var mx = 0, mn = Infinity; for (var i = 0; i <= 720; i++){ var s = sum(i/720); mx = Math.max(mx, s); mn = Math.min(mn, s); }
+      var top = Math.max(mx, 2*P*Math.max(1, kB), 1)*1.08;
+      var m = strip(c, 46, g.w-8, 8, g.h-22, 0, top, "");
+      c.fillStyle = css("--muted"); c.fillText("0", 30, g.h-22); c.fillText((top/1000).toFixed(1)+" kW", 2, 18);
+      c.fillText("one line cycle, ωt from 0° to 360°", m.X(0.32), g.h-6);
+      line(c, m, 360, pa, css("--c1")); line(c, m, 360, pb, css("--c2")); line(c, m, 360, pc, css("--c3")); line(c, m, 360, sum, css("--ink"), 2.4);
+      show(ro, [
+        "P = \\frac{\\hat V\\hat I}{2} = \\frac{"+fx(V,0)+"\\ \\text{V}\\times "+fx(I,1)+"\\ \\text{A}}{2} = "+fx(P,0)+"\\ \\text{W per phase}",
+        "p_A+p_B+p_C\\ \\text{ranges from } "+fx(mn,0)+"\\ \\text{W to } "+fx(mx,0)+"\\ \\text{W}",
+        "\\text{ripple on the sum} = "+fx(mx-mn,0)+"\\ \\text{W}" + (Math.abs(kB-1) < 1e-9 ? "\\quad(\\text{balanced: constant } 3P)" : "\\quad(\\text{unbalanced: } 2\\omega \\text{ ripple returns})")
+      ]);
+    }
+    wire(root, draw);
+  })();
+
+  // ---------- Section 3: Fortescue ----------
+  (function(){
+    var root = document.getElementById("fortDemo"); if (!root) return;
+    var cv = root.querySelector("canvas"), ro = root.querySelector(".readout");
+    function rot(a, deg){ var r = deg*D2R; return [a*Math.cos(r), a*Math.sin(r)]; }
+    function draw(){
+      var p = val(root, "p"), n = val(root, "n"), z = val(root, "z");
+      var parts = {A:[rot(p,0), rot(n,0), rot(z,0)], B:[rot(p,-120), rot(n,120), rot(z,0)], C:[rot(p,120), rot(n,-120), rot(z,0)]};
+      var g = setup(cv), c = g.c, pw = g.w/3, R = Math.max(1, Math.abs(p)+Math.abs(n)+Math.abs(z));
+      var sc = Math.min(pw*0.42, g.h*0.40)/R, cols = [css("--c1"), css("--c2"), css("--c3")], res = {};
+      ["A","B","C"].forEach(function(k, j){
+        var cx = pw*j + pw/2, cy = g.h/2 + 8, x = 0, y = 0;
+        c.strokeStyle = css("--grid"); c.lineWidth = 1; c.beginPath(); c.moveTo(cx - pw*0.45, cy); c.lineTo(cx + pw*0.45, cy); c.moveTo(cx, cy - g.h*0.45); c.lineTo(cx, cy + g.h*0.42); c.stroke();
+        parts[k].forEach(function(v, i){ arrow(c, cx + x*sc, cy - y*sc, cx + (x+v[0])*sc, cy - (y+v[1])*sc, cols[i], 2); x += v[0]; y += v[1]; });
+        arrow(c, cx, cy, cx + x*sc, cy - y*sc, css("--ink"), 2.6);
+        c.fillStyle = css("--ink"); c.font = "bold 14px " + css("--display"); c.fillText("Phase " + k, cx - 24, 16);
+        res[k] = [x, y];
+      });
+      function pol(v){ var mag = Math.hypot(v[0], v[1]), ang = Math.atan2(v[1], v[0])/D2R; return fx(mag, 1) + "\\angle{" + (mag < 1e-9 ? "0" : fx(ang, 1)) + "^\\circ}\\ \\text{V}"; }
+      var s = [res.A[0]+res.B[0]+res.C[0], res.A[1]+res.B[1]+res.C[1]];
+      show(ro, [
+        "\\underline{V}_A = " + pol(res.A) + ",\\quad \\underline{V}_B = " + pol(res.B) + ",\\quad \\underline{V}_C = " + pol(res.C),
+        "\\text{check: } \\frac{1}{3}\\bigl(\\underline{V}_A+\\underline{V}_B+\\underline{V}_C\\bigr) = " + pol([s[0]/3, s[1]/3]) + " = \\underline{V}_0"
+      ]);
+    }
+    wire(root, draw);
+  })();
+
+  // ---------- Section 7: three-leg SPWM ----------
+  function tri(x){ x = x - Math.floor(x); return x < 0.5 ? 1 - 4*x : 4*x - 3; }  // +1 at the ends, -1 in the middle
+  (function(){
+    var root = document.getElementById("pwmDemo"); if (!root) return;
+    var cv = root.querySelector("canvas"), ro = root.querySelector(".readout");
+    function draw(){
+      var mi = val(root, "mi"), fr = Math.max(1, Math.round(val(root, "fr"))), vd = val(root, "vd");
+      out(root, "mi", mi.toFixed(2)); out(root, "fr", String(fr));
+      var g = setup(cv), c = g.c, x0 = 54, x1 = g.w - 8, hh = (g.h - 30)/3, N = 2400;
+      function mr(t, sh){ return mi*Math.cos(2*Math.PI*t - sh*D2R); }
+      function leg(t, sh){ return mr(t, sh) > tri(fr*t) ? 0.5 : -0.5; }
+      var m1 = strip(c, x0, x1, 4, 4 + hh - 6, -1.15, 1.15, "carrier and references");
+      line(c, m1, N, function(t){ return tri(fr*t); }, css("--muted"), 1);
+      line(c, m1, 360, function(t){ return mr(t, 0); }, css("--c1"), 2); line(c, m1, 360, function(t){ return mr(t, 120); }, css("--c2"), 2); line(c, m1, 360, function(t){ return mr(t, -120); }, css("--c3"), 2);
+      var m2 = strip(c, x0, x1, 4 + hh, 4 + 2*hh - 6, -0.62, 0.62, "leg voltage v_tAN");
+      line(c, m2, N, function(t){ return leg(t, 0); }, css("--c1"), 1.3);
+      line(c, m2, 360, function(t){ return mi*0.5*Math.cos(2*Math.PI*t); }, css("--bad"), 2.2);
+      var m3 = strip(c, x0, x1, 4 + 2*hh, 4 + 3*hh - 6, -1.2, 1.2, "line voltage v_AB");
+      line(c, m3, N, function(t){ return leg(t, 0) - leg(t, 120); }, css("--ink"), 1.3);
+      line(c, m3, 360, function(t){ return S3*mi*0.5*Math.cos(2*Math.PI*t + 30*D2R); }, css("--bad"), 2.2);
+      c.fillStyle = css("--muted");
+      c.fillText("+1", 30, m1.Y(1) + 4); c.fillText("−1", 30, m1.Y(-1) + 4);
+      c.fillText("+½vd", 14, m2.Y(0.5) + 4); c.fillText("−½vd", 14, m2.Y(-0.5) + 4);
+      c.fillText("+vd", 22, m3.Y(1) + 4); c.fillText("0", 34, m3.Y(0) + 4); c.fillText("−vd", 22, m3.Y(-1) + 4);
+      c.fillText("one line cycle, ωt from 0° to 360°", x0 + (x1-x0)*0.32, g.h - 6);
+      var ph = mi*vd/2;
+      show(ro, [
+        "\\hat V_{tAN,1} = m_i\\frac{v_d}{2} = " + fx(mi,2) + "\\times\\frac{" + fx(vd,0) + "\\ \\text{V}}{2} = " + fx(ph,1) + "\\ \\text{V}",
+        "\\hat V_{AB,1} = \\sqrt{3}\\,m_i\\frac{v_d}{2} = " + fx(S3*ph,1) + "\\ \\text{V}\\quad(\\text{RMS } " + fx(S3*ph/Math.SQRT2,1) + "\\ \\text{V})",
+        "f_s = " + fr + "f_1"
+      ]);
+    }
+    wire(root, draw);
+  })();
+
+  // ---------- Section 8: one switching period ----------
+  (function(){
+    var root = document.getElementById("nDemo"); if (!root) return;
+    var cv = root.querySelector("canvas"), ro = root.querySelector(".readout");
+    function draw(){
+      var wt = val(root, "wt"), mi = val(root, "mi"); out(root, "wt", wt.toFixed(0) + "°"); out(root, "mi", mi.toFixed(2));
+      var ms = [0, 120, -120].map(function(s){ return mi*Math.cos((wt - s)*D2R); });
+      var ds = ms.map(function(m){ return (1+m)/2; });
+      function up(k, t){ return Math.abs(t - 0.5) < ds[k]/2; }
+      function v(k, t){ return up(k, t) ? 0.5 : -0.5; }
+      function vn(t){ return (v(0,t)+v(1,t)+v(2,t))/3; }
+      var g = setup(cv), c = g.c, x0 = 54, x1 = g.w - 8, hs = 52, N = 2000;
+      var cols = [css("--c1"), css("--c2"), css("--c3")], names = ["v_tAN", "v_tBN", "v_tCN"];
+      for (var k = 0; k < 3; k++){
+        var m = strip(c, x0, x1, 4 + k*hs, 4 + k*hs + hs - 8, -0.62, 0.62, names[k]);
+        (function(kk){ line(c, m, N, function(t){ return v(kk, t); }, cols[kk], 2); })(k);
+        c.fillStyle = css("--muted"); c.fillText("+½vd", 14, m.Y(0.5) + 4); c.fillText("−½vd", 14, m.Y(-0.5) + 4);
+      }
+      var y0 = 4 + 3*hs, mN = strip(c, x0, x1, y0, g.h - 22, -0.62, 0.62, "v_nN");
+      c.strokeStyle = css("--grid"); [1/6, -1/6].forEach(function(l){ c.beginPath(); c.moveTo(x0, mN.Y(l)); c.lineTo(x1, mN.Y(l)); c.stroke(); });
+      line(c, mN, N, vn, css("--ink"), 2.2);
+      var mean = (ms[0]+ms[1]+ms[2])/6;
+      line(c, mN, 2, function(){ return mean; }, css("--bad"), 1.6, [6, 4]);
+      c.fillStyle = css("--muted");
+      [[0.5,"+½vd"],[1/6,"+⅙vd"],[-1/6,"−⅙vd"],[-0.5,"−½vd"]].forEach(function(p){ c.fillText(p[1], 14, mN.Y(p[0]) + 4); });
+      c.fillText("0", x0 - 4, g.h - 6); c.fillText("Ts", x1 - 14, g.h - 6); c.fillText("one switching period", x0 + (x1-x0)*0.38, g.h - 6);
+      var srt = ds.slice().sort(function(a, b){ return a - b; });
+      show(ro, [
+        "m_A = " + fx(ms[0],3) + ",\\quad m_B = " + fx(ms[1],3) + ",\\quad m_C = " + fx(ms[2],3),
+        "d_A = " + fx(ds[0],3) + ",\\quad d_B = " + fx(ds[1],3) + ",\\quad d_C = " + fx(ds[2],3),
+        "\\text{time at } +\\tfrac{v_d}{2}: " + fx(srt[0],3) + ",\\ +\\tfrac{v_d}{6}: " + fx(srt[1]-srt[0],3) + ",\\ -\\tfrac{v_d}{6}: " + fx(srt[2]-srt[1],3) + ",\\ -\\tfrac{v_d}{2}: " + fx(1-srt[2],3) + "\\ \\text{(fractions of } T_s)",
+        "\\langle v_{nN}\\rangle_{T_s} = \\frac{m_A+m_B+m_C}{3}\\cdot\\frac{v_d}{2} = " + fx(mean,3) + "\\,v_d"
+      ]);
+    }
+    wire(root, draw);
+  })();
+
+  // ---------- Section 10: rotating arrow ----------
+  (function(){
+    var root = document.getElementById("arrDemo"); if (!root) return;
+    var cv = root.querySelector("canvas"), ro = root.querySelector(".readout"), playing = false, raf = 0;
+    function phases(p, n, z, th){
+      return [p*Math.cos(th) + n*Math.cos(th) + z*Math.cos(th),
+              p*Math.cos(th - 120*D2R) + n*Math.cos(th + 120*D2R) + z*Math.cos(th),
+              p*Math.cos(th + 120*D2R) + n*Math.cos(th - 120*D2R) + z*Math.cos(th)];
+    }
+    var ax = [0, 120, -120].map(function(d){ return [Math.cos(d*D2R), Math.sin(d*D2R)]; });
+    function pts(x){ var a = [[0,0]], px = 0, py = 0; for (var k = 0; k < 3; k++){ px += 2/3*x[k]*ax[k][0]; py += 2/3*x[k]*ax[k][1]; a.push([px, py]); } return a; }
+    function draw(){
+      var wt = val(root, "wt"), p = val(root, "p"), n = val(root, "n"), z = val(root, "z"); out(root, "wt", wt.toFixed(0) + "°");
+      var g = setup(cv), c = g.c, cx = g.w/2, cy = g.h/2, ext = 1;
+      for (var i = 0; i < 360; i += 3){ pts(phases(p, n, z, i*D2R)).forEach(function(q){ ext = Math.max(ext, Math.abs(q[0]), Math.abs(q[1])); }); }
+      var sc = (Math.min(g.w, g.h)/2 - 22)/ext;
+      c.strokeStyle = css("--grid"); c.lineWidth = 1; c.fillStyle = css("--muted");
+      ["A (α)", "B", "C"].forEach(function(lb, k){ c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + ax[k][0]*(ext*sc + 10), cy - ax[k][1]*(ext*sc + 10)); c.stroke();
+        c.fillText(lb, cx + ax[k][0]*(ext*sc + 12) - 8, cy - ax[k][1]*(ext*sc + 12) + 4); });
+      c.setLineDash([3, 4]); c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy - ext*sc - 10); c.stroke(); c.setLineDash([]); c.fillText("β", cx + 4, cy - ext*sc - 6);
+      c.strokeStyle = css("--bad"); c.globalAlpha = 0.45; c.lineWidth = 1.4; c.beginPath();
+      for (var j = 0; j <= 360; j += 2){ var e = pts(phases(p, n, z, j*D2R))[3]; if (j) c.lineTo(cx + e[0]*sc, cy - e[1]*sc); else c.moveTo(cx + e[0]*sc, cy - e[1]*sc); }
+      c.stroke(); c.globalAlpha = 1;
+      var x = phases(p, n, z, wt*D2R), q = pts(x), cols = [css("--c1"), css("--c2"), css("--c3")];
+      for (var k = 0; k < 3; k++) arrow(c, cx + q[k][0]*sc, cy - q[k][1]*sc, cx + q[k+1][0]*sc, cy - q[k+1][1]*sc, cols[k], 2.2);
+      arrow(c, cx, cy, cx + q[3][0]*sc, cy - q[3][1]*sc, css("--bad"), 3);
+      var xa = q[3][0], xb = q[3][1], x0 = (x[0]+x[1]+x[2])/3;
+      show(ro, [
+        "x_A = " + fx(x[0],1) + ",\\ \\ x_B = " + fx(x[1],1) + ",\\ \\ x_C = " + fx(x[2],1) + "\\ \\text{V}",
+        "x_\\alpha = " + fx(xa,1) + ",\\ \\ x_\\beta = " + fx(xb,1) + ",\\ \\ x_0 = " + fx(x0,1) + "\\ \\text{V}",
+        "|\\vec x| = \\sqrt{x_\\alpha^2+x_\\beta^2} = " + fx(Math.hypot(xa, xb),1) + "\\ \\text{V}" + (Math.abs(n) < 1e-9 ? "\\quad(= V_+ \\text{ at every instant})" : "\\quad(\\text{varies from } " + fx(Math.abs(Math.abs(p)-Math.abs(n)),0) + " \\text{ to } " + fx(Math.abs(p)+Math.abs(n),0) + "\\ \\text{V})")
+      ]);
+    }
+    var pb = root.querySelector("[data-play]"), wi = root.querySelector('[data-k="wt"]');
+    function step(){ if (!playing) return; wi.value = (+wi.value + 1) % 361; draw(); raf = requestAnimationFrame(step); }
+    pb.addEventListener("click", function(){ playing = !playing; pb.textContent = playing ? "Pause" : "Play"; if (playing) step(); else cancelAnimationFrame(raf); });
+    root.querySelector("[data-ex3]").addEventListener("click", function(){
+      root.querySelector('[data-k="p"]').value = 100; root.querySelector('[data-k="n"]').value = 40; root.querySelector('[data-k="z"]').value = 25; draw(); });
+    root._reset = function(){ playing = false; pb.textContent = "Play"; cancelAnimationFrame(raf); };
+    wire(root, draw);
+  })();
+
+  // ---------- Section 11: Clarke of a switching state ----------
+  (function(){
+    var root = document.getElementById("stDemo"); if (!root) return;
+    var ro = root.querySelector(".readout"), segs = root.querySelectorAll(".seg"), st = [1, -1, -1];
+    function sync(){ segs.forEach(function(s, k){ var b = s.querySelectorAll("button"); b[0].setAttribute("aria-pressed", st[k] > 0); b[1].setAttribute("aria-pressed", st[k] < 0); }); }
+    segs.forEach(function(s, k){ var b = s.querySelectorAll("button");
+      b[0].addEventListener("click", function(){ st[k] = 1; sync(); draw(); });
+      b[1].addEventListener("click", function(){ st[k] = -1; sync(); draw(); }); });
+    root._reset = function(){ st = [1, -1, -1]; sync(); };
+    function draw(){
+      var vd = val(root, "vd"), v = st.map(function(s){ return s*vd/2; });
+      var al = 2/3*(v[0] - v[1]/2 - v[2]/2), be = (v[1] - v[2])/S3, z = (v[0]+v[1]+v[2])/3;
+      show(ro, [
+        "v_{tAN} = " + fx(v[0],1) + ",\\ \\ v_{tBN} = " + fx(v[1],1) + ",\\ \\ v_{tCN} = " + fx(v[2],1) + "\\ \\text{V}",
+        "v_{t\\alpha} = \\frac{2}{3}\\Bigl(v_{tAN}-\\frac{v_{tBN}}{2}-\\frac{v_{tCN}}{2}\\Bigr) = " + fx(al,1) + "\\ \\text{V}",
+        "v_{t\\beta} = \\frac{v_{tBN}-v_{tCN}}{\\sqrt{3}} = " + fx(be,1) + "\\ \\text{V}",
+        "v_{t0} = \\frac{v_{tAN}+v_{tBN}+v_{tCN}}{3} = " + fx(z,1) + "\\ \\text{V} = v_{nN}",
+        "\\sqrt{v_{t\\alpha}^2+v_{t\\beta}^2} = " + fx(Math.hypot(al, be),1) + "\\ \\text{V}"
+      ]);
+    }
+    wire(root, draw);
+  })();
+
+  var rt; window.addEventListener("resize", function(){ clearTimeout(rt); rt = setTimeout(function(){ redrawers.forEach(function(f){ f(); }); }, 120); });
+  try{ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function(){ redrawers.forEach(function(f){ f(); }); }); }catch(e){}
+  try{ new MutationObserver(function(){ redrawers.forEach(function(f){ f(); }); }).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]}); }catch(e){}
+};
+
+</script>
+<script>
+/* Study guide engine: quizzes, saved progress, sidebar scores, final exam review,
+   math typesetting, active section highlight, print formula sheet.
+   Reads window.GUIDE = {title, quizzes:{id:{title, questions:[{q, options[4], answer, explain, mistakes[4], review}]}}}
+   Tested once; guides should not modify this file. */
+(function(){
+  "use strict";
+  var G = window.GUIDE || {quizzes:{}};
+  var KEY = "guide:" + String(G.title||document.title).toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  var L = ["A","B","C","D","E"];
+  var state = load();
+
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  function typeset(root){
+    if (window.renderMathInElement){
+      try{ renderMathInElement(root||document.body,{
+        delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],
+        throwOnError:false }); }catch(e){}
+    }
+  }
+  window.typeset = typeset;
+
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+
+  function score(id){
+    var qs=G.quizzes[id].questions, a=state[id]||[], n=0, right=0;
+    qs.forEach(function(q,i){ if(a[i]!=null){ n++; if(a[i]===q.answer) right++; } });
+    return {n:n, right:right, total:qs.length};
+  }
+
+  function updateChip(id){
+    var s=score(id);
+    document.querySelectorAll('[data-chip="'+id+'"]').forEach(function(c){
+      c.textContent = s.n ? (s.right+"/"+s.total) : "";
+      c.classList.toggle("done", s.n===s.total);
+    });
+    var box=document.querySelector('.quiz[data-quiz="'+id+'"] .score');
+    if (box) box.textContent = "Score: "+s.right+"/"+s.total + (s.n<s.total ? "  ("+s.n+" answered)" : "");
+  }
+
+  function explanation(id, q, chosen){
+    var html = chosen===q.answer
+      ? '<b class="ok">Correct.</b> '
+      : '<b class="no">Not quite.</b> You chose '+L[chosen]+((q.mistakes&&q.mistakes[chosen])?', which comes from '+q.mistakes[chosen]+'.':'.')+' The answer is '+L[q.answer]+'. ';
+    html += q.explain || "";
+    if (q.review){ var t=document.getElementById(q.review); var name=t?(t.querySelector("h3 .num")||{}).textContent||q.review:q.review;
+      html += ' <a href="#'+q.review+'">Review: '+name+'</a>'; }
+    return html;
+  }
+
+  function renderQuestion(id, i, item){
+    var q=G.quizzes[id].questions[i], chosen=(state[id]||[])[i];
+    item.innerHTML="";
+    item.appendChild(el("div","qq",'<span class="qn">'+(i+1)+'.</span>'+q.q));
+    var opts=el("div","opts");
+    q.options.forEach(function(o,k){
+      var b=el("button","opt",'<span class="L">'+L[k]+'</span><span>'+o+'</span>');
+      b.type="button";
+      if (chosen!=null){ b.disabled=true; if(k===q.answer) b.classList.add("right"); else if(k===chosen) b.classList.add("wrong"); }
+      else b.addEventListener("click",function(){ (state[id]=state[id]||[])[i]=k; save(); renderQuestion(id,i,item); updateChip(id); if(id==="final") renderReview(); });
+      opts.appendChild(b);
+    });
+    item.appendChild(opts);
+    if (chosen!=null) item.appendChild(el("div","expl",explanation(id,q,chosen)));
+    typeset(item);
+  }
+
+  function renderReview(){
+    var box=document.getElementById("finalReview"); if(!box||!G.quizzes.final) return;
+    var s=score("final"); box.innerHTML="";
+    if (s.n<s.total) return;
+    var qs=G.quizzes.final.questions, a=state.final, wrong=[];
+    qs.forEach(function(q,i){ if(a[i]!==q.answer) wrong.push(i); });
+    var h='<h4>Review my wrong answers</h4>';
+    if(!wrong.length) h+='<p>All '+s.total+' correct. Nothing to review.</p>';
+    else { h+='<ol class="plain review">'; wrong.forEach(function(i){ var q=qs[i];
+      h+='<li><b>Q'+(i+1)+'.</b> '+q.q+'<br>You chose '+L[a[i]]+': '+q.options[a[i]]+'<br>Correct: '+L[q.answer]+': '+q.options[q.answer]+(q.review?'<br><a href="#'+q.review+'">Review this section</a>':'')+'</li>'; });
+      h+='</ol>'; }
+    box.innerHTML=h; typeset(box);
+  }
+
+  function renderQuiz(box){
+    var id=box.getAttribute("data-quiz"), Q=G.quizzes[id];
+    if(!Q){ box.innerHTML='<div class="quiz-head"><span class="qt">Missing quiz data: '+id+'</span></div>'; return; }
+    box.innerHTML="";
+    var head=el("div","quiz-head",'<span class="qt">'+(Q.title||"Quiz")+'</span><span class="score"></span>');
+    var list=el("div","qlist");
+    Q.questions.forEach(function(_,i){ var it=el("div","qitem"); list.appendChild(it); renderQuestion(id,i,it); });
+    var foot=el("div","quiz-foot",'<span>'+Q.questions.length+' questions</span>');
+    var reset=el("button","btn","Reset"); reset.type="button";
+    reset.addEventListener("click",function(){ delete state[id]; save(); renderQuiz(box); if(id==="final") renderReview(); });
+    foot.appendChild(reset);
+    box.appendChild(head); box.appendChild(list); box.appendChild(foot);
+    if(id==="final"){ var r=el("div",""); r.id="finalReview"; r.style.padding="0 16px 8px"; box.appendChild(r); renderReview(); }
+    updateChip(id);
+  }
+
+  function init(){
+    document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz);
+    Object.keys(G.quizzes).forEach(updateChip);
+    var ra=document.getElementById("resetAll");
+    if(ra) ra.addEventListener("click",function(){ if(confirm("Clear all quiz answers and scores for this guide?")){ state={}; save(); document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz); } });
+    var pb=document.getElementById("printSheet");
+    if(pb) pb.addEventListener("click",function(){ document.body.classList.add("print-sheet"); window.print(); });
+    window.addEventListener("afterprint",function(){ document.body.classList.remove("print-sheet"); });
+    if("IntersectionObserver" in window){
+      var links={}; document.querySelectorAll('nav.toc a[href^="#"]').forEach(function(a){ links[a.getAttribute("href").slice(1)]=a; });
+      var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&links[e.target.id]){
+        Object.keys(links).forEach(function(k){ links[k].classList.remove("active"); }); links[e.target.id].classList.add("active"); } }); },{rootMargin:"-20% 0px -70% 0px"});
+      document.querySelectorAll("section.sec[id]").forEach(function(s){ io.observe(s); });
+    }
+    typeset();
+    if (typeof window.initDemos==="function"){ try{ window.initDemos(); }catch(e){ console.error(e); } }
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",function(){ waitKatex(init); }); else waitKatex(init);
+  function waitKatex(fn){ var t=0; (function w(){ if(window.renderMathInElement||t++>40) fn(); else setTimeout(w,50); })(); }
+})();
+
+</script>
+</body></html>

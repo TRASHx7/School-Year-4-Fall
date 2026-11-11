@@ -1,0 +1,1514 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blackbody, Photoelectric and Compton Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --surface-2:#E8ECE7; --ink:#18212B; --muted:#56616D; --line:#D3D9D2;
+  --accent:#1D5FC2; --accent-soft:#E2EBFA; --on-accent:#FFFFFF;
+  --c1:#1D5FC2; --c2:#C24E12; --c3:#23804D; --grid:#DCE1DB;   /* plot series 1, 2, 3 and grid */
+  --ana-bg:#FFF5DC; --ana-line:#C9920F; --ana-ink:#6B4B00;
+  --trk-bg:#FBEAE8; --trk-line:#C0392B; --trk-ink:#8A2318;
+  --fill-bg:#E9F0FB; --fill-line:#5B7DB8; --fill-ink:#2A4677;
+  --good:#1E7A47; --good-bg:#E3F3E9; --bad:#B3261E; --bad-bg:#FBE6E4; --hl:#FFF1C2;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+  }
+}
+:root[data-theme="dark"]{
+color-scheme:dark;
+--bg:#10151A; --surface:#172028; --surface-2:#1F2A34; --ink:#E3E8ED; --muted:#9AA6B2; --line:#2B3742;
+--accent:#78AAFF; --accent-soft:#1B2B45; --on-accent:#0E1620;
+--c1:#78AAFF; --c2:#F0935A; --c3:#5CC48A; --grid:#26313B;
+--ana-bg:#2A2413; --ana-line:#C9982A; --ana-ink:#F1D48A;
+--trk-bg:#2E1B1B; --trk-line:#E0675A; --trk-ink:#F4B4AB;
+--fill-bg:#18243A; --fill-line:#6F93D6; --fill-ink:#B9CDF2;
+--good:#5CC48A; --good-bg:#16301F; --bad:#F07167; --bad-bg:#361B1A; --hl:#3A3316;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0; padding-inline:16px}
+.wrap{max-width:1140px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:48px; padding-block:40px 80px}
+main{max-width:760px; min-width:0}
+nav.toc{position:sticky; top:24px; align-self:start; font-family:var(--display); font-size:14px; max-height:calc(100vh - 48px); overflow:auto}
+nav.toc h2{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:18px 0 6px; font-weight:700}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{display:flex; justify-content:space-between; gap:8px; color:var(--ink); text-decoration:none; padding:5px 8px; border-radius:6px; font-weight:500}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--surface-2); outline:none}
+nav.toc a.active{background:var(--accent-soft); color:var(--accent)}
+nav.toc .chip{font-family:var(--mono); font-size:11px; color:var(--muted); white-space:nowrap}
+nav.toc .chip.done{color:var(--good); font-weight:600}
+@media (max-width:920px){
+  .wrap{grid-template-columns:minmax(0,1fr); gap:24px; padding-block:24px 64px}
+  nav.toc{position:static; max-height:none; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(34px,5.4vw,50px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; text-wrap:balance}
+.lede{font-size:19px; color:var(--muted); margin:0 0 22px; max-width:62ch}
+header.hero{padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:8px}
+h2.part{font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:56px 0 0; font-weight:700}
+section.sec{padding-top:28px; scroll-margin-top:16px}
+h3{font-family:var(--display); font-weight:700; font-size:28px; line-height:1.15; margin:4px 0 14px; text-wrap:balance}
+h3 .num{font-family:var(--mono); font-weight:400; font-size:15px; color:var(--muted); display:block; margin-bottom:4px}
+h4{font-family:var(--display); font-size:17px; font-weight:700; margin:26px 0 8px}
+p{margin:0 0 14px; max-width:68ch}
+sub,sup{font-size:.72em; line-height:0}
+code,.mono{font-family:var(--mono); font-size:.86em}
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+
+.eq{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 18px; margin:6px 0 18px}
+.math{margin:8px 0 14px; overflow-x:auto; overflow-y:hidden}
+.katex{font-size:1.12em; color:var(--ink)}
+.katex-display{margin:.6em 0}
+.eq .note{font-family:var(--display); font-size:13px; color:var(--muted)}
+.eq .defs{font-size:15px; line-height:1.7; color:var(--muted); border-top:1px dashed var(--line); margin-top:10px; padding-top:8px}
+
+.callout{border-left:4px solid; border-radius:0 8px 8px 0; padding:12px 16px 4px; margin:18px 0}
+.callout .tag{font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px}
+.callout p{margin-bottom:10px} .callout ul{margin:0 0 10px; padding-left:20px} .callout li{margin-bottom:6px}
+.analogy{background:var(--ana-bg); border-color:var(--ana-line)} .analogy .tag{color:var(--ana-ink)}
+.tricky{background:var(--trk-bg); border-color:var(--trk-line)} .tricky .tag{color:var(--trk-ink)}
+.filled{background:var(--fill-bg); border-color:var(--fill-line); font-size:15.5px} .filled .tag{color:var(--fill-ink)}
+
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:8px; margin:12px 0 18px}
+.blk{flex:1 1 118px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:var(--display); font-size:14px; line-height:1.3}
+.blk b{display:block; font-size:15px}
+.blk span{color:var(--muted); font-size:12.5px; font-weight:500}
+.blk .secs{display:block; font-family:var(--mono); font-size:11px; color:var(--accent); margin-top:6px}
+.arrow{align-self:center; color:var(--muted); font-family:var(--mono)}
+@media (max-width:560px){ .arrow{display:none} }
+
+.tbl{overflow-x:auto; margin:6px 0 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--display); font-size:13px; font-weight:700; background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num{text-align:right; font-family:var(--mono); font-size:13.5px}
+.hlcol{background:var(--hl)}
+
+details.work{background:var(--surface); border:1px solid var(--line); border-radius:8px; margin:12px 0 18px}
+details.work summary{cursor:pointer; padding:12px 16px; font-family:var(--display); font-weight:700; font-size:15px; list-style:none}
+details.work summary::-webkit-details-marker{display:none}
+details.work summary::before{content:"+ "; font-family:var(--mono); color:var(--accent)}
+details.work[open] summary::before{content:"− "}
+details.work .body{padding:0 16px 8px}
+details.work.practice summary{color:var(--muted)}
+.givens{font-size:15.5px; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-bottom:10px}
+.answer{font-family:var(--display); font-weight:700; background:var(--good-bg); color:var(--good); border-radius:6px; padding:6px 10px; display:inline-block; margin:6px 0 12px}
+
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 20px}
+.demo .dtitle{font-family:var(--display); font-weight:700; font-size:14px; margin-bottom:8px}
+.demo .src{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+.demo canvas, .demo svg{width:100%; display:block}
+.controls{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; margin-top:10px; font-family:var(--display); font-size:14px}
+.controls label{display:flex; align-items:center; gap:8px}
+.controls input[type=range]{width:160px; accent-color:var(--accent)}
+.controls input[type=number]{width:92px; font-family:var(--mono); font-size:13.5px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink)}
+.controls output{font-family:var(--mono); font-size:13px; min-width:44px}
+.readout{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7}
+.readout b{color:var(--ink); font-weight:600}
+.btn{font-family:var(--display); font-weight:700; font-size:13px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:6px; padding:6px 12px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden}
+.seg button{font-family:var(--display); font-weight:700; font-size:13px; border:0; background:var(--surface-2); color:var(--ink); padding:7px 12px; cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-family:var(--display); font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; border-radius:2px}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; font-size:13px; padding:3px 10px; border-radius:99px}
+.verdict.ok{background:var(--good-bg); color:var(--good)} .verdict.no{background:var(--bad-bg); color:var(--bad)}
+*:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.quiz{margin:26px 0 8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden}
+.quiz-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 16px; background:var(--accent-soft); flex-wrap:wrap}
+.quiz-head .qt{font-family:var(--display); font-weight:800; font-size:15px}
+.quiz-head .score{font-family:var(--mono); font-size:13px}
+.qitem{padding:16px; border-top:1px solid var(--line)} .qitem:first-child{border-top:none}
+.qq{font-weight:600; margin-bottom:10px}
+.qq .qn{font-family:var(--mono); font-weight:400; color:var(--muted); margin-right:6px; font-size:14px}
+.opts{display:grid; gap:8px}
+.opt{display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; font-family:var(--body); font-size:16px; line-height:1.45; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; cursor:pointer}
+.opt .L{font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:2px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-bg); border-color:var(--good)} .opt.right .L{color:var(--good); font-weight:600}
+.opt.wrong{background:var(--bad-bg); border-color:var(--bad)} .opt.wrong .L{color:var(--bad); font-weight:600}
+.expl{margin-top:10px; font-size:15.5px; padding:10px 12px; border-radius:8px; background:var(--surface-2)}
+.expl b.ok{color:var(--good)} .expl b.no{color:var(--bad)}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line); font-family:var(--display); font-size:14px; color:var(--muted)}
+.final .quiz-head{background:var(--ink); color:var(--bg)} .final .quiz-head .score{color:var(--bg)}
+.review{margin-top:16px} .review li{margin-bottom:10px}
+
+.sheet{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px}
+.sheet .card{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 16px; break-inside:avoid}
+.sheet .card h5{font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+.sheet .f{padding:8px 0; border-top:1px solid var(--line); line-height:2.1} .sheet .f:first-of-type{border-top:none}
+.sheet .f .expr{display:block; overflow-x:auto}
+.sheet .f .d{font-size:13.5px; color:var(--muted); line-height:1.5; display:block}
+.sheet .f .s{font-family:var(--mono); font-size:11px; color:var(--accent)}
+@media print{
+  body{background:#fff; color:#000; padding:0; font-size:12pt}
+  nav.toc, .demo, .quiz, .btn, details.practice, header.hero .lede{display:none!important}
+  .wrap{display:block; padding:0} main{max-width:none}
+  .sheet .card{border:1px solid #999; background:#fff}
+  .sheet .f .d, .sheet .f .s, .sheet .card h5{color:#333}
+  body.print-sheet main > *:not(#formulas){display:none!important}
+}
+
+nav.toc #resetAll{width:100%; margin-bottom:14px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important} }
+
+</style>
+</head><body>
+<div class="wrap"><nav class="toc" aria-label="Contents">
+<button class="btn" id="resetAll" type="button">Reset all progress</button>
+<h2>Start</h2><ol><li><a href="#big">Big picture</a></li></ol>
+<h2>Part 1 · Blackbody radiation (Lecture 9a)</h2><ol>
+<li><a href="#s1">1 Blackbodies and the radiation curve <span class="chip" data-chip="q1"></span></a></li>
+<li><a href="#s2">2 Wien's and Stefan's laws <span class="chip" data-chip="q2"></span></a></li>
+<li><a href="#s3">3 The UV catastrophe and Planck's quanta <span class="chip" data-chip="q3"></span></a></li>
+</ol>
+<h2>Part 2 · The photoelectric effect (Lecture 9a)</h2><ol>
+<li><a href="#s4">4 The experiment and the stopping potential <span class="chip" data-chip="q4"></span></a></li>
+<li><a href="#s5">5 Three results classical physics cannot explain <span class="chip" data-chip="q5"></span></a></li>
+</ol>
+<h2>Part 3 · Einstein&#x27;s photons (Lecture 9b)</h2><ol>
+<li><a href="#s6">6 Photon energy and the work function <span class="chip" data-chip="q6"></span></a></li>
+<li><a href="#s7">7 Cut-off frequency and cut-off wavelength <span class="chip" data-chip="q7"></span></a></li>
+<li><a href="#s8">8 Photon momentum <span class="chip" data-chip="q8"></span></a></li>
+</ol>
+<h2>Part 4 · The Compton effect (Lecture 9b)</h2><ol>
+<li><a href="#s9">9 X-ray scattering and the Compton shift <span class="chip" data-chip="q9"></span></a></li>
+<li><a href="#s10">10 Deriving the Compton formula <span class="chip" data-chip="q10"></span></a></li>
+</ol>
+<h2>Part 5 · Practice problem (Lecture 9a)</h2><ol>
+<li><a href="#s11">11 Single-slit diffraction minima <span class="chip" data-chip="q11"></span></a></li>
+</ol>
+<h2>Finish</h2><ol><li><a href="#final">Final exam <span class="chip" data-chip="final"></span></a></li>
+<li><a href="#formulas">Formula sheet</a></li></ol></nav><main><header class="hero"><div class="eyebrow">PHYS 365 · Lectures 9a and 9b · Study guide</div><h1>Blackbody, Photoelectric and Compton Guide</h1><p class="lede">Three experiments that classical wave physics could not explain: the glow of hot objects, electrons knocked out of metal by light, and X-rays that come back with a longer wavelength. Each one is fixed by the same idea. Light carries energy in packets (photons) of size hf, and each photon also carries momentum h over λ.</p></header><section class="sec" id="big">
+<h3><span class="num">Start here</span>Big picture</h3>
+<p>Up to Lecture 8, light was a wave: it diffracts, it interferes, it has a wavelength \(\lambda\) and a frequency \(f\) with \(\lambda f = c\). Lecture 9 shows three experiments where that picture gives the wrong answer. In each case the fix is the same: light's energy comes in lumps called <b>quanta</b> (later <b>photons</b>), each with energy \(hf\). Once you accept that, the same lumps also carry momentum \(\frac{h}{\lambda}\), and you can treat a photon hitting an electron like a collision between two particles.</p>
+<div class="chain">
+  <div class="blk"><b>Blackbody radiation</b><span>Hot objects glow with a peaked spectrum. Classical theory blows up; Planck's quanta fix it.</span><span class="secs">Sections 1 to 3</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>Photoelectric effect</b><span>Light knocks electrons out of metal, but not in the way waves predict.</span><span class="secs">Sections 4 and 5</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>Einstein's photons</b><span>Each photon gives its energy hf to one electron. Photons also carry momentum.</span><span class="secs">Sections 6 to 8</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>Compton effect</b><span>Photon and electron collide; energy and momentum balance give the shift Δλ.</span><span class="secs">Sections 9 and 10</span></div>
+  <div class="arrow">→</div>
+  <div class="blk"><b>Practice problem</b><span>Lecture 9a's practice problem: single-slit diffraction minima.</span><span class="secs">Section 11</span></div>
+</div>
+<p>Constants used throughout (from the course formula sheet):</p>
+<ul>
+<li>Planck's constant: \(h = 6.63\times10^{-34}\ \text{J}\cdot\text{s}\), or \(h = 4.136\times10^{-15}\ \text{eV}\cdot\text{s}\)</li>
+<li>speed of light: \(c = 3.00\times10^{8}\ \text{m/s}\)</li>
+<li>electron charge: \(e = 1.602\times10^{-19}\ \text{C}\)</li>
+<li>electron rest mass: \(m_0 = 9.109\times10^{-31}\ \text{kg}\)</li>
+<li>Boltzmann's constant: \(k_B = 1.381\times10^{-23}\ \text{J/K}\)</li>
+</ul>
+<p>A handy product for photon energies:</p>
+<div class="math">\[
+\begin{aligned}
+hc &= (4.136\times10^{-15}\ \text{eV}\cdot\text{s})\\
+&\quad\times(3.00\times10^{8}\ \text{m/s})\\
+&= 1240.8\ \text{eV}\cdot\text{nm}
+\end{aligned}
+\]</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The four source files: <b>Lecture-9.pdf</b> (Lecture 9a, 16 pages: blackbody radiation and the photoelectric effect), <b>Lecture 9-2.pdf</b> (Lecture 9b, 21 pages: Einstein's photons, photon momentum and the Compton effect) and <b>Lecture-9a-Practice Problem.pdf</b> (a single-slit diffraction problem). <b>Lecture 9-1.pdf</b> is an exact copy of Lecture-9.pdf, so it was used only once.</p></div>
+</section>
+
+<h2 class="part">Part 1 · Blackbody radiation (Lecture 9a)</h2>
+
+<section class="sec" id="s1">
+<h3><span class="num">Section 1</span>Blackbodies and the radiation curve</h3>
+<p>A <b>blackbody</b> is an object that absorbs the energy that falls on it and re-emits large amounts of it. A <b>perfect blackbody</b> absorbs everything that hits it. When it sits at a steady temperature, it must send out exactly as much energy as it takes in, otherwise it would keep heating up. The light it sends out is called <b>blackbody radiation</b>.</p>
+<div class="eq">
+  <div class="math">\[ E_1 = E_2 \]</div>
+  <span class="note">steady state of a perfect blackbody (lecture page 1)</span>
+  <div class="defs">\(E_1\) = energy absorbed, in joules (J) · \(E_2\) = energy emitted, in joules (J). Over a time interval the same holds for power: absorbed power = emitted power, in watts (W).</div>
+</div>
+<p>The important experimental fact is the <b>shape</b> of the emitted spectrum. Plot radiation intensity \(I\) against wavelength \(\lambda\) and you get a hump (lecture page 2):</p>
+<ul>
+<li>At about 3000 K the object is "red hot". Its hump peaks in the infrared, and only the red tail reaches the visible range.</li>
+<li>At about 4000 K the hump is taller and its peak has moved toward the visible range.</li>
+<li>At about 5000 K the object is "white hot". The peak sits inside the visible range (about 0.4 to 0.7 µm), so all colours are emitted strongly.</li>
+<li>The ultraviolet range is to the left of the visible band (shorter \(\lambda\)), the infrared to the right.</li>
+</ul>
+<p>Hotter means <b>more</b> radiation at every wavelength and a peak at a <b>shorter</b> wavelength. Every real curve drops back to zero at very short wavelengths. The grey curve the lecture labels "classical physics (about 5000 K)" does not: it keeps rising as \(\lambda\) gets shorter. That disagreement is the problem Section 3 solves.</p>
+
+<details class="work"><summary>Example (lecture page 1): a black shirt on a hot day</summary><div class="body">
+<div class="givens">Given: sunlight falls on a black shirt and on a white shirt.</div>
+<p>A black surface is close to a blackbody: it absorbs almost all the visible sunlight that hits it. A white surface reflects most of it. So the black shirt takes in much more energy per second (\(E_1\) is larger).</p>
+<p>The shirt warms up until it re-emits as much as it absorbs (\(E_1 = E_2\)). Because it absorbs more, it has to reach a higher temperature before its emission catches up, so it feels hotter on your skin.</p>
+<div class="answer">The black shirt is the better absorber, so it settles at a higher temperature</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Think of a bathtub with the tap running and the drain open. The water level rises until the outflow matches the inflow. A blackbody's temperature works the same way: it climbs until the energy leaving (emission) matches the energy arriving (absorption). Turn the tap up (more sunlight) and the level settles higher (hotter object). The analogy breaks in one place: a hotter blackbody does not just emit more, it also changes colour, which a drain cannot do.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>"Black" body does not mean it looks black. A perfect absorber at 5000 K glows white. The name describes how it absorbs, not its colour.</li>
+<li>The x-axis on the lecture graph is in micrometres (µm): 1 µm = 1000 nm = \(10^{-6}\) m. The visible band is roughly 0.4 to 0.7 µm, that is 400 to 700 nm.</li>
+<li>A higher-temperature curve lies above a lower one at <b>every</b> wavelength. The curves never cross.</li>
+<li>Absorbed equals emitted only at steady state. While an object is warming up, it absorbs more than it emits.</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 1.1 (not from the lecture): steady-state emission</summary><div class="body">
+<div class="givens">A perfect blackbody plate in sunlight absorbs \(250\ \text{W}\) and has stopped warming up. How much power does it emit?</div>
+<p>Steady state means absorbed power equals emitted power:</p>
+<div class="math">\[ P_{\text{emit}} = P_{\text{abs}} = 250\ \text{W} \]</div>
+<div class="answer">250 W</div>
+</div></details>
+<details class="work practice"><summary>Practice 1.2 (not from the lecture): peak wavelength to frequency</summary><div class="body">
+<div class="givens">A blackbody curve peaks at \(\lambda = 0.50\ \mu\text{m}\). What frequency is that? Use \(c = 3.00\times10^{8}\ \text{m/s}\).</div>
+<div class="math">\[
+\begin{aligned}
+\lambda &= 0.50\ \mu\text{m} = 0.50\times10^{-6}\ \text{m}\\
+f &= \frac{c}{\lambda} = \frac{3.00\times10^{8}\ \text{m/s}}{0.50\times10^{-6}\ \text{m}} = \mathbf{6.0\times10^{14}\ \text{Hz}}
+\end{aligned}
+\]</div>
+<div class="answer">\(f = 6.0\times10^{14}\) Hz (visible, blue-green light)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q1"></div>
+</section>
+
+<section class="sec" id="s2">
+<h3><span class="num">Section 2</span>Wien's and Stefan's laws</h3>
+<p>Two experimental laws summarise the blackbody curves (lecture pages 4 and 5). <b>Wien's displacement law</b> says where the peak is: the hotter the body, the shorter the peak wavelength. <b>Stefan's law</b> says how much power comes out in total, adding up all wavelengths: it grows as the fourth power of temperature.</p>
+<div class="eq">
+  <div class="math">\[ \lambda_{\max}\,T = 2.898\times10^{-3}\ \text{m}\cdot\text{K} \]</div>
+  <span class="note">Wien's displacement law (law 1)</span>
+  <div class="defs">\(\lambda_{\max}\) = wavelength at which the intensity curve peaks, in metres (m) · \(T\) = absolute temperature of the body, in kelvin (K)</div>
+</div>
+<div class="eq">
+  <div class="math">\[ P(T) = \sigma A T^{4} \]</div>
+  <span class="note">Stefan's law (law 2): total power radiated over the whole spectrum</span>
+  <div class="defs">\(P(T)\) = total radiated power, in watts (W) · \(\sigma\) = Stefan-Boltzmann constant, \(5.67\times10^{-8}\ \text{W/(m}^2\cdot\text{K}^4)\) · \(A\) = surface area of the blackbody, in square metres (m²) · \(T\) = temperature, in kelvin (K)</div>
+</div>
+<p>On the lecture's page 4 graph, a thick line joins the peaks of the 5000 K, 4000 K and 3000 K curves. It slopes down and to the right: as the temperature falls, the peak drops and moves to longer \(\lambda\). That line is Wien's law.</p>
+
+<details class="work"><summary>Example (applied to the lecture page 2 curves): where do the three peaks sit?</summary><div class="body">
+<div class="givens">Temperatures from the lecture graph: \(T = 3000\ \text{K}\) (red hot), \(4000\ \text{K}\), \(5000\ \text{K}\) (white hot). Wien constant \(2.898\times10^{-3}\ \text{m}\cdot\text{K}\).</div>
+<p>Rearrange Wien's law for the peak wavelength and substitute each temperature:</p>
+<div class="math">\[
+\begin{aligned}
+\lambda_{\max} &= \frac{2.898\times10^{-3}\ \text{m}\cdot\text{K}}{T}\\
+T = 3000\ \text{K}:\quad \lambda_{\max} &= \frac{2.898\times10^{-3}}{3000}\ \text{m} = 9.66\times10^{-7}\ \text{m} = \mathbf{966\ \text{nm}}\\
+T = 4000\ \text{K}:\quad \lambda_{\max} &= \frac{2.898\times10^{-3}}{4000}\ \text{m} = \mathbf{724.5\ \text{nm}}\\
+T = 5000\ \text{K}:\quad \lambda_{\max} &= \frac{2.898\times10^{-3}}{5000}\ \text{m} = \mathbf{579.6\ \text{nm}}
+\end{aligned}
+\]</div>
+<p>Only the 5000 K peak lies inside the visible band (400 to 700 nm). That matches the "white hot" label. The 3000 K peak is in the infrared, which is why a red-hot object looks dull red: you only see the edge of its hump.</p>
+<p>Stefan's law compares the total power from the same surface at 5000 K and 3000 K. The area and \(\sigma\) cancel:</p>
+<div class="math">\[
+\frac{P(5000\ \text{K})}{P(3000\ \text{K})} = \left(\frac{5000}{3000}\right)^{4} = \mathbf{7.72}\ \text{(ratio, no unit)}
+\]</div>
+<div class="answer">Peaks at 966 nm, 724.5 nm and 579.6 nm; the 5000 K body radiates 7.72 times as much power as at 3000 K</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture draws these curves without numbers on the peaks. The peak wavelengths and the power ratio were calculated here with the lecture's own two laws.</p></div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: Wien peak and Stefan power</div>
+  <div class="src">Defaults: the "white hot" 5000 K curve from lecture page 2, with a 1 m² surface</div>
+  <div class="controls">
+    <label>\(T\) (K) <input type="range" id="wsT" min="300" max="10000" step="50" value="5000"><output id="wsTo">5000</output></label>
+    <label>\(A\) (m²) <input type="number" id="wsA" value="1" min="0.0001" step="0.01"></label>
+    <button class="btn" type="button" id="wsReset">Reset to lecture values</button>
+  </div>
+  <canvas id="wsCanvas" height="200"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>Planck curve at your T</span><span><i style="background:var(--c2)"></i>Wien peak</span><span><i style="background:var(--grid);height:10px"></i>visible band</span></div>
+  <div class="readout" id="wsOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Picture a stove element as you turn up the dial. First it glows dull red, then orange, then yellow-white. That colour shift is Wien's law. At the same time the heat you feel on your face climbs much faster than the dial setting, because doubling the temperature multiplies the power by 16. That is Stefan's law. (The analogy is only qualitative: a stove element is not a perfect blackbody, so its exact power is lower than \(\sigma A T^4\).)</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li><b>Kelvin only.</b> Both laws need absolute temperature. Convert first: \(T(\text{K}) = T(^\circ\text{C}) + 273.15\). Using Celsius in \(T^4\) gives nonsense.</li>
+<li>The Wien constant is \(2.898\times10^{-3}\) m·K, not 2.898 m·K. Dropping the \(10^{-3}\) gives a peak wavelength in millimetres.</li>
+<li>Stefan's law is a <b>fourth</b> power. Doubling \(T\) gives \(2^4 = 16\) times the power, not 2 or 4 times.</li>
+<li>\(A\) is the radiating surface area. For a sphere, \(A = 4\pi r^2\), not \(\pi r^2\).</li>
+<li>Wien gives the peak only; Stefan gives the total under the whole curve. Don't use one in place of the other.</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 2.1 (not from the lecture): temperature of the Sun's surface</summary><div class="body">
+<div class="givens">Sunlight peaks at about \(\lambda_{\max} = 500\ \text{nm}\). Treat the Sun as a blackbody and find its surface temperature.</div>
+<div class="math">\[
+T = \frac{2.898\times10^{-3}\ \text{m}\cdot\text{K}}{\lambda_{\max}} = \frac{2.898\times10^{-3}\ \text{m}\cdot\text{K}}{500\times10^{-9}\ \text{m}} = \mathbf{5796\ \text{K}}
+\]</div>
+<div class="answer">T ≈ 5796 K (about 5800 K)</div>
+</div></details>
+<details class="work practice"><summary>Practice 2.2 (not from the lecture): power from a hot sphere</summary><div class="body">
+<div class="givens">A blackbody sphere of radius \(r = 0.10\ \text{m}\) is held at \(T = 1000\ \text{K}\). Find the total power it radiates.</div>
+<div class="math">\[
+\begin{aligned}
+A &= 4\pi r^{2} = 4\pi(0.10\ \text{m})^{2} = 0.1257\ \text{m}^2\\
+P &= \sigma A T^{4} = (5.67\times10^{-8})(0.1257)(1000)^{4}\ \text{W}\\
+&= \mathbf{7125\ \text{W}}\ (\approx 7.1\ \text{kW})
+\end{aligned}
+\]</div>
+<div class="answer">P ≈ 7125 W</div>
+</div></details>
+<details class="work practice"><summary>Practice 2.3 (not from the lecture): two stars</summary><div class="body">
+<div class="givens">Star X peaks at 400 nm and star Y peaks at 700 nm. Which is hotter, and by what factor?</div>
+<p>From Wien, \(T\) is inversely proportional to \(\lambda_{\max}\):</p>
+<div class="math">\[
+\frac{T_X}{T_Y} = \frac{\lambda_{\max,Y}}{\lambda_{\max,X}} = \frac{700\ \text{nm}}{400\ \text{nm}} = \mathbf{1.75}
+\]</div>
+<div class="answer">Star X (the bluer one) is 1.75 times hotter</div>
+</div></details>
+
+<div class="quiz" data-quiz="q2"></div>
+</section>
+
+<section class="sec" id="s3">
+<h3><span class="num">Section 3</span>The UV catastrophe and Planck's quanta</h3>
+<p><b>The classical picture</b> (lecture page 6). Model the blackbody as a cavity: electromagnetic waves bounce around inside, in equilibrium with the walls. Radiation is treated purely as waves, each wave mode gets an equal share of thermal energy, and the result is the <b>Rayleigh-Jeans law</b>:</p>
+<div class="eq">
+  <div class="math">\[ I(T) = \frac{2\,c\,k_B\,T}{\lambda^{4}} \]</div>
+  <span class="note">Rayleigh-Jeans law (lecture page 3, classical)</span>
+  <div class="defs">\(I\) = radiation intensity per unit wavelength · \(c\) = speed of light, \(3.00\times10^{8}\) m/s · \(k_B\) = Boltzmann's constant, \(1.381\times10^{-23}\ \text{J}\cdot\text{K}^{-1}\) · \(\lambda\) = wavelength, in metres (m) · \(T\) = temperature, in kelvin (K)</div>
+</div>
+<p>It matches the measured curves at long wavelengths, but the \(\lambda^4\) in the denominator means that as \(\lambda \to 0\) the intensity grows without limit. Adding up all wavelengths would give infinite power. This failure in the ultraviolet end is the <b>ultraviolet catastrophe</b>: a divergence between theory and experiment.</p>
+
+<p><b>Planck's hypothesis</b> (lecture pages 7 to 9). Cavity radiation comes from atoms oscillating in the walls, and those oscillators can only hold <b>discrete</b> (quantized) amounts of energy, called <b>quanta</b>:</p>
+<div class="eq">
+  <div class="math">\[ E_n = n\,h\,f,\qquad n = 1, 2, 3, \ldots \]</div>
+  <span class="note">allowed energies of a Planck oscillator</span>
+  <div class="defs">\(E_n\) = energy of the oscillator in quantum state \(n\), in electron-volts (eV) or joules (J) · \(n\) = quantum number (whole number, no unit), describing the quantum state of the oscillator · \(h\) = Planck's constant, \(4.136\times10^{-15}\ \text{eV}\cdot\text{s} = 6.63\times10^{-34}\ \text{J}\cdot\text{s}\) · \(f\) = oscillation frequency, in hertz (Hz)</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \Delta E = h f \]</div>
+  <span class="note">energy jump between two consecutive quantum states: the ladder is \(hf, 2hf, 3hf, \ldots, nhf\)</span>
+  <div class="defs">\(\Delta E\) = energy of one quantum, in eV or J</div>
+</div>
+<p>With this one assumption Planck derived a formula that fits the measured curves at every wavelength:</p>
+<div class="eq">
+  <div class="math">\[ I(\lambda, T) = \frac{2\pi h c^{2}}{\lambda^{5}}\cdot\frac{1}{\exp\!\left[\dfrac{hc}{\lambda k_B T}\right] - 1} \]</div>
+  <span class="note">Planck's blackbody radiation law (lecture page 9)</span>
+  <div class="defs">\(I(\lambda,T)\) = power intensity per unit wavelength, in W/m² per metre of wavelength (W·m⁻³) · all other symbols as above. Wien's law and Stefan's law can both be derived from this formula.</div>
+</div>
+
+<details class="work"><summary>Worked derivation: why Planck's law has no catastrophe</summary><div class="body">
+<p>Call the exponent \(x = \dfrac{hc}{\lambda k_B T}\) (no unit). It compares one quantum's energy \(\frac{hc}{\lambda}\) with the typical thermal energy \(k_B T\).</p>
+<p><b>Long wavelengths</b> (\(x \ll 1\)): use \(e^{x} \approx 1 + x\), so \(e^{x} - 1 \approx x\):</p>
+<div class="math">\[
+\begin{aligned}
+I &\approx \frac{2\pi h c^{2}}{\lambda^{5}}\cdot\frac{\lambda k_B T}{hc}\\
+&= \frac{2\pi c\,k_B T}{\lambda^{4}}
+\end{aligned}
+\]</div>
+<p>This is the Rayleigh-Jeans shape: the \(\lambda^{-4}\) law reappears, so the classical result is correct for long wavelengths.</p>
+<p><b>Short wavelengths</b> (\(x \gg 1\)): \(e^{x}\) grows much faster than \(\lambda^{-5}\), so</p>
+<div class="math">\[
+I \approx \frac{2\pi h c^{2}}{\lambda^{5}}\,\exp\!\left(-\frac{hc}{\lambda k_B T}\right) \;\longrightarrow\; 0 \quad \text{as } \lambda \to 0
+\]</div>
+<p>Physically: a short-wavelength quantum \(hf\) is much bigger than \(k_B T\), so the walls almost never have enough thermal energy to emit one. Those modes stay nearly empty, and the curve turns over instead of blowing up.</p>
+<div class="answer">Planck matches Rayleigh-Jeans at long λ and goes to zero at short λ</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture states that Planck's law fixes the catastrophe but does not show the two limits. They were added here.</p></div>
+</div></details>
+
+<div class="callout filled"><span class="tag">Possible lecture error</span><p>Lecture page 3 writes Rayleigh-Jeans as \(I(T) = \frac{2ck_BT}{\lambda^4}\), while page 9 writes Planck's law with a leading \(2\pi hc^2\). The long-wavelength limit of the page 9 formula is \(\frac{2\pi c k_B T}{\lambda^4}\), a factor of \(\pi\) larger. Both forms appear in textbooks (one counts power per unit solid angle, the other the total power leaving a surface), but the two pages mix them. For comparing the two laws on one graph, use \(\frac{2\pi c k_B T}{\lambda^4}\) with the page 9 Planck formula. Any ratio of Rayleigh-Jeans values (for example, halving \(\lambda\)) is unaffected.</p></div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture lists \(n = 1, 2, 3, \ldots\). In Planck's model \(n = 0\) (an oscillator holding no quanta) is also allowed. It does not change the spacing \(\Delta E = hf\) or any result in this lecture.</p></div>
+
+<div class="demo">
+  <div class="dtitle">Plot: Planck's law against Rayleigh-Jeans</div>
+  <div class="src">Defaults: the 5000 K curve from lecture page 2. Rayleigh-Jeans drawn as \(2\pi c k_B T\lambda^{-4}\) to match the page 9 Planck formula.</div>
+  <div class="controls">
+    <label>\(T\) (K) <input type="range" id="pjT" min="1000" max="8000" step="100" value="5000"><output id="pjTo">5000</output></label>
+    <label>\(\lambda\) probe (µm) <input type="range" id="pjL" min="0.1" max="3" step="0.01" value="1"><output id="pjLo">1.00</output></label>
+    <button class="btn" type="button" id="pjReset">Reset to lecture values</button>
+  </div>
+  <canvas id="pjCanvas" height="220"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>Planck (quantum)</span><span><i style="background:var(--c2)"></i>Rayleigh-Jeans (classical)</span><span><i style="background:var(--c3)"></i>probe wavelength</span></div>
+  <div class="readout" id="pjOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A vending machine that only takes whole coins. The machine's walls (the oscillators) have a pocketful of small change (thermal energy about \(k_BT\)). Low-frequency modes are cheap snacks, priced in small coins, so they sell all the time. High-frequency modes are priced at one big coin \(hf\) each, which the walls rarely have, so they almost never sell. Classical physics assumed you could pay any fraction of a price, so every snack sold equally often, and the infinitely many expensive ones added up to infinity. (The analogy breaks in that real thermal energy is shared statistically, not held as a fixed amount.)</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Planck quantized the energy of the <b>oscillators in the walls</b>. It was Einstein (Part 3) who said light itself travels as quanta.</li>
+<li>Watch the units of \(h\): \(4.136\times10^{-15}\) eV·s gives energies in eV; \(6.63\times10^{-34}\) J·s gives joules. Never mix them in one line.</li>
+<li>Rayleigh-Jeans has \(\lambda^4\); Planck has \(\lambda^5\) times an exponential. Halving \(\lambda\) in Rayleigh-Jeans multiplies \(I\) by \(2^4 = 16\).</li>
+<li>The catastrophe is at <b>short</b> wavelength (ultraviolet), not long. At long wavelength classical theory works.</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 3.1 (not from the lecture): energy ladder of an oscillator</summary><div class="body">
+<div class="givens">A wall oscillator vibrates at \(f = 6.0\times10^{14}\ \text{Hz}\). Find the size of one quantum and the energy of the \(n = 4\) state. Use \(h = 4.136\times10^{-15}\ \text{eV}\cdot\text{s}\).</div>
+<div class="math">\[
+\begin{aligned}
+\Delta E &= hf = (4.136\times10^{-15}\ \text{eV}\cdot\text{s})(6.0\times10^{14}\ \text{Hz}) = \mathbf{2.48\ \text{eV}}\\
+E_4 &= 4hf = 4(2.4816\ \text{eV}) = \mathbf{9.93\ \text{eV}}
+\end{aligned}
+\]</div>
+<div class="answer">ΔE = 2.48 eV, E₄ = 9.93 eV</div>
+</div></details>
+<details class="work practice"><summary>Practice 3.2 (not from the lecture): how far below classical is Planck at 1 µm?</summary><div class="body">
+<div class="givens">\(T = 5000\ \text{K}\), \(\lambda = 1.0\ \mu\text{m}\). Find the ratio of Planck's intensity to the Rayleigh-Jeans value \(\frac{2\pi c k_B T}{\lambda^4}\).</div>
+<p>Dividing the two formulas leaves \(\dfrac{I_{\text{Planck}}}{I_{\text{RJ}}} = \dfrac{x}{e^{x}-1}\) with \(x = \dfrac{hc}{\lambda k_B T}\):</p>
+<div class="math">\[
+\begin{aligned}
+x &= \frac{(6.63\times10^{-34})(3.00\times10^{8})}{(1.0\times10^{-6})(1.381\times10^{-23})(5000)} = 2.88\\
+\frac{I_{\text{Planck}}}{I_{\text{RJ}}} &= \frac{2.88}{e^{2.88}-1} = \mathbf{0.171}\ \text{(ratio, no unit)}
+\end{aligned}
+\]</div>
+<div class="answer">Planck gives only about 17% of the classical value at 1 µm</div>
+</div></details>
+
+<div class="quiz" data-quiz="q3"></div>
+</section>
+
+<h2 class="part">Part 2 · The photoelectric effect (Lecture 9a)</h2>
+
+<section class="sec" id="s4">
+<h3><span class="num">Section 4</span>The experiment and the stopping potential</h3>
+<p>Shine monochromatic (single-wavelength) light of short enough wavelength on a metal surface. The metal absorbs the light and its surface emits electrons. This is the <b>photoelectric effect</b>, and the emitted electrons are <b>photoelectrons</b> (lecture page 10).</p>
+<p><b>The apparatus</b> (lecture page 11). Inside an evacuated glass tube sit two electrodes. Light falls on the <b>cathode</b> (the target material). Electrons fly across to the <b>anode</b>, and the ammeter in the outer circuit reads the resulting <b>photocurrent</b>. A battery and a rheostat set the potential difference between the electrodes, read by the voltmeter. If you reverse the battery so the anode is negative, it pushes electrons back. Make that reverse potential large enough and even the fastest electrons cannot reach the anode: the photocurrent drops to zero. That reverse potential is the <b>stopping potential</b> \(\Delta V_s\).</p>
+
+<div class="eq">
+  <div class="math">\[ K_{\max} = e\,\Delta V_s \]</div>
+  <span class="note">largest kinetic energy of the photoelectrons (lecture page 14)</span>
+  <div class="defs">\(K_{\max}\) = maximum kinetic energy of an emitted electron, in joules (J) or electron-volts (eV) · \(e\) = magnitude of the electron charge, \(1.602\times10^{-19}\) C · \(\Delta V_s\) = stopping potential, in volts (V)</div>
+</div>
+
+<details class="work"><summary>Worked derivation (lecture page 14): energy balance at the stopping potential</summary><div class="body">
+<p>A charge \(q\) moving through a potential difference \(\Delta V\) changes its kinetic energy by \(q\Delta V\). For the electron the lecture writes the charge as \(e\) and the balance as:</p>
+<div class="math">\[
+\begin{aligned}
+\Delta K &= q\,\Delta V\\
+\Delta K - e\,\Delta V &= 0
+\end{aligned}
+\]</div>
+<p>Apply the stopping potential, which is a reverse potential, so \(\Delta V = -\Delta V_s\):</p>
+<div class="math">\[
+\begin{aligned}
+\Delta K - e(-\Delta V_s) &= 0\\
+(0 - K_i) + e\,\Delta V_s &= 0
+\end{aligned}
+\]</div>
+<p>The fastest electron starts with kinetic energy \(K_i\) and just comes to rest (\(K_f = 0\)) at the anode. So</p>
+<div class="math">\[
+K_i = e\,\Delta V_s \quad\Longrightarrow\quad K_{\max} = e\,\Delta V_s
+\]</div>
+<div class="answer">\(K_{\max} = e\,\Delta V_s\)</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture writes the charge simply as \(e\) and lets the minus sign on \(-\Delta V_s\) carry the direction. Expanding: \(\Delta K + e\Delta V_s = 0\), so \(\Delta K = -e\Delta V_s\). The electron <b>loses</b> \(e\Delta V_s\) of kinetic energy crossing the reverse potential, and the fastest one has exactly that much to lose.</p></div>
+</div></details>
+
+<p><b>The convenient unit.</b> An electron-volt is the energy one electron gains or loses crossing 1 V, so \(1\ \text{eV} = 1.602\times10^{-19}\ \text{J}\). In eV, \(K_{\max}\) has the same number as \(\Delta V_s\) in volts: a stopping potential of 1.5 V means \(K_{\max} = 1.5\ \text{eV}\).</p>
+
+<details class="work"><summary>Example (built on lecture page 14): a 1.5 V stopping potential</summary><div class="body">
+<div class="givens">Measured stopping potential \(\Delta V_s = 1.5\ \text{V}\). Electron mass \(m_0 = 9.109\times10^{-31}\ \text{kg}\).</div>
+<div class="math">\[
+\begin{aligned}
+K_{\max} &= e\,\Delta V_s = (1.602\times10^{-19}\ \text{C})(1.5\ \text{V})\\
+&= 2.403\times10^{-19}\ \text{J} = 1.5\ \text{eV}\\
+v_{\max} &= \sqrt{\frac{2K_{\max}}{m_0}} = \sqrt{\frac{2(2.403\times10^{-19}\ \text{J})}{9.109\times10^{-31}\ \text{kg}}}\\
+&= \mathbf{7.26\times10^{5}\ \text{m/s}}
+\end{aligned}
+\]</div>
+<p>That is about 0.24% of \(c\), so the non-relativistic \(K = \tfrac{1}{2}mv^2\) is fine here.</p>
+<div class="answer">K_max = 2.403 × 10⁻¹⁹ J = 1.5 eV; v_max = 7.26 × 10⁵ m/s</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Electrons leaving the cathode are like balls kicked up a hill toward the anode. The reverse potential is the height of the hill. Raise it until not even the hardest-kicked ball makes it over the top; that height tells you the kinetic energy of the hardest kick. (It breaks down in that the hill here is electrical, so it only slows charged particles.)</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>\(e\Delta V_s\) gives the <b>maximum</b> kinetic energy, not the typical one. Electrons from deeper in the metal lose extra energy on the way out and are stopped earlier.</li>
+<li>Converting: multiply volts by \(1.602\times10^{-19}\) to get joules. Dividing by it instead gives a huge, wrong number.</li>
+<li>\(K_{\max}\) in eV equals \(\Delta V_s\) in volts. Don't multiply by \(1.602\times10^{-19}\) if the answer is wanted in eV.</li>
+<li>The stopping potential is a <b>reverse</b> potential (anode negative). That is why it appears as \(-\Delta V_s\) on the left of the current graph.</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 4.1 (not from the lecture): from stopping potential to joules</summary><div class="body">
+<div class="givens">\(\Delta V_s = 2.2\ \text{V}\). Find \(K_{\max}\) in eV and in J.</div>
+<div class="math">\[
+K_{\max} = e\,\Delta V_s = 2.2\ \text{eV} = (2.2)(1.602\times10^{-19}\ \text{J}) = \mathbf{3.52\times10^{-19}\ \text{J}}
+\]</div>
+<div class="answer">2.2 eV = 3.52 × 10⁻¹⁹ J</div>
+</div></details>
+<details class="work practice"><summary>Practice 4.2 (not from the lecture): stopping potential from electron speed</summary><div class="body">
+<div class="givens">The fastest photoelectrons leave at \(v = 5.0\times10^{5}\ \text{m/s}\). What stopping potential stops them?</div>
+<div class="math">\[
+\begin{aligned}
+K_{\max} &= \tfrac{1}{2}m_0v^{2} = \tfrac{1}{2}(9.109\times10^{-31})(5.0\times10^{5})^{2}\ \text{J} = 1.139\times10^{-19}\ \text{J}\\
+\Delta V_s &= \frac{K_{\max}}{e} = \frac{1.139\times10^{-19}\ \text{J}}{1.602\times10^{-19}\ \text{C}} = \mathbf{0.711\ \text{V}}
+\end{aligned}
+\]</div>
+<div class="answer">ΔV_s = 0.711 V</div>
+</div></details>
+
+<div class="quiz" data-quiz="q4"></div>
+</section>
+
+<section class="sec" id="s5">
+<h3><span class="num">Section 5</span>Three results classical physics cannot explain</h3>
+<p>Lecture pages 12 to 16 list three key characteristics of the photoelectric effect. Classical wave theory predicts something different for each one.</p>
+<div class="tbl"><table>
+<tr><th>Observation</th><th>What is measured</th><th>What classical (wave) physics predicts</th></tr>
+<tr><td>1. Absence of lag time</td><td>Electrons come out instantly, even in very dim light.</td><td>A dim wave spreads energy thinly, so each electron needs time to build up enough energy: there should be a lag.</td></tr>
+<tr><td>2. Intensity and kinetic energy</td><td>Brighter light gives more photocurrent, but the stopping potential \(-\Delta V_s\) is the same for any intensity, so \(K_{\max}\) does not change.</td><td>A stronger wave shakes electrons harder: \(K\) should be proportional to intensity, and depend only on intensity.</td></tr>
+<tr><td>3. Cut-off frequency</td><td>Below a minimum frequency \(f_c\) no photocurrent is generated, however bright the light. Above it, \(K_{\max}\) rises linearly with \(f\).</td><td>\(K\) should not depend on frequency at all, so there should be no cut-off: any frequency works if you wait or turn up the brightness.</td></tr>
+</table></div>
+<p><b>The \(K_{\max}\) versus \(f\) graph</b> (lecture page 15). Each metal gives a straight line that starts at its own cut-off frequency (\(f_{c,1}\) for metal 1, \(f_{c,2}\) for metal 2). Extend the lines backwards (dashed) and they hit the vertical axis at \(-\varphi_1\) and \(-\varphi_2\), where \(\varphi\) is the metal's work function (Section 6). The two lines are parallel: the slope is the same for every metal. Part 3 shows the slope is Planck's constant.</p>
+<div class="eq">
+  <div class="math">\[ K_{\max} = 0 \quad \text{for } f < f_c \qquad(\text{no photocurrent}) \]</div>
+  <span class="note">the cut-off: no electrons below \(f_c\), whatever the intensity</span>
+  <div class="defs">\(f\) = frequency of the incident light, in hertz (Hz) · \(f_c\) = cut-off (threshold) frequency of the metal, in Hz · \(\varphi\) = work function of the metal, in eV (Section 6)</div>
+</div>
+
+<details class="work"><summary>Example (lecture page 13): reading the photocurrent graph</summary><div class="body">
+<div class="givens">Two curves of photocurrent against potential difference: one for high-intensity light, one for low-intensity light, same frequency.</div>
+<p>At large positive potential both curves level off. The high-intensity plateau is higher: more light means more electrons per second, so more current.</p>
+<p>Moving to negative (reverse) potential, both curves fall and reach zero at the <b>same</b> point, \(-\Delta V_s\). The stopping potential is "always at one value for any intensity". Since \(K_{\max} = e\Delta V_s\), the fastest electrons have the same energy in dim and bright light.</p>
+<div class="answer">Intensity changes how many electrons come out, not how fast the fastest ones are</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Photocurrent against potential difference</div>
+  <div class="src">Defaults: aluminium (\(\varphi = 4.08\ \text{eV}\), lecture 9b table) lit by 200 nm light. Change the intensity and watch \(-\Delta V_s\) stay put; change \(\lambda\) and watch it move.</div>
+  <div class="controls">
+    <label>Intensity (relative) <input type="range" id="ivI" min="0" max="2" step="0.05" value="1"><output id="ivIo">1.00</output></label>
+    <label>\(\lambda\) (nm) <input type="range" id="ivL" min="150" max="400" step="1" value="200"><output id="ivLo">200</output></label>
+    <button class="btn" type="button" id="ivReset">Reset to lecture values</button>
+  </div>
+  <canvas id="ivCanvas" height="220"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>your setting</span><span><i style="background:var(--c2)"></i>same light at half intensity</span></div>
+  <div class="readout" id="ivOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Knocking coconuts out of a tree by throwing balls. A wave is like spraying the tree with a gentle hose: it would take ages to build up enough force, and a bigger hose would knock coconuts off harder. What actually happens is like throwing individual baseballs. Each throw either knocks one coconut free immediately or does nothing. Throwing more balls per second (brighter light) frees more coconuts, but each one flies off no faster. Only a harder throw (higher frequency) makes them fly faster, and below some minimum throw speed nothing falls at all.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Brighter light raises the <b>photocurrent</b> (number of electrons) but not \(K_{\max}\) or \(\Delta V_s\).</li>
+<li>The cut-off is a <b>frequency</b> threshold, not an intensity threshold. Very bright red light still ejects nothing from most metals.</li>
+<li>Lecture page 16 lists what <b>classical</b> physics predicts, not what is observed. Read "kinetic energy is independent of frequency" as the wrong classical prediction.</li>
+<li>On the \(K_{\max}\) against \(f\) graph, the vertical-axis intercept is \(-\varphi\) (negative), and the horizontal-axis intercept is \(f_c\).</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 5.1 (not from the lecture): how long would a classical electron wait?</summary><div class="body">
+<div class="givens">Dim light of intensity \(I = 0.010\ \text{W/m}^2\) falls on aluminium (\(\varphi = 4.08\ \text{eV}\)). Classically, suppose one electron collects energy over an atom-sized area \(A = 1.0\times10^{-19}\ \text{m}^2\). How long until it has gathered \(4.08\ \text{eV}\)?</div>
+<div class="math">\[
+\begin{aligned}
+\varphi &= 4.08\ \text{eV} = (4.08)(1.602\times10^{-19}\ \text{J}) = 6.536\times10^{-19}\ \text{J}\\
+\text{power collected} &= IA = (0.010\ \text{W/m}^2)(1.0\times10^{-19}\ \text{m}^2) = 1.0\times10^{-21}\ \text{W}\\
+t &= \frac{\varphi}{IA} = \frac{6.536\times10^{-19}\ \text{J}}{1.0\times10^{-21}\ \text{W}} = \mathbf{654\ \text{s}}\ (\approx 11\ \text{min})
+\end{aligned}
+\]</div>
+<p>Experiments see electrons within about a nanosecond. That is the "absence of lag time".</p>
+<div class="answer">Classical wait ≈ 654 s; observed: essentially instant</div>
+</div></details>
+<details class="work practice"><summary>Practice 5.2 (not from the lecture): reading intercepts</summary><div class="body">
+<div class="givens">A \(K_{\max}\) against \(f\) line for some metal, extended backwards, crosses the vertical axis at \(-2.3\ \text{eV}\). What is the work function, and does light of energy 2.0 eV per quantum eject electrons?</div>
+<p>The intercept is \(-\varphi\), so \(\varphi = 2.3\ \text{eV}\). A 2.0 eV quantum is below that, so its frequency is below \(f_c\):</p>
+<div class="answer">φ = 2.3 eV; 2.0 eV light ejects no electrons</div>
+</div></details>
+
+<div class="quiz" data-quiz="q5"></div>
+</section>
+
+<h2 class="part">Part 3 · Einstein's photons (Lecture 9b)</h2>
+
+<section class="sec" id="s6">
+<h3><span class="num">Section 6</span>Photon energy and the work function</h3>
+<p>Einstein asked: if Planck was right that energy comes in quanta in the cavity walls, could the same idea explain how the surface of the photoelectrode absorbs energy from light? His approach (lecture 9b pages 1 to 3):</p>
+<ul>
+<li>A beam of monochromatic light of frequency \(f\) is made of <b>photons</b>.</li>
+<li>A photon is a particle of light and moves at the speed of light.</li>
+<li>Each photon carries one energy quantum \(E_f\) that depends only on its frequency.</li>
+<li>Energy transfer is <b>"all or nothing"</b>: one photon gives all its energy to one electron, and the photon ceases to exist after the transfer.</li>
+</ul>
+<div class="eq">
+  <div class="math">\[ E_f = h f \]</div>
+  <span class="note">energy of one photon</span>
+  <div class="defs">\(E_f\) = photon energy, in eV or J · \(h\) = Planck's constant, \(4.136\times10^{-15}\ \text{eV}\cdot\text{s}\) · \(f\) = frequency of the light, in Hz</div>
+</div>
+<div class="eq">
+  <div class="math">\[ E_f = K_{\max} + \varphi \qquad\Longrightarrow\qquad K_{\max} = E_f - \varphi = hf - \varphi \]</div>
+  <span class="note">Einstein's photoelectric equation: photon energy = kinetic energy + energy to escape</span>
+  <div class="defs">\(K_{\max}\) = maximum kinetic energy of the photoelectron, in eV · \(\varphi\) = work function: the detachment energy needed to pull an electron free of the surface, in eV</div>
+</div>
+<div class="tbl"><table>
+<tr><th>Metal (lecture 9b page 4)</th><th>Work function \(\varphi\) (eV)</th></tr>
+<tr><td>Ag (silver)</td><td class="num">4.73</td></tr>
+<tr><td>Al (aluminium)</td><td class="num">4.08</td></tr>
+<tr><td>Pt (platinum)</td><td class="num">6.35</td></tr>
+</table></div>
+<p><b>Einstein's interpretation</b> of the puzzles from Section 5 (lecture page 5):</p>
+<ol>
+<li><b>Absence of lag time.</b> The interaction is between one individual photon and one individual electron, so it is instantaneous. Lowering the intensity cannot lengthen it.</li>
+<li><b>Intensity and kinetic energy.</b> Intensity is the number of photons arriving at the metal surface per unit time. More photons free more electrons (more current), but each photon still has \(E_f = hf\), so \(K_{\max}\) does not change.</li>
+<li><b>Cut-off frequency.</b> If \(hf < \varphi\), a single photon cannot free an electron, and no number of photons helps. This is Section 7.</li>
+</ol>
+<p>Comparing \(K_{\max} = hf - \varphi\) with the straight lines of Section 5: slope \(h\) (the same for every metal) and intercept \(-\varphi\).</p>
+
+<details class="work"><summary>Example (built on the lecture page 4 table): 200 nm light on aluminium and silver</summary><div class="body">
+<div class="givens">Ultraviolet light, \(\lambda = 200\ \text{nm}\). \(hc = 1240.8\ \text{eV}\cdot\text{nm}\). Work functions from the table: Al 4.08 eV, Ag 4.73 eV.</div>
+<p>Photon energy first (using \(f = \frac{c}{\lambda}\), so \(E_f = \frac{hc}{\lambda}\)):</p>
+<div class="math">\[
+E_f = \frac{hc}{\lambda} = \frac{1240.8\ \text{eV}\cdot\text{nm}}{200\ \text{nm}} = 6.204\ \text{eV}
+\]</div>
+<p>Then subtract each work function, as on lecture page 4:</p>
+<div class="math">\[
+\begin{aligned}
+\text{Al:}\quad K_{\max} &= 6.204\ \text{eV} - 4.08\ \text{eV} = \mathbf{2.124\ \text{eV}}\quad(\Delta V_s = 2.124\ \text{V})\\
+\text{Ag:}\quad K_{\max} &= 6.204\ \text{eV} - 4.73\ \text{eV} = \mathbf{1.474\ \text{eV}}\quad(\Delta V_s = 1.474\ \text{V})
+\end{aligned}
+\]</div>
+<div class="answer">Al: K_max = 2.124 eV; Ag: K_max = 1.474 eV</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture sets up \(K_{\max} = hf - \varphi\) without numbers. The 200 nm wavelength was chosen here to show the table in use.</p></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Paying to leave a car park. Each photon is one payment of \(hf\). The exit fee is the work function \(\varphi\). Whatever is left over after the fee is the change you drive away with (\(K_{\max}\)). Electrons parked deeper inside pay extra fees on the way out, so they leave with less change; \(K_{\max}\) is the change of the electron parked right at the gate. You cannot combine two small payments: if one photon is less than the fee, the gate stays shut.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Subtract the work function: \(K_{\max} = hf - \varphi\), not \(hf + \varphi\).</li>
+<li>Keep everything in eV: use \(h = 4.136\times10^{-15}\) eV·s, or \(hc = 1240.8\) eV·nm with \(\lambda\) in nm.</li>
+<li>If \(hf - \varphi\) comes out negative, the answer is "no photoelectrons", not a negative kinetic energy.</li>
+<li>The lecture's interpretation list numbers the second item "iv"; it is the second of three points (lag time, intensity, cut-off).</li>
+<li>The symbol \(E_f\) means photon energy. The subscript \(f\) does not stand for "final".</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 6.1 (not from the lecture): silver lit by a given frequency</summary><div class="body">
+<div class="givens">Light of \(f = 1.5\times10^{15}\ \text{Hz}\) falls on silver (\(\varphi = 4.73\ \text{eV}\)). Find \(K_{\max}\) and \(\Delta V_s\).</div>
+<div class="math">\[
+\begin{aligned}
+E_f &= hf = (4.136\times10^{-15}\ \text{eV}\cdot\text{s})(1.5\times10^{15}\ \text{Hz}) = 6.204\ \text{eV}\\
+K_{\max} &= 6.204\ \text{eV} - 4.73\ \text{eV} = \mathbf{1.474\ \text{eV}},\qquad \Delta V_s = 1.474\ \text{V}
+\end{aligned}
+\]</div>
+<div class="answer">K_max = 1.474 eV, ΔV_s = 1.474 V</div>
+</div></details>
+<details class="work practice"><summary>Practice 6.2 (not from the lecture): platinum at 200 nm</summary><div class="body">
+<div class="givens">The same 200 nm light (\(E_f = 6.204\ \text{eV}\)) falls on platinum (\(\varphi = 6.35\ \text{eV}\)).</div>
+<div class="math">\[
+hf - \varphi = 6.204\ \text{eV} - 6.35\ \text{eV} = -0.146\ \text{eV} < 0
+\]</div>
+<p>One photon does not have enough energy to free an electron. No photoelectrons, at any intensity.</p>
+<div class="answer">No photoelectric effect</div>
+</div></details>
+<details class="work practice"><summary>Practice 6.3 (not from the lecture): how many photons per second?</summary><div class="body">
+<div class="givens">A 1.0 mW beam of 200 nm light. How many photons arrive per second?</div>
+<div class="math">\[
+\begin{aligned}
+E_f &= 6.204\ \text{eV} = (6.204)(1.602\times10^{-19}\ \text{J}) = 9.939\times10^{-19}\ \text{J}\\
+N &= \frac{P}{E_f} = \frac{1.0\times10^{-3}\ \text{J/s}}{9.939\times10^{-19}\ \text{J}} = \mathbf{1.01\times10^{15}\ \text{photons per second}}
+\end{aligned}
+\]</div>
+<div class="answer">About 1.01 × 10¹⁵ photons per second</div>
+</div></details>
+
+<div class="quiz" data-quiz="q6"></div>
+</section>
+
+<section class="sec" id="s7">
+<h3><span class="num">Section 7</span>Cut-off frequency and cut-off wavelength</h3>
+<p>At the threshold, the photon has just enough energy to free the electron and nothing is left over: \(K_{\max} = 0\). Setting that in Einstein's equation gives the cut-off frequency (lecture 9b page 6). Then \(\lambda f = c\) turns it into a cut-off wavelength (page 7).</p>
+<div class="eq">
+  <div class="math">\[ f_c = \frac{\varphi}{h} \]</div>
+  <span class="note">cut-off (threshold) frequency: depends only on the metal's work function</span>
+  <div class="defs">\(f_c\) = cut-off frequency, in Hz · \(\varphi\) = work function, in eV · \(h = 4.136\times10^{-15}\) eV·s</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \lambda_c = \frac{c}{f_c} = \frac{hc}{\varphi} \]</div>
+  <span class="note">cut-off wavelength: the photoelectric effect does not occur for \(\lambda > \lambda_c\)</span>
+  <div class="defs">\(\lambda_c\) = cut-off wavelength, in m (or nm with \(hc = 1240.8\) eV·nm) · \(c = 3.00\times10^{8}\) m/s</div>
+</div>
+<p>A bigger work function means a higher cut-off frequency, which means a photon of higher energy is needed (the lecture's arrows: \(\uparrow\varphi \to \uparrow f \to \uparrow E\)). Photons with energy below \(E_c = hf_c\) do <b>not</b> produce the photoelectric effect.</p>
+<div class="callout filled"><span class="tag">Possible lecture error</span><p>Lecture 9b page 6 reads "Photon with energy lower than \(E_c = hf_c\) do produce the photoelectric effect." From \(K_{\max} = hf - \varphi\) and the cut-off result on page 15 of Lecture 9a ("below this minimum frequency, no photocurrent is generated"), it should read "do <b>not</b> produce". A missing "not".</p></div>
+
+<details class="work"><summary>Worked derivation (lecture 9b pages 6 and 7): from K_max = 0 to λ_c</summary><div class="body">
+<div class="math">\[
+\begin{aligned}
+K_{\max} &= hf - \varphi\\
+\text{threshold: } K_{\max} = 0 \;\Rightarrow\; hf_c - \varphi &= 0\\
+f_c &= \frac{\varphi}{h}\\
+\lambda_c &= \frac{c}{f_c} = \frac{c}{\;\dfrac{\varphi}{h}\;} = \frac{hc}{\varphi}
+\end{aligned}
+\]</div>
+<div class="answer">\(f_c = \frac{\varphi}{h}\), \(\lambda_c = \frac{hc}{\varphi}\)</div>
+</div></details>
+
+<details class="work"><summary>Example (built on the lecture page 4 table): cut-offs for Ag, Al and Pt</summary><div class="body">
+<div class="givens">\(h = 4.136\times10^{-15}\ \text{eV}\cdot\text{s}\), \(hc = 1240.8\ \text{eV}\cdot\text{nm}\). \(\varphi\): Ag 4.73 eV, Al 4.08 eV, Pt 6.35 eV.</div>
+<div class="math">\[
+\begin{aligned}
+\text{Ag:}\quad f_c &= \frac{4.73\ \text{eV}}{4.136\times10^{-15}\ \text{eV}\cdot\text{s}} = 1.144\times10^{15}\ \text{Hz}\\
+\lambda_c &= \frac{1240.8\ \text{eV}\cdot\text{nm}}{4.73\ \text{eV}} = \mathbf{262.3\ \text{nm}}\\
+\text{Al:}\quad f_c &= \frac{4.08\ \text{eV}}{4.136\times10^{-15}\ \text{eV}\cdot\text{s}} = 9.865\times10^{14}\ \text{Hz}\\
+\lambda_c &= \frac{1240.8\ \text{eV}\cdot\text{nm}}{4.08\ \text{eV}} = \mathbf{304.1\ \text{nm}}\\
+\text{Pt:}\quad f_c &= \frac{6.35\ \text{eV}}{4.136\times10^{-15}\ \text{eV}\cdot\text{s}} = 1.535\times10^{15}\ \text{Hz}\\
+\lambda_c &= \frac{1240.8\ \text{eV}\cdot\text{nm}}{6.35\ \text{eV}} = \mathbf{195.4\ \text{nm}}
+\end{aligned}
+\]</div>
+<p>All three cut-offs are in the ultraviolet. Visible light (400 to 700 nm) ejects no electrons from any of these metals.</p>
+<div class="answer">λ_c: Ag 262.3 nm, Al 304.1 nm, Pt 195.4 nm</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Calculator: Einstein's photoelectric equation</div>
+  <div class="src">Defaults: aluminium from the lecture 9b table, \(\lambda = 200\) nm (the Section 6 example)</div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Metal" id="peSeg"><button type="button" data-phi="4.73">Ag</button><button type="button" data-phi="4.08" aria-pressed="true">Al</button><button type="button" data-phi="6.35">Pt</button></div>
+    <label>\(\lambda\) (nm) <input type="number" id="peL" value="200" min="50" max="1000" step="1"></label>
+    <button class="btn" type="button" id="peReset">Reset to lecture values</button>
+  </div>
+  <canvas id="peCanvas" height="220"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>Ag</span><span><i style="background:var(--c2)"></i>Al</span><span><i style="background:var(--c3)"></i>Pt</span><span>dot: your light on the chosen metal</span></div>
+  <div class="readout" id="peOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A height barrier at a car park entrance. A car (photon) either fits under the bar or it doesn't; a queue of a thousand tall cars gets no further than one. The bar height is set by the metal (\(\varphi\)). Here the analogy flips one detail: in the photoelectric effect a photon must have <b>at least</b> the threshold energy, so think of it as a minimum speed bump rather than a maximum height.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Frequency and wavelength thresholds point opposite ways: emission needs \(f > f_c\), which is \(\lambda < \lambda_c\).</li>
+<li>Notation clash: the lecture uses \(\lambda_c\) here for the photoelectric <b>cut-off</b> wavelength, and later (Section 9) the same symbol for the <b>Compton</b> wavelength \(\frac{h}{m_0c}\). Check which one a question means.</li>
+<li>Units: \(\varphi\) in eV needs \(h\) in eV·s. With \(h\) in J·s, convert \(\varphi\) to joules first.</li>
+<li>The slope of \(K_{\max}\) against \(f\) is \(h\) for every metal. Only the intercepts change.</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 7.1 (not from the lecture): work function from the cut-off</summary><div class="body">
+<div class="givens">A metal has cut-off wavelength \(\lambda_c = 540\ \text{nm}\). Find \(\varphi\), then \(K_{\max}\) for 400 nm light.</div>
+<div class="math">\[
+\begin{aligned}
+\varphi &= \frac{hc}{\lambda_c} = \frac{1240.8\ \text{eV}\cdot\text{nm}}{540\ \text{nm}} = \mathbf{2.298\ \text{eV}}\\
+E_f &= \frac{1240.8\ \text{eV}\cdot\text{nm}}{400\ \text{nm}} = 3.102\ \text{eV}\\
+K_{\max} &= 3.102\ \text{eV} - 2.298\ \text{eV} = \mathbf{0.804\ \text{eV}}
+\end{aligned}
+\]</div>
+<div class="answer">φ = 2.298 eV; K_max = 0.804 eV</div>
+</div></details>
+<details class="work practice"><summary>Practice 7.2 (not from the lecture): Planck's constant from two measurements</summary><div class="body">
+<div class="givens">On one metal: \(f_1 = 1.0\times10^{15}\ \text{Hz}\) gives \(\Delta V_{s1} = 1.20\ \text{V}\); \(f_2 = 1.5\times10^{15}\ \text{Hz}\) gives \(\Delta V_{s2} = 3.268\ \text{V}\). Find \(h\) and \(\varphi\).</div>
+<p>\(K_{\max}\) in eV equals \(\Delta V_s\) in volts, and the slope of \(K_{\max}\) against \(f\) is \(h\):</p>
+<div class="math">\[
+\begin{aligned}
+h &= \frac{3.268\ \text{eV} - 1.20\ \text{eV}}{1.5\times10^{15}\ \text{Hz} - 1.0\times10^{15}\ \text{Hz}} = \mathbf{4.136\times10^{-15}\ \text{eV}\cdot\text{s}}\\
+\varphi &= hf_1 - K_{\max,1} = 4.136\ \text{eV} - 1.20\ \text{eV} = \mathbf{2.936\ \text{eV}}
+\end{aligned}
+\]</div>
+<div class="answer">h = 4.136 × 10⁻¹⁵ eV·s, φ = 2.936 eV</div>
+</div></details>
+
+<div class="quiz" data-quiz="q7"></div>
+</section>
+
+<section class="sec" id="s8">
+<h3><span class="num">Section 8</span>Photon momentum</h3>
+<p>Photons are massless energy particles, and like all propagation of pure energy (EM waves) they travel at only one speed, \(c\). So how can something with no mass have momentum? Classical \(p = mv\) gives zero. The answer comes from special relativity, which links energy, momentum and rest mass for anything moving close to \(c\) (lecture 9b pages 8 to 11):</p>
+<div class="eq">
+  <div class="math">\[ E^{2} = p^{2}c^{2} + m_0^{2}c^{4} \]</div>
+  <span class="note">relativistic energy relation</span>
+  <div class="defs">\(E\) = total energy, in J · \(p\) = linear momentum, in kg·m/s · \(m_0\) = rest mass, in kg · \(c = 3\times10^{8}\) m/s</div>
+</div>
+<div class="eq">
+  <div class="math">\[ p_f = \frac{h}{\lambda} \qquad\text{and}\qquad \vec{p}_f = \hbar\,\vec{k} \]</div>
+  <span class="note">photon momentum, as a magnitude and as a vector</span>
+  <div class="defs">\(p_f\) = photon momentum, in kg·m/s · \(h = 6.63\times10^{-34}\) J·s · \(\lambda\) = wavelength, in m · \(\hbar = \frac{h}{2\pi}\) = reduced Planck's constant, \(1.055\times10^{-34}\) J·s · \(\vec{k}\) = wave vector, pointing along the direction of travel, with magnitude \(k = |\vec{k}| = \frac{2\pi}{\lambda}\) (wave number), in rad/m</div>
+</div>
+
+<details class="work"><summary>Worked derivation (lecture 9b pages 10 and 11): p_f = h over λ, then ħk</summary><div class="body">
+<p>A photon has no rest mass, \(m_0 = 0\), so the relativistic relation loses its second term:</p>
+<div class="math">\[
+E_f^{2} = p_f^{2}c^{2} \;\Longrightarrow\; E_f = p_f\,c \qquad (1)
+\]</div>
+<p>Planck's energy quantum with \(f = \frac{c}{\lambda}\):</p>
+<div class="math">\[
+E_f = hf = \frac{hc}{\lambda} \qquad (2)
+\]</div>
+<p>Set (1) equal to (2); the \(c\) cancels:</p>
+<div class="math">\[
+p_f\,c = \frac{hc}{\lambda} \;\Longrightarrow\; p_f = \frac{h}{\lambda}
+\]</div>
+<p>Now recall the wave number \(k = \frac{2\pi}{\lambda}\), so \(\lambda = \frac{2\pi}{k}\):</p>
+<div class="math">\[
+\begin{aligned}
+p_f &= \frac{h}{\;\dfrac{2\pi}{k}\;} = \frac{h}{2\pi}\,k = \hbar k\\
+\vec{p}_f &= \hbar\,\vec{k}
+\end{aligned}
+\]</div>
+<div class="answer">\(p_f = \frac{h}{\lambda} = \hbar k\), pointing along the photon's direction</div>
+</div></details>
+
+<details class="work"><summary>Example (built on lecture 9b pages 10 and 11): green photon</summary><div class="body">
+<div class="givens">\(\lambda = 500\ \text{nm} = 500\times10^{-9}\ \text{m}\), \(h = 6.63\times10^{-34}\ \text{J}\cdot\text{s}\)</div>
+<div class="math">\[
+\begin{aligned}
+p_f &= \frac{h}{\lambda} = \frac{6.63\times10^{-34}\ \text{J}\cdot\text{s}}{500\times10^{-9}\ \text{m}} = \mathbf{1.326\times10^{-27}\ \text{kg}\cdot\text{m/s}}\\
+k &= \frac{2\pi}{\lambda} = \frac{2\pi}{500\times10^{-9}\ \text{m}} = 1.257\times10^{7}\ \text{rad/m}\\
+\hbar k &= (1.055\times10^{-34}\ \text{J}\cdot\text{s})(1.257\times10^{7}\ \text{rad/m}) = 1.326\times10^{-27}\ \text{kg}\cdot\text{m/s}\ \checkmark\\
+E_f &= \frac{hc}{\lambda} = \frac{1240.8\ \text{eV}\cdot\text{nm}}{500\ \text{nm}} = 2.482\ \text{eV}
+\end{aligned}
+\]</div>
+<div class="answer">p_f = 1.326 × 10⁻²⁷ kg·m/s (tiny, but measurable as radiation pressure)</div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Wind has no "weight" you can hold, yet it pushes a sail. Light pushes too: solar sails use exactly this photon momentum. The analogy breaks because wind is made of massive air molecules; a photon's momentum comes from its energy alone, \(p = \frac{E}{c}\).</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>Never use \(p = mv\) for a photon. Use \(p_f = \frac{h}{\lambda}\) or \(p_f = \frac{E_f}{c}\).</li>
+<li>\(h\) versus \(\hbar\): \(p = \frac{h}{\lambda}\) uses \(h\); \(p = \hbar k\) uses \(\hbar = \frac{h}{2\pi}\). Mixing them is off by \(2\pi\).</li>
+<li>For momentum in kg·m/s, use \(h\) in J·s and \(\lambda\) in metres. An eV-based \(h\) gives eV·s/m.</li>
+<li>Shorter wavelength means <b>larger</b> momentum. X-ray photons carry far more momentum than visible ones.</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 8.1 (not from the lecture): an X-ray photon</summary><div class="body">
+<div class="givens">X-ray with \(\lambda = 0.0710\ \text{nm}\). Find its momentum and energy.</div>
+<div class="math">\[
+\begin{aligned}
+p_f &= \frac{6.63\times10^{-34}\ \text{J}\cdot\text{s}}{0.0710\times10^{-9}\ \text{m}} = \mathbf{9.34\times10^{-24}\ \text{kg}\cdot\text{m/s}}\\
+E_f &= \frac{1240.8\ \text{eV}\cdot\text{nm}}{0.0710\ \text{nm}} = 17\,476\ \text{eV} = \mathbf{17.48\ \text{keV}}
+\end{aligned}
+\]</div>
+<div class="answer">p = 9.34 × 10⁻²⁴ kg·m/s, E = 17.48 keV</div>
+</div></details>
+<details class="work practice"><summary>Practice 8.2 (not from the lecture): momentum from energy</summary><div class="body">
+<div class="givens">A 10 keV photon. Use \(p_f = \frac{E_f}{c}\).</div>
+<div class="math">\[
+\begin{aligned}
+E_f &= 10\times10^{3}\ \text{eV} \times 1.602\times10^{-19}\ \text{J/eV} = 1.602\times10^{-15}\ \text{J}\\
+p_f &= \frac{1.602\times10^{-15}\ \text{J}}{3.00\times10^{8}\ \text{m/s}} = \mathbf{5.34\times10^{-24}\ \text{kg}\cdot\text{m/s}}
+\end{aligned}
+\]</div>
+<div class="answer">p = 5.34 × 10⁻²⁴ kg·m/s</div>
+</div></details>
+
+<div class="quiz" data-quiz="q8"></div>
+</section>
+
+<h2 class="part">Part 4 · The Compton effect (Lecture 9b)</h2>
+
+<section class="sec" id="s9">
+<h3><span class="num">Section 9</span>X-ray scattering and the Compton shift</h3>
+<p><b>Classical expectation</b> (lecture 9b page 12). When an EM wave scatters off the atoms of a material, it is re-radiated at the same frequency, so the incident and scattered wavelengths should be equal, \(\lambda_1 = \lambda_2\).</p>
+<p><b>The experiment</b> (pages 13 and 14). X-rays of wavelength \(\lambda\) from a source pass through collimating slits and hit a graphite target. A detector swings around the target and measures the scattered X-rays at scattering angle \(\theta\) (measured from the original direction). The scattered spectrum shows:</p>
+<ul>
+<li>At \(\theta = 0^\circ\): a single peak at the original \(\lambda\).</li>
+<li>At \(\theta = 45^\circ\): two peaks. One at \(\lambda\) and one shifted to a longer wavelength \(\lambda'\), with \(\Delta\lambda \approx 6\times10^{-4}\ \text{nm}\) on the lecture sketch.</li>
+<li>At \(\theta = 90^\circ\): the shifted peak is further out and taller, \(\Delta\lambda \approx 2.2\times10^{-3}\ \text{nm}\) on the sketch.</li>
+</ul>
+<p>The shift in wavelength is called the <b>Compton shift</b>. Compton explained it with Einstein's photons (page 15): the incoming photon collides with a valence electron in the graphite, hands over some of its energy and momentum, and leaves as a scattered photon with less energy, so \(\lambda' > \lambda\). Because the photon loses energy, this is <b>inelastic scattering</b>. The result (derived in Section 10) is:</p>
+<div class="eq">
+  <div class="math">\[ \Delta\lambda = \lambda' - \lambda = \frac{h}{m_0 c}\,(1 - \cos\theta) = \lambda_c\,(1-\cos\theta) \]</div>
+  <span class="note">Compton shift</span>
+  <div class="defs">\(\lambda\) = incident X-ray wavelength, in m or nm · \(\lambda'\) = scattered wavelength, in m or nm · \(\theta\) = scattering angle of the photon, in degrees · \(m_0\) = electron rest mass, \(9.109\times10^{-31}\) kg · \(\lambda_c = \frac{h}{m_0c} \approx 0.00243\ \text{nm}\) = Compton wavelength of the electron</div>
+</div>
+
+<details class="work"><summary>Example (lecture 9b page 14): the shifts at 0°, 45° and 90°</summary><div class="body">
+<div class="givens">\(\lambda_c = 0.00243\ \text{nm}\). Angles from the lecture's three spectra.</div>
+<div class="math">\[
+\begin{aligned}
+\theta = 0^\circ:\quad \Delta\lambda &= 0.00243\,(1 - \cos 0^\circ)\ \text{nm} = \mathbf{0}\\
+\theta = 45^\circ:\quad \Delta\lambda &= 0.00243\,(1 - 0.7071)\ \text{nm} = \mathbf{7.12\times10^{-4}\ \text{nm}}\\
+\theta = 90^\circ:\quad \Delta\lambda &= 0.00243\,(1 - 0)\ \text{nm} = \mathbf{2.43\times10^{-3}\ \text{nm}}
+\end{aligned}
+\]</div>
+<p>So at 0° there is no shift (one peak), and the shift grows with angle, as in the sketches.</p>
+<div class="answer">Δλ = 0, 7.12 × 10⁻⁴ nm and 2.43 × 10⁻³ nm</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture's sketches label the shifts as \(6\times10^{-4}\) nm (45°) and \(2.2\times10^{-3}\) nm (90°). These read as approximate values from measured spectra; the Compton formula from page 21 gives \(7.12\times10^{-4}\) nm and \(2.43\times10^{-3}\) nm. Use the formula values in calculations.</p></div>
+</div></details>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>A cue ball (photon) hits a stationary ball (electron). If it barely grazes it (small \(\theta\)), the cue ball keeps almost all its energy. If it bounces off at a large angle, it hands over much more energy and continues slower. For a photon "slower" is impossible, so losing energy shows up as a longer wavelength instead. The analogy breaks because the photon always moves at \(c\).</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>\(\theta\) is the angle of the <b>scattered photon</b>, measured from the incoming direction, not the electron's recoil angle.</li>
+<li>The shift \(\Delta\lambda\) does <b>not</b> depend on the incident wavelength. The same 0.00243 nm at 90° is huge for X-rays and invisible for light, which is why Compton used X-rays.</li>
+<li>Maximum shift is at \(\theta = 180^\circ\) (photon bounces straight back): \(\Delta\lambda = 2\lambda_c = 0.00486\ \text{nm}\).</li>
+<li>Calculator in degrees mode for \(\cos\theta\).</li>
+<li>Same symbol, different thing: \(\lambda_c\) here is the Compton wavelength, not the photoelectric cut-off wavelength of Section 7.</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 9.1 (not from the lecture): scattered wavelength at 60°</summary><div class="body">
+<div class="givens">X-rays of \(\lambda = 0.0710\ \text{nm}\) scatter at \(\theta = 60^\circ\). Find \(\lambda'\).</div>
+<div class="math">\[
+\begin{aligned}
+\Delta\lambda &= 0.00243\,(1 - \cos 60^\circ)\ \text{nm} = 0.00243\,(0.5)\ \text{nm} = 0.001215\ \text{nm}\\
+\lambda' &= 0.0710\ \text{nm} + 0.001215\ \text{nm} = \mathbf{0.072215\ \text{nm}}
+\end{aligned}
+\]</div>
+<div class="answer">λ′ = 0.0722 nm</div>
+</div></details>
+<details class="work practice"><summary>Practice 9.2 (not from the lecture): the biggest possible shift</summary><div class="body">
+<div class="givens">What is the largest Compton shift, and at what angle?</div>
+<div class="math">\[
+\Delta\lambda_{\max} = \lambda_c\,(1 - \cos 180^\circ) = 0.00243\,(1-(-1))\ \text{nm} = \mathbf{0.00486\ \text{nm}}
+\]</div>
+<div class="answer">0.00486 nm at θ = 180° (back-scattering)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q9"></div>
+</section>
+
+<section class="sec" id="s10">
+<h3><span class="num">Section 10</span>Deriving the Compton formula</h3>
+<p>Treat the scattering as a collision between two particles and apply two conservation laws (lecture 9b pages 16 to 21). Before: a photon with energy \(E_f\), momentum \(\vec{p}_f\), frequency \(f\), and a relativistic electron at rest with rest energy \(m_0c^2\). After: the photon has \(\tilde{E}_f\), \(\tilde{\vec{p}}_f\), \(f'\) and travels at angle \(\theta\); the electron has total energy \(E\) and momentum \(\vec{p}\).</p>
+<div class="eq">
+  <div class="math">\[ E_f + m_0c^{2} = \tilde{E}_f + E \]</div>
+  <span class="note">photon-electron energy balance</span>
+  <div class="defs">\(E_f,\ \tilde{E}_f\) = photon energy before and after, in J · \(m_0c^2\) = electron rest energy, in J · \(E\) = electron's total energy after the collision, in J</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \vec{p}_f = \tilde{\vec{p}}_f + \vec{p}, \qquad \vec{p}_f\cdot\tilde{\vec{p}}_f = |\vec{p}_f|\,|\tilde{\vec{p}}_f|\cos\theta \]</div>
+  <span class="note">momentum balance, and the dot product that brings in the scattering angle</span>
+  <div class="defs">\(\vec{p}_f,\ \tilde{\vec{p}}_f\) = photon momentum before and after, in kg·m/s · \(\vec{p}\) = electron momentum after, in kg·m/s · \(\theta\) = photon scattering angle</div>
+</div>
+<div class="eq">
+  <div class="math">\[ \frac{1}{\tilde{p}_f} - \frac{1}{p_f} = \frac{1}{m_0c}\,(1-\cos\theta) \quad\Longrightarrow\quad \lambda' - \lambda = \frac{h}{m_0c}\,(1-\cos\theta) \]</div>
+  <span class="note">the result, first in momenta and then in wavelengths</span>
+  <div class="defs">\(p_f = \frac{h}{\lambda}\), \(\tilde{p}_f = \frac{h}{\lambda'}\) (Section 8)</div>
+</div>
+
+<details class="work" open><summary>Worked derivation (lecture 9b pages 16 to 21): the Compton shift</summary><div class="body">
+<p><b>Step 1: energy.</b> Move the photon terms together and square both sides (page 17):</p>
+<div class="math">\[
+\begin{aligned}
+E &= (E_f - \tilde{E}_f) + m_0c^{2}\\
+\left[(E_f - \tilde{E}_f) + m_0c^{2}\right]^{2} &= E^{2}
+\end{aligned}
+\]</div>
+<p>The electron obeys \(E^{2} = p^{2}c^{2} + m_0^{2}c^{4}\). Expand the left side:</p>
+<div class="math">\[
+\begin{aligned}
+(E_f - \tilde{E}_f)^{2} + m_0^{2}c^{4} + 2m_0c^{2}(E_f - \tilde{E}_f) &= p^{2}c^{2} + m_0^{2}c^{4}\\
+E_f^{2} - 2\tilde{E}_fE_f + \tilde{E}_f^{2} + 2m_0c^{2}E_f - 2m_0c^{2}\tilde{E}_f &= p^{2}c^{2}
+\end{aligned}
+\]</div>
+<p>(the \(m_0^{2}c^{4}\) terms cancel, page 18). Divide by \(c^{2}\) and regroup:</p>
+<div class="math">\[
+\begin{aligned}
+\frac{E_f^{2}}{c^{2}} - \frac{2\tilde{E}_fE_f}{c^{2}} + \frac{\tilde{E}_f^{2}}{c^{2}} + 2m_0E_f - 2m_0\tilde{E}_f &= p^{2}\\
+\left[\frac{E_f}{c} - \frac{\tilde{E}_f}{c}\right]^{2} + 2m_0c\left[\frac{E_f}{c} - \frac{\tilde{E}_f}{c}\right] &= p^{2}
+\end{aligned}
+\]</div>
+<p>Since a photon has \(p_f = \frac{E_f}{c}\) (page 19):</p>
+<div class="math">\[
+(p_f - \tilde{p}_f)^{2} + 2m_0c\,(p_f - \tilde{p}_f) = p^{2} \qquad (\text{A})
+\]</div>
+<p><b>Step 2: momentum.</b> From \(\vec{p}_f = \tilde{\vec{p}}_f + \vec{p}\), the electron's momentum is \(\vec{p} = \vec{p}_f - \tilde{\vec{p}}_f\). Square it using the dot product:</p>
+<div class="math">\[
+\begin{aligned}
+p^{2} = |\vec{p}|^{2} = \left[\vec{p}_f - \tilde{\vec{p}}_f\right]^{2} &= p_f^{2} + \tilde{p}_f^{2} - 2\,\vec{p}_f\cdot\tilde{\vec{p}}_f\\
+&= p_f^{2} + \tilde{p}_f^{2} - 2\,p_f\tilde{p}_f\cos\theta \qquad (\text{B})
+\end{aligned}
+\]</div>
+<p><b>Step 3: eliminate \(p^{2}\).</b> Set (A) equal to (B) and expand (page 20):</p>
+<div class="math">\[
+\begin{aligned}
+p_f^{2} + \tilde{p}_f^{2} - 2\tilde{p}_fp_f + 2m_0c\,p_f - 2m_0c\,\tilde{p}_f &= p_f^{2} + \tilde{p}_f^{2} - 2p_f\tilde{p}_f\cos\theta\\
+-\tilde{p}_fp_f + m_0c\left[p_f - \tilde{p}_f\right] &= -p_f\tilde{p}_f\cos\theta
+\end{aligned}
+\]</div>
+<p>(the squares cancel and everything was divided by 2). Divide by \(\tilde{p}_fp_f\) and by \(m_0c\):</p>
+<div class="math">\[
+\begin{aligned}
+-\frac{1}{m_0c} + \frac{p_f - \tilde{p}_f}{\tilde{p}_f\,p_f} &= -\frac{\cos\theta}{m_0c}\\
+\frac{1}{\tilde{p}_f} - \frac{1}{p_f} &= \frac{1}{m_0c}\left[1 - \cos\theta\right]
+\end{aligned}
+\]</div>
+<p><b>Step 4: wavelengths.</b> With \(p_f = \frac{h}{\lambda}\) and \(\tilde{p}_f = \frac{h}{\lambda'}\) (page 21), \(\frac{1}{\tilde{p}_f} = \frac{\lambda'}{h}\) and \(\frac{1}{p_f} = \frac{\lambda}{h}\). Multiply through by \(h\):</p>
+<div class="math">\[
+\begin{aligned}
+\lambda' - \lambda &= \frac{h}{m_0c}\left[1 - \cos\theta\right]\\
+\lambda_c &= \frac{h}{m_0c} = \frac{6.63\times10^{-34}\ \text{J}\cdot\text{s}}{(9.109\times10^{-31}\ \text{kg})(3.00\times10^{8}\ \text{m/s})} = 2.43\times10^{-12}\ \text{m} = 0.00243\ \text{nm}
+\end{aligned}
+\]</div>
+<div class="answer">\(\Delta\lambda = \lambda' - \lambda = \lambda_c(1 - \cos\theta)\), with \(\lambda_c \approx 0.00243\) nm</div>
+<div class="callout filled"><span class="tag">Filled in</span><p>The lecture states \(\lambda_c \sim 0.00243\) nm; the substitution of \(h\), \(m_0\) and \(c\) was added. One small slip in the notes was tidied: page 18 ends with "\(= P_2\)", which should be \(p^{2}\) (the electron's momentum squared), as page 19 confirms.</p></div>
+</div></details>
+
+<details class="work"><summary>Example (built on the derivation): where the photon's energy goes at 90°</summary><div class="body">
+<div class="givens">\(\lambda = 0.0710\ \text{nm}\), \(\theta = 90^\circ\), \(\lambda_c = 0.00243\ \text{nm}\), \(hc = 1240.8\ \text{eV}\cdot\text{nm}\)</div>
+<div class="math">\[
+\begin{aligned}
+\lambda' &= 0.0710\ \text{nm} + 0.00243\,(1 - \cos 90^\circ)\ \text{nm} = 0.07343\ \text{nm}\\
+E_f &= \frac{1240.8\ \text{eV}\cdot\text{nm}}{0.0710\ \text{nm}} = 17\,476\ \text{eV}\\
+\tilde{E}_f &= \frac{1240.8\ \text{eV}\cdot\text{nm}}{0.07343\ \text{nm}} = 16\,898\ \text{eV}\\
+K_e &= E_f - \tilde{E}_f = \mathbf{578\ \text{eV}}
+\end{aligned}
+\]</div>
+<p>The energy balance \(E_f + m_0c^2 = \tilde{E}_f + E\) says the electron's kinetic energy \(K_e = E - m_0c^2\) is exactly what the photon lost.</p>
+<div class="answer">λ′ = 0.07343 nm; the electron recoils with 578 eV</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Compton scattering calculator</div>
+  <div class="src">Defaults: θ = 90° (lecture 9b page 14) with λ = 0.0710 nm (an example X-ray wavelength)</div>
+  <div class="controls">
+    <label>\(\theta\) (°) <input type="range" id="cpT" min="0" max="180" step="1" value="90"><output id="cpTo">90</output></label>
+    <label>\(\lambda\) (nm) <input type="number" id="cpL" value="0.0710" min="0.001" max="1" step="0.001"></label>
+    <button class="btn" type="button" id="cpReset">Reset to lecture values</button>
+  </div>
+  <canvas id="cpCanvas" height="220"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>incoming photon</span><span><i style="background:var(--c2)"></i>scattered photon</span><span><i style="background:var(--c3)"></i>recoiling electron</span></div>
+  <div class="readout" id="cpOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>The derivation is the same bookkeeping as a snooker collision: total energy in equals total energy out, and the momentum arrows before add up to the momentum arrows after. The only special rules are relativity's \(E^{2} = p^{2}c^{2} + m_0^{2}c^{4}\) for the electron and \(p = \frac{E}{c}\) for the massless photon. The analogy fails at the end: a snooker ball slows down, a photon's wavelength stretches.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>The electron must be treated relativistically: use \(E^{2} = p^{2}c^{2} + m_0^{2}c^{4}\), not \(\frac{p^2}{2m}\).</li>
+<li>\(E\) in the energy balance is the electron's <b>total</b> energy (rest + kinetic), not its kinetic energy.</li>
+<li>The cross term comes from the dot product: \(\vec{p}_f\cdot\tilde{\vec{p}}_f = p_f\tilde{p}_f\cos\theta\). Forgetting the factor 2 in \(-2p_f\tilde{p}_f\cos\theta\) breaks the cancellation.</li>
+<li>The result is \(\frac{1}{\tilde{p}_f} - \frac{1}{p_f}\) (after minus before), which turns into \(\lambda' - \lambda\), a positive shift.</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 10.1 (not from the lecture): which angle gives a chosen shift?</summary><div class="body">
+<div class="givens">At what angle is \(\Delta\lambda = 0.0010\ \text{nm}\)? (\(\lambda_c = 0.00243\ \text{nm}\))</div>
+<div class="math">\[
+\begin{aligned}
+1 - \cos\theta &= \frac{0.0010}{0.00243} = 0.4115\\
+\cos\theta &= 0.5885 \;\Longrightarrow\; \theta = \mathbf{54.0^\circ}
+\end{aligned}
+\]</div>
+<div class="answer">θ ≈ 54.0°</div>
+</div></details>
+<details class="work practice"><summary>Practice 10.2 (not from the lecture): electron energy for back-scattering</summary><div class="body">
+<div class="givens">\(\lambda = 0.0710\ \text{nm}\) scattered at \(\theta = 180^\circ\). Find the electron's kinetic energy.</div>
+<div class="math">\[
+\begin{aligned}
+\lambda' &= 0.0710 + 0.00486 = 0.07586\ \text{nm}\\
+\tilde{E}_f &= \frac{1240.8}{0.07586}\ \text{eV} = 16\,356\ \text{eV}\\
+K_e &= 17\,476\ \text{eV} - 16\,356\ \text{eV} = \mathbf{1120\ \text{eV}}\ (\approx 1.12\ \text{keV})
+\end{aligned}
+\]</div>
+<div class="answer">K_e ≈ 1.12 keV (the most energy the electron can get from this photon)</div>
+</div></details>
+
+<div class="quiz" data-quiz="q10"></div>
+</section>
+
+<h2 class="part">Part 5 · Practice problem (Lecture 9a)</h2>
+
+<section class="sec" id="s11">
+<h3><span class="num">Section 11</span>Single-slit diffraction minima</h3>
+<p>The Lecture 9a practice problem goes back to wave optics from the previous lecture. Light of wavelength \(\lambda\) passing through one slit of width \(a\) spreads out, and the pattern on a screen has dark points (minima) where waves from different parts of the slit cancel. Minima sit at angles that satisfy:</p>
+<div class="eq">
+  <div class="math">\[ a\sin\theta_m = m\lambda, \qquad m = 1, 2, 3, \ldots \]</div>
+  <span class="note">single-slit minima (dark points)</span>
+  <div class="defs">\(a\) = slit width, in m · \(\theta_m\) = angle of the \(m\)-th minimum from the central axis, in degrees · \(m\) = order of the minimum (whole number, no unit; \(m = 0\) is the bright centre, not a minimum) · \(\lambda\) = wavelength, in m</div>
+</div>
+<p>Because \(\sin\theta \le 1\), the highest order that can appear is the largest whole number \(m\) with \(m \le \frac{a}{\lambda}\). Minima come in pairs, one on each side of the centre, so the total count on the screen is twice that.</p>
+<div class="callout filled"><span class="tag">Filled in</span><p>This practice problem is single-slit diffraction (wave optics), not the quantum topics of Lecture 9. It is kept here because it is the problem Dr. Andrew attached to Lecture 9a. The formula \(a\sin\theta = m\lambda\) is from the course formula sheet.</p></div>
+
+<details class="work"><summary>Example (Lecture 9a practice problem, part a): width of the slit</summary><div class="body">
+<div class="givens">Ultraviolet light, \(\lambda = 300\ \text{nm} = 300\times10^{-9}\ \text{m}\). The 3rd minimum is at \(45^\circ\): \(m = 3\), \(\theta_3 = 45^\circ\).</div>
+<div class="math">\[
+\begin{aligned}
+a\sin\theta_m &= m\lambda\\
+a &= \frac{m\lambda}{\sin\theta_m} = \frac{3\,(300\times10^{-9}\ \text{m})}{\sin(45^\circ)}\\
+&= \mathbf{1.273\times10^{-6}\ \text{m}}
+\end{aligned}
+\]</div>
+<div class="answer">a = 1.273 × 10⁻⁶ m (about 1.27 µm)</div>
+</div></details>
+
+<details class="work"><summary>Example (Lecture 9a practice problem, part b): first minimum and total number of minima</summary><div class="body">
+<div class="givens">\(a = 1.273\times10^{-6}\ \text{m}\), \(\lambda = 300\times10^{-9}\ \text{m}\). First minimum: \(m = 1\).</div>
+<div class="math">\[
+\begin{aligned}
+(1.273\times10^{-6}\ \text{m})\sin\theta_1 &= 300\times10^{-9}\ \text{m}\\
+\theta_1 &= \sin^{-1}\!\left[\frac{300\times10^{-9}}{1.273\times10^{-6}}\right] \approx \mathbf{13.63^\circ}
+\end{aligned}
+\]</div>
+<p>The largest possible angle is \(\theta_m = 90^\circ\), where \(\sin\theta_m = 1\):</p>
+<div class="math">\[
+\begin{aligned}
+m &= \frac{a}{\lambda} = \frac{1.273\times10^{-6}}{300\times10^{-9}} = 4.243\\
+\text{total minima} &= (4.243 \approx 4)(2) = \mathbf{8\ \text{points}}
+\end{aligned}
+\]</div>
+<div class="answer">θ₁ ≈ 13.63°; 8 minima on the screen (4 on each side)</div>
+</div></details>
+
+<details class="work"><summary>Example (Lecture 9a practice problem, part c): narrowing the slit to 1 µm</summary><div class="body">
+<div class="givens">New slit width \(a = 1\ \mu\text{m} = 1\times10^{-6}\ \text{m}\), same \(\lambda = 300\times10^{-9}\ \text{m}\).</div>
+<p>1) Total number of minimum points:</p>
+<div class="math">\[
+\begin{aligned}
+m &= \frac{a}{\lambda} = \frac{1\times10^{-6}\ \text{m}}{300\times10^{-9}\ \text{m}} = 3.33\\
+\text{total minima} &= (3.33 \approx 3)(2) = \mathbf{6\ \text{points}}
+\end{aligned}
+\]</div>
+<p>2) Angle of the first minimum:</p>
+<div class="math">\[
+\theta_1 = \sin^{-1}\!\left[\frac{\lambda}{a}\right] = \sin^{-1}\!\left[\frac{300\times10^{-9}}{1\times10^{-6}}\right] = \mathbf{17.46^\circ}\ \text{(an increase in } \theta)
+\]</div>
+<div class="answer">A narrower slit gives fewer minima (6 instead of 8) and a wider pattern (θ₁ rises from 13.63° to 17.46°)</div>
+</div></details>
+
+<div class="demo">
+  <div class="dtitle">Single-slit pattern and its minima</div>
+  <div class="src">Defaults: the Lecture 9a practice problem, \(\lambda = 300\) nm and \(a = 1.273\ \mu\text{m}\). Try \(a = 1.0\ \mu\text{m}\) for part c.</div>
+  <div class="controls">
+    <label>\(a\) (µm) <input type="range" id="ssA" min="0.3" max="5" step="0.001" value="1.273"><output id="ssAo">1.273</output></label>
+    <label>\(\lambda\) (nm) <input type="range" id="ssL" min="200" max="800" step="1" value="300"><output id="ssLo">300</output></label>
+    <button class="btn" type="button" id="ssReset">Reset to lecture values</button>
+  </div>
+  <canvas id="ssCanvas" height="200"></canvas>
+  <div class="legend"><span><i style="background:var(--c1)"></i>relative intensity</span><span><i style="background:var(--c2)"></i>minima, \(a\sin\theta = m\lambda\)</span></div>
+  <div class="readout" id="ssOut"></div>
+</div>
+
+<div class="callout analogy"><span class="tag">Analogy</span><p>Water waves going through a gap in a harbour wall. A narrow gap makes the waves fan out widely; a wide gap lets them through in a tighter beam. The dark spots are directions where ripples from one half of the gap arrive exactly out of step with ripples from the other half. The analogy is close; the main difference is scale, since light needs a gap only a few wavelengths wide.</p></div>
+
+<div class="callout tricky"><span class="tag">Tricky bits</span><ul>
+<li>For the count, round \(\frac{a}{\lambda}\) <b>down</b> (4.243 gives 4), then double for both sides. Rounding up would put a minimum beyond 90°, which does not exist.</li>
+<li>\(m = 0\) is the central bright maximum, not a minimum. Single-slit minima start at \(m = 1\).</li>
+<li>Don't confuse with the double-slit bright-fringe formula \(d\sin\theta = m\lambda\): same shape, different meaning (\(d\) is slit separation and those are maxima).</li>
+<li>A narrower slit gives a <b>wider</b> pattern (bigger angles) and fewer minima.</li>
+<li>Convert nm and µm to metres (or at least to the same unit) before dividing.</li>
+</ul></div>
+
+<h4>Practice (not from the lecture)</h4>
+<details class="work practice"><summary>Practice 11.1 (not from the lecture): green light through a 2.2 µm slit</summary><div class="body">
+<div class="givens">\(\lambda = 500\ \text{nm}\), \(a = 2.2\ \mu\text{m}\). Find \(\theta_1\) and the total number of minima.</div>
+<div class="math">\[
+\begin{aligned}
+\theta_1 &= \sin^{-1}\!\left[\frac{500\times10^{-9}}{2.2\times10^{-6}}\right] = \sin^{-1}(0.2273) = \mathbf{13.14^\circ}\\
+\frac{a}{\lambda} &= \frac{2.2\times10^{-6}}{500\times10^{-9}} = 4.4 \;\Longrightarrow\; (4)(2) = \mathbf{8\ \text{minima}}
+\end{aligned}
+\]</div>
+<div class="answer">θ₁ = 13.14°, 8 minima</div>
+</div></details>
+<details class="work practice"><summary>Practice 11.2 (not from the lecture): design a slit</summary><div class="body">
+<div class="givens">You want the first minimum of 600 nm light at \(30^\circ\). How wide should the slit be?</div>
+<div class="math">\[
+a = \frac{m\lambda}{\sin\theta_1} = \frac{(1)(600\times10^{-9}\ \text{m})}{\sin 30^\circ} = \frac{600\times10^{-9}\ \text{m}}{0.5} = \mathbf{1.2\times10^{-6}\ \text{m}}
+\]</div>
+<div class="answer">a = 1.2 µm</div>
+</div></details>
+
+<div class="quiz" data-quiz="q11"></div>
+</section>
+
+<section class="sec final" id="final">
+<h3><span class="num">Finish</span>Final exam</h3>
+<p>Twelve questions mixing every part of Lecture 9. Each explanation links back to the section to review. Once you have answered all twelve, a list of your wrong answers appears below the quiz.</p>
+<div class="quiz" data-quiz="final"></div>
+</section>
+
+<section class="sec" id="formulas">
+<h3><span class="num">Reference</span>Formula sheet</h3>
+<button class="btn" id="printSheet" type="button">Print formula sheet</button>
+<ul>
+<li>\(h = 6.63\times10^{-34}\ \text{J}\cdot\text{s}\)</li>
+<li>\(h = 4.136\times10^{-15}\ \text{eV}\cdot\text{s}\)</li>
+<li>\(hc = 1240.8\ \text{eV}\cdot\text{nm}\)</li>
+<li>\(c = 3.00\times10^{8}\ \text{m/s}\)</li>
+<li>\(e = 1.602\times10^{-19}\ \text{C}\)</li>
+<li>\(m_0 = 9.109\times10^{-31}\ \text{kg}\)</li>
+<li>\(k_B = 1.381\times10^{-23}\ \text{J/K}\)</li>
+<li>\(\sigma = 5.67\times10^{-8}\ \text{W/(m}^2\cdot\text{K}^4)\)</li>
+</ul>
+<div class="sheet">
+ <div class="card"><h5>Part 1 · Blackbody radiation</h5>
+  <div class="f"><span class="expr">\[ E_1 = E_2 \]</span><span class="d">energy absorbed = energy emitted at steady state (J)</span><span class="s">Section 1</span></div>
+  <div class="f"><span class="expr">\[ \lambda_{\max}T = 2.898\times10^{-3}\ \text{m}\cdot\text{K} \]</span><span class="d">\(\lambda_{\max}\) peak wavelength (m); \(T\) temperature (K)</span><span class="s">Section 2</span></div>
+  <div class="f"><span class="expr">\[ P(T) = \sigma A T^{4} \]</span><span class="d">\(P\) total power (W); \(A\) surface area (m²); \(T\) in K</span><span class="s">Section 2</span></div>
+  <div class="f"><span class="expr">\[ I(T) = \frac{2ck_BT}{\lambda^{4}} \]</span><span class="d">Rayleigh-Jeans (classical); blows up as \(\lambda \to 0\)</span><span class="s">Section 3</span></div>
+  <div class="f"><span class="expr">\[ E_n = nhf,\qquad \Delta E = hf \]</span><span class="d">\(n\) quantum number (no unit); \(f\) oscillator frequency (Hz); energies in eV or J</span><span class="s">Section 3</span></div>
+  <div class="f"><span class="expr">\[ I(\lambda,T) = \frac{2\pi hc^{2}}{\lambda^{5}}\cdot\frac{1}{\exp\!\left[\frac{hc}{\lambda k_BT}\right]-1} \]</span><span class="d">Planck's law; power intensity per unit wavelength</span><span class="s">Section 3</span></div>
+ </div>
+ <div class="card"><h5>Part 2 · Photoelectric effect</h5>
+  <div class="f"><span class="expr">\[ K_{\max} = e\,\Delta V_s \]</span><span class="d">\(K_{\max}\) max kinetic energy (J, or eV with the same number as \(\Delta V_s\)); \(\Delta V_s\) stopping potential (V)</span><span class="s">Section 4</span></div>
+  <div class="f"><span class="expr">\[ K_{\max} = 0 \ \text{ for } f < f_c \]</span><span class="d">no photocurrent below the cut-off frequency, at any intensity</span><span class="s">Section 5</span></div>
+ </div>
+ <div class="card"><h5>Part 3 · Einstein's photons</h5>
+  <div class="f"><span class="expr">\[ E_f = hf = \frac{hc}{\lambda} \]</span><span class="d">\(E_f\) photon energy (eV or J); \(f\) frequency (Hz); \(\lambda\) wavelength</span><span class="s">Section 6</span></div>
+  <div class="f"><span class="expr">\[ K_{\max} = hf - \varphi \]</span><span class="d">\(\varphi\) work function (eV): Ag 4.73, Al 4.08, Pt 6.35</span><span class="s">Section 6</span></div>
+  <div class="f"><span class="expr">\[ f_c = \frac{\varphi}{h},\qquad \lambda_c = \frac{hc}{\varphi} \]</span><span class="d">cut-off frequency (Hz) and cut-off wavelength (m); no emission for \(\lambda > \lambda_c\)</span><span class="s">Section 7</span></div>
+  <div class="f"><span class="expr">\[ E^{2} = p^{2}c^{2} + m_0^{2}c^{4} \]</span><span class="d">\(E\) total energy (J); \(p\) momentum (kg·m/s); \(m_0\) rest mass (kg)</span><span class="s">Section 8</span></div>
+  <div class="f"><span class="expr">\[ p_f = \frac{E_f}{c} = \frac{h}{\lambda} = \hbar k,\qquad \vec{p}_f = \hbar\vec{k} \]</span><span class="d">\(\hbar = \frac{h}{2\pi}\); \(k = \frac{2\pi}{\lambda}\) wave number (rad/m)</span><span class="s">Section 8</span></div>
+ </div>
+ <div class="card"><h5>Part 4 · Compton effect</h5>
+  <div class="f"><span class="expr">\[ E_f + m_0c^{2} = \tilde{E}_f + E \]</span><span class="d">energy balance; \(E\) electron total energy after (J)</span><span class="s">Section 10</span></div>
+  <div class="f"><span class="expr">\[ \vec{p}_f = \tilde{\vec{p}}_f + \vec{p} \]</span><span class="d">momentum balance (kg·m/s)</span><span class="s">Section 10</span></div>
+  <div class="f"><span class="expr">\[ \lambda' - \lambda = \frac{h}{m_0c}(1-\cos\theta) \]</span><span class="d">\(\theta\) photon scattering angle; \(\lambda_c = \frac{h}{m_0c} \approx 0.00243\) nm (Compton wavelength)</span><span class="s">Sections 9 and 10</span></div>
+ </div>
+ <div class="card"><h5>Part 5 · Single slit (practice problem)</h5>
+  <div class="f"><span class="expr">\[ a\sin\theta_m = m\lambda,\quad m = 1,2,3,\ldots \]</span><span class="d">\(a\) slit width (m); \(\theta_m\) angle of the \(m\)-th minimum; total minima \(= 2\times\) (largest whole \(m \le \frac{a}{\lambda}\))</span><span class="s">Section 11</span></div>
+ </div>
+</div>
+</section>
+<footer>Study guide generated from the lecture. Check flagged notes against your class materials.</footer></main></div>
+<script>window.GUIDE={"title": "Blackbody, Photoelectric and Compton Guide", "quizzes": {"q1": {"title": "Section 1 quiz", "questions": [{"q": "A perfect blackbody sitting in sunlight has stopped warming up. It absorbs 120 W. How much power does it emit?", "options": ["120 W", "0 W", "60 W", "240 W"], "answer": 0, "explain": "At steady state the energy absorbed equals the energy emitted, \\(E_1 = E_2\\), so it emits 120 W. A perfect absorber is also a perfect emitter.", "mistakes": [null, "thinking a perfect absorber cannot emit", "splitting the absorbed power in half", "doubling the absorbed power"], "review": "s1"}, {"q": "A blackbody is heated from 3000 K (red hot) to 5000 K (white hot). What happens to the peak of its intensity curve?", "options": ["It moves to a shorter wavelength and gets higher", "It moves to a longer wavelength and gets higher", "It moves to a shorter wavelength and gets lower", "It stays at the same wavelength and only gets higher"], "answer": 0, "explain": "On the lecture's graph the 5000 K curve lies above the 3000 K curve at every wavelength and peaks further left (shorter \\(\\lambda\\)): hotter means bluer and brighter.", "mistakes": [null, "reversing the direction of the peak shift", "thinking the curves cross", "missing the peak shift (Wien's law)"], "review": "s1"}, {"q": "On the lecture's page 2 graph, how does the classical-physics curve differ from the measured curves?", "options": ["It keeps rising as \\(\\lambda\\) gets shorter, while real curves fall to zero", "It falls to zero at long wavelengths, while real curves keep rising", "It peaks in the infrared at every temperature", "It matches the measured curves everywhere"], "answer": 0, "explain": "The classical (Rayleigh-Jeans) curve grows like \\(\\frac{1}{\\lambda^4}\\), so it shoots up at short wavelengths. Real curves turn over and drop to zero. That mismatch is the ultraviolet catastrophe.", "mistakes": [null, "swapping the short and long wavelength ends", "confusing it with the 3000 K curve", "missing the ultraviolet catastrophe"], "review": "s1"}, {"q": "A blackbody curve peaks at 0.55 µm. What is the frequency of that light?", "options": ["\\(5.45\\times10^{14}\\ \\text{Hz}\\)", "\\(5.45\\times10^{11}\\ \\text{Hz}\\)", "\\(5.45\\times10^{17}\\ \\text{Hz}\\)", "\\(1.83\\times10^{-15}\\ \\text{Hz}\\)"], "answer": 0, "explain": "\\(f = \\frac{c}{\\lambda} = \\frac{3.00\\times10^{8}\\ \\text{m/s}}{0.55\\times10^{-6}\\ \\text{m}} = 5.45\\times10^{14}\\ \\text{Hz}\\).", "mistakes": [null, "converting µm as if it were mm", "converting µm as if it were nm", "dividing \\(\\lambda\\) by \\(c\\) instead of \\(c\\) by \\(\\lambda\\)"], "review": "s1"}]}, "q2": {"title": "Section 2 quiz", "questions": [{"q": "A lamp filament runs at 1727 °C. Treating it as a blackbody, where is its peak wavelength?", "options": ["\\(1.449\\ \\mu\\text{m}\\)", "\\(1.678\\ \\mu\\text{m}\\)", "\\(1.449\\ \\text{mm}\\)", "\\(0.1449\\ \\mu\\text{m}\\)"], "answer": 0, "explain": "Convert to kelvin first: \\(T = 1727 + 273.15 = 2000\\ \\text{K}\\). Then \\(\\lambda_{\\max} = \\frac{2.898\\times10^{-3}\\ \\text{m}\\cdot\\text{K}}{2000\\ \\text{K}} = 1.449\\times10^{-6}\\ \\text{m} = 1.449\\ \\mu\\text{m}\\) (infrared).", "mistakes": [null, "using the Celsius temperature directly", "dropping the \\(10^{-3}\\) from Wien's constant", "slipping a power of ten converting to µm"], "review": "s2"}, {"q": "The absolute temperature of a blackbody is doubled. By what factor does its total radiated power change?", "options": ["16", "2", "4", "8"], "answer": 0, "explain": "Stefan's law \\(P = \\sigma A T^4\\): doubling \\(T\\) multiplies \\(P\\) by \\(2^4 = 16\\).", "mistakes": [null, "treating power as proportional to \\(T\\)", "squaring instead of raising to the fourth power", "cubing instead of raising to the fourth power"], "review": "s2"}, {"q": "A blackbody plate of area 0.020 m² is at 600 K. What total power does it radiate?", "options": ["\\(147\\ \\text{W}\\)", "\\(4.08\\times10^{-4}\\ \\text{W}\\)", "\\(0.245\\ \\text{W}\\)", "\\(7348\\ \\text{W}\\)"], "answer": 0, "explain": "\\(P = \\sigma A T^4 = (5.67\\times10^{-8})(0.020)(600)^4\\ \\text{W} = 147\\ \\text{W}\\).", "mistakes": [null, "using \\(T^2\\) instead of \\(T^4\\)", "using \\(T^3\\) instead of \\(T^4\\)", "leaving out the area \\(A\\) (that is the power per m²)"], "review": "s2"}, {"q": "Star X peaks at 400 nm and star Y at 700 nm. Which statement is right?", "options": ["X is hotter, by a factor of 1.75", "Y is hotter, by a factor of 1.75", "X is hotter, by a factor of 3.06", "X is hotter, by a factor of 9.38"], "answer": 0, "explain": "Wien: \\(T \\propto \\frac{1}{\\lambda_{\\max}}\\), so \\(\\frac{T_X}{T_Y} = \\frac{700}{400} = 1.75\\). The shorter peak wavelength belongs to the hotter star.", "mistakes": [null, "reversing Wien's law (longer peak means hotter)", "squaring the wavelength ratio", "raising the ratio to the fourth power as in Stefan's law"], "review": "s2"}]}, "q3": {"title": "Section 3 quiz", "questions": [{"q": "In the Rayleigh-Jeans law \\(I(T) = \\frac{2ck_BT}{\\lambda^4}\\), the wavelength is halved at fixed \\(T\\). The intensity becomes:", "options": ["16 times larger", "2 times larger", "4 times larger", "32 times larger"], "answer": 0, "explain": "\\(I \\propto \\lambda^{-4}\\), so halving \\(\\lambda\\) gives \\(2^4 = 16\\) times the intensity. Keep doing it and \\(I\\) grows without limit: the ultraviolet catastrophe.", "mistakes": [null, "treating \\(I\\) as proportional to \\(\\frac{1}{\\lambda}\\)", "using \\(\\lambda^2\\) instead of \\(\\lambda^4\\)", "using the \\(\\lambda^5\\) from Planck's prefactor"], "review": "s3"}, {"q": "A wall oscillator has frequency \\(1.0\\times10^{15}\\) Hz. What is the size of one energy quantum \\(\\Delta E\\)?", "options": ["\\(4.136\\ \\text{eV}\\)", "\\(6.63\\times10^{-19}\\ \\text{eV}\\)", "\\(4.136\\times10^{-15}\\ \\text{eV}\\)", "\\(0.4136\\ \\text{eV}\\)"], "answer": 0, "explain": "\\(\\Delta E = hf = (4.136\\times10^{-15}\\ \\text{eV}\\cdot\\text{s})(1.0\\times10^{15}\\ \\text{Hz}) = 4.136\\ \\text{eV}\\). (In joules it is \\(6.63\\times10^{-19}\\ \\text{J}\\).)", "mistakes": [null, "using the J·s value of \\(h\\) but writing the answer in eV", "writing down \\(h\\) without multiplying by \\(f\\)", "slipping a power of ten"], "review": "s3"}, {"q": "A Planck oscillator with \\(f = 2.0\\times10^{14}\\) Hz is in the state \\(n = 5\\). What is its energy \\(E_5\\)?", "options": ["\\(4.136\\ \\text{eV}\\)", "\\(0.8272\\ \\text{eV}\\)", "\\(3.309\\ \\text{eV}\\)", "\\(20.68\\ \\text{eV}\\)"], "answer": 0, "explain": "\\(E_n = nhf = 5(4.136\\times10^{-15}\\ \\text{eV}\\cdot\\text{s})(2.0\\times10^{14}\\ \\text{Hz}) = 4.136\\ \\text{eV}\\).", "mistakes": [null, "giving one quantum \\(hf\\) instead of \\(5hf\\)", "using \\(n - 1 = 4\\) quanta", "using \\(n^2 = 25\\) instead of \\(n\\)"], "review": "s3"}, {"q": "What did Planck assume in order to fix the ultraviolet catastrophe?", "options": ["Oscillators in the cavity walls can only have energies \\(E_n = nhf\\)", "Light travels through space as particles called photons", "Only certain wavelengths can exist inside the cavity", "The cavity temperature can only take discrete values"], "answer": 0, "explain": "Planck quantized the energy of the atomic oscillators in the walls (lecture pages 7 and 8). The photon idea, quantizing light itself, came later from Einstein.", "mistakes": [null, "crediting Einstein's photon idea to Planck", "quantizing wavelength rather than oscillator energy", "quantizing temperature rather than energy"], "review": "s3"}]}, "q4": {"title": "Section 4 quiz", "questions": [{"q": "The stopping potential is measured as 2.2 V. What is \\(K_{\\max}\\) in joules?", "options": ["\\(3.52\\times10^{-19}\\ \\text{J}\\)", "\\(2.2\\ \\text{J}\\)", "\\(1.37\\times10^{19}\\ \\text{J}\\)", "\\(3.52\\times10^{-19}\\ \\text{eV}\\)"], "answer": 0, "explain": "\\(K_{\\max} = e\\Delta V_s = (1.602\\times10^{-19}\\ \\text{C})(2.2\\ \\text{V}) = 3.52\\times10^{-19}\\ \\text{J}\\) (which is 2.2 eV).", "mistakes": [null, "treating eV and J as the same unit", "dividing by \\(e\\) instead of multiplying", "attaching the eV unit to a joule value"], "review": "s4"}, {"q": "The stopping potential is 0.80 V. What is \\(K_{\\max}\\) in electron-volts?", "options": ["\\(0.80\\ \\text{eV}\\)", "\\(1.28\\times10^{-19}\\ \\text{eV}\\)", "\\(4.99\\times10^{18}\\ \\text{eV}\\)", "\\(1.60\\ \\text{eV}\\)"], "answer": 0, "explain": "In eV, \\(K_{\\max}\\) has the same number as \\(\\Delta V_s\\) in volts: \\(K_{\\max} = e(0.80\\ \\text{V}) = 0.80\\ \\text{eV}\\).", "mistakes": [null, "multiplying by \\(1.602\\times10^{-19}\\) when the answer is wanted in eV", "dividing by \\(1.602\\times10^{-19}\\)", "doubling the energy"], "review": "s4"}, {"q": "The fastest photoelectrons leave at \\(6.0\\times10^{5}\\) m/s. What stopping potential stops them?", "options": ["\\(1.02\\ \\text{V}\\)", "\\(2.05\\ \\text{V}\\)", "\\(1.71\\times10^{-6}\\ \\text{V}\\)", "\\(1.64\\times10^{-19}\\ \\text{V}\\)"], "answer": 0, "explain": "\\(K_{\\max} = \\tfrac{1}{2}m_0v^2 = \\tfrac{1}{2}(9.109\\times10^{-31})(6.0\\times10^{5})^2 = 1.64\\times10^{-19}\\ \\text{J}\\), so \\(\\Delta V_s = \\frac{K_{\\max}}{e} = 1.02\\ \\text{V}\\).", "mistakes": [null, "forgetting the \\(\\tfrac{1}{2}\\) in kinetic energy", "not squaring the speed", "not dividing the energy by \\(e\\)"], "review": "s4"}, {"q": "What is the stopping potential?", "options": ["The reverse potential that just reduces the photocurrent to zero", "The forward potential that gives the largest photocurrent", "The energy needed to free an electron from the metal", "The potential at which the photocurrent levels off"], "answer": 0, "explain": "Reversing the battery pushes electrons back. At \\(-\\Delta V_s\\) even the fastest ones are stopped, so the current is zero and \\(K_{\\max} = e\\Delta V_s\\).", "mistakes": [null, "confusing it with the saturation region", "confusing it with the work function", "confusing it with the saturation current plateau"], "review": "s4"}]}, "q5": {"title": "Section 5 quiz", "questions": [{"q": "Light above the cut-off frequency hits a metal. Its intensity is doubled, frequency unchanged. What happens?", "options": ["The photocurrent doubles; the stopping potential stays the same", "The stopping potential doubles", "Both the photocurrent and the stopping potential double", "Nothing changes"], "answer": 0, "explain": "Lecture page 13: higher intensity gives a higher current plateau, but both curves reach zero at the same \\(-\\Delta V_s\\). So \\(K_{\\max}\\) is unchanged.", "mistakes": [null, "the classical prediction that kinetic energy follows intensity", "mixing the number of electrons with their energy", "missing that more light frees more electrons"], "review": "s5"}, {"q": "Light below the cut-off frequency is made 100 times brighter. What is observed?", "options": ["Still no photoelectrons", "Photoelectrons appear after a delay", "Photoelectrons appear with very little kinetic energy", "100 times more photoelectrons than before"], "answer": 0, "explain": "Below \\(f_c\\) no photocurrent is generated, however intense the light (lecture page 15). Brightness cannot make up for too low a frequency.", "mistakes": [null, "the classical energy build-up (lag time) picture", "assuming any light frees some electrons", "scaling a zero current"], "review": "s5"}, {"q": "A \\(K_{\\max}\\) against \\(f\\) line, extended backwards, hits the vertical axis at \\(-3.1\\) eV. What is the metal's work function?", "options": ["\\(3.1\\ \\text{eV}\\)", "\\(-3.1\\ \\text{eV}\\)", "\\(0\\ \\text{eV}\\)", "\\(1.55\\ \\text{eV}\\)"], "answer": 0, "explain": "The vertical intercept is \\(-\\varphi\\) (lecture page 15: \\(-\\varphi_1\\), \\(-\\varphi_2\\)), so \\(\\varphi = 3.1\\ \\text{eV}\\). A work function is always positive.", "mistakes": [null, "keeping the sign of the intercept", "assuming the line passes through the origin", "halving the intercept"], "review": "s5"}, {"q": "Classically, an electron in silver (\\(\\varphi = 4.73\\) eV) collects energy from light of intensity 0.020 W/m² over an area \\(1.0\\times10^{-19}\\) m². How long must it wait?", "options": ["\\(379\\ \\text{s}\\)", "\\(2.37\\times10^{21}\\ \\text{s}\\)", "\\(1.52\\times10^{-39}\\ \\text{s}\\)", "\\(0\\ \\text{s}\\)"], "answer": 0, "explain": "\\(t = \\frac{\\varphi}{IA} = \\frac{(4.73)(1.602\\times10^{-19})\\ \\text{J}}{(0.020)(1.0\\times10^{-19})\\ \\text{W}} = 379\\ \\text{s}\\), about 6 minutes. Experiments show no such lag.", "mistakes": [null, "leaving \\(\\varphi\\) in eV instead of joules", "multiplying by \\(IA\\) instead of dividing", "using the observed result instead of the classical estimate"], "review": "s5"}]}, "q6": {"title": "Section 6 quiz", "questions": [{"q": "Light of \\(f = 1.5\\times10^{15}\\) Hz falls on silver (\\(\\varphi = 4.73\\) eV). What is \\(K_{\\max}\\)?", "options": ["\\(1.474\\ \\text{eV}\\)", "\\(10.934\\ \\text{eV}\\)", "\\(6.204\\ \\text{eV}\\)", "\\(2.124\\ \\text{eV}\\)"], "answer": 0, "explain": "\\(E_f = hf = (4.136\\times10^{-15})(1.5\\times10^{15}) = 6.204\\ \\text{eV}\\), so \\(K_{\\max} = 6.204 - 4.73 = 1.474\\ \\text{eV}\\).", "mistakes": [null, "adding the work function instead of subtracting", "forgetting to subtract the work function", "using aluminium's work function (4.08 eV)"], "review": "s6"}, {"q": "250 nm light falls on aluminium (\\(\\varphi = 4.08\\) eV). What is \\(K_{\\max}\\)?", "options": ["\\(0.883\\ \\text{eV}\\)", "\\(9.043\\ \\text{eV}\\)", "\\(4.963\\ \\text{eV}\\)", "No photoelectrons are emitted"], "answer": 0, "explain": "\\(E_f = \\frac{1240.8\\ \\text{eV}\\cdot\\text{nm}}{250\\ \\text{nm}} = 4.963\\ \\text{eV}\\), so \\(K_{\\max} = 4.963 - 4.08 = 0.883\\ \\text{eV}\\). 250 nm is shorter than aluminium's cut-off (304.1 nm), so electrons are emitted.", "mistakes": [null, "adding the work function", "forgetting the work function", "thinking a wavelength must exceed the cut-off wavelength"], "review": "s6"}, {"q": "In Einstein's picture, what does the intensity of the light measure?", "options": ["The number of photons arriving per unit time", "The energy of each photon", "The frequency of the photons", "The speed of the photons"], "answer": 0, "explain": "Intensity is the number of photons arriving at the metal surface per unit time (lecture 9b page 5). Each photon's energy is \\(hf\\), set by frequency alone.", "mistakes": [null, "the classical idea that brighter light carries more energy per packet", "mixing up intensity and colour", "all photons travel at \\(c\\)"], "review": "s6"}, {"q": "A 2.0 mW beam of 250 nm light. How many photons arrive per second?", "options": ["\\(2.52\\times10^{15}\\ \\text{s}^{-1}\\)", "\\(4.03\\times10^{-4}\\ \\text{s}^{-1}\\)", "\\(1.59\\times10^{-21}\\ \\text{s}^{-1}\\)", "\\(2.52\\times10^{12}\\ \\text{s}^{-1}\\)"], "answer": 0, "explain": "\\(E_f = 4.963\\ \\text{eV} = 7.95\\times10^{-19}\\ \\text{J}\\), so \\(N = \\frac{P}{E_f} = \\frac{2.0\\times10^{-3}\\ \\text{J/s}}{7.95\\times10^{-19}\\ \\text{J}} = 2.52\\times10^{15}\\) photons per second.", "mistakes": [null, "leaving the photon energy in eV", "multiplying power by photon energy", "reading 2.0 mW as 2.0 µW"], "review": "s6"}]}, "q7": {"title": "Section 7 quiz", "questions": [{"q": "A metal has \\(\\varphi = 2.0\\) eV. What is its cut-off wavelength?", "options": ["\\(620.4\\ \\text{nm}\\)", "\\(1.61\\times10^{-3}\\ \\text{nm}\\)", "\\(2481.6\\ \\text{nm}\\)", "\\(4.84\\times10^{14}\\ \\text{nm}\\)"], "answer": 0, "explain": "\\(\\lambda_c = \\frac{hc}{\\varphi} = \\frac{1240.8\\ \\text{eV}\\cdot\\text{nm}}{2.0\\ \\text{eV}} = 620.4\\ \\text{nm}\\).", "mistakes": [null, "inverting the ratio (\\(\\frac{\\varphi}{hc}\\))", "multiplying \\(hc\\) by \\(\\varphi\\)", "computing \\(f_c\\) and labelling it a wavelength"], "review": "s7"}, {"q": "What is the cut-off frequency of aluminium (\\(\\varphi = 4.08\\) eV)?", "options": ["\\(9.865\\times10^{14}\\ \\text{Hz}\\)", "\\(1.014\\times10^{-15}\\ \\text{Hz}\\)", "\\(1.687\\times10^{-14}\\ \\text{Hz}\\)", "\\(6.154\\times10^{33}\\ \\text{Hz}\\)"], "answer": 0, "explain": "\\(f_c = \\frac{\\varphi}{h} = \\frac{4.08\\ \\text{eV}}{4.136\\times10^{-15}\\ \\text{eV}\\cdot\\text{s}} = 9.865\\times10^{14}\\ \\text{Hz}\\).", "mistakes": [null, "inverting \\(\\frac{\\varphi}{h}\\)", "multiplying \\(\\varphi\\) by \\(h\\)", "dividing an eV value by \\(h\\) in J·s"], "review": "s7"}, {"q": "Light of 350 nm falls on aluminium (cut-off wavelength 304.1 nm). What happens?", "options": ["No photoelectrons, because \\(\\lambda > \\lambda_c\\)", "Photoelectrons with \\(K_{\\max} = 0.535\\) eV", "Photoelectrons after a delay, if the light is bright enough", "Photoelectrons with \\(K_{\\max} = 3.545\\) eV"], "answer": 0, "explain": "\\(E_f = \\frac{1240.8}{350} = 3.545\\ \\text{eV}\\), less than \\(\\varphi = 4.08\\ \\text{eV}\\). Equivalently \\(\\lambda > \\lambda_c\\), so the photoelectric effect does not occur.", "mistakes": [null, "taking the size of a negative \\(hf - \\varphi\\)", "the classical build-up picture", "forgetting to subtract the work function"], "review": "s7"}, {"q": "What is the slope of a \\(K_{\\max}\\) against \\(f\\) graph?", "options": ["Planck's constant \\(h\\)", "The work function \\(\\varphi\\)", "\\(-\\varphi\\)", "The speed of light \\(c\\)"], "answer": 0, "explain": "\\(K_{\\max} = hf - \\varphi\\) is a straight line with slope \\(h\\) and intercept \\(-\\varphi\\). The slope is the same for every metal.", "mistakes": [null, "confusing the slope with the intercept", "confusing the slope with the intercept (including its sign)", "mixing it up with \\(\\lambda f = c\\)"], "review": "s7"}]}, "q8": {"title": "Section 8 quiz", "questions": [{"q": "What is the momentum of a 250 nm photon?", "options": ["\\(2.652\\times10^{-27}\\ \\text{kg}\\cdot\\text{m/s}\\)", "\\(4.22\\times10^{-28}\\ \\text{kg}\\cdot\\text{m/s}\\)", "\\(1.66\\times10^{-40}\\ \\text{kg}\\cdot\\text{m/s}\\)", "\\(8.84\\times10^{-36}\\ \\text{kg}\\cdot\\text{m/s}\\)"], "answer": 0, "explain": "\\(p_f = \\frac{h}{\\lambda} = \\frac{6.63\\times10^{-34}\\ \\text{J}\\cdot\\text{s}}{250\\times10^{-9}\\ \\text{m}} = 2.652\\times10^{-27}\\ \\text{kg}\\cdot\\text{m/s}\\).", "mistakes": [null, "using \\(\\hbar\\) instead of \\(h\\)", "multiplying \\(h\\) by \\(\\lambda\\)", "dividing by \\(c\\) an extra time"], "review": "s8"}, {"q": "What is the momentum of a 10 keV X-ray photon?", "options": ["\\(5.34\\times10^{-24}\\ \\text{kg}\\cdot\\text{m/s}\\)", "\\(3.33\\times10^{-5}\\ \\text{kg}\\cdot\\text{m/s}\\)", "\\(4.81\\times10^{-7}\\ \\text{kg}\\cdot\\text{m/s}\\)", "\\(1.78\\times10^{-32}\\ \\text{kg}\\cdot\\text{m/s}\\)"], "answer": 0, "explain": "\\(E_f = 10^{4}\\ \\text{eV} = 1.602\\times10^{-15}\\ \\text{J}\\), so \\(p_f = \\frac{E_f}{c} = 5.34\\times10^{-24}\\ \\text{kg}\\cdot\\text{m/s}\\).", "mistakes": [null, "leaving the energy in eV", "multiplying by \\(c\\) instead of dividing", "dividing by \\(c^2\\) (as for a mass)"], "review": "s8"}, {"q": "A photon has no rest mass. Why does it still carry momentum?", "options": ["With \\(m_0 = 0\\), \\(E^2 = p^2c^2 + m_0^2c^4\\) gives \\(p = \\frac{E}{c}\\), which is not zero", "Because \\(p = mv\\) with \\(v = c\\)", "It doesn't: a massless particle has zero momentum", "Because its wave number is quantized"], "answer": 0, "explain": "Relativity, not \\(p = mv\\), links energy and momentum. Setting \\(m_0 = 0\\) leaves \\(E_f = p_fc\\), and with \\(E_f = \\frac{hc}{\\lambda}\\) that gives \\(p_f = \\frac{h}{\\lambda}\\).", "mistakes": [null, "using the classical \\(p = mv\\)", "applying \\(p = mv\\) with \\(m = 0\\)", "confusing \\(p = \\hbar k\\) with a quantization rule"], "review": "s8"}, {"q": "How does the momentum of a 0.10 nm X-ray photon compare with a 500 nm visible photon?", "options": ["The X-ray photon's is 5000 times larger", "The visible photon's is 5000 times larger", "The X-ray photon's is \\(2.5\\times10^{7}\\) times larger", "They are equal"], "answer": 0, "explain": "\\(p_f = \\frac{h}{\\lambda}\\), so \\(\\frac{p_X}{p_{\\text{vis}}} = \\frac{500\\ \\text{nm}}{0.10\\ \\text{nm}} = 5000\\).", "mistakes": [null, "thinking momentum grows with wavelength", "squaring the wavelength ratio", "thinking all photons have the same momentum because they share the speed \\(c\\)"], "review": "s8"}]}, "q9": {"title": "Section 9 quiz", "questions": [{"q": "What is the Compton shift at \\(\\theta = 90^\\circ\\)?", "options": ["\\(0.00243\\ \\text{nm}\\)", "\\(0\\)", "\\(0.00486\\ \\text{nm}\\)", "\\(0.00352\\ \\text{nm}\\)"], "answer": 0, "explain": "\\(\\Delta\\lambda = \\lambda_c(1 - \\cos 90^\\circ) = 0.00243(1 - 0) = 0.00243\\ \\text{nm}\\). At 90° the shift equals the Compton wavelength.", "mistakes": [null, "taking \\(\\cos 90^\\circ = 1\\)", "using the back-scattering (180°) value", "a calculator in radians mode"], "review": "s9"}, {"q": "X-rays of \\(\\lambda = 0.0500\\) nm scatter at \\(60^\\circ\\). What is \\(\\lambda'\\)?", "options": ["\\(0.05122\\ \\text{nm}\\)", "\\(0.04879\\ \\text{nm}\\)", "\\(0.05243\\ \\text{nm}\\)", "\\(0.0500\\ \\text{nm}\\)"], "answer": 0, "explain": "\\(\\Delta\\lambda = 0.00243(1 - \\cos 60^\\circ) = 0.001215\\ \\text{nm}\\), so \\(\\lambda' = 0.0500 + 0.001215 = 0.05122\\ \\text{nm}\\).", "mistakes": [null, "subtracting the shift", "using \\(1 - \\cos\\theta = 1\\)", "the classical expectation of no shift"], "review": "s9"}, {"q": "Why is the scattered wavelength \\(\\lambda'\\) longer than \\(\\lambda\\)?", "options": ["The photon gives some of its energy and momentum to an electron", "The electron gives energy to the photon", "The photon slows down inside the graphite", "The graphite refracts the X-rays"], "answer": 0, "explain": "Compton: the photon collides with a valence electron and transfers part of its energy. Less energy means lower \\(f\\) and longer \\(\\lambda\\) (inelastic scattering).", "mistakes": [null, "reversing the direction of energy transfer", "treating the photon like a massive ball", "the classical wave picture of lecture page 12"], "review": "s9"}, {"q": "At a fixed angle, the incident X-ray wavelength is doubled. The Compton shift \\(\\Delta\\lambda\\):", "options": ["stays the same", "doubles", "halves", "quadruples"], "answer": 0, "explain": "\\(\\Delta\\lambda = \\frac{h}{m_0c}(1-\\cos\\theta)\\) contains no \\(\\lambda\\), so it does not depend on the incident wavelength.", "mistakes": [null, "assuming the shift is a fixed fraction of \\(\\lambda\\)", "assuming the shift scales like photon energy", "squaring a proportionality that is not there"], "review": "s9"}]}, "q10": {"title": "Section 10 quiz", "questions": [{"q": "In \\(E_f + m_0c^2 = \\tilde{E}_f + E\\), what is \\(E\\)?", "options": ["The electron's total energy after the collision (rest plus kinetic)", "The electron's kinetic energy only", "The scattered photon's energy", "The electron's rest energy"], "answer": 0, "explain": "\\(E\\) is the electron's total relativistic energy, which obeys \\(E^2 = p^2c^2 + m_0^2c^4\\). Its kinetic energy is \\(E - m_0c^2\\).", "mistakes": [null, "forgetting the rest energy is included", "mixing up \\(E\\) and \\(\\tilde{E}_f\\)", "ignoring the energy gained in the collision"], "review": "s10"}, {"q": "What is \\(\\frac{h}{m_0c}\\) for an electron?", "options": ["\\(2.43\\times10^{-12}\\ \\text{m}\\)", "\\(7.28\\times10^{-4}\\ \\text{m}\\)", "\\(8.09\\times10^{-21}\\ \\text{m}\\)", "\\(2.43\\times10^{-3}\\ \\text{m}\\)"], "answer": 0, "explain": "\\(\\frac{h}{m_0c} = \\frac{6.63\\times10^{-34}}{(9.109\\times10^{-31})(3.00\\times10^{8})}\\ \\text{m} = 2.43\\times10^{-12}\\ \\text{m} = 0.00243\\ \\text{nm}\\).", "mistakes": [null, "forgetting to divide by \\(c\\)", "dividing by \\(c^2\\)", "writing the nm value as metres"], "review": "s10"}, {"q": "\\(\\lambda = 0.0710\\) nm X-rays scatter at 90°. What kinetic energy does the electron gain?", "options": ["\\(578\\ \\text{eV}\\)", "\\(17\\,476\\ \\text{eV}\\)", "\\(16\\,898\\ \\text{eV}\\)", "\\(0\\ \\text{eV}\\)"], "answer": 0, "explain": "\\(\\lambda' = 0.07343\\ \\text{nm}\\); \\(E_f = \\frac{1240.8}{0.0710} = 17\\,476\\ \\text{eV}\\), \\(\\tilde{E}_f = \\frac{1240.8}{0.07343} = 16\\,898\\ \\text{eV}\\). The electron gets the difference, 578 eV.", "mistakes": [null, "giving the incident photon energy", "giving the scattered photon energy", "treating the scattering as elastic"], "review": "s10"}, {"q": "Where does \\(p^2 = p_f^2 + \\tilde{p}_f^2 - 2p_f\\tilde{p}_f\\cos\\theta\\) come from?", "options": ["Squaring \\(\\vec{p} = \\vec{p}_f - \\tilde{\\vec{p}}_f\\) and using the dot product", "The energy balance divided by \\(c^2\\)", "Pythagoras, since the photon and electron always leave at right angles", "Setting the electron's rest mass to zero"], "answer": 0, "explain": "Momentum balance \\(\\vec{p}_f = \\tilde{\\vec{p}}_f + \\vec{p}\\) gives \\(\\vec{p} = \\vec{p}_f - \\tilde{\\vec{p}}_f\\). Squaring brings in \\(\\vec{p}_f\\cdot\\tilde{\\vec{p}}_f = p_f\\tilde{p}_f\\cos\\theta\\).", "mistakes": [null, "mixing up the two conservation laws", "dropping the cosine term", "confusing the electron with the photon"], "review": "s10"}]}, "q11": {"title": "Section 11 quiz", "questions": [{"q": "Light of 450 nm passes through a 1.80 µm slit. At what angle is the first minimum?", "options": ["\\(14.48^\\circ\\)", "\\(0.250^\\circ\\)", "\\(30.0^\\circ\\)", "\\(75.5^\\circ\\)"], "answer": 0, "explain": "\\(\\sin\\theta_1 = \\frac{\\lambda}{a} = \\frac{450\\times10^{-9}}{1.80\\times10^{-6}} = 0.250\\), so \\(\\theta_1 = \\sin^{-1}(0.250) = 14.48^\\circ\\).", "mistakes": [null, "not taking the inverse sine", "using \\(m = 2\\)", "using inverse cosine"], "review": "s11"}, {"q": "Light of 420 nm passes through a 1.80 µm slit. How many minima appear on the screen in total?", "options": ["8", "4", "10", "9"], "answer": 0, "explain": "\\(\\frac{a}{\\lambda} = \\frac{1.80\\times10^{-6}}{420\\times10^{-9}} = 4.29\\), round down to 4 orders, two sides: \\((4)(2) = 8\\) minima.", "mistakes": [null, "counting only one side", "rounding 4.29 up to 5", "counting the central maximum as a minimum"], "review": "s11"}, {"q": "The slit is made narrower (same \\(\\lambda\\)). What happens?", "options": ["\\(\\theta_1\\) increases and there are fewer minima", "\\(\\theta_1\\) decreases and there are more minima", "\\(\\theta_1\\) increases and there are more minima", "Nothing changes"], "answer": 0, "explain": "\\(\\sin\\theta_1 = \\frac{\\lambda}{a}\\) grows as \\(a\\) shrinks, and the count \\(\\frac{a}{\\lambda}\\) drops (part c: 13.63° to 17.46°, 8 to 6 minima).", "mistakes": [null, "reversing both effects", "getting the count backwards", "missing that \\(a\\) appears in the formula"], "review": "s11"}, {"q": "The 3rd minimum of 400 nm light is at 45°. How wide is the slit?", "options": ["\\(1.697\\times10^{-6}\\ \\text{m}\\)", "\\(8.485\\times10^{-7}\\ \\text{m}\\)", "\\(5.657\\times10^{-7}\\ \\text{m}\\)", "\\(1.2\\times10^{-6}\\ \\text{m}\\)"], "answer": 0, "explain": "\\(a = \\frac{m\\lambda}{\\sin\\theta_m} = \\frac{3(400\\times10^{-9}\\ \\text{m})}{\\sin 45^\\circ} = 1.697\\times10^{-6}\\ \\text{m}\\).", "mistakes": [null, "multiplying by \\(\\sin\\theta\\) instead of dividing", "using \\(m = 1\\)", "leaving out \\(\\sin\\theta\\)"], "review": "s11"}]}, "final": {"title": "Final exam", "questions": [{"q": "A blackbody's spectrum peaks at 966 nm. What is its temperature?", "options": ["\\(3000\\ \\text{K}\\)", "\\(3.33\\times10^{-4}\\ \\text{K}\\)", "\\(2727\\ \\text{K}\\)", "\\(3.00\\ \\text{K}\\)"], "answer": 0, "explain": "\\(T = \\frac{2.898\\times10^{-3}\\ \\text{m}\\cdot\\text{K}}{966\\times10^{-9}\\ \\text{m}} = 3000\\ \\text{K}\\) (the lecture's red-hot curve).", "mistakes": [null, "dividing \\(\\lambda\\) by Wien's constant", "subtracting 273 from a temperature already in kelvin", "converting nm as if they were µm"], "review": "s2"}, {"q": "A blackbody goes from 3000 K to 5000 K. By what factor does its total radiated power increase?", "options": ["7.72", "1.67", "2.78", "4.63"], "answer": 0, "explain": "Stefan: \\(\\frac{P_2}{P_1} = \\left(\\frac{5000}{3000}\\right)^4 = 7.72\\).", "mistakes": [null, "using \\(T\\) instead of \\(T^4\\)", "using \\(T^2\\)", "using \\(T^3\\)"], "review": "s2"}, {"q": "A wall oscillator vibrates at \\(3.0\\times10^{13}\\) Hz. How big is the energy jump between consecutive quantum states?", "options": ["\\(0.124\\ \\text{eV}\\)", "\\(1.99\\times10^{-20}\\ \\text{eV}\\)", "\\(0.0124\\ \\text{eV}\\)", "\\(0.248\\ \\text{eV}\\)"], "answer": 0, "explain": "\\(\\Delta E = hf = (4.136\\times10^{-15}\\ \\text{eV}\\cdot\\text{s})(3.0\\times10^{13}\\ \\text{Hz}) = 0.124\\ \\text{eV}\\).", "mistakes": [null, "using the J·s value of \\(h\\) with an eV label", "slipping a power of ten", "doubling the jump"], "review": "s3"}, {"q": "The stopping potential is 1.8 V. What is the speed of the fastest photoelectrons?", "options": ["\\(7.96\\times10^{5}\\ \\text{m/s}\\)", "\\(5.63\\times10^{5}\\ \\text{m/s}\\)", "\\(1.99\\times10^{15}\\ \\text{m/s}\\)", "\\(6.33\\times10^{11}\\ \\text{m/s}\\)"], "answer": 0, "explain": "\\(K_{\\max} = e\\Delta V_s = 1.8\\ \\text{eV} = 2.884\\times10^{-19}\\ \\text{J}\\); \\(v = \\sqrt{\\frac{2K_{\\max}}{m_0}} = 7.96\\times10^{5}\\ \\text{m/s}\\).", "mistakes": [null, "forgetting the factor 2", "leaving the energy in eV", "forgetting the square root"], "review": "s4"}, {"q": "Which change raises the stopping potential in a photoelectric experiment?", "options": ["Using light of higher frequency", "Using brighter light of the same frequency", "Using light of longer wavelength", "Using a larger cathode"], "answer": 0, "explain": "\\(e\\Delta V_s = K_{\\max} = hf - \\varphi\\) depends only on \\(f\\) and the metal. Brightness and cathode size change the current, not \\(\\Delta V_s\\).", "mistakes": [null, "the classical intensity picture", "reversing the frequency-wavelength link", "confusing current with stopping potential"], "review": "s5"}, {"q": "180 nm ultraviolet light falls on aluminium (\\(\\varphi = 4.08\\) eV). What is \\(K_{\\max}\\)?", "options": ["\\(2.81\\ \\text{eV}\\)", "\\(10.97\\ \\text{eV}\\)", "\\(6.89\\ \\text{eV}\\)", "\\(0.54\\ \\text{eV}\\)"], "answer": 0, "explain": "\\(E_f = \\frac{1240.8}{180} = 6.893\\ \\text{eV}\\); \\(K_{\\max} = 6.893 - 4.08 = 2.81\\ \\text{eV}\\).", "mistakes": [null, "adding the work function", "forgetting the work function", "using platinum's work function"], "review": "s6"}, {"q": "Which of these wavelengths ejects electrons from silver (\\(\\varphi = 4.73\\) eV, \\(\\lambda_c = 262.3\\) nm)?", "options": ["250 nm", "300 nm", "450 nm", "650 nm"], "answer": 0, "explain": "Emission needs \\(\\lambda < \\lambda_c = 262.3\\ \\text{nm}\\). Only 250 nm qualifies: \\(E_f = \\frac{1240.8}{250} = 4.96\\ \\text{eV} > 4.73\\ \\text{eV}\\).", "mistakes": [null, "thinking \\(\\lambda\\) must be just above the cut-off", "thinking longer wavelength means more energy", "thinking longer wavelength means more energy"], "review": "s7"}, {"q": "What is the momentum of a 0.0500 nm X-ray photon?", "options": ["\\(1.326\\times10^{-23}\\ \\text{kg}\\cdot\\text{m/s}\\)", "\\(2.11\\times10^{-24}\\ \\text{kg}\\cdot\\text{m/s}\\)", "\\(3.315\\times10^{-44}\\ \\text{kg}\\cdot\\text{m/s}\\)", "\\(4.42\\times10^{-32}\\ \\text{kg}\\cdot\\text{m/s}\\)"], "answer": 0, "explain": "\\(p_f = \\frac{h}{\\lambda} = \\frac{6.63\\times10^{-34}}{0.0500\\times10^{-9}}\\ \\text{kg}\\cdot\\text{m/s} = 1.326\\times10^{-23}\\ \\text{kg}\\cdot\\text{m/s}\\).", "mistakes": [null, "using \\(\\hbar\\) instead of \\(h\\)", "multiplying by \\(\\lambda\\)", "dividing by \\(c\\) again"], "review": "s8"}, {"q": "What is the Compton shift for a photon scattered straight back (\\(\\theta = 180^\\circ\\))?", "options": ["\\(0.00486\\ \\text{nm}\\)", "\\(0.00243\\ \\text{nm}\\)", "\\(0\\)", "\\(0.00388\\ \\text{nm}\\)"], "answer": 0, "explain": "\\(\\Delta\\lambda = 0.00243(1 - \\cos 180^\\circ) = 0.00243(2) = 0.00486\\ \\text{nm}\\), the largest possible shift.", "mistakes": [null, "taking \\(1 - \\cos 180^\\circ = 1\\)", "taking \\(\\cos 180^\\circ = 1\\)", "a calculator in radians mode"], "review": "s9"}, {"q": "X-rays of 0.0300 nm scatter at 120°. What is the scattered wavelength?", "options": ["\\(0.03365\\ \\text{nm}\\)", "\\(0.03121\\ \\text{nm}\\)", "\\(0.02635\\ \\text{nm}\\)", "\\(0.03486\\ \\text{nm}\\)"], "answer": 0, "explain": "\\(\\cos 120^\\circ = -0.5\\), so \\(\\Delta\\lambda = 0.00243(1.5) = 0.003645\\ \\text{nm}\\) and \\(\\lambda' = 0.03365\\ \\text{nm}\\).", "mistakes": [null, "taking \\(\\cos 120^\\circ = +0.5\\)", "subtracting the shift", "using the 180° shift"], "review": "s10"}, {"q": "Light of 600 nm passes through a 2.7 µm slit. How many minima appear on the screen?", "options": ["8", "4", "10", "9"], "answer": 0, "explain": "\\(\\frac{a}{\\lambda} = \\frac{2.7\\times10^{-6}}{600\\times10^{-9}} = 4.5\\), round down to 4, both sides: 8 minima.", "mistakes": [null, "counting one side only", "rounding 4.5 up to 5", "counting the central maximum"], "review": "s11"}, {"q": "A metal lit by 220 nm light has a stopping potential of 1.50 V. What is its work function?", "options": ["\\(4.14\\ \\text{eV}\\)", "\\(7.14\\ \\text{eV}\\)", "\\(5.64\\ \\text{eV}\\)", "\\(1.50\\ \\text{eV}\\)"], "answer": 0, "explain": "\\(E_f = \\frac{1240.8}{220} = 5.64\\ \\text{eV}\\) and \\(K_{\\max} = 1.50\\ \\text{eV}\\), so \\(\\varphi = E_f - K_{\\max} = 4.14\\ \\text{eV}\\).", "mistakes": [null, "adding \\(K_{\\max}\\) to the photon energy", "ignoring the stopping potential", "taking \\(\\varphi = e\\Delta V_s\\)"], "review": "s6"}]}}};</script>
+<script>
+window.initDemos = function(){
+  "use strict";
+  var h=6.63e-34, heV=4.136e-15, c=3.00e8, e=1.602e-19, kB=1.381e-23, sig=5.67e-8, b=2.898e-3, HC=1240.8, LC=0.00243;
+  function $(id){ return document.getElementById(id); }
+  function col(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim() || "#888"; }
+  function sci(x,d){ if(x===0) return "0"; d=d||3; var s=x.toExponential(d-1).split("e"), ex=parseInt(s[1],10); return ex===0?s[0]:s[0]+"\\times10^{"+ex+"}"; }
+  function tex(el, lines){ if(!el) return; el.style.overflowX="auto"; el.style.overflowY="hidden"; var t="\\begin{aligned}"+lines.join("\\\\")+"\\end{aligned}";
+    try{ katex.render(t, el, {displayMode:true, throwOnError:false}); }catch(err){ el.textContent=lines.join("  "); } }
+  function canvas(id){ var cv=$(id); if(!cv) return null; var r=window.devicePixelRatio||1, w=cv.clientWidth||600, H=parseInt(cv.getAttribute("height"),10);
+    cv.style.height=H+"px"; cv.width=w*r; cv.height=H*r; var g=cv.getContext("2d"); g.setTransform(r,0,0,r,0,0); g.clearRect(0,0,w,H);
+    g.font="12px "+col("--display"); return {g:g, w:w, h:H}; }
+  function axes(C, L, B, xl, yl){ var g=C.g; g.strokeStyle=col("--muted"); g.lineWidth=1; g.beginPath(); g.moveTo(L,8); g.lineTo(L,C.h-B); g.lineTo(C.w-8,C.h-B); g.stroke();
+    g.fillStyle=col("--muted"); g.fillText(xl, C.w-8-g.measureText(xl).width, C.h-B+16); g.fillText(yl, L+6, 16); }
+  function line(g, pts, color, w, dash){ g.strokeStyle=color; g.lineWidth=w||2; g.setLineDash(dash||[]); g.beginPath();
+    pts.forEach(function(p,i){ if(i) g.lineTo(p[0],p[1]); else g.moveTo(p[0],p[1]); }); g.stroke(); g.setLineDash([]); }
+  var redraws=[];
+  function bind(ids, fn){ ids.forEach(function(id){ var el=$(id); if(el) el.addEventListener("input", fn); }); redraws.push(fn); fn(); }
+  function out(id, v){ var o=$(id); if(o) o.textContent=v; }
+  function planck(lam, T){ return 2*Math.PI*h*c*c/Math.pow(lam,5)/(Math.exp(h*c/(lam*kB*T))-1); }
+
+  /* Section 2: Wien and Stefan */
+  function ws(){ var T=+$("wsT").value, A=+$("wsA").value||0; out("wsTo", T);
+    var lm=b/T, P=sig*A*Math.pow(T,4), C=canvas("wsCanvas"); if(!C) return;
+    var L=40, B=24, xmax=3e-6, W=C.w-L-12, Hh=C.h-B-14, ymax=planck(b/T,T)*1.15, g=C.g;
+    g.fillStyle=col("--grid"); g.fillRect(L+0.4e-6/xmax*W, 8, 0.3e-6/xmax*W, Hh+6);
+    axes(C,L,B,"λ (µm)","I");
+    for(var t=1;t<=2;t++){ var x=L+t*1e-6/xmax*W; g.fillStyle=col("--muted"); g.fillText(String(t), x-3, C.h-B+14); }
+    var pts=[]; for(var i=1;i<=300;i++){ var lam=i/300*xmax; pts.push([L+lam/xmax*W, C.h-B-planck(lam,T)/ymax*Hh]); }
+    line(g, pts, col("--c1"), 2);
+    var xp=L+lm/xmax*W; line(g, [[xp,C.h-B],[xp,8]], col("--c2"), 1.5, [4,3]);
+    tex($("wsOut"), ["\\lambda_{\\max} &= \\frac{2.898\\times10^{-3}\\ \\text{m}\\cdot\\text{K}}{"+T+"\\ \\text{K}} = "+sci(lm,4)+"\\ \\text{m} = "+(lm*1e9).toFixed(1)+"\\ \\text{nm}",
+      "P &= \\sigma A T^4 = (5.67\\times10^{-8})("+A+")("+T+")^4 = "+sci(P,4)+"\\ \\text{W}"]); }
+  bind(["wsT","wsA"], ws);
+  $("wsReset").addEventListener("click", function(){ $("wsT").value=5000; $("wsA").value=1; ws(); });
+
+  /* Section 3: Planck vs Rayleigh-Jeans */
+  function pj(){ var T=+$("pjT").value, lp=+$("pjL").value*1e-6; out("pjTo", T); out("pjLo", (lp*1e6).toFixed(2));
+    var C=canvas("pjCanvas"); if(!C) return; var L=40,B=24,xmax=3e-6,W=C.w-L-12,Hh=C.h-B-14,g=C.g, ymax=planck(b/T,T)*1.3;
+    axes(C,L,B,"λ (µm)","I"); for(var t=1;t<=2;t++){ g.fillStyle=col("--muted"); g.fillText(String(t), L+t*1e-6/xmax*W-3, C.h-B+14); }
+    var p1=[],p2=[]; for(var i=1;i<=400;i++){ var lam=i/400*xmax; p1.push([L+lam/xmax*W, C.h-B-planck(lam,T)/ymax*Hh]);
+      var rj=2*Math.PI*c*kB*T/Math.pow(lam,4); p2.push([L+lam/xmax*W, Math.max(8, C.h-B-rj/ymax*Hh)]); }
+    line(g,p2,col("--c2"),2); line(g,p1,col("--c1"),2);
+    var xp=L+lp/xmax*W; line(g,[[xp,C.h-B],[xp,8]],col("--c3"),1.5,[4,3]);
+    var x=h*c/(lp*kB*T), r=x/(Math.exp(x)-1);
+    tex($("pjOut"), ["x &= \\frac{hc}{\\lambda k_BT} = "+x.toFixed(3)+"\\ \\text{(no unit)}",
+      "\\frac{I_{\\text{Planck}}}{I_{\\text{RJ}}} &= \\frac{x}{e^{x}-1} = "+r.toFixed(3)+"\\ \\text{(ratio)}"]); }
+  bind(["pjT","pjL"], pj);
+  $("pjReset").addEventListener("click", function(){ $("pjT").value=5000; $("pjL").value=1; pj(); });
+
+  /* Section 5: photocurrent against potential difference (aluminium) */
+  function iv(){ var I=+$("ivI").value, lam=+$("ivL").value; out("ivIo", I.toFixed(2)); out("ivLo", lam);
+    var phi=4.08, E=HC/lam, K=E-phi, Vs=Math.max(K,0), C=canvas("ivCanvas"); if(!C) return;
+    var g=C.g, Vmin=-4, Vmax=4, W=C.w-24, Hh=C.h-40, x0=12+(0-Vmin)/(Vmax-Vmin)*W, yb=C.h-24;
+    g.strokeStyle=col("--muted"); g.lineWidth=1; g.beginPath(); g.moveTo(12,yb); g.lineTo(C.w-12,yb); g.moveTo(x0,8); g.lineTo(x0,yb); g.stroke();
+    g.fillStyle=col("--muted"); g.fillText("ΔV (V)", C.w-60, yb+16); g.fillText("photocurrent", x0+6, 16);
+    [-4,-2,2,4].forEach(function(v){ g.fillText(String(v), 12+(v-Vmin)/(Vmax-Vmin)*W-6, yb+14); });
+    function cur(V, Ii){ if(K<=0) return 0; if(V<=-Vs) return 0; var s=Math.min(1,(V+Vs)/(Vs+0.6)); return Ii*(1-Math.pow(1-s,2)); }
+    [[I*0.5,col("--c2")],[I,col("--c1")]].forEach(function(a){ var pts=[]; for(var i=0;i<=300;i++){ var V=Vmin+i/300*(Vmax-Vmin);
+      pts.push([12+(V-Vmin)/(Vmax-Vmin)*W, yb-cur(V,a[0])/2.1*Hh]); } line(g,pts,a[1],2); });
+    if(K>0){ var xs=12+(-Vs-Vmin)/(Vmax-Vmin)*W; g.fillStyle=col("--c3"); g.fillText("−ΔVs", xs-14, yb-6); }
+    tex($("ivOut"), K>0 ? ["E_f &= \\frac{1240.8\\ \\text{eV}\\cdot\\text{nm}}{"+lam+"\\ \\text{nm}} = "+E.toFixed(3)+"\\ \\text{eV}",
+      "K_{\\max} &= E_f - \\varphi = "+E.toFixed(3)+" - 4.08 = "+K.toFixed(3)+"\\ \\text{eV}",
+      "\\Delta V_s &= "+K.toFixed(3)+"\\ \\text{V (same for every intensity)}"]
+      : ["E_f &= "+E.toFixed(3)+"\\ \\text{eV} < \\varphi = 4.08\\ \\text{eV}", "&\\text{no photocurrent at any intensity}"]); }
+  bind(["ivI","ivL"], iv);
+  $("ivReset").addEventListener("click", function(){ $("ivI").value=1; $("ivL").value=200; iv(); });
+
+  /* Section 7: K_max against f for Ag, Al, Pt */
+  var phiSel=4.08;
+  function pe(){ var lam=+$("peL").value||200, f=c/(lam*1e-9), E=heV*f, K=E-phiSel, C=canvas("peCanvas"); if(!C) return;
+    var g=C.g, L=36, B=24, W=C.w-L-12, fmax=3e15, Kmin=-7, Kmax=6, Hh=C.h-B-8;
+    function X(fr){ return L+fr/fmax*W; } function Y(k){ return 8+(Kmax-k)/(Kmax-Kmin)*Hh; }
+    g.strokeStyle=col("--muted"); g.lineWidth=1; g.beginPath(); g.moveTo(L,8); g.lineTo(L,8+Hh); g.moveTo(L,Y(0)); g.lineTo(C.w-12,Y(0)); g.stroke();
+    g.fillStyle=col("--muted"); g.fillText("f (10¹⁵ Hz)", C.w-80, Y(0)+16); g.fillText("Kmax (eV)", L+6, 18);
+    [1,2,3].forEach(function(t){ g.fillText(String(t), X(t*1e15)-3, Y(0)+14); });
+    [[4.73,"--c1"],[4.08,"--c2"],[6.35,"--c3"]].forEach(function(m){ var fc=m[0]/heV;
+      line(g,[[X(0),Y(-m[0])],[X(fc),Y(0)]],col(m[1]),1.5,[4,4]); line(g,[[X(fc),Y(0)],[X(fmax),Y(heV*fmax-m[0])]],col(m[1]),2); });
+    var fx=Math.min(f,fmax); g.fillStyle=col("--ink"); g.beginPath(); g.arc(X(fx), Y(Math.max(K,0)), 5, 0, 7); g.fill();
+    var fc=phiSel/heV, lc=HC/phiSel;
+    tex($("peOut"), ["E_f &= \\frac{hc}{\\lambda} = \\frac{1240.8\\ \\text{eV}\\cdot\\text{nm}}{"+lam+"\\ \\text{nm}} = "+E.toFixed(3)+"\\ \\text{eV}",
+      K>0 ? "K_{\\max} &= E_f - \\varphi = "+E.toFixed(3)+" - "+phiSel+" = "+K.toFixed(3)+"\\ \\text{eV},\\quad \\Delta V_s = "+K.toFixed(3)+"\\ \\text{V}"
+          : "E_f - \\varphi &= "+K.toFixed(3)+"\\ \\text{eV} < 0:\\ \\text{no photoelectrons}",
+      "f_c &= \\frac{\\varphi}{h} = "+sci(fc,4)+"\\ \\text{Hz},\\quad \\lambda_c = \\frac{hc}{\\varphi} = "+lc.toFixed(1)+"\\ \\text{nm}"]); }
+  document.querySelectorAll("#peSeg button").forEach(function(bt){ bt.addEventListener("click", function(){
+    document.querySelectorAll("#peSeg button").forEach(function(x){ x.setAttribute("aria-pressed","false"); });
+    bt.setAttribute("aria-pressed","true"); phiSel=+bt.getAttribute("data-phi"); pe(); }); });
+  bind(["peL"], pe);
+  $("peReset").addEventListener("click", function(){ $("peL").value=200; document.querySelector('#peSeg button[data-phi="4.08"]').click(); });
+
+  /* Section 10: Compton */
+  function cp(){ var th=+$("cpT").value, lam=+$("cpL").value||0.0710; out("cpTo", th);
+    var r=th*Math.PI/180, dl=LC*(1-Math.cos(r)), lp=lam+dl, E1=HC/lam, E2=HC/lp, C=canvas("cpCanvas"); if(!C) return;
+    var g=C.g, cx=C.w*0.45, cy=C.h*0.55, R=Math.min(C.w*0.4, C.h*0.42);
+    var p1=1/lam, p2=1/lp, px=p1-p2*Math.cos(r), py=-p2*Math.sin(r), pe_=Math.hypot(px,py);
+    line(g,[[cx-R,cy],[cx,cy]],col("--c1"),2.5);
+    line(g,[[cx,cy],[cx+R*Math.cos(r),cy-R*Math.sin(r)]],col("--c2"),2.5);
+    if(pe_>0){ var s=R*0.9/ (p1*1.0); line(g,[[cx,cy],[cx+px*s,cy-py*s]],col("--c3"),2.5); }
+    line(g,[[cx,cy],[cx+R,cy]],col("--muted"),1,[3,4]);
+    g.strokeStyle=col("--muted"); g.beginPath(); g.arc(cx,cy,26,-r,0); g.stroke();
+    g.fillStyle=col("--muted"); g.fillText("θ", cx+30, cy-6); g.fillStyle=col("--ink"); g.beginPath(); g.arc(cx,cy,5,0,7); g.fill();
+    tex($("cpOut"), ["\\Delta\\lambda &= \\lambda_c(1-\\cos\\theta) = 0.00243\\,(1-\\cos "+th+"^\\circ) = "+dl.toFixed(5)+"\\ \\text{nm}",
+      "\\lambda' &= "+lam.toFixed(4)+" + "+dl.toFixed(5)+" = "+lp.toFixed(5)+"\\ \\text{nm}",
+      "E_f &= \\frac{1240.8}{"+lam.toFixed(4)+"} = "+E1.toFixed(0)+"\\ \\text{eV},\\quad \\tilde{E}_f = "+E2.toFixed(0)+"\\ \\text{eV}",
+      "K_e &= E_f - \\tilde{E}_f = "+(E1-E2).toFixed(0)+"\\ \\text{eV}"]); }
+  bind(["cpT","cpL"], cp);
+  $("cpReset").addEventListener("click", function(){ $("cpT").value=90; $("cpL").value="0.0710"; cp(); });
+
+  /* Section 11: single slit */
+  function ss(){ var a=+$("ssA").value*1e-6, lam=+$("ssL").value*1e-9; out("ssAo", (a*1e6).toFixed(3)); out("ssLo", Math.round(lam*1e9));
+    var C=canvas("ssCanvas"); if(!C) return; var g=C.g, L=12, B=24, W=C.w-24, Hh=C.h-B-12, yb=C.h-B;
+    function X(deg){ return L+(deg+90)/180*W; }
+    g.strokeStyle=col("--muted"); g.lineWidth=1; g.beginPath(); g.moveTo(L,yb); g.lineTo(C.w-12,yb); g.stroke();
+    g.fillStyle=col("--muted"); [-90,-45,0,45,90].forEach(function(d){ g.fillText(d+"°", X(d)-10, yb+14); });
+    var pts=[]; for(var i=0;i<=600;i++){ var d=-90+i/600*180, be=Math.PI*a*Math.sin(d*Math.PI/180)/lam, I=be===0?1:Math.pow(Math.sin(be)/be,2); pts.push([X(d), yb-I*Hh]); }
+    line(g,pts,col("--c1"),2);
+    var mmax=Math.floor(a/lam+1e-9); for(var m=1;m<=mmax;m++){ var d=Math.asin(Math.min(1,m*lam/a))*180/Math.PI; [d,-d].forEach(function(dd){ line(g,[[X(dd),yb],[X(dd),yb-Hh*0.25]],col("--c2"),1.5); }); }
+    var th1=a>=lam ? Math.asin(lam/a)*180/Math.PI : NaN;
+    tex($("ssOut"), [ isNaN(th1) ? "\\lambda > a:\\ \\text{no minima at all}" : "\\theta_1 &= \\sin^{-1}\\!\\left[\\frac{\\lambda}{a}\\right] = \\sin^{-1}\\!\\left["+(lam/a).toFixed(4)+"\\right] = "+th1.toFixed(2)+"^\\circ",
+      "\\frac{a}{\\lambda} &= "+(a/lam).toFixed(3)+" \\;\\Rightarrow\\; ("+mmax+")(2) = "+(2*mmax)+"\\ \\text{minima}"]); }
+  bind(["ssA","ssL"], ss);
+  $("ssReset").addEventListener("click", function(){ $("ssA").value=1.273; $("ssL").value=300; ss(); });
+
+  var rt; window.addEventListener("resize", function(){ clearTimeout(rt); rt=setTimeout(function(){ redraws.forEach(function(f){ f(); }); }, 150); });
+  if(window.matchMedia){ var mq=window.matchMedia("(prefers-color-scheme: dark)"); if(mq.addEventListener) mq.addEventListener("change", function(){ redraws.forEach(function(f){ f(); }); }); }
+};
+
+</script>
+<script>
+/* Study guide engine: quizzes, saved progress, sidebar scores, final exam review,
+   math typesetting, active section highlight, print formula sheet.
+   Reads window.GUIDE = {title, quizzes:{id:{title, questions:[{q, options[4], answer, explain, mistakes[4], review}]}}}
+   Tested once; guides should not modify this file. */
+(function(){
+  "use strict";
+  var G = window.GUIDE || {quizzes:{}};
+  var KEY = "guide:" + String(G.title||document.title).toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  var L = ["A","B","C","D","E"];
+  var state = load();
+
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  function typeset(root){
+    if (window.renderMathInElement){
+      try{ renderMathInElement(root||document.body,{
+        delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],
+        throwOnError:false }); }catch(e){}
+    }
+  }
+  window.typeset = typeset;
+
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+
+  function score(id){
+    var qs=G.quizzes[id].questions, a=state[id]||[], n=0, right=0;
+    qs.forEach(function(q,i){ if(a[i]!=null){ n++; if(a[i]===q.answer) right++; } });
+    return {n:n, right:right, total:qs.length};
+  }
+
+  function updateChip(id){
+    var s=score(id);
+    document.querySelectorAll('[data-chip="'+id+'"]').forEach(function(c){
+      c.textContent = s.n ? (s.right+"/"+s.total) : "";
+      c.classList.toggle("done", s.n===s.total);
+    });
+    var box=document.querySelector('.quiz[data-quiz="'+id+'"] .score');
+    if (box) box.textContent = "Score: "+s.right+"/"+s.total + (s.n<s.total ? "  ("+s.n+" answered)" : "");
+  }
+
+  function explanation(id, q, chosen){
+    var html = chosen===q.answer
+      ? '<b class="ok">Correct.</b> '
+      : '<b class="no">Not quite.</b> You chose '+L[chosen]+((q.mistakes&&q.mistakes[chosen])?', which comes from '+q.mistakes[chosen]+'.':'.')+' The answer is '+L[q.answer]+'. ';
+    html += q.explain || "";
+    if (q.review){ var t=document.getElementById(q.review); var name=t?(t.querySelector("h3 .num")||{}).textContent||q.review:q.review;
+      html += ' <a href="#'+q.review+'">Review: '+name+'</a>'; }
+    return html;
+  }
+
+  function renderQuestion(id, i, item){
+    var q=G.quizzes[id].questions[i], chosen=(state[id]||[])[i];
+    item.innerHTML="";
+    item.appendChild(el("div","qq",'<span class="qn">'+(i+1)+'.</span>'+q.q));
+    var opts=el("div","opts");
+    q.options.forEach(function(o,k){
+      var b=el("button","opt",'<span class="L">'+L[k]+'</span><span>'+o+'</span>');
+      b.type="button";
+      if (chosen!=null){ b.disabled=true; if(k===q.answer) b.classList.add("right"); else if(k===chosen) b.classList.add("wrong"); }
+      else b.addEventListener("click",function(){ (state[id]=state[id]||[])[i]=k; save(); renderQuestion(id,i,item); updateChip(id); if(id==="final") renderReview(); });
+      opts.appendChild(b);
+    });
+    item.appendChild(opts);
+    if (chosen!=null) item.appendChild(el("div","expl",explanation(id,q,chosen)));
+    typeset(item);
+  }
+
+  function renderReview(){
+    var box=document.getElementById("finalReview"); if(!box||!G.quizzes.final) return;
+    var s=score("final"); box.innerHTML="";
+    if (s.n<s.total) return;
+    var qs=G.quizzes.final.questions, a=state.final, wrong=[];
+    qs.forEach(function(q,i){ if(a[i]!==q.answer) wrong.push(i); });
+    var h='<h4>Review my wrong answers</h4>';
+    if(!wrong.length) h+='<p>All '+s.total+' correct. Nothing to review.</p>';
+    else { h+='<ol class="plain review">'; wrong.forEach(function(i){ var q=qs[i];
+      h+='<li><b>Q'+(i+1)+'.</b> '+q.q+'<br>You chose '+L[a[i]]+': '+q.options[a[i]]+'<br>Correct: '+L[q.answer]+': '+q.options[q.answer]+(q.review?'<br><a href="#'+q.review+'">Review this section</a>':'')+'</li>'; });
+      h+='</ol>'; }
+    box.innerHTML=h; typeset(box);
+  }
+
+  function renderQuiz(box){
+    var id=box.getAttribute("data-quiz"), Q=G.quizzes[id];
+    if(!Q){ box.innerHTML='<div class="quiz-head"><span class="qt">Missing quiz data: '+id+'</span></div>'; return; }
+    box.innerHTML="";
+    var head=el("div","quiz-head",'<span class="qt">'+(Q.title||"Quiz")+'</span><span class="score"></span>');
+    var list=el("div","qlist");
+    Q.questions.forEach(function(_,i){ var it=el("div","qitem"); list.appendChild(it); renderQuestion(id,i,it); });
+    var foot=el("div","quiz-foot",'<span>'+Q.questions.length+' questions</span>');
+    var reset=el("button","btn","Reset"); reset.type="button";
+    reset.addEventListener("click",function(){ delete state[id]; save(); renderQuiz(box); if(id==="final") renderReview(); });
+    foot.appendChild(reset);
+    box.appendChild(head); box.appendChild(list); box.appendChild(foot);
+    if(id==="final"){ var r=el("div",""); r.id="finalReview"; r.style.padding="0 16px 8px"; box.appendChild(r); renderReview(); }
+    updateChip(id);
+  }
+
+  function init(){
+    document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz);
+    Object.keys(G.quizzes).forEach(updateChip);
+    var ra=document.getElementById("resetAll");
+    if(ra) ra.addEventListener("click",function(){ if(confirm("Clear all quiz answers and scores for this guide?")){ state={}; save(); document.querySelectorAll(".quiz[data-quiz]").forEach(renderQuiz); } });
+    var pb=document.getElementById("printSheet");
+    if(pb) pb.addEventListener("click",function(){ document.body.classList.add("print-sheet"); window.print(); });
+    window.addEventListener("afterprint",function(){ document.body.classList.remove("print-sheet"); });
+    if("IntersectionObserver" in window){
+      var links={}; document.querySelectorAll('nav.toc a[href^="#"]').forEach(function(a){ links[a.getAttribute("href").slice(1)]=a; });
+      var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&links[e.target.id]){
+        Object.keys(links).forEach(function(k){ links[k].classList.remove("active"); }); links[e.target.id].classList.add("active"); } }); },{rootMargin:"-20% 0px -70% 0px"});
+      document.querySelectorAll("section.sec[id]").forEach(function(s){ io.observe(s); });
+    }
+    typeset();
+    if (typeof window.initDemos==="function"){ try{ window.initDemos(); }catch(e){ console.error(e); } }
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",function(){ waitKatex(init); }); else waitKatex(init);
+  function waitKatex(fn){ var t=0; (function w(){ if(window.renderMathInElement||t++>40) fn(); else setTimeout(w,50); })(); }
+})();
+
+</script>
+</body></html>
