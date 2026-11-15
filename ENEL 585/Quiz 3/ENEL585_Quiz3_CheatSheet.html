@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENEL 585 Quiz 3 Sheet</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{--ink:#111;--mut:#555;--rule:#999;--acc:#9b1118;--box:#f3f3f3;--bg:#fff}
+@page{size:letter;margin:0.22in}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:6.9pt/1.22 "Helvetica Neue",Arial,sans-serif}
+.page{width:8.06in;height:10.53in;overflow:hidden;columns:3;column-gap:0.1in;column-rule:0.4pt solid #bbb;column-fill:auto}
+.page+.page{break-before:page;page-break-before:always}
+.hdr{column-span:all;display:flex;justify-content:space-between;align-items:baseline;border-bottom:1.2pt solid var(--acc);margin-bottom:2pt;padding-bottom:1pt}
+.hdr b{font-size:8pt;white-space:nowrap;margin-right:6pt;color:var(--acc)}
+.hdr span{font-size:5.9pt;color:var(--mut)}
+h2{font-size:7.2pt;margin:3pt 0 1pt;padding:0.6pt 2pt;background:var(--acc);color:#fff;break-after:avoid}
+h3{font-size:6.8pt;margin:2.5pt 0 0.5pt;color:var(--acc);border-bottom:0.4pt solid var(--rule);break-after:avoid}
+p{margin:0.8pt 0}
+ol,ul{margin:0.5pt 0;padding-left:9pt}
+li{margin:0.3pt 0}
+.box{background:var(--box);border:0.5pt solid #bbb;padding:1.5pt 2.5pt;margin:1.5pt 0;break-inside:avoid}
+.key{border:0.8pt solid var(--acc);background:#fff}
+table{border-collapse:collapse;width:100%;margin:1pt 0;break-inside:avoid}
+th,td{border:0.4pt solid #aaa;padding:0.6pt 1.2pt;vertical-align:top;text-align:left}
+th{background:#e4e4e4;font-weight:700}
+.sm{font-size:6pt}
+.mut{color:var(--mut)}
+.katex{font-size:1.06em}
+.katex-display{margin:1pt 0}
+.nb{break-inside:avoid}
+b.r{color:var(--acc)}
+</style>
+</head>
+<body>
+
+<!-- ======================= SIDE 1: TOPIC 10 + LAB 3 ======================= -->
+<div class="page">
+<div class="hdr"><b>ENEL 585 Quiz 3 · Side 1: Topic 10 Rectifiers + Lab 3</b><span>Notation as in the slides: $\theta=\omega t$, $\hat V_g$ = peak of $v_g$ (problems write $V_g$), $X_c=\omega L_c$, $x=X_cI_d/\hat V_g$, $\langle\cdot\rangle$ = average. Show every interval and equation (no working = max half marks).</span></div>
+
+<h2>A. General method for ANY rectifier problem</h2>
+<div class="box key">
+<ol>
+<li><b>Model the dc side.</b> $L_d$ large $\Rightarrow i_d=I_d$ (a current source). Check: $X_{L_d}=2\pi f_{\text{rip}}L_d\gg R$? ($f_{\text{rip}}$: half-wave $f$, 1φ bridge $2f$, 3φ bridge $6f$.) If not, $i_d\approx v_d/R$ and $i_g$ is closer to a sinusoid.</li>
+<li><b>Split the cycle</b> ($0$ to $2\pi$ in $\theta$) at: zero crossings of $v_g$, where phases cross (3φ), firing instants $\alpha,\ \pi+\alpha$, end of overlap $\alpha+u$.</li>
+<li><b>Method of assumed states</b> in each interval: guess each device on/off, solve the circuit, then check
+<br>on: $i\ge 0$ ✓ &nbsp; off: $v_{AK}\le 0$ ✓ (diode). Fails → flip it, re-solve.
+<br><b>Thyristor:</b> turns on only if $v_{AK}>0$ <i>and</i> gated; turns off only when $i\to0$ (so it keeps conducting after $v_g$ reverses: $v_d$ dips below 0).
+<br><b>With $L_c$:</b> the current in $L_c$ cannot jump, so incoming and outgoing devices are <i>both</i> on (overlap); get $v_d$ from KVL.</li>
+<li><b>Sketch</b> $v_d$ and $i_g$ vs $\theta$; label which devices conduct in each interval.</li>
+<li><b>Average:</b> $\langle v_d\rangle=\frac{1}{\Theta}\int_{\Theta} v_d\,d\theta$ ($\Theta$ = repeat period). Steady state $\langle v_{L_d}\rangle=0\Rightarrow\langle v_d\rangle=V_o+I_dR$.
+<br>$\int_a^b\sin\theta\,d\theta=\cos a-\cos b,\quad \int_a^b\cos\theta\,d\theta=\sin b-\sin a$</li>
+<li><b>Overlap $u$</b> (volt-seconds that ramp the $L_c$ current): $\displaystyle \omega L_c\,\Delta i_{L_c}\cdot n_L=\int_{\alpha}^{\alpha+u}v_{\text{loop}}\,d\theta$ ($n_L$ = no. of $L_c$ in the commutating loop, $\Delta i$ = change in each).
+<br>Drop: $\Delta\langle v_d\rangle=\dfrac{(\text{commutations per }2\pi)\times(\text{area lost each})}{2\pi}$.</li>
+<li><b>Power:</b> $P=\langle v_d\rangle I_d$ (lossless), $S=V_{g,\text{rms}}I_{g,\text{rms}}$, $k_p=P/S$; $Q$ from the fundamental of $i_g$ (Section D).</li>
+</ol>
+</div>
+
+<h2>B. Results table (diode = set $\alpha=0$)</h2>
+<table class="sm">
+<tr><th>Circuit</th><th>$\langle v_d\rangle$ ($L_c=0$)</th><th>Overlap equation</th><th>Drop $\Delta\langle v_d\rangle$</th></tr>
+<tr><td>Half-wave + freewheel diode</td><td>$\hat V_g/\pi$<br><span class="mut">SCR + FWD: $\frac{\hat V_g}{2\pi}(1+\cos\alpha)$</span></td><td>$X_cI_d=\hat V_g(1-\cos u)$</td><td>$\dfrac{X_cI_d}{2\pi}$</td></tr>
+<tr><td>Half-wave, 2 SCRs ($S_2$ at $\pi+\alpha$)</td><td>$\frac{\hat V_g}{\pi}\cos\alpha$</td><td>$X_cI_d=\hat V_g[\cos\alpha-\cos(\alpha+u)]$</td><td>$\dfrac{X_cI_d}{2\pi}$</td></tr>
+<tr><td>Centre-tapped ($\pm v_g$, 2 diodes)</td><td>$2\hat V_g/\pi$</td><td>$X_cI_d=\hat V_g(1-\cos u)$<br><span class="mut">loop $2v_g$, 2 $L_c$, each $\Delta i=I_d$</span></td><td>$\dfrac{X_cI_d}{\pi}$</td></tr>
+<tr><td><b>1φ bridge</b> (4 diodes / 4 SCRs)</td><td>$\frac{2\hat V_g}{\pi}\cos\alpha$</td><td>$2X_cI_d=\hat V_g[\cos\alpha-\cos(\alpha+u)]$<br><span class="mut">$i_g$ swings $-I_d\to I_d$</span></td><td>$\dfrac{2X_cI_d}{\pi}$</td></tr>
+<tr><td>Hybrid bridge (2 SCR + 2 D)</td><td>$\frac{\hat V_g}{\pi}(1+\cos\alpha)\ge0$</td><td colspan="2">freewheels ($v_d=0$) for $\pi\to\pi+\alpha$: <b>cannot invert</b></td></tr>
+<tr><td><b>3φ bridge</b> (6 pulse)</td><td>$\frac{3\sqrt3}{\pi}\hat V_g\cos\alpha$<br>$=1.35V_{LL}\cos\alpha$</td><td>$2X_cI_d=\sqrt3\hat V_g[\cos\alpha-\cos(\alpha+u)]$<br><span class="mut">$\hat V_g$ = phase peak; $v_d=v_{\max}-v_{\min}$</span></td><td>$\dfrac{3X_cI_d}{\pi}$</td></tr>
+<tr><td>Square wave $\pm V_s$, period $T$, bridge</td><td>$V_s$</td><td>$t_u=2L_cI_d/V_s$ ($v_d=0$, $i_s$ slope $\pm V_s/L_c$)</td><td>$\dfrac{4L_cI_d}{T}$</td></tr>
+</table>
+<div class="box">
+<b>Solve $u$:</b> $u=\cos^{-1}\!\big(\cos\alpha-k\,x\big)-\alpha$, with $k=1$ (half-wave, centre-tap), $2$ (1φ bridge), $2/\sqrt3$ (3φ). Diode, small $u$: $1-\cos u\approx u^2/2\Rightarrow u\propto\sqrt{L_cI_d}$ (halve $I_d$ → $u\div\sqrt2$, drop $\div2$).
+<br><b>Angle ↔ time:</b> $t_u=u_{\text{rad}}/\omega$, $u^\circ=360^\circ f\,t_u$. &nbsp; Measured overlap → $L_c$: compute $u$, then $X_c$ from the overlap equation, $L_c=X_c/\omega$.
+<br><b>Lossless "resistance":</b> $\langle v_d\rangle=V_{d0}\cos\alpha-R_cI_d$, $R_c=\frac{2X_c}{\pi}$ (1φ), $\frac{3X_c}{\pi}$ (3φ). $L_c$ stores energy and returns it to $v_g$: no loss (a real $R_c$ dissipates). E.g. battery charger: $\frac{2\hat V_g}{\pi}\cos\alpha-\frac{2X_c}{\pi}I_B=E_B+R_BI_B$.
+<br><b>Why the 1φ bridge drop is $2\times$ centre-tap:</b> its $L_c$ current changes by $2I_d$ per commutation, not $I_d$.
+</div>
+
+<h2>C. Phase control, inversion, commutation failure</h2>
+<ul>
+<li>$I_d>0$ always, so $P=\langle v_d\rangle I_d$ has the sign of $\langle v_d\rangle$. $\alpha<90^\circ$: rectifier. $\alpha>90^\circ$: $\langle v_d\rangle<0$, <b>inverter</b>; the dc source must be reversed ($V_o<0$) and supplies the grid.</li>
+<li>Inversion needs a path that keeps $v_d=v_g$ after $v_g<0$ (an SCR pair). A freewheel diode (half-wave FWD, hybrid bridge) clamps $v_d\ge0$: no inversion.</li>
+<li><b>Limit:</b> overlap must end before $\pi$: $\alpha+u<\pi$. Extinction angle $\gamma=\pi-\alpha-u$ (outgoing SCR reverse biased for $\gamma$; must cover turn-off time).
+<br>$\gamma=0$: $\cos\alpha_{\max}=-1+kx$; bridge $\alpha_{\max}=\cos^{-1}(2x-1)$, $\langle v_d\rangle\ge-\frac{2\hat V_g}{\pi}(1-x)$. Then plug $\alpha_{\max}$ into the $\langle v_d\rangle$ row (with drop) for the largest $|\langle v_d\rangle|$.</li>
+<li><b>Commutation failure</b> ($\alpha>\alpha_{\max}$): $i_g$ turns back before $-I_d$, outgoing pair stays on, $v_d=v_g$ swings positive; real $L_d$: $L_d\,di_d/dt=v_g+|v_o|$ so $i_d$ climbs. Causes: late firing, dip in $\hat V_g$, rise in $I_d$. Fix: fire earlier, lower $|v_o|$.</li>
+<li>Overlap is shortest near $\alpha=90^\circ$ ($v_g$ at peak); the drop $2X_cI_d/\pi$ is the same for any $\alpha$.</li>
+</ul>
+
+<h2>D. Power factor toolkit</h2>
+<div class="box key">
+$$k_p=\frac{P}{S}=\frac{P}{V_{g}I_{g}}=\underbrace{\frac{I_{g1}}{I_g}}_{k_d}\underbrace{\cos\varphi_1}_{k_\theta}$$ $$\text{THD}=\frac{\sqrt{I_g^2-I_{g1}^2}}{I_{g1}}=\sqrt{\frac{1}{k_d^2}-1}$$
+(rms values; $\varphi_1$ = lag of the fundamental of $i_g$ behind $v_g$).<br>
+<b>Rectangular current</b> $+I_d$ on $(\theta_1,\theta_2)$, $-I_d$ on $(\theta_1+\pi,\theta_2+\pi)$, width $w=\theta_2-\theta_1$:
+$$I_g=I_d\sqrt{w/\pi},\quad \hat I_{g1}=\tfrac{4I_d}{\pi}\sin\tfrac{w}{2},\quad I_{g1}=\tfrac{\hat I_{g1}}{\sqrt2}$$ $$\varphi_1=\tfrac{\theta_1+\theta_2}{2}-\tfrac{\pi}{2}\ \ (\text{lag of the fundamental})$$
+$P=\tfrac12\hat V_g\hat I_{g1}\cos\varphi_1$ (check $=\langle v_d\rangle I_d$), &nbsp;$Q=\tfrac12\hat V_g\hat I_{g1}\sin\varphi_1$ (absorbed).
+</div>
+<table class="sm">
+<tr><th>Case</th><th>$i_g$</th><th>$k_p$</th><th>$Q$</th></tr>
+<tr><td>Half-wave + FWD</td><td>$I_d$ on $(0,\pi)$, else 0; $I_g=I_d/\sqrt2$</td><td>$2/\pi=0.637$</td><td>0 (dc part $I_d/2$ adds rms, no power)</td></tr>
+<tr><td>1φ bridge</td><td>$\pm I_d$ square, delayed $\alpha$; $I_g=I_d$, $I_{g1}=\frac{2\sqrt2}{\pi}I_d=0.90I_d$</td><td>$0.90\cos\alpha$<br>THD 48%</td><td>$\frac{2\hat V_g}{\pi}I_d\sin\alpha$</td></tr>
+<tr><td>Hybrid bridge</td><td>$\pm I_d$ for $\alpha\to\pi$; $\hat I_{g1}=\frac{4I_d}{\pi}\cos\frac{\alpha}{2}$, lag $\frac{\alpha}{2}$</td><td>$\dfrac{\sqrt2(1+\cos\alpha)}{\sqrt{\pi(\pi-\alpha)}}$</td><td>$\frac{\hat V_gI_d}{\pi}\sin\alpha$</td></tr>
+<tr><td>Notched, zero for $\beta$ at each crossing</td><td>$w=\pi-2\beta$, $\varphi_1=0$</td><td>$\dfrac{2\sqrt2\cos\beta}{\sqrt{\pi(\pi-2\beta)}}$</td><td>0 (β=30° gives 0.955)</td></tr>
+<tr><td>3φ bridge</td><td>$\pm I_d$ 120° blocks; $I_g=\sqrt{2/3}I_d$, $I_{g1}=\frac{\sqrt6}{\pi}I_d$</td><td>$\frac{3}{\pi}\cos\alpha=0.955\cos\alpha$, THD 31%</td><td>$\frac{3\sqrt3}{\pi}\hat V_gI_d\sin\alpha$<span class="mut"> (3φ total)</span></td></tr>
+</table>
+<p class="sm"><b>Harmonics</b> (square wave): $I_{gh}=I_{g1}/h$, odd $h$ (3rd 33%, 5th 20%). 3φ bridge: $h=6k\pm1$ only (5, 7, 11, 13), no triplen. Current near the zero crossings adds to $I_g$ but carries little power. $\alpha=90^\circ$: $k_p=0$, $\langle v_d\rangle=0$; energy sloshes in/out of $L_d$ → seen as $Q$.</p>
+
+<h2>E. Power factor correction (boost PFC)</h2>
+<div class="box">
+<ol>
+<li>Goal: grid sees a resistor, $i_g=v_g/R_e$ ($k_p=1$, THD $\approx0$). $R_e$ is set by control, not a component:
+$$R_e=\frac{V_{g,\text{rms}}^2}{P}=\frac{\hat V_g^2}{2P},\qquad \hat I_g=\frac{\hat V_g}{R_e}=\frac{2P}{\hat V_g}$$</li>
+<li>After the bridge: $i_L=|v_g|/R_e$. $Q_1$ on: $v_L=|v_g|$ (rises); off: $v_L=|v_g|-V_d<0$ (falls). <b>Need $V_d>\hat V_g$</b>, else current is uncontrolled near the line peaks.</li>
+<li>Each switching period is quasi steady state ($\langle v_L\rangle_{T_s}\approx0$):
+$$d(t)=1-\frac{|v_g(t)|}{V_d},\qquad d_{\min}=1-\frac{\hat V_g}{V_d}$$ ($d=1$ at the zero crossings, lowest at the line peak.)</li>
+<li>$p=v_gi_g=P(1-\cos2\omega t)$; $C$ absorbs the difference: $v_d$ ripples at $2\omega$, $\Delta v_{d,pp}\approx\frac{P}{\omega CV_d}$.</li>
+</ol>
+<b>Totem pole:</b> fast leg $Q_1,Q_2$ at $f_s$, slow leg ($D_1,D_2$ or $Q_3,Q_4$) once per half-cycle; 2 devices in the path vs 3. <b>H-bridge active rectifier:</b> $P$ either way, can supply/absorb $Q$; unipolar ripple at $2f_s$ (smaller $L$) but all 4 switch.
+</div>
+
+<h2>F. Lab 3 (station transformer, $V_{LL}=36.7$ V rms, 60 Hz)</h2>
+<ul class="sm">
+<li>1φ bridge fed line-to-line (A, B): $\hat V_g=\sqrt2(36.7)=51.9$ V; R load 12.5 Ω: $\langle v_d\rangle=2\hat V_g/\pi=33.0$ V, $I_d=2.64$ A.</li>
+<li>3φ bridge: phase peak $\hat V_g=\sqrt2(21.2)=30.0$ V: $\langle v_d\rangle=\frac{3\sqrt3}{\pi}\hat V_g=49.6$ V, $I_d=1.98$ A; $v_d$ between $1.5\hat V_g$ and $\sqrt3\hat V_g$.</li>
+<li>5 mH choke: $X_L(120\text{ Hz})=3.8\ \Omega\lt R$ → $i_d$ <b>not</b> constant, $i_g$ closer to a sinusoid, PF <b>above</b> 0.90 (≈0.99 measured).</li>
+<li>Overlap measured ≈110 µs at 1.9 A → $u=2.4^\circ$, $L_c\approx31$ µH, drop only ≈21 mV. Real $I_d$ deficit: diode drops + winding resistance, not overlap.</li>
+<li>Part A PF $=P/(V_{AB}I_A)$. Distortion with a pure R: overlap/$L_c$, diode drops, distorted source.</li>
+</ul>
+<p class="sm"><b>Numbers:</b> $2/\pi=0.637$, $2\sqrt2/\pi=0.900$, $3/\pi=0.955$, $3\sqrt3/\pi=1.654$, $3\sqrt2/\pi=1.350$, $\sqrt6/\pi=0.780$, $\sqrt{2/3}=0.816$, $\omega=377$ rad/s at 60 Hz, $2\pi(400)=2513$.</p>
+<h3>Worked flow (1φ SCR bridge, Lab 3 transformer)</h3>
+<p class="sm">$\hat V_g=51.9$ V, $\alpha=30^\circ$, $R=12.5\ \Omega$, $L_d$ large, $L_c\approx0$. ① $\langle v_d\rangle=\frac{2\hat V_g}{\pi}\cos\alpha=28.6$ V. ② $I_d=\langle v_d\rangle/R=2.29$ A. ③ $P=\langle v_d\rangle I_d=65.5$ W. ④ $k_p=0.90\cos30^\circ=0.78$. ⑤ $Q=\frac{2\hat V_g}{\pi}I_d\sin\alpha=37.8$ var. With $L_c$: ⓪ $x=X_cI_d/\hat V_g$, $u=\cos^{-1}(\cos\alpha-2x)-\alpha$, subtract $2X_cI_d/\pi$, then $I_d=(\frac{2\hat V_g}{\pi}\cos\alpha-V_o)/(R+\frac{2X_c}{\pi})$.</p>
+</div>
+
+<!-- ======================= SIDE 2: TOPIC 11 ======================= -->
+<div class="page">
+<div class="hdr"><b>ENEL 585 Quiz 3 · Side 2: Topic 11 Dynamics &amp; Control (Parts 1 to 4 and 6)</b><span>$\langle x\rangle_{T_s}$ = switching-period average, $x=X+\hat x$, $d'=1-d$, $D'=1-D$. Hats = small-signal; $\hat V_g$ in Part 6 = peak.</span></div>
+
+<h2>1. Averaged → small-signal model (any converter)</h2>
+<div class="box key">
+<ol>
+<li><b>Two CCM states:</b> write $v_L$ and $i_C$ with $Q_1$ on ($dT_s$) and off ($d'T_s$).</li>
+<li><b>Average</b> (signals → $\langle\cdot\rangle_{T_s}$):
+$L\frac{d\langle i_L\rangle}{dt}=d\,v_{L,\text{on}}+d'\,v_{L,\text{off}}$, &nbsp;$C\frac{d\langle v\rangle}{dt}=d\,i_{C,\text{on}}+d'\,i_{C,\text{off}}$.
+Products $d\langle x\rangle$ make it <b>nonlinear</b>.</li>
+<li><b>Operating point:</b> set $d/dt=0$ (volt-second, charge balance) → $V$, $I_L$.</li>
+<li><b>Perturb:</b> $\langle x\rangle=X+\hat x$, $d=D+\hat d$, $d'=D'-\hat d$. Expand; dc terms cancel; drop $\hat d\,\hat x$ (small × small, since $|\hat x|\ll|X|$, $|\hat d|\ll D,D'$).</li>
+<li><b>Matrix:</b> $\dfrac{d\hat{\mathbf x}}{dt}=\mathbf A\hat{\mathbf x}+\mathbf B\hat{\mathbf u}$, $\hat{\mathbf x}=\begin{bmatrix}\hat i_L\\ \hat v\end{bmatrix}$, $\hat{\mathbf u}=\begin{bmatrix}\hat v_g\\ \hat d\end{bmatrix}$ (row 1 ÷ $L$, row 2 ÷ $C$).</li>
+<li><b>Solve</b> $\hat{\mathbf x}(s)=(s\mathbf I-\mathbf A)^{-1}\mathbf B\hat{\mathbf u}$. For $\mathbf A=\begin{bmatrix}a&b\\c&e\end{bmatrix}$: $\Delta(s)=s^2-(a+e)s+(ae-bc)$,
+$(s\mathbf I-\mathbf A)^{-1}=\frac{1}{\Delta}\begin{bmatrix}s-e&b\\c&s-a\end{bmatrix}$ so $\hat v=\dfrac{c\,(\mathbf B_1\hat{\mathbf u})+(s-a)(\mathbf B_2\hat{\mathbf u})}{\Delta(s)}$.<br>(Or by hand: Laplace each equation, solve row 1 for $\hat i_L$, substitute.)</li>
+<li><b>Standard form:</b> divide by the constant term of $\Delta$: $\omega_0^2=ae-bc$, $\ \omega_0/Q=-(a+e)$:
+$$G(s)=G_0\frac{1\pm s/\omega_z}{1+\frac{s}{Q\omega_0}+\left(\frac{s}{\omega_0}\right)^2}\quad (1-s/\omega_z:\ \text{RHP zero})$$
+$G_0=G(0)$ = steady-state slope ($dV/dD$ or $V/V_g$).</li>
+</ol>
+Valid: $f\ll f_s$, small ripple, $|\hat d|\ll D,D'$; one model per operating point (redo at each corner of $V_g$, $R$).
+</div>
+<table class="sm">
+<tr><th></th><th>Buck</th><th>Boost</th><th>Buck-boost (inverting)</th></tr>
+<tr><td>$L\frac{d\langle i_L\rangle}{dt}$</td><td>$d\langle v_g\rangle-\langle v\rangle$</td><td>$\langle v_g\rangle-d'\langle v\rangle$</td><td>$d\langle v_g\rangle+d'\langle v\rangle$</td></tr>
+<tr><td>$C\frac{d\langle v\rangle}{dt}$</td><td>$\langle i_L\rangle-\frac{\langle v\rangle}{R}$</td><td>$d'\langle i_L\rangle-\frac{\langle v\rangle}{R}$</td><td>$-d'\langle i_L\rangle-\frac{\langle v\rangle}{R}$</td></tr>
+<tr><td>small-signal</td><td>$L\dot{\hat i}=D\hat v_g+V_g\hat d-\hat v$<br>$C\dot{\hat v}=\hat i-\hat v/R$</td><td>$L\dot{\hat i}=\hat v_g-D'\hat v+V\hat d$<br>$C\dot{\hat v}=D'\hat i-\hat v/R-I_L\hat d$</td><td>$L\dot{\hat i}=D\hat v_g+D'\hat v+(V_g-V)\hat d$<br>$C\dot{\hat v}=-D'\hat i-\hat v/R+I_L\hat d$</td></tr>
+<tr><td>$V$, $I_L$</td><td>$DV_g$, $V/R$</td><td>$V_g/D'$, $V/(D'R)$</td><td>$-DV_g/D'$, $-V/(D'R)$</td></tr>
+<tr><td>$G_{g0}$</td><td>$D$</td><td>$1/D'$</td><td>$-D/D'$</td></tr>
+<tr><td>$G_{d0}$</td><td>$V/D=V_g$</td><td>$V/D'=V_g/D'^2$</td><td>$-V_g/D'^2$</td></tr>
+<tr><td>$\omega_0$</td><td>$1/\sqrt{LC}$</td><td>$D'/\sqrt{LC}$</td><td>$D'/\sqrt{LC}$</td></tr>
+<tr><td>$Q$</td><td>$R\sqrt{C/L}$</td><td>$D'R\sqrt{C/L}$</td><td>$D'R\sqrt{C/L}$</td></tr>
+<tr><td>$\omega_z$</td><td>none</td><td>$D'^2R/L$ (RHP)</td><td>$D'^2R/(DL)$ (RHP)</td></tr>
+</table>
+<p class="sm"><b>Only $G_{vd}$ has the zero</b> ($G_{vg}$ has none). $R$ moves only $Q$. A series resistance (e.g. source $R_g$: term $d\,R_g\langle i_L\rangle$) adds damping: lower $Q$, lower $G_{d0}$. <b>RHP zero</b>: raising $d$ first cuts the diode current $d'i_L$ ($i_L$ can't step), so $v$ first moves the wrong way. Ringing freq $f_0\sqrt{1-1/(4Q^2)}$.</p>
+
+<h2>2. PWM and Bode rules</h2>
+<p><b>PWM:</b> sawtooth $0\to V_M$: $d=v_c/V_M$, $\hat d=\hat v_c/V_M$, $D=V_C/V_M$. Triangle from $V_{lo}$ to $V_{hi}$ (on while $v_c$ above): $V_M=V_{hi}-V_{lo}$ (peak-to-peak), $d=(v_c-V_{lo})/V_M$, $f_s$ = 1/(carrier period).</p>
+<table class="sm">
+<tr><th>Factor</th><th>Magnitude asymptote</th><th>Phase</th></tr>
+<tr><td>$K$</td><td>flat $20\log|K|$ (dB, dBV if volts)</td><td>0 (sign → 180°)</td></tr>
+<tr><td>$\omega_x/s$</td><td>$-20$ dB/dec, 0 dB at $f_x$</td><td>$-90^\circ$</td></tr>
+<tr><td>$1/(1+s/\omega_p)$</td><td>0 dB, then $-20$ dB/dec; $-3$ dB at $f_p$</td><td>$0$ at $f_p/10\to-90^\circ$ at $10f_p$</td></tr>
+<tr><td>$1+s/\omega_z$ (LHP)</td><td>$+20$ dB/dec above $f_z$</td><td>$0\to+90^\circ$</td></tr>
+<tr><td>$1-s/\omega_z$ (RHP)</td><td>$+20$ dB/dec (same magnitude)</td><td>$0\to-90^\circ$ (lag!)</td></tr>
+<tr><td>quadratic</td><td>$-40$ dB/dec above $f_0$; $|G(f_0)|=Q$, peak $20\log Q$; no peak if $Q\le0.707$</td><td>$-90^\circ$ at $f_0$; $0\to-180^\circ$ from $f_0 10^{-1/(2Q)}$ to $f_010^{1/(2Q)}$</td></tr>
+</table>
+<p class="sm"><b>Exact at $f$:</b> $|1\pm jf/f_z|=\sqrt{1+(f/f_z)^2}$, $\angle=\pm\tan^{-1}(f/f_z)$. Quadratic, $r=f/f_0$: $|\cdot|=1/\sqrt{(1-r^2)^2+(r/Q)^2}$, $\angle=-\operatorname{atan2}(r/Q,\,1-r^2)$. <b>Asymptote on a segment</b> = product of each factor's asymptote: $(f_0/f)^2$ above $f_0$, $(f/f_z)$ above $f_z$, $f_x/f$ for an integrator. $\times2=6$ dB, $\times10=20$ dB, $\sqrt2=3$ dB; $|G|=10^{\text{dB}/20}$.</p>
+
+<h2>3. Feedback loop and stability</h2>
+<div class="box key">
+$$T=\pm\frac{H\,G_c\,G_{vd}}{V_M}\;\big(\times e^{-s\tau}\big)$$ ($+$ if $G_{d0}>0$; $-$ for an inverting converter with the $-1$ block; $\times e^{-s\tau}$ for a digital delay).<br>
+Regulated output: $Hv=v_{\text{ref}}\Rightarrow V=V_{\text{ref}}/H$ (inverting: $-V_{\text{ref}}/H$).
+$$\hat v_e=\frac{\hat v_{\text{ref}}}{1+T},\qquad \frac{\hat v}{\hat v_g}=\frac{G_{vg}}{1+T}$$ $$\frac{\hat v}{\hat v_{\text{ref}}}=\frac1H\frac{T}{1+T}\approx\begin{cases}1/H,&|T|\gg1\\ T/H,&|T|\ll1\end{cases}$$
+<ul>
+<li><b>Crossover</b> $f_c$: $|T(f_c)|=1$. <b>Phase margin</b> $\varphi_m=180^\circ+\angle T(f_c)$. Stable if $T$ has no RHP poles, $|T|$ crosses 1 once, and $\varphi_m>0$. At $f_c$: $|1+T|=2\sin(\varphi_m/2)$.</li>
+<li><b>Steady-state error</b> (step of $v_{\text{ref}}$): $1/(1+T(0))$. Integrator in $G_c$ → $|T(0)|\to\infty$ → zero error.</li>
+<li><b>Overshoot</b> ($0<\varphi_m<90^\circ$): $Q\approx\dfrac{\sqrt{\cos\varphi_m}}{\sin\varphi_m}$, $\zeta=\dfrac{1}{2Q}$, $\%\text{OS}=100\,e^{-\pi\zeta/\sqrt{1-\zeta^2}}$. $\varphi_m\ge76^\circ\Rightarrow Q\le0.5$: no overshoot. (52°: $Q\approx1$, 16%; 45°: 23%.)</li>
+<li>$f_c\ll f_s$ (e.g. $f_s/20$) so $|T(f_s)|\ll1$ and $1/V_M$ holds; higher $f_c$ = faster but less phase left against the resonance/RHP zero/delay.</li>
+</ul>
+</div>
+
+<h2>4. Compensator design steps (PI)</h2>
+<ol>
+<li>Uncompensated $T_u=HG_{vd}/V_M$ ($G_c=1$): $T_u(0)=HG_{d0}/V_M$, resonant peak $\approx Q\,T_u(0)$ at $f_0$. Constant $G_c$ fails: peak $<1$ forces $|T(0)|<1$ (large error); large $G_c$ crosses past $-180^\circ$ (unstable).</li>
+<li>PI: $G_c=G_{cm}\left(1+\dfrac{\omega_L}{s}\right)$. Below $f_L$: integrator ($-20$ dB/dec, $-90^\circ$); above: flat $G_{cm}$, $0^\circ$.</li>
+<li>Put $f_L$ below the lowest $f_0$ (higher $f_L$: more low-$f$ gain, but PI adds $\sqrt{1+(f_L/f_0)^2}$ at the resonance).</li>
+<li>Set $G_{cm}$ so the peak $|T(f_0)|\approx G_{cm}\,Q\,T_u(0)\sqrt{1+(f_L/f_0)^2}\le0.5$ ($-6$ dB) at the worst corner.</li>
+<li>Crossover (below $f_L$ and $f_0$): $T\approx G_{cm}T_u(0)\omega_L/s\Rightarrow f_c\approx G_{cm}T_u(0)f_L$. Pure integrator $G_c=\omega_I/s$: $f_c\approx\frac{\omega_I T_u(0)}{2\pi}$.</li>
+<li>$\varphi_m=180^\circ+\angle T(f_c)$, with $\angle T=-90^\circ+\tan^{-1}\!\frac{f_c}{f_L}+\angle_{\text{quad}}-\tan^{-1}\!\frac{f_c}{f_z}-360^\circ f_c\tau$.</li>
+<li>Check: $|T(10\text{ Hz})|\approx G_{cm}T_u(0)f_L/(10)$ (rejection), $|T(f_s)|\ll1$, every operating point (new $D$ → new $G_{d0},f_0,Q,f_z$).</li>
+</ol>
+<p class="sm"><b>Feedforward:</b> $d=d_{ff}+v_c/V_M$ (one PWM: compare $V_Md_{ff}+v_c$). $d_{ff}$ from ideal $M(D)$ with $V=V_{\text{ref}}/H$: buck $\frac{v_{\text{ref}}}{Hv_g}$, boost $1-\frac{H\langle v_g\rangle}{v_{\text{ref}}}$, buck-boost $\frac{v_{\text{ref}}}{v_{\text{ref}}+H\langle v_g\rangle}$. Acts before an error builds; <b>does not change $T$</b>; feedback still needed (losses, load, model error). Low-pass a $v_{\text{ref}}$ step (a duty step rings the LC resonance above $f_c$); don't over-filter measured $v_g$ (delays the correction).</p>
+
+<h2>5. Sampling delay (digital controller)</h2>
+<table class="sm">
+<tr><th>Symmetric PWM, load at next period start; sample at</th><th>start of period</th><th>middle (carrier peak)</th><th>just before load</th></tr>
+<tr><td>Total delay $\tau$ ($T_s=1/f_s$)</td><td>$1.5T_s$</td><td>$T_s$ (compute in $T_s/2$)</td><td>$\approx0.5T_s$</td></tr>
+</table>
+<p>$|e^{-j\omega\tau}|=1$ → $|T|$, $f_c$ unchanged; $\angle=-\omega\tau$: $\boxed{\varphi_m=\varphi_{m0}-360^\circ f_c\tau}$. Max $f_c$ for a target $\varphi_m$: $f_c=\frac{\varphi_{m0}-\varphi_m}{360^\circ\tau}$. Padé: $e^{-s\tau}\approx\frac{1-s\tau/2}{1+s\tau/2}$ (good near $f_c$, poor at high $f$).</p>
+
+<h2>6. Controlling an ac current (inverter, PFC)</h2>
+<div class="box">
+<ol>
+<li><b>Reference</b> ($i_L$ + toward grid; $Q_g$ = vars <i>absorbed by grid</i>; "grid supplies $Q$" → $Q_g<0$):
+$i_P^*=\dfrac{2P^*}{\hat V_g},\ i_Q^*=-\dfrac{2Q_g^*}{\hat V_g},\ i^*=i_P^*\sin\theta+i_Q^*\cos\theta$. &nbsp;$a\sin\theta+b\cos\theta=\sqrt{a^2+b^2}\sin(\theta+\operatorname{atan2}(b,a))$.</li>
+<li><b>Plant:</b> $L\frac{d\langle i_L\rangle}{dt}=m\langle v_d\rangle-\langle v_g\rangle$ (bipolar $m=2d-1$, $\langle v_t\rangle=mv_d$). Small-signal $G_p=\hat i_L/\hat v_L=1/(sL)$.</li>
+<li><b>Feedforward:</b> $v_{L,ff}=L\frac{di^*}{dt}=\omega_1L(i_P^*\cos\theta-i_Q^*\sin\theta)$; $v_t^*=v_{g,ff}+v_{L,ff}+v_c$; $m=v_t^*/v_d$, need $|m|\le1$ → $V_d^*>$ peak of $v_t^*$ (+ ripple margin). Compensate delay: evaluate at $\theta+\omega_1\tau$.</li>
+<li><b>Loop:</b> $T=G_c\,e^{-s\tau}/(sL)$. P-only: $\boxed{K_p=2\pi f_cL}$, $\varphi_m=90^\circ-360^\circ f_c\tau$.</li>
+<li><b>Residual 60 Hz voltage error $D$</b> across $L$ (e.g. grid FF not advanced: $|D|\approx\omega_1\tau\hat V_g$) → current error $\approx|D|/|G_c(j\omega_1)|$. PR: $G_c=K_p+K_r\frac{2\omega_bs}{s^2+2\omega_bs+\omega_1^2}$, $|G_c(j\omega_1)|=K_p+K_r$ → error $\div(1+K_r/K_p)$; band $\approx f_1\pm f_b$; ideal PR: infinite gain at $f_1$.</li>
+</ol>
+<b>Boost PFC current loop:</b> $i^*=\hat I^*|\sin\theta|$, $\hat I^*=2P/\hat V_g$; $v_{L,ff}=\omega_1L\hat I^*\cos\theta$ ($0<\theta<\pi$, max $\pm\omega_1L\hat I^*$ at crossings); $\boxed{d=1-\frac{|v_g|-v_L^*}{v_d}}$, $v_L^*=v_{L,ff}+v_c$. Zero crossing: even $d=1$ gives only $v_L=|v_g|\approx\hat V_g\theta<\omega_1L\hat I^*$ for $\theta<\omega_1L\hat I^*/\hat V_g$; holding $d=1$: $i=\frac{\hat V_g}{\omega_1L}(1-\cos\theta)\approx\frac{\hat V_g\theta^2}{2\omega_1L}$ meets $\hat I^*\theta$ at $\theta=2\omega_1L\hat I^*/\hat V_g$. Uses PI (rectified reference has no 60 Hz for a resonant term).
+</div>
+<div class="box key">
+<b>DC-link voltage loop (outer):</b> $Cv_d\frac{dv_d}{dt}=p_d-P\ \Rightarrow\ \boxed{\dfrac{\hat v_d}{\hat p^*}=-\dfrac{1}{CV_ds}}$ (negative integrator). Error $e_v=v_d-V_d^*$ (measured − ref) cancels the minus: $T_v=\dfrac{G_{cv}}{CV_ds}$, $G_{cv}=G_{cvm}\left(1+\frac{\omega_{Lv}}{s}\right)$.
+<ol>
+<li>$f_{co}\ll120$ Hz (≈8 to 10 Hz); $f_{Lv}=f_{co}/5$.</li>
+<li>$|T_v(f_{co})|=1$: $\ G_{cvm}=\dfrac{2\pi f_{co}CV_d}{\sqrt{1+(f_{Lv}/f_{co})^2}}$; $\ \varphi_m=90^\circ-\tan^{-1}\frac{f_{Lv}}{f_{co}}$ ($=78.7^\circ$ for 1/5).</li>
+<li>Check $|T_v(120)|\ll1$; current loop $f_c\ge10f_{co}$ → treat it as 1 ($P=P^*$).</li>
+</ol>
+Why slow: $p_g=P(1-\cos2\theta)$ → 120 Hz ripple on $v_d$; a fast loop puts it in $i_P^*$, and $\times\sin\theta$ makes 180 Hz (3rd) + 60 Hz in $i^*$. Step up in $p_d$: $v_d$ rises, PI raises $P^*$, $P$ catches $p_d$ at the $v_d$ peak, then $P>p_d$ returns $v_d$ to $V_d^*$; final $i_P^*=2p_d/\hat V_g$.
+</div>
+<h3>Traps to check before you hand in</h3>
+<ul class="sm">
+<li>Peak vs rms: $\hat V=\sqrt2V_{\text{rms}}$; 3φ phase peak $=\sqrt2V_{LL}/\sqrt3$. $X_c=2\pi fL_c$; angles in rad inside $\cos^{-1}$, $u=\omega t_u$.</li>
+<li>$\langle v_d\rangle$ with $L_c$: drop applies at every $\alpha$; inversion needs $V_o<0$ and $\alpha+u<\pi$.</li>
+<li>$\omega$ (rad/s) vs $f$ (Hz): $G_c=250/s$ has $s$ in rad/s; $f_c=\omega_c/2\pi$.</li>
+<li>Inverting converter: $G_{d0}<0$ → use the $-1$ block so $T$ is positive at dc.</li>
+<li>$\varphi_m$ from asymptotes is an estimate: also add the quadratic's and RHP zero's lag at $f_c$ and $360^\circ f_c\tau$.</li>
+<li>$Q_g$ sign (absorbed by the grid); dc-link error is $v_d-V_d^*$; check $|m|\le1$ and $d\in[0,1]$.</li>
+<li>Write the interval, the equation set up, then the number (half marks without working).</li>
+</ul>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});
+  document.body.setAttribute("data-ready","1");
+});
+</script>
+</body>
+</html>
