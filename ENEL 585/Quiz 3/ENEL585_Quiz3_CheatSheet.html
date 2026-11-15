@@ -130,6 +130,23 @@ $$d(t)=1-\frac{|v_g(t)|}{V_d},\qquad d_{\min}=1-\frac{\hat V_g}{V_d}$$ ($d=1$ at
 <p class="sm"><b>Numbers:</b> $2/\pi=0.637$, $2\sqrt2/\pi=0.900$, $3/\pi=0.955$, $3\sqrt3/\pi=1.654$, $3\sqrt2/\pi=1.350$, $\sqrt6/\pi=0.780$, $\sqrt{2/3}=0.816$, $\omega=377$ rad/s at 60 Hz, $2\pi(400)=2513$.</p>
 <h3>Worked flow (1φ SCR bridge, Lab 3 transformer)</h3>
 <p class="sm">$\hat V_g=51.9$ V, $\alpha=30^\circ$, $R=12.5\ \Omega$, $L_d$ large, $L_c\approx0$. ① $\langle v_d\rangle=\frac{2\hat V_g}{\pi}\cos\alpha=28.6$ V. ② $I_d=\langle v_d\rangle/R=2.29$ A. ③ $P=\langle v_d\rangle I_d=65.5$ W. ④ $k_p=0.90\cos30^\circ=0.78$. ⑤ $Q=\frac{2\hat V_g}{\pi}I_d\sin\alpha=37.8$ var. With $L_c$: ⓪ $x=X_cI_d/\hat V_g$, $u=\cos^{-1}(\cos\alpha-2x)-\alpha$, subtract $2X_cI_d/\pi$, then $I_d=(\frac{2\hat V_g}{\pi}\cos\alpha-V_o)/(R+\frac{2X_c}{\pi})$.</p>
+<h2>G. New circuit fast track (do this first)</h2>
+<div class="box key">
+<ol>
+<li><b>Match the family</b> by asking what $v_d$ connects to after the source goes negative.
+<br>A freewheel path (diode across the dc side, or a diode pair in a bridge) → $v_d$ clamps at 0: $\langle v_d\rangle\propto(1+\cos\alpha)$, <b>no inversion</b>.
+<br>SCRs only → $v_d$ follows the source for a full repeat period after $\alpha$: $\langle v_d\rangle\propto\cos\alpha$, inverts for $\alpha>90^\circ$.</li>
+<li><b>$v_d$ during overlap</b> (KVL shortcut): equal $L_c$ in both paths → $v_d$ uses the <i>average</i> of the two path voltages (1φ bridge: $\tfrac12(v_g-v_g)=0$; 3φ: $\tfrac12(v_{ga}+v_{gc})-v_{gb}$; centre-tap: 0). $L_c$ in only one path → $v_d$ = the other path's voltage (half-wave + FWD: 0).</li>
+<li><b>Overlap and drop, one line each.</b> $\Delta i$ = change in the current of <i>one</i> $L_c$ ($0\to I_d$: $I_d$; $-I_d\to I_d$: $2I_d$); $v_{\text{eff}}$ = loop voltage ÷ no. of $L_c$ in the loop:
+$$X_c\,\Delta i=\int_{\alpha}^{\alpha+u}v_{\text{eff}}\,d\theta,\qquad \Delta\langle v_d\rangle=\frac{N\,X_c\,\Delta i}{2\pi}$$
+$N$ = commutations per cycle that move $v_d$ <i>onto</i> a source (a hand-off onto a freewheel path loses nothing). Check: 1φ bridge $v_{\text{eff}}=v_g$, $\Delta i=2I_d$, $N=2$; 3φ $v_{\text{eff}}=\tfrac12v_{ac}$, $\Delta i=I_d$, $N=6$; centre-tap $v_{\text{eff}}=v_g$, $N=2$; half-wave + FWD $N=1$.</li>
+<li><b>Any current shape</b> ($v_g=\hat V_g\sin\theta$):
+$a_1=\frac1\pi\int_0^{2\pi}i_g\cos\theta\,d\theta$, $b_1=\frac1\pi\int_0^{2\pi}i_g\sin\theta\,d\theta$, $\hat I_{g1}=\sqrt{a_1^2+b_1^2}$,
+$P=\tfrac12\hat V_gb_1$, $Q=-\tfrac12\hat V_ga_1$ (absorbed), $I_g^2=\frac1{2\pi}\int_0^{2\pi}i_g^2\,d\theta$. Half-wave symmetric: integrate over $\pi$, double.</li>
+<li><b>Resistive load</b> ($i_d=v_d/R$, not constant): same $\langle v_d\rangle$ integral; $\int\sin^2\theta\,d\theta=\frac{\theta}{2}-\frac{\sin2\theta}{4}$. Conduction $\alpha\to\pi$ each half-cycle: half-wave $I_{\text{rms}}^2=\frac{\hat V_g^2}{R^2}\cdot\frac{\pi-\alpha+\frac12\sin2\alpha}{4\pi}$, bridge $\times2$; $P=I_{\text{rms}}^2R$.</li>
+</ol>
+</div>
+<p class="sm"><b>50 min plan:</b> do parts that match a table row first. For a new circuit spend 1 minute on intervals + sketch, then apply G.2 and G.3 instead of re-deriving.</p>
 </div>
 
 <!-- ======================= SIDE 2: TOPIC 11 ======================= -->
@@ -244,6 +261,15 @@ Why slow: $p_g=P(1-\cos2\theta)$ → 120 Hz ripple on $v_d$; a fast loop puts it
 <li>$Q_g$ sign (absorbed by the grid); dc-link error is $v_d-V_d^*$; check $|m|\le1$ and $d\in[0,1]$.</li>
 <li>Write the interval, the equation set up, then the number (half marks without working).</li>
 </ul>
+<h3>Control question fast track</h3>
+<ol class="sm">
+<li>Plant: dc converter → $G_{vd}$ (table, or Section 1 recipe); ac current → $1/(sL)$; dc link → $-1/(CV_ds)$.</li>
+<li>$T$ = product of every block around the loop: $H$, $G_c$, $1/V_M$, plant, $e^{-s\tau}$ (plus $-1$ if inverting).</li>
+<li>$f_c$: pick the asymptote segment where $|T|$ crosses 1 and solve $|T|=1$ on it (e.g. $K\omega_x/\omega=1$).</li>
+<li>$\varphi_m=180^\circ+\sum\angle(\text{factors at }f_c)$; then error $1/(1+T(0))$, overshoot from $\varphi_m$, $|T|$ elsewhere from asymptotes.</li>
+</ol>
+<h3>Worked: Section 1 recipe on the boost (7.1)</h3>
+<p class="sm">On: $v_L=v_g$, $i_C=-v/R$. Off: $v_L=v_g-v$, $i_C=i_L-v/R$. Average: $L\frac{d\langle i_L\rangle}{dt}=\langle v_g\rangle-d'\langle v\rangle$, $C\frac{d\langle v\rangle}{dt}=d'\langle i_L\rangle-\frac{\langle v\rangle}{R}$. DC: $V=V_g/D'$, $I_L=V/(D'R)$. Perturb: $d'\langle v\rangle=(D'-\hat d)(V+\hat v)\approx D'V+D'\hat v-V\hat d$. So $a=0$, $b=-\frac{D'}{L}$, $c=\frac{D'}{C}$, $e=-\frac{1}{RC}$, $\mathbf B=\begin{bmatrix}1/L&V/L\\0&-I_L/C\end{bmatrix}$. $\omega_0^2=ae-bc=\frac{D'^2}{LC}$, $\frac{\omega_0}{Q}=\frac{1}{RC}\Rightarrow Q=D'R\sqrt{C/L}$. $\hat d$ column numerator: $c\cdot\tfrac{V}{L}+s\cdot\big(-\tfrac{I_L}{C}\big)=\tfrac{D'V}{LC}-s\tfrac{I_L}{C}$; divide by $\tfrac{D'^2}{LC}$: $G_{d0}=\frac{V}{D'}$, $\omega_z=\frac{D'V}{LI_L}=\frac{D'^2R}{L}$ (minus sign → RHP).</p>
 </div>
 
 <script>
