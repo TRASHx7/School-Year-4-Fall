@@ -74,6 +74,11 @@ cd design && python3 design.py && python3 simulate.py && cd ../plecs && python3 
 
 Needs Python 3 with numpy, scipy and matplotlib, plus gcc (the simulation compiles the controller).
 
+**Warning:** `plecs/ProjectB_Sim.plecs` has since been re-laid out by hand-style placement (H-bridge
+power stage, labelled regions, Goto/From tags; preview in `figures/ProjectB_Sim_layout.png`).
+`gen_plecs.py` still writes the old layout and would overwrite it. To regenerate only the firmware
+model, keep a copy of `ProjectB_Sim.plecs` first and put it back afterwards.
+
 ## What has been verified, and what has not
 
 | Item | Status |
