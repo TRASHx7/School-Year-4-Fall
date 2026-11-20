@@ -1,9 +1,19 @@
 ENEL 585 - News Items
-Exported Nov 8, 2026
-Total items: 33
+Exported Nov 20, 2026
+Total items: 34
 
 ======================================================================
-1. Quiz 3 (Tuesday, November 17): scope, aids and how to prepare
+1. Funded MSc positions in power electronics: May, July or September 2027
+Posted: Nov 18, 2026, 8:55 AM
+----------------------------------------------------------------------
+I have a couple of funded MSc positions in my research group, on power electronics for solid-state transformers and energy storage systems, with a focus on converter modelling and control.
+
+I'm looking for strong theory skills. Hands-on experience, for example from student clubs, design teams or co-op, is a big asset. These positions are competitive.
+
+If you're interested, email me your CV and an unofficial transcript. I review applications as they arrive and the positions may fill early. If you know someone who might fit, please pass this along. ENEL 585 provides good background for this work, but the positions are open to anyone.
+
+======================================================================
+2. Quiz 3 (Tuesday, November 17): scope, aids and how to prepare
 Posted: Nov 6, 2026, 12:49 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -45,7 +55,7 @@ How to prepare
 Phil
 
 ======================================================================
-2. Final presentations on December 8: please report any conflicts
+3. Final presentations on December 8: please report any conflicts
 Posted: Nov 5, 2026, 3:27 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -56,7 +66,7 @@ Thanks,
 Phil
 
 ======================================================================
-3. Final Presentation Sign-Up: Tuesday, December 8
+4. Final Presentation Sign-Up: Tuesday, December 8
 Posted: Nov 3, 2026, 9:52 PM (Edited)
 ----------------------------------------------------------------------
 Hi everyone,
@@ -82,7 +92,7 @@ Thanks,
 Phil
 
 ======================================================================
-4. Tutorial #5 location: SB 146
+5. Tutorial #5 location: SB 146
 Posted: Nov 3, 2026, 9:43 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -92,7 +102,7 @@ Just wanted to confirm that the tutorial is in the normal classroom: SB 146, not
 JT
 
 ======================================================================
-5. Tutorial #5: Remote HIL Workshop
+6. Tutorial #5: Remote HIL Workshop
 Posted: Nov 2, 2026, 9:43 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -106,7 +116,7 @@ Hopefully this workshop will help you feel comfortable designing your project co
 JT
 
 ======================================================================
-6. HIL Plant Models Posted (Projects B, D, E) and Remote HIL Quick Start
+7. HIL Plant Models Posted (Projects B, D, E) and Remote HIL Quick Start
 Posted: Oct 29, 2026, 11:58 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -145,7 +155,7 @@ Thanks,
 Phil
 
 ======================================================================
-7. Clarification: Bench 1 Has Not Moved, Only the Design Review
+8. Clarification: Bench 1 Has Not Moved, Only the Design Review
 Posted: Oct 29, 2026, 9:14 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -171,7 +181,7 @@ Thanks,
 Phil
 
 ======================================================================
-8. Bench Session 1 Tomorrow (B01) / Nov 6 (B02): Your Station Assignments
+9. Bench Session 1 Tomorrow (B01) / Nov 6 (B02): Your Station Assignments
 Posted: Oct 29, 2026, 7:05 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -221,7 +231,7 @@ See you tomorrow,
 Phil
 
 ======================================================================
-9. Quiz 2 returned in lecture tomorrow; regrade requests due Thursday, November 5
+10. Quiz 2 returned in lecture tomorrow; regrade requests due Thursday, November 5
 Posted: Oct 28, 2026, 10:23 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -247,7 +257,7 @@ Thanks,
 Phil
 
 ======================================================================
-10. Tutorial #4 Problems
+11. Tutorial #4 Problems
 Posted: Oct 25, 2026, 5:19 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -265,7 +275,7 @@ see you then,
 JT
 
 ======================================================================
-11. Typhoon HIL Farm Follow-up
+12. Typhoon HIL Farm Follow-up
 Posted: Oct 21, 2026, 8:42 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -277,7 +287,7 @@ Thanks,
 Phil
 
 ======================================================================
-12. Final project: design review moved to Bench 2, and a streamlined handout
+13. Final project: design review moved to Bench 2, and a streamlined handout
 Posted: Oct 21, 2026, 9:05 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -301,7 +311,7 @@ Thanks,
 Phil
 
 ======================================================================
-13. Typhoon HIL Remote Farm Now Available
+14. Typhoon HIL Remote Farm Now Available
 Posted: Oct 20, 2026, 9:23 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -336,7 +346,7 @@ Thanks,
 Phil
 
 ======================================================================
-14. Tutorial #3 Problems
+15. Tutorial #3 Problems
 Posted: Oct 19, 2026, 4:29 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -354,7 +364,7 @@ See you all then,
 JT
 
 ======================================================================
-15. Quiz 1 - Regrade Requests (Deadline: Friday, October 23)
+16. Quiz 1 - Regrade Requests (Deadline: Friday, October 23)
 Posted: Oct 16, 2026, 12:25 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -378,7 +388,7 @@ Thanks,
 Phil
 
 ======================================================================
-16. Industry Talk: Thursday Oct 22, ENG 207
+17. Industry Talk: Thursday Oct 22, ENG 207
 Posted: Oct 15, 2026, 3:49 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -390,7 +400,7 @@ It seems like a good chance to hear from a practicing engineer in the power sect
 Phil
 
 ======================================================================
-17. Lab 3 (Diode Rectifiers): handout posted
+18. Lab 3 (Diode Rectifiers): handout posted
 Posted: Oct 14, 2026, 11:00 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -407,7 +417,7 @@ B01 has a short turnaround, so we've kept the pre-lab small: four short question
 Before you come, read the whole handout, especially the Safety Notes and the Experiment questions, so you know what to measure.
 
 ======================================================================
-18. Quiz 1 Marks
+19. Quiz 1 Marks
 Posted: Oct 9, 2026, 12:29 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -423,7 +433,7 @@ I will have the quizzes with me at the next lecture, so you can pick yours up th
 Phil
 
 ======================================================================
-19. Tutorial #2 Problems
+20. Tutorial #2 Problems
 Posted: Oct 4, 2026, 2:27 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -442,7 +452,7 @@ See you all then,
 JT
 
 ======================================================================
-20. Quiz 2 (Tuesday, October 13): scope, aids and how to prepare
+21. Quiz 2 (Tuesday, October 13): scope, aids and how to prepare
 Posted: Oct 3, 2026, 12:29 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -486,7 +496,7 @@ There will be no prelab quiz for Lab 2 in Section B02. The prelab quiz had to be
 Phil
 
 ======================================================================
-21. ENEL 585 Lab 2 reminder: B01 tomorrow, B02 next Friday Body:
+22. ENEL 585 Lab 2 reminder: B01 tomorrow, B02 next Friday Body:
 Posted: Oct 1, 2026, 9:45 PM
 ----------------------------------------------------------------------
 Hello everyone,
@@ -502,7 +512,7 @@ Thanks,
 Phil
 
 ======================================================================
-22. Final project documents updated: proposal expectations, group registration and dropbox
+23. Final project documents updated: proposal expectations, group registration and dropbox
 Posted: Oct 1, 2026, 10:11 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -528,7 +538,7 @@ Thanks,
 Phil
 
 ======================================================================
-23. Quiz 1 (Tuesday, September 29): scope, aids and how to prepare
+24. Quiz 1 (Tuesday, September 29): scope, aids and how to prepare
 Posted: Sep 25, 2026, 11:59 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -578,7 +588,7 @@ Good luck, and see you on Tuesday.
 Phil
 
 ======================================================================
-24. Solutions to Tutorial #1 are posted
+25. Solutions to Tutorial #1 are posted
 Posted: Sep 24, 2026, 3:43 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -590,7 +600,7 @@ If you have any questions, you can send me an email or message on Teams.
 JT
 
 ======================================================================
-25. Problems for Quiz #1
+26. Problems for Quiz #1
 Posted: Sep 23, 2026, 9:18 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -603,7 +613,7 @@ Thanks,
 Phil
 
 ======================================================================
-26. Quiz #1: Content
+27. Quiz #1: Content
 Posted: Sep 22, 2026, 9:45 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -615,7 +625,7 @@ Thanks,
 Phil
 
 ======================================================================
-27. Tutorial #1 Problems
+28. Tutorial #1 Problems
 Posted: Sep 17, 2026, 9:00 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -637,7 +647,7 @@ See you all then,
 JT
 
 ======================================================================
-28. Annoucements
+29. Annoucements
 Posted: Sep 15, 2026, 9:54 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -649,7 +659,7 @@ Just a few announcements:
 - Bench instruments guide has also been uploaded to D2L: Bench Instruments Guide (https://d2l.ucalgary.ca/d2l/le/content/770066/viewContent/7810293/View). This should be helpful for future labs.
 
 ======================================================================
-29. Lab 1
+30. Lab 1
 Posted: Sep 10, 2026, 11:28 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -672,7 +682,7 @@ Thanks,
 Phil
 
 ======================================================================
-30. Announcements
+31. Announcements
 Posted: Sep 10, 2026, 2:11 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -688,7 +698,7 @@ Thanks all,
 Phil
 
 ======================================================================
-31. Reminder about Tutorial Today/Next Week
+32. Reminder about Tutorial Today/Next Week
 Posted: Sep 8, 2026, 9:07 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -702,7 +712,7 @@ Thanks,
 Phil
 
 ======================================================================
-32. Project Orientation Overview
+33. Project Orientation Overview
 Posted: Sep 4, 2026, 3:05 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -722,7 +732,7 @@ Have a good long weekend,
 JT Luterbach
 
 ======================================================================
-33. Welcome to ENEL 585!
+34. Welcome to ENEL 585!
 Posted: Aug 31, 2026, 10:09 PM
 ----------------------------------------------------------------------
 Hi all,
