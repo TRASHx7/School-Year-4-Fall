@@ -1,15 +1,44 @@
 ENEL 500A - News Items
-Exported Nov 17, 2026
-Total items: 26
+Exported Nov 20, 2026
+Total items: 27
 
 ======================================================================
-1. Fall Evaluations
+1. Booking Rooms for Capstone Evaluation Sessions
+Posted: Nov 18, 2026, 10:51 AM (Edited)
+----------------------------------------------------------------------
+Dear Students,
+
+As you prepare for your capstone evaluation sessions, here are the instructions for booking a room to ensure the process runs smoothly:
+
+Steps to Book a Room:
+
+1. Available Rooms:
+   You can book the following rooms in ICT: 214, 236, 414, 533, 415, and 424C.
+
+2. How to Book ICT Rooms:
+   Email ese@ucalgary.ca with the following details:
+   - Date of the meeting
+   - Start time and duration
+   - Room preference (if any)
+   - Number of attendees
+   - Your name and capstone project name
+
+3. Alternative Options:
+   - If ICT rooms are unavailable, you can book spaces at the U of C library using this link (link on D2L).
+   - For other Schulich School of Engineering (SSE) rooms, contact sserooms@ucalgary.ca.
+
+Reminder:
+
+Rooms are in high demand, so book as early as possible to secure your preferred time and location. If you have any questions or encounter issues, feel free to reach out to the contacts listed above.
+
+======================================================================
+2. Fall Evaluations
 Posted: Nov 14, 2026, 8:51 PM (Edited)
 ----------------------------------------------------------------------
 Team managers: Please review the requirements for setting up the fall evaluation sessions on Fall Course Deliverables, on D2L. I have summarized some tips for you in the attached document. Find it Fall Deliverables. Good luck.
 
 ======================================================================
-2. Demonstrating Engineering Design in your Roadmap Codument
+3. Demonstrating Engineering Design in your Roadmap Codument
 Posted: Oct 19, 2026, 10:31 AM
 ----------------------------------------------------------------------
 Teams,
@@ -31,7 +60,7 @@ Additional Guidelines for Capstone Project Design
 - Consider Sustainability and Ethics: Consider reflecting on the environmental, social, and ethical implications of your design choices.
 
 ======================================================================
-3. Categorizing Deliverables: Must-Haves, Should-Haves, and Nice-to-Haves
+4. Categorizing Deliverables: Must-Haves, Should-Haves, and Nice-to-Haves
 Posted: Oct 14, 2026, 9:19 AM
 ----------------------------------------------------------------------
 Hello all,
@@ -52,7 +81,7 @@ Important Note: Remember that while Must-Haves define the minimum success criter
 Good luck teams!
 
 ======================================================================
-4. Services from Makerspace
+5. Services from Makerspace
 Posted: Oct 12, 2026, 11:22 PM
 ----------------------------------------------------------------------
 Hello Capstone Students,
@@ -100,13 +129,13 @@ Happy making
 The Schulich Makerspace Team
 
 ======================================================================
-5. PDF Cover pages
+6. PDF Cover pages
 Posted: Oct 5, 2026, 9:58 AM
 ----------------------------------------------------------------------
 Please note that all teams are required to submit a cover page to the nine designated dropbox folders. See the fall requirements for what you need to include (see the screen shots attached). This is basically the cover page of your future reports! This is required because it is a trick to get around the limitations of D2L for populated group grades. Thank you.
 
 ======================================================================
-6. Updated makerspace resources
+7. Updated makerspace resources
 Posted: Sep 28, 2026, 9:14 AM
 ----------------------------------------------------------------------
 Hi all, please see this:
@@ -116,7 +145,7 @@ https://uofc.sharepoint.com/:p:/s/SSETS/IQBIR-C2nth_RI5wJZQwpS5bAfu1guY6AS4Ht889
 This presentation includes important information about what is available through the makerspace, including links to hours, workshops, consultation appointments, the access code to the academic printing queue, and more. If you have any questions, please don't hesitate to reach out.
 
 ======================================================================
-7. Additional support availble to you
+8. Additional support availble to you
 Posted: Sep 24, 2026, 5:24 PM
 ----------------------------------------------------------------------
 Please see this link for all resources that are available to you:
@@ -124,7 +153,7 @@ Please see this link for all resources that are available to you:
 https://schulich.libguides.com/m2z/access-trainings
 
 ======================================================================
-8. Technician support
+9. Technician support
 Posted: Sep 24, 2026, 12:43 PM
 ----------------------------------------------------------------------
 To teams with a hardware component:
@@ -132,7 +161,7 @@ To teams with a hardware component:
 The idea of identifying a technician is to make sure you know how to reach out to the technicians who can support you ad give you advice. Given the changes that has happened in the way the lab technicians work, as long as you confirm with your TA that you are aware of the internal resources within engineering and you know how to find/get advice when you need, it is sufficient.
 
 ======================================================================
-9. TAs assigned
+10. TAs assigned
 Posted: Sep 18, 2026, 7:45 AM
 ----------------------------------------------------------------------
 Hi teams,
@@ -142,7 +171,7 @@ TAs are now assigned and you should receive the feedback on your initial submiss
 Stay tuned.
 
 ======================================================================
-10. Updates and next steps
+11. Updates and next steps
 Posted: Sep 17, 2026, 9:00 AM
 ----------------------------------------------------------------------
 Hi All,
@@ -172,7 +201,7 @@ Best wishes,
 Dr. Z.
 
 ======================================================================
-11. Submit your proposal, even if a few pieces are still pending
+12. Submit your proposal, even if a few pieces are still pending
 Posted: Sep 13, 2026, 6:15 PM
 ----------------------------------------------------------------------
 Hello everyone,
@@ -188,7 +217,7 @@ If your proposal is incomplete, include a short note inside the Excel file that 
 One submission per team, please.
 
 ======================================================================
-12. using makerspace machine shop
+13. using makerspace machine shop
 Posted: Sep 11, 2026, 7:53 PM
 ----------------------------------------------------------------------
 Hello capstone teams!
@@ -202,7 +231,7 @@ Happy making,
 The Schulich Makerspace Team
 
 ======================================================================
-13. swapping to engg 503/504
+14. swapping to engg 503/504
 Posted: Sep 11, 2026, 11:18 AM
 ----------------------------------------------------------------------
 Students who have no teams/no lead on a project
@@ -212,7 +241,7 @@ Consider swapping to ENGG 503/504: there is a lot more flexibility there and you
 Today is deadline to swap, I believe.
 
 ======================================================================
-14. Incomplete Project Arrangements
+15. Incomplete Project Arrangements
 Posted: Sep 10, 2026, 6:47 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -229,13 +258,13 @@ By this Sunday, every student must:
 You will have until October 4 to finalize the remaining project and sponsor details.
 
 ======================================================================
-15. Sponsor-student team contract
+16. Sponsor-student team contract
 Posted: Sep 8, 2026, 10:26 AM
 ----------------------------------------------------------------------
 All teams must sign the capstone sponsor-student team contract. Find it in Fall Team Deliverables. This is between the two parties and the instructor or TAs will not sign. This must be done by the final project submission deadline. The TAs or the instructor may ask to see this at any time.
 
 ======================================================================
-16. Scoping the proposal
+17. Scoping the proposal
 Posted: Sep 7, 2026, 1:25 PM
 ----------------------------------------------------------------------
 Teams:
@@ -245,7 +274,7 @@ Please note that the scope of the work and deliverables must be agreed upon betw
 Good luck.
 
 ======================================================================
-17. Project proposal submission instructions
+18. Project proposal submission instructions
 Posted: Sep 6, 2026, 12:29 PM
 Attachments: ENEL500_Project_Proposal_Template (studnets).xlsx
 ----------------------------------------------------------------------
@@ -261,7 +290,7 @@ Important Initial Project Proposal Instructions
 If you have already submitted and you have not followed the above, please delete the old submissions and die it again.
 
 ======================================================================
-18. Lectures and Labs
+19. Lectures and Labs
 Posted: Sep 3, 2026, 3:54 PM
 ----------------------------------------------------------------------
 Hello all,
@@ -273,7 +302,7 @@ Hello all,
 Thank you.
 
 ======================================================================
-19. Technician Support Staff
+20. Technician Support Staff
 Posted: Aug 31, 2026, 7:04 PM
 ----------------------------------------------------------------------
 Hello all,
@@ -287,7 +316,7 @@ Those projects that have a hardware component, must connect with a technician me
 Thank you.
 
 ======================================================================
-20. A few notes and tips before you submit your proposal and next steps
+21. A few notes and tips before you submit your proposal and next steps
 Posted: Aug 31, 2026, 1:03 PM
 ----------------------------------------------------------------------
 Hi All,
@@ -313,7 +342,7 @@ Hi All,
 Good luck.
 
 ======================================================================
-21. academic advisor
+22. academic advisor
 Posted: Aug 27, 2026, 9:49 AM
 ----------------------------------------------------------------------
 Hello all,
@@ -331,7 +360,7 @@ Please note that each team must have an academic advisor and the deadline to sec
 Good luck!
 
 ======================================================================
-22. Use of Gen AI policy.
+23. Use of Gen AI policy.
 Posted: Aug 21, 2026, 10:22 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -343,7 +372,7 @@ https://d2l.ucalgary.ca/d2l/le/content/770054/Home
 Thank you
 
 ======================================================================
-23. Sposonsor Rep's APEGA status
+24. Sposonsor Rep's APEGA status
 Posted: Aug 10, 2026, 11:26 AM
 ----------------------------------------------------------------------
 Hi All,
@@ -355,7 +384,7 @@ In any case, please make it clear in your proposal template filed (EIT/PEng/None
 Thank you
 
 ======================================================================
-24. Electrical students in pure software projects (or the other way around)
+25. Electrical students in pure software projects (or the other way around)
 Posted: Jul 29, 2026, 5:08 PM
 ----------------------------------------------------------------------
 Hi All,
@@ -369,7 +398,7 @@ The TAs are tasked to make sure everyone does their part.
 Thank you.
 
 ======================================================================
-25. Entrepreneurial/Multidisciplinary capstone courses
+26. Entrepreneurial/Multidisciplinary capstone courses
 Posted: Jul 27, 2026, 2:45 PM
 ----------------------------------------------------------------------
 Hello all,
@@ -385,7 +414,7 @@ These courses will give you the same caret for graduation as ENEL 500.
 Good luck.
 
 ======================================================================
-26. Welcome aboard!
+27. Welcome aboard!
 Posted: Jul 3, 2026, 2:32 PM
 ----------------------------------------------------------------------
 Hello all,
