@@ -295,9 +295,9 @@ Plecs {
   InvalidNetlistFunctionEvaluationMsg "1"
   IncompatibleInitialConditionMsg "2"
   Schematic {
-    Location      [0, 23; 1920, 989]
-    ZoomFactor    1.96257
-    SliderPosition [447, 1057]
+    Location      [0, 24; 1920, 990]
+    ZoomFactor    1
+    SliderPosition [0, 0]
     ShowBrowser   off
     BrowserWidth  100
     Component {
@@ -657,7 +657,7 @@ Plecs {
       Type          Resistor
       Name          "R_load_A"
       Show          on
-      Position      [780, 340]
+      Position      [760, 340]
       Direction     up
       Flipped       off
       LabelPosition east
@@ -1572,7 +1572,7 @@ Plecs {
       Direction     right
       Flipped       on
       LabelPosition south
-      Frame         [-2, -15; 7, 15]
+      Frame         [-7, -15; 2, 15]
       Parameter {
         Variable      "Width"
         Value         "3"
@@ -2495,7 +2495,7 @@ Plecs {
       Direction     right
       Flipped       on
       LabelPosition south
-      Frame         [-2, -60; 7, 60]
+      Frame         [-7, -60; 2, 60]
       Parameter {
         Variable      "Width"
         Value         "12"
@@ -4101,7 +4101,7 @@ Plecs {
             DstTerminal   1
           }
           Branch {
-            Points        [780, 200]
+            Points        [760, 200]
             Branch {
               DstComponent  "R_load_A"
               DstTerminal   1
@@ -4125,7 +4125,7 @@ Plecs {
         DstTerminal   1
       }
       Branch {
-        Points        [780, 480]
+        Points        [760, 480]
         Branch {
           DstComponent  "R_load_A"
           DstTerminal   2
@@ -4585,7 +4585,7 @@ Plecs {
       Type          Signal
       SrcComponent  "en_Q1"
       SrcTerminal   1
-      Points        [1570, 820; 1570, 780]
+      Points        [1570, 820]
       DstComponent  "EN_Q1"
       DstTerminal   3
     }
@@ -4607,7 +4607,7 @@ Plecs {
       Type          Signal
       SrcComponent  "en_Q3"
       SrcTerminal   1
-      Points        [1570, 920; 1570, 880]
+      Points        [1570, 920]
       DstComponent  "EN_Q3"
       DstTerminal   3
     }
@@ -4658,7 +4658,7 @@ Plecs {
       Type          Signal
       SrcComponent  "en_Q2"
       SrcTerminal   1
-      Points        [1570, 1040; 1570, 1000]
+      Points        [1570, 1040]
       DstComponent  "EN_Q2"
       DstTerminal   3
     }
@@ -4680,7 +4680,7 @@ Plecs {
       Type          Signal
       SrcComponent  "en_Q4"
       SrcTerminal   1
-      Points        [1570, 1140; 1570, 1100]
+      Points        [1570, 1140]
       DstComponent  "EN_Q4"
       DstTerminal   3
     }
@@ -4771,7 +4771,9 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Power stage: ITECH, DC link, full bridge, LC filter, load and load-step switch</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">Power st"
+"age: ITECH, DC link, full bridge, LC filter, load and load-step switch</span>"
+"</p></body></html>"
       Position      [342, 32]
     } 
     RectangleAnnotation {
@@ -4786,7 +4788,8 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Sensing: probes and interface-board filter H(s)</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">Sensing:"
+" probes and interface-board filter H(s)</span></p></body></html>"
       Position      [218, 732]
     } 
     RectangleAnnotation {
@@ -4801,7 +4804,8 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Test sequence</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">Test seq"
+"uence</span></p></body></html>"
       Position      [82, 1212]
     } 
     RectangleAnnotation {
@@ -4816,7 +4820,8 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Controller (same C code as the firmware)</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">Controll"
+"er (same C code as the firmware)</span></p></body></html>"
       Position      [690, 732]
     } 
     RectangleAnnotation {
@@ -4831,7 +4836,8 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Modulator: unipolar SPWM, dead time, enable</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">Modulato"
+"r: unipolar SPWM, dead time, enable</span></p></body></html>"
       Position      [1402, 732]
     } 
     RectangleAnnotation {
@@ -4846,11 +4852,15 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Scopes</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">Scopes</"
+"span></p></body></html>"
       Position      [1254, 1212]
     } 
     Annotation {
-      Name          "<html><body><p>Test sequence: soft start to V1, Vref step V1 -&gt; V2 at 0.6 s and back at 0.8 s, load step 25 -&gt; 12.5 ohm at 1.0 s and back at 1.2 s. Set sensing_bench = 0 in the init commands for the HIL filter.</p></body></html>"
+      Name          "<html><body><p>Test sequence: soft start to V1, Vref step"
+" V1 -&gt; V2 at 0.6 s and back at 0.8 s, load step 25 -&gt; 12.5 ohm at 1.0 s"
+" and back at 1.2 s. Set sensing_bench = 0 in the init commands for the HIL fi"
+"lter.</p></body></html>"
       Position      [860, 1300]
     } 
   }
