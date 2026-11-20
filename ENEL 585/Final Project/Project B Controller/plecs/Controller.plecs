@@ -325,10 +325,10 @@ Plecs {
       SrcComponent  "TIC2000_Lib/ADC"
       Name          "ADC_A"
       Show          on
-      Position      [80, 120]
+      Position      [90, 150]
       Direction     up
       Flipped       off
-      LabelPosition northNortheast
+      LabelPosition south
       Frame         [-25, -25; 25, 25]
       Parameter {
         Variable      "TrigSrc"
@@ -406,10 +406,10 @@ Plecs {
       SrcComponent  "TIC2000_Lib/ADC"
       Name          "ADC_B"
       Show          on
-      Position      [80, 220]
+      Position      [90, 260]
       Direction     up
       Flipped       off
-      LabelPosition northNortheast
+      LabelPosition south
       Frame         [-25, -25; 25, 25]
       Parameter {
         Variable      "TrigSrc"
@@ -483,22 +483,12 @@ Plecs {
       }
     }
     Component {
-      Type          Reference
-      SrcComponent  "TIC2000_Lib/Control Task\\nTrigger"
-      Name          "Control Task Trigger"
-      Show          on
-      Position      [150, 300]
-      Direction     right
-      Flipped       off
-      LabelPosition south
-    }
-    Component {
       Type          SignalDemux
       Name          "DemuxA"
       Show          off
-      Position      [150, 120]
+      Position      [160, 150]
       Direction     right
-      Flipped       off
+      Flipped       on
       LabelPosition south
       Frame         [-2, -10; 7, 10]
       Parameter {
@@ -511,9 +501,9 @@ Plecs {
       Type          SignalDemux
       Name          "DemuxB"
       Show          off
-      Position      [150, 220]
+      Position      [160, 260]
       Direction     right
-      Flipped       off
+      Flipped       on
       LabelPosition south
       Frame         [-2, -10; 7, 10]
       Parameter {
@@ -523,10 +513,20 @@ Plecs {
       }
     }
     Component {
+      Type          Reference
+      SrcComponent  "TIC2000_Lib/Control Task\\nTrigger"
+      Name          "Control Task Trigger"
+      Show          on
+      Position      [200, 330]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+    }
+    Component {
       Type          Constant
       Name          "enable"
       Show          on
-      Position      [190, 330]
+      Position      [230, 390]
       Direction     right
       Flipped       off
       LabelPosition west
@@ -546,7 +546,7 @@ Plecs {
       Type          Constant
       Name          "disable"
       Show          on
-      Position      [190, 360]
+      Position      [230, 430]
       Direction     right
       Flipped       off
       LabelPosition west
@@ -566,7 +566,7 @@ Plecs {
       Type          ManualSignalSwitch
       Name          "enableswitch"
       Show          on
-      Position      [240, 345]
+      Position      [310, 410]
       Direction     right
       Flipped       off
       LabelPosition north
@@ -580,7 +580,7 @@ Plecs {
       Type          Constant
       Name          "Vref_rms"
       Show          on
-      Position      [230, 390]
+      Position      [300, 470]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -600,7 +600,7 @@ Plecs {
       Type          Constant
       Name          "Kp"
       Show          on
-      Position      [230, 430]
+      Position      [300, 510]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -620,7 +620,7 @@ Plecs {
       Type          Constant
       Name          "Ki"
       Show          on
-      Position      [230, 470]
+      Position      [300, 550]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -640,7 +640,7 @@ Plecs {
       Type          Constant
       Name          "FF"
       Show          on
-      Position      [230, 510]
+      Position      [300, 590]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -660,7 +660,7 @@ Plecs {
       Type          Constant
       Name          "Trip_vo"
       Show          on
-      Position      [230, 555]
+      Position      [300, 630]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -680,7 +680,7 @@ Plecs {
       Type          Constant
       Name          "Trip_iL"
       Show          on
-      Position      [230, 600]
+      Position      [300, 670]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -700,7 +700,7 @@ Plecs {
       Type          Constant
       Name          "Trip_io"
       Show          on
-      Position      [230, 650]
+      Position      [300, 710]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -720,7 +720,7 @@ Plecs {
       Type          SignalMux
       Name          "Mux"
       Show          off
-      Position      [330, 300]
+      Position      [470, 420]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -735,8 +735,8 @@ Plecs {
       Type          CScript
       Name          "PB_controller"
       Show          on
-      Position      [430, 300]
-      Direction     right
+      Position      [550, 420]
+      Direction     up
       Flipped       off
       LabelPosition south
       Parameter {
@@ -1189,9 +1189,9 @@ Plecs {
       Type          SignalDemux
       Name          "Demux"
       Show          off
-      Position      [520, 300]
+      Position      [630, 420]
       Direction     right
-      Flipped       off
+      Flipped       on
       LabelPosition south
       Frame         [-2, -60; 7, 60]
       Parameter {
@@ -1201,11 +1201,406 @@ Plecs {
       }
     }
     Component {
+      Type          Goto
+      Name          "dA_out"
+      Show          off
+      Position      [790, 200]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "dA"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "dB_out"
+      Show          off
+      Position      [790, 240]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "dB"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "en_out"
+      Show          off
+      Position      [790, 280]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "en"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "fault_out"
+      Show          off
+      Position      [790, 320]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "fault"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Display
+      Name          "amp (V pk)"
+      Show          on
+      Position      [800, 360]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-31, -11; 31, 11]
+      Parameter {
+        Variable      "Notation"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Precision"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "m_out"
+      Show          off
+      Position      [790, 400]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "m"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Display
+      Name          "x_amp (V)"
+      Show          on
+      Position      [800, 440]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-31, -11; 31, 11]
+      Parameter {
+        Variable      "Notation"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Precision"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "vref_out"
+      Show          off
+      Position      [790, 480]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "vref"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Display
+      Name          "v_dc (V)"
+      Show          on
+      Position      [800, 520]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-31, -11; 31, 11]
+      Parameter {
+        Variable      "Notation"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Precision"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "iL_out"
+      Show          off
+      Position      [790, 560]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "iL"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Goto
+      Name          "vo_out"
+      Show          off
+      Position      [790, 600]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "vo"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Display
+      Name          "i_o (A)"
+      Show          on
+      Position      [800, 640]
+      Direction     up
+      Flipped       off
+      LabelPosition south
+      Frame         [-31, -11; 31, 11]
+      Parameter {
+        Variable      "Notation"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Precision"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "dA_in"
+      Show          off
+      Position      [990, 150]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "dA"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
       Type          Reference
       SrcComponent  "TIC2000_Lib/PWM"
       Name          "PWM"
       Show          on
-      Position      [680, 180]
+      Position      [1080, 150]
       Direction     up
       Flipped       off
       LabelPosition south
@@ -1437,11 +1832,46 @@ Plecs {
       }
     }
     Component {
+      Type          From
+      Name          "dB_in"
+      Show          off
+      Position      [990, 310]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "dB"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
       Type          Reference
       SrcComponent  "TIC2000_Lib/PWM"
       Name          "PWM1"
       Show          on
-      Position      [680, 320]
+      Position      [1080, 310]
       Direction     up
       Flipped       off
       LabelPosition south
@@ -1673,11 +2103,46 @@ Plecs {
       }
     }
     Component {
+      Type          From
+      Name          "en_in"
+      Show          off
+      Position      [990, 450]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "en"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
       Type          Reference
       SrcComponent  "TIC2000_Lib/Powerstage Protection"
       Name          "Protection"
       Show          on
-      Position      [680, 440]
+      Position      [1080, 450]
       Direction     up
       Flipped       off
       LabelPosition south
@@ -1754,10 +2219,215 @@ Plecs {
       }
     }
     Component {
+      Type          From
+      Name          "vo_sc"
+      Show          off
+      Position      [1000, 560]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "vo"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "vref_sc"
+      Show          off
+      Position      [1000, 600]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "vref"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "iL_sc"
+      Show          off
+      Position      [1000, 640]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "iL"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "fault_sc"
+      Show          off
+      Position      [1000, 680]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "fault"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          From
+      Name          "m_sc"
+      Show          off
+      Position      [1000, 720]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Parameter {
+        Variable      "Tag"
+        Value         "m"
+        Show          off
+      }
+      Parameter {
+        Variable      "Visibility"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "NoMatchingCounterpartAction"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "CustomMessage"
+        Value         ""
+        Show          off
+        Evaluate      on
+      }
+      Parameter {
+        Variable      "HighlightLevel"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          SignalMux
+      Name          "MuxS1"
+      Show          off
+      Position      [1100, 580]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Frame         [-2, -10; 7, 10]
+      Parameter {
+        Variable      "Width"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          SignalMux
+      Name          "MuxS3"
+      Show          off
+      Position      [1100, 700]
+      Direction     right
+      Flipped       off
+      LabelPosition south
+      Frame         [-2, -10; 7, 10]
+      Parameter {
+        Variable      "Width"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
       Type          Scope
       Name          "Scope meas"
       Show          on
-      Position      [640, 560]
+      Position      [1220, 640]
       Direction     up
       Flipped       off
       LabelPosition north
@@ -1856,44 +2526,14 @@ Plecs {
       }
     }
     Component {
-      Type          SignalMux
-      Name          "MuxS1"
-      Show          off
-      Position      [600, 540]
-      Direction     right
-      Flipped       off
-      LabelPosition south
-      Frame         [-2, -10; 7, 10]
-      Parameter {
-        Variable      "Width"
-        Value         "2"
-        Show          off
-      }
-    }
-    Component {
-      Type          SignalMux
-      Name          "MuxS3"
-      Show          off
-      Position      [600, 580]
-      Direction     right
-      Flipped       off
-      LabelPosition south
-      Frame         [-2, -10; 7, 10]
-      Parameter {
-        Variable      "Width"
-        Value         "2"
-        Show          off
-      }
-    }
-    Component {
       Type          Reference
       SrcComponent  "TIC2000_Lib/Load"
       Name          "Load"
       Show          on
-      Position      [800, 560]
+      Position      [1040, 800]
       Direction     up
       Flipped       off
-      LabelPosition north
+      LabelPosition south
       Frame         [-25, -20; 25, 20]
       Parameter {
         Variable      "TargetPortIndices"
@@ -1915,91 +2555,11 @@ Plecs {
       Type          Display
       Name          "%"
       Show          on
-      Position      [860, 560]
+      Position      [1140, 800]
       Direction     up
       Flipped       off
       LabelPosition south
       Frame         [-21, -11; 21, 11]
-      Parameter {
-        Variable      "Notation"
-        Value         "1"
-        Show          off
-      }
-      Parameter {
-        Variable      "Precision"
-        Value         "2"
-        Show          off
-      }
-    }
-    Component {
-      Type          Display
-      Name          "amp (V pk)"
-      Show          on
-      Position      [620, 635]
-      Direction     right
-      Flipped       off
-      LabelPosition south
-      Frame         [-31, -11; 31, 11]
-      Parameter {
-        Variable      "Notation"
-        Value         "1"
-        Show          off
-      }
-      Parameter {
-        Variable      "Precision"
-        Value         "2"
-        Show          off
-      }
-    }
-    Component {
-      Type          Display
-      Name          "x_amp (V)"
-      Show          on
-      Position      [445, 665]
-      Direction     right
-      Flipped       off
-      LabelPosition south
-      Frame         [-31, -11; 31, 11]
-      Parameter {
-        Variable      "Notation"
-        Value         "1"
-        Show          off
-      }
-      Parameter {
-        Variable      "Precision"
-        Value         "2"
-        Show          off
-      }
-    }
-    Component {
-      Type          Display
-      Name          "v_dc (V)"
-      Show          on
-      Position      [620, 710]
-      Direction     right
-      Flipped       off
-      LabelPosition south
-      Frame         [-31, -11; 31, 11]
-      Parameter {
-        Variable      "Notation"
-        Value         "1"
-        Show          off
-      }
-      Parameter {
-        Variable      "Precision"
-        Value         "2"
-        Show          off
-      }
-    }
-    Component {
-      Type          Display
-      Name          "i_o (A)"
-      Show          on
-      Position      [445, 740]
-      Direction     right
-      Flipped       off
-      LabelPosition south
-      Frame         [-31, -11; 31, 11]
       Parameter {
         Variable      "Notation"
         Value         "1"
@@ -2026,10 +2586,18 @@ Plecs {
       DstTerminal   1
     }
     Connection {
+      Type          Event
+      SrcComponent  "ADC_B"
+      SrcTerminal   2
+      Points        [140, 275; 140, 330]
+      DstComponent  "Control Task Trigger"
+      DstTerminal   1
+    }
+    Connection {
       Type          Signal
       SrcComponent  "enable"
       SrcTerminal   1
-      Points        [205, 340]
+      Points        [270, 390; 270, 405]
       DstComponent  "enableswitch"
       DstTerminal   2
     }
@@ -2037,7 +2605,7 @@ Plecs {
       Type          Signal
       SrcComponent  "disable"
       SrcTerminal   1
-      Points        [205, 350]
+      Points        [270, 430; 270, 415]
       DstComponent  "enableswitch"
       DstTerminal   3
     }
@@ -2045,7 +2613,7 @@ Plecs {
       Type          Signal
       SrcComponent  "DemuxA"
       SrcTerminal   2
-      Points        [145, 245]
+      Points        [445, 145; 445, 365]
       DstComponent  "Mux"
       DstTerminal   2
     }
@@ -2053,7 +2621,7 @@ Plecs {
       Type          Signal
       SrcComponent  "DemuxA"
       SrcTerminal   3
-      Points        [145, 255]
+      Points        [435, 155; 435, 375]
       DstComponent  "Mux"
       DstTerminal   3
     }
@@ -2061,7 +2629,7 @@ Plecs {
       Type          Signal
       SrcComponent  "DemuxB"
       SrcTerminal   2
-      Points        [145, 265]
+      Points        [420, 255; 420, 385]
       DstComponent  "Mux"
       DstTerminal   4
     }
@@ -2069,7 +2637,7 @@ Plecs {
       Type          Signal
       SrcComponent  "DemuxB"
       SrcTerminal   3
-      Points        [145, 275]
+      Points        [410, 265; 410, 395]
       DstComponent  "Mux"
       DstTerminal   5
     }
@@ -2077,7 +2645,7 @@ Plecs {
       Type          Signal
       SrcComponent  "enableswitch"
       SrcTerminal   1
-      Points        [260, 285]
+      Points        [360, 410; 360, 405]
       DstComponent  "Mux"
       DstTerminal   6
     }
@@ -2085,7 +2653,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Vref_rms"
       SrcTerminal   1
-      Points        [250, 295]
+      Points        [370, 470; 370, 415]
       DstComponent  "Mux"
       DstTerminal   7
     }
@@ -2093,7 +2661,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Kp"
       SrcTerminal   1
-      Points        [250, 305]
+      Points        [385, 510; 385, 425]
       DstComponent  "Mux"
       DstTerminal   8
     }
@@ -2101,7 +2669,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Ki"
       SrcTerminal   1
-      Points        [250, 315]
+      Points        [395, 550; 395, 435]
       DstComponent  "Mux"
       DstTerminal   9
     }
@@ -2109,7 +2677,7 @@ Plecs {
       Type          Signal
       SrcComponent  "FF"
       SrcTerminal   1
-      Points        [250, 325]
+      Points        [410, 590; 410, 445]
       DstComponent  "Mux"
       DstTerminal   10
     }
@@ -2117,7 +2685,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Trip_vo"
       SrcTerminal   1
-      Points        [250, 335]
+      Points        [420, 630; 420, 455]
       DstComponent  "Mux"
       DstTerminal   11
     }
@@ -2125,7 +2693,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Trip_iL"
       SrcTerminal   1
-      Points        [250, 345]
+      Points        [435, 670; 435, 465]
       DstComponent  "Mux"
       DstTerminal   12
     }
@@ -2133,7 +2701,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Trip_io"
       SrcTerminal   1
-      Points        [250, 355]
+      Points        [445, 710; 445, 475]
       DstComponent  "Mux"
       DstTerminal   13
     }
@@ -2141,7 +2709,6 @@ Plecs {
       Type          Signal
       SrcComponent  "Mux"
       SrcTerminal   1
-      Points        [340, 255]
       DstComponent  "PB_controller"
       DstTerminal   1
     }
@@ -2149,7 +2716,6 @@ Plecs {
       Type          Signal
       SrcComponent  "PB_controller"
       SrcTerminal   2
-      Points        [430, 300]
       DstComponent  "Demux"
       DstTerminal   1
     }
@@ -2157,77 +2723,186 @@ Plecs {
       Type          Signal
       SrcComponent  "Demux"
       SrcTerminal   2
-      Points        [515, 180]
-      DstComponent  "PWM"
+      Points        [660, 365; 660, 200]
+      DstComponent  "dA_out"
       DstTerminal   1
     }
     Connection {
       Type          Signal
       SrcComponent  "Demux"
       SrcTerminal   3
-      Points        [515, 320]
-      DstComponent  "PWM1"
+      Points        [675, 375; 675, 240]
+      DstComponent  "dB_out"
       DstTerminal   1
     }
     Connection {
       Type          Signal
       SrcComponent  "Demux"
       SrcTerminal   4
-      Points        [515, 440]
-      DstComponent  "Protection"
+      Points        [690, 385; 690, 280]
+      DstComponent  "en_out"
       DstTerminal   1
     }
     Connection {
       Type          Signal
       SrcComponent  "Demux"
-      SrcTerminal   12
-      Points        [515, 535]
-      DstComponent  "MuxS1"
-      DstTerminal   2
+      SrcTerminal   5
+      Points        [700, 395; 700, 320]
+      DstComponent  "fault_out"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux"
+      SrcTerminal   6
+      Points        [715, 405; 715, 360]
+      DstComponent  "amp (V pk)"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux"
+      SrcTerminal   7
+      Points        [730, 415; 730, 400]
+      DstComponent  "m_out"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux"
+      SrcTerminal   8
+      Points        [730, 425; 730, 440]
+      DstComponent  "x_amp (V)"
+      DstTerminal   1
     }
     Connection {
       Type          Signal
       SrcComponent  "Demux"
       SrcTerminal   9
-      Points        [515, 545]
-      DstComponent  "MuxS1"
-      DstTerminal   3
+      Points        [715, 435; 715, 480]
+      DstComponent  "vref_out"
+      DstTerminal   1
     }
     Connection {
       Type          Signal
-      SrcComponent  "MuxS1"
-      SrcTerminal   1
-      DstComponent  "Scope meas"
+      SrcComponent  "Demux"
+      SrcTerminal   10
+      Points        [700, 445; 700, 520]
+      DstComponent  "v_dc (V)"
       DstTerminal   1
     }
     Connection {
       Type          Signal
       SrcComponent  "Demux"
       SrcTerminal   11
-      Points        [515, 560]
-      DstComponent  "Scope meas"
-      DstTerminal   2
+      Points        [690, 455; 690, 560]
+      DstComponent  "iL_out"
+      DstTerminal   1
     }
     Connection {
       Type          Signal
       SrcComponent  "Demux"
-      SrcTerminal   5
-      Points        [515, 575]
+      SrcTerminal   12
+      Points        [675, 465; 675, 600]
+      DstComponent  "vo_out"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux"
+      SrcTerminal   13
+      Points        [660, 475; 660, 640]
+      DstComponent  "i_o (A)"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "dA_in"
+      SrcTerminal   1
+      DstComponent  "PWM"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "dB_in"
+      SrcTerminal   1
+      DstComponent  "PWM1"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "en_in"
+      SrcTerminal   1
+      DstComponent  "Protection"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Event
+      SrcComponent  "PWM"
+      SrcTerminal   3
+      Points        [1140, 130; 1140, 50; 90, 50]
+      Branch {
+        DstComponent  "ADC_A"
+        DstTerminal   3
+      }
+      Branch {
+        Points        [40, 50; 40, 210; 90, 210]
+        DstComponent  "ADC_B"
+        DstTerminal   3
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "vo_sc"
+      SrcTerminal   1
+      Points        [1065, 560; 1065, 575]
+      DstComponent  "MuxS1"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "vref_sc"
+      SrcTerminal   1
+      Points        [1065, 600; 1065, 585]
+      DstComponent  "MuxS1"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "fault_sc"
+      SrcTerminal   1
+      Points        [1065, 680; 1065, 695]
       DstComponent  "MuxS3"
       DstTerminal   2
     }
     Connection {
       Type          Signal
-      SrcComponent  "Demux"
-      SrcTerminal   7
-      Points        [515, 585]
+      SrcComponent  "m_sc"
+      SrcTerminal   1
+      Points        [1065, 720; 1065, 705]
       DstComponent  "MuxS3"
       DstTerminal   3
     }
     Connection {
       Type          Signal
+      SrcComponent  "MuxS1"
+      SrcTerminal   1
+      Points        [1160, 580; 1160, 630]
+      DstComponent  "Scope meas"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "iL_sc"
+      SrcTerminal   1
+      DstComponent  "Scope meas"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
       SrcComponent  "MuxS3"
       SrcTerminal   1
+      Points        [1160, 700; 1160, 650]
       DstComponent  "Scope meas"
       DstTerminal   3
     }
@@ -2238,67 +2913,95 @@ Plecs {
       DstComponent  "%"
       DstTerminal   1
     }
-    Connection {
-      Type          Signal
-      SrcComponent  "Demux"
-      SrcTerminal   6
-      Points        [515, 605; 620, 605]
-      DstComponent  "amp (V pk)"
-      DstTerminal   1
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Demux"
-      SrcTerminal   8
-      Points        [515, 635; 445, 635]
-      DstComponent  "x_amp (V)"
-      DstTerminal   1
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Demux"
-      SrcTerminal   10
-      Points        [515, 670; 620, 670]
-      DstComponent  "v_dc (V)"
-      DstTerminal   1
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Demux"
-      SrcTerminal   13
-      Points        [515, 700; 445, 700]
-      DstComponent  "i_o (A)"
-      DstTerminal   1
-    }
-    Connection {
-      Type          Event
-      SrcComponent  "PWM"
-      SrcTerminal   3
-      Points        [715, 20; 20, 20; 20, 20]
-      Branch {
-        Points        [20, 80]
-        DstComponent  "ADC_A"
-        DstTerminal   3
-      }
-      Branch {
-        Points        [20, 180]
-        DstComponent  "ADC_B"
-        DstTerminal   3
-      }
-    }
-    Connection {
-      Type          Event
-      SrcComponent  "ADC_B"
-      SrcTerminal   2
-      Points        [130, 235; 130, 10; 5, 10; 5, 300]
-      DstComponent  "Control Task Trigger"
-      DstTerminal   1
-    }
+    RectangleAnnotation {
+      Position     [135, 190]
+      Width        230
+      Height       340
+      CornerRadius 3
+      Thickness    1
+      PenColor     4286611584
+      PenAlpha     1
+      BrushColor   0
+      BrushAlpha   0
+    } 
     Annotation {
-      Name          "<html><body><p>Project B controller (Group 8): ADC -> con"
-"troller C-Script -> ePWM1/ePWM2. Generated by gen_plecs.py from pb_ctrl_core."
-"c. Do not edit the C-Script here.</p></body></html>"
-      Position      [420, 60]
+      Name          "<html><body><p><span style=\" font-weight:700;\">Measurements: ADC A (v_dc, i_L1), ADC B (v_o, i_o)</span></p></body></html>"
+      Position      [230, 32]
+    } 
+    RectangleAnnotation {
+      Position     [270, 560]
+      Width        180
+      Height       400
+      CornerRadius 3
+      Thickness    1
+      PenColor     4286611584
+      PenAlpha     1
+      BrushColor   0
+      BrushAlpha   0
+    } 
+    Annotation {
+      Name          "<html><body><p><span style=\" font-weight:700;\">Operator settings (tunable in Watch / External Mode)</span></p></body></html>"
+      Position      [398, 372]
+    } 
+    RectangleAnnotation {
+      Position     [625, 460]
+      Width        490
+      Height       600
+      CornerRadius 3
+      Thickness    1
+      PenColor     4286611584
+      PenAlpha     1
+      BrushColor   0
+      BrushAlpha   0
+    } 
+    Annotation {
+      Name          "<html><body><p><span style=\" font-weight:700;\">Controller (pb_ctrl_core.c)</span></p></body></html>"
+      Position      [498, 172]
+    } 
+    RectangleAnnotation {
+      Position     [1080, 260]
+      Width        360
+      Height       480
+      CornerRadius 3
+      Thickness    1
+      PenColor     4286611584
+      PenAlpha     1
+      BrushColor   0
+      BrushAlpha   0
+    } 
+    Annotation {
+      Name          "<html><body><p><span style=\" font-weight:700;\">PWM (ePWM1 leg A, ePWM2 leg B) and power-stage enable</span></p></body></html>"
+      Position      [1122, 32]
+    } 
+    RectangleAnnotation {
+      Position     [1080, 640]
+      Width        360
+      Height       240
+      CornerRadius 3
+      Thickness    1
+      PenColor     4286611584
+      PenAlpha     1
+      BrushColor   0
+      BrushAlpha   0
+    } 
+    Annotation {
+      Name          "<html><body><p><span style=\" font-weight:700;\">Scope (External Mode on the bench)</span></p></body></html>"
+      Position      [1046, 532]
+    } 
+    RectangleAnnotation {
+      Position     [1120, 800]
+      Width        280
+      Height       60
+      CornerRadius 3
+      Thickness    1
+      PenColor     4286611584
+      PenAlpha     1
+      BrushColor   0
+      BrushAlpha   0
+    } 
+    Annotation {
+      Name          "<html><body><p><span style=\" font-weight:700;\">CPU load</span></p></body></html>"
+      Position      [1022, 782]
     } 
   }
 }

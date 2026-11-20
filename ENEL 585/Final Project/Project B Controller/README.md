@@ -76,8 +76,9 @@ Needs Python 3 with numpy, scipy and matplotlib, plus gcc (the simulation compil
 
 **Warning:** `plecs/ProjectB_Sim.plecs` has since been re-laid out by hand-style placement (H-bridge
 power stage, labelled regions, Goto/From tags; preview in `figures/ProjectB_Sim_layout.png`).
-`gen_plecs.py` still writes the old layout and would overwrite it. To regenerate only the firmware
-model, keep a copy of `ProjectB_Sim.plecs` first and put it back afterwards.
+`plecs/Controller.plecs` has been re-laid out the same way (preview in `figures/Controller_layout.png`).
+`gen_plecs.py` still writes the old layouts and would overwrite both files, so keep copies of
+both before running it.
 
 ## What has been verified, and what has not
 
