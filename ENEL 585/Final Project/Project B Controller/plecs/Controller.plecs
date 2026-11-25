@@ -490,7 +490,7 @@ Plecs {
       Direction     right
       Flipped       on
       LabelPosition south
-      Frame         [-2, -10; 7, 10]
+      Frame         [-7, -10; 2, 10]
       Parameter {
         Variable      "Width"
         Value         "2"
@@ -505,7 +505,7 @@ Plecs {
       Direction     right
       Flipped       on
       LabelPosition south
-      Frame         [-2, -10; 7, 10]
+      Frame         [-7, -10; 2, 10]
       Parameter {
         Variable      "Width"
         Value         "2"
@@ -526,7 +526,7 @@ Plecs {
       Type          Constant
       Name          "enable"
       Show          on
-      Position      [230, 390]
+      Position      [80, 415]
       Direction     right
       Flipped       off
       LabelPosition west
@@ -546,7 +546,7 @@ Plecs {
       Type          Constant
       Name          "disable"
       Show          on
-      Position      [230, 430]
+      Position      [80, 455]
       Direction     right
       Flipped       off
       LabelPosition west
@@ -566,7 +566,7 @@ Plecs {
       Type          ManualSignalSwitch
       Name          "enableswitch"
       Show          on
-      Position      [310, 410]
+      Position      [160, 435]
       Direction     right
       Flipped       off
       LabelPosition north
@@ -580,7 +580,7 @@ Plecs {
       Type          Constant
       Name          "Vref_rms"
       Show          on
-      Position      [300, 470]
+      Position      [150, 495]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -600,7 +600,7 @@ Plecs {
       Type          Constant
       Name          "Kp"
       Show          on
-      Position      [300, 510]
+      Position      [150, 535]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -620,7 +620,7 @@ Plecs {
       Type          Constant
       Name          "Ki"
       Show          on
-      Position      [300, 550]
+      Position      [150, 575]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -640,7 +640,7 @@ Plecs {
       Type          Constant
       Name          "FF"
       Show          on
-      Position      [300, 590]
+      Position      [150, 615]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -660,7 +660,7 @@ Plecs {
       Type          Constant
       Name          "Trip_vo"
       Show          on
-      Position      [300, 630]
+      Position      [150, 655]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -680,7 +680,7 @@ Plecs {
       Type          Constant
       Name          "Trip_iL"
       Show          on
-      Position      [300, 670]
+      Position      [150, 695]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -700,7 +700,7 @@ Plecs {
       Type          Constant
       Name          "Trip_io"
       Show          on
-      Position      [300, 710]
+      Position      [150, 735]
       Direction     right
       Flipped       off
       LabelPosition south
@@ -741,7 +741,7 @@ Plecs {
       LabelPosition south
       Parameter {
         Variable      "DialogGeometry"
-        Value         ""
+        Value         "[711 265 455 516]"
         Show          off
       }
       Parameter {
@@ -1193,7 +1193,7 @@ Plecs {
       Direction     right
       Flipped       on
       LabelPosition south
-      Frame         [-2, -60; 7, 60]
+      Frame         [-7, -60; 2, 60]
       Parameter {
         Variable      "Width"
         Value         "12"
@@ -2530,7 +2530,7 @@ Plecs {
       SrcComponent  "TIC2000_Lib/Load"
       Name          "Load"
       Show          on
-      Position      [1040, 800]
+      Position      [1040, 820]
       Direction     up
       Flipped       off
       LabelPosition south
@@ -2555,7 +2555,7 @@ Plecs {
       Type          Display
       Name          "%"
       Show          on
-      Position      [1140, 800]
+      Position      [1140, 820]
       Direction     up
       Flipped       off
       LabelPosition south
@@ -2597,7 +2597,7 @@ Plecs {
       Type          Signal
       SrcComponent  "enable"
       SrcTerminal   1
-      Points        [270, 390; 270, 405]
+      Points        [120, 415; 120, 430]
       DstComponent  "enableswitch"
       DstTerminal   2
     }
@@ -2605,7 +2605,7 @@ Plecs {
       Type          Signal
       SrcComponent  "disable"
       SrcTerminal   1
-      Points        [270, 430; 270, 415]
+      Points        [120, 455; 120, 440]
       DstComponent  "enableswitch"
       DstTerminal   3
     }
@@ -2645,7 +2645,7 @@ Plecs {
       Type          Signal
       SrcComponent  "enableswitch"
       SrcTerminal   1
-      Points        [360, 410; 360, 405]
+      Points        [360, 435; 360, 405]
       DstComponent  "Mux"
       DstTerminal   6
     }
@@ -2653,7 +2653,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Vref_rms"
       SrcTerminal   1
-      Points        [370, 470; 370, 415]
+      Points        [370, 495; 370, 415]
       DstComponent  "Mux"
       DstTerminal   7
     }
@@ -2661,7 +2661,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Kp"
       SrcTerminal   1
-      Points        [385, 510; 385, 425]
+      Points        [385, 535; 385, 425]
       DstComponent  "Mux"
       DstTerminal   8
     }
@@ -2669,7 +2669,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Ki"
       SrcTerminal   1
-      Points        [395, 550; 395, 435]
+      Points        [395, 575; 395, 435]
       DstComponent  "Mux"
       DstTerminal   9
     }
@@ -2677,7 +2677,7 @@ Plecs {
       Type          Signal
       SrcComponent  "FF"
       SrcTerminal   1
-      Points        [410, 590; 410, 445]
+      Points        [410, 615; 410, 445]
       DstComponent  "Mux"
       DstTerminal   10
     }
@@ -2685,7 +2685,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Trip_vo"
       SrcTerminal   1
-      Points        [420, 630; 420, 455]
+      Points        [420, 655; 420, 455]
       DstComponent  "Mux"
       DstTerminal   11
     }
@@ -2693,7 +2693,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Trip_iL"
       SrcTerminal   1
-      Points        [435, 670; 435, 465]
+      Points        [435, 695; 435, 465]
       DstComponent  "Mux"
       DstTerminal   12
     }
@@ -2701,7 +2701,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Trip_io"
       SrcTerminal   1
-      Points        [445, 710; 445, 475]
+      Points        [445, 735; 445, 475]
       DstComponent  "Mux"
       DstTerminal   13
     }
@@ -2925,12 +2925,13 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Measurements: ADC A (v_dc, i_L1), ADC B (v_o, i_o)</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">Measurem"
+"ents: ADC A (v_dc, i_L1), ADC B (v_o, i_o)</span></p></body></html>"
       Position      [230, 32]
     } 
     RectangleAnnotation {
-      Position     [270, 560]
-      Width        180
+      Position     [175, 585]
+      Width        290
       Height       400
       CornerRadius 3
       Thickness    1
@@ -2940,12 +2941,13 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Operator settings (tunable in Watch / External Mode)</span></p></body></html>"
-      Position      [398, 372]
+      Name          "<html><body><p><span style=\" font-weight:700;\">Operator"
+" settings (tunable in Watch / External Mode)</span></p></body></html>"
+      Position      [173, 397]
     } 
     RectangleAnnotation {
-      Position     [625, 460]
-      Width        490
+      Position     [635, 460]
+      Width        470
       Height       600
       CornerRadius 3
       Thickness    1
@@ -2955,7 +2957,8 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Controller (pb_ctrl_core.c)</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">Controll"
+"er (pb_ctrl_core.c)</span></p></body></html>"
       Position      [498, 172]
     } 
     RectangleAnnotation {
@@ -2970,7 +2973,8 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">PWM (ePWM1 leg A, ePWM2 leg B) and power-stage enable</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">PWM (ePW"
+"M1 leg A, ePWM2 leg B) and power-stage enable</span></p></body></html>"
       Position      [1122, 32]
     } 
     RectangleAnnotation {
@@ -2985,13 +2989,14 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">Scope (External Mode on the bench)</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">Scope (E"
+"xternal Mode on the bench)</span></p></body></html>"
       Position      [1046, 532]
     } 
     RectangleAnnotation {
-      Position     [1120, 800]
+      Position     [1120, 815]
       Width        280
-      Height       60
+      Height       90
       CornerRadius 3
       Thickness    1
       PenColor     4286611584
@@ -3000,7 +3005,8 @@ Plecs {
       BrushAlpha   0
     } 
     Annotation {
-      Name          "<html><body><p><span style=\" font-weight:700;\">CPU load</span></p></body></html>"
+      Name          "<html><body><p><span style=\" font-weight:700;\">CPU load"
+"</span></p></body></html>"
       Position      [1022, 782]
     } 
   }
