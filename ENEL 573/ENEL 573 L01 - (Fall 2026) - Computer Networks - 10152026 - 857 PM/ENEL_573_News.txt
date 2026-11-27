@@ -1,9 +1,20 @@
 ENEL 573 - News Items
-Exported Nov 20, 2026
-Total items: 21
+Exported Nov 26, 2026
+Total items: 22
 
 ======================================================================
-1. HW5 Posted
+1. Tomorrow's Class Covered by TA
+Posted: Nov 26, 2026, 9:41 PM
+----------------------------------------------------------------------
+Hi all,
+
+Due to an urgent event that I will need to attend, my TA, Mr. Guojun Tang, will help cover the rest of the content in the Network Security Chapter in tomorrow's class.
+
+Thank you,
+John
+
+======================================================================
+2. HW5 Posted
 Posted: Nov 20, 2026, 11:04 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -16,7 +27,7 @@ Thanks,
 John
 
 ======================================================================
-2. Delayed Release of HW5
+3. Delayed Release of HW5
 Posted: Nov 17, 2026, 11:58 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -29,7 +40,7 @@ Thank you for your understanding.
 John
 
 ======================================================================
-3. Project 3 Manual Released
+4. Project 3 Manual Released
 Posted: Nov 16, 2026, 10:39 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -42,7 +53,7 @@ Best,
 John
 
 ======================================================================
-4. Project 1 Evaluation
+5. Project 1 Evaluation
 Posted: Nov 12, 2026, 9:17 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -55,7 +66,7 @@ Best,
 John
 
 ======================================================================
-5. Midterm Exam Evaluation Released
+6. Midterm Exam Evaluation Released
 Posted: Oct 31, 2026, 11:38 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -70,7 +81,7 @@ Best,
 John
 
 ======================================================================
-6. HW4 Posted
+7. HW4 Posted
 Posted: Oct 31, 2026, 11:18 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -83,7 +94,7 @@ Thanks,
 John
 
 ======================================================================
-7. HW2 Evaluation Released
+8. HW2 Evaluation Released
 Posted: Oct 23, 2026, 7:34 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -96,7 +107,7 @@ Best,
 John
 
 ======================================================================
-8. Tomorrow's Lecture Canceled - Office Hour Instead
+9. Tomorrow's Lecture Canceled - Office Hour Instead
 Posted: Oct 22, 2026, 7:17 PM (Edited)
 ----------------------------------------------------------------------
 Hi all,
@@ -111,7 +122,7 @@ Good luck on your midterm exam,
 John
 
 ======================================================================
-9. Midterm - Clarification on Formulas
+10. Midterm - Clarification on Formulas
 Posted: Oct 21, 2026, 11:08 AM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -130,7 +141,7 @@ Thanks,
 John
 
 ======================================================================
-10. Midterm Exam Practice
+11. Midterm Exam Practice
 Posted: Oct 19, 2026, 4:37 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -143,7 +154,7 @@ Cheers,
 John
 
 ======================================================================
-11. Project 2 Manual Released
+12. Project 2 Manual Released
 Posted: Oct 19, 2026, 4:15 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -156,7 +167,7 @@ Thanks,
 John
 
 ======================================================================
-12. [!Important] Midterm Instructions
+13. [!Important] Midterm Instructions
 Posted: Oct 18, 2026, 10:57 PM
 ----------------------------------------------------------------------
 Dear all,
@@ -182,7 +193,7 @@ Cheers,
 John
 
 ======================================================================
-13. HW1 Evaluation Released
+14. HW1 Evaluation Released
 Posted: Oct 16, 2026, 4:54 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -193,7 +204,7 @@ Best,
 John
 
 ======================================================================
-14. HW Assignment 3 Posted
+15. HW Assignment 3 Posted
 Posted: Oct 16, 2026, 3:57 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -206,7 +217,7 @@ Thanks,
 John
 
 ======================================================================
-15. Project 1 - Important Clarification on E[N] in Question 2
+16. Project 1 - Important Clarification on E[N] in Question 2
 Posted: Oct 13, 2026, 8:13 PM
 ----------------------------------------------------------------------
 Hi everyone,
@@ -225,7 +236,7 @@ Best,
 John
 
 ======================================================================
-16. HW Assignment 2 Posted
+17. HW Assignment 2 Posted
 Posted: Oct 2, 2026, 6:40 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -238,7 +249,7 @@ Thanks,
 John
 
 ======================================================================
-17. Tomorrow's Class Cancelled (Oct 2)
+18. Tomorrow's Class Cancelled (Oct 2)
 Posted: Oct 1, 2026, 11:23 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -253,7 +264,7 @@ Best,
 John
 
 ======================================================================
-18. Project 1 Manual Released
+19. Project 1 Manual Released
 Posted: Sep 25, 2026, 11:31 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -266,7 +277,7 @@ Thanks,
 John
 
 ======================================================================
-19. HW Assignment 1 Posted
+20. HW Assignment 1 Posted
 Posted: Sep 18, 2026, 9:15 PM
 ----------------------------------------------------------------------
 Hi all,
@@ -279,7 +290,7 @@ Thanks,
 John
 
 ======================================================================
-20. Wednesday's Lecture (Sept 9)
+21. Wednesday's Lecture (Sept 9)
 Posted: Sep 7, 2026, 7:55 AM
 ----------------------------------------------------------------------
 Hi all,
@@ -292,7 +303,7 @@ Thank you,
 John
 
 ======================================================================
-21. Welcome to ENEL 573 - Fall 2026 (First class today)
+22. Welcome to ENEL 573 - Fall 2026 (First class today)
 Posted: Sep 2, 2026, 12:17 AM
 ----------------------------------------------------------------------
 Dear Students,
